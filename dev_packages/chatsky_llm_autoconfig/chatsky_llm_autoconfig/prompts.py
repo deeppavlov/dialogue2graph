@@ -248,10 +248,9 @@ create_graph_prompt = PromptTemplate.from_template(
 
 graph_example_1 = {
     "edges": [
-#        {'source': 1, 'target': 2, 'utterances': ['I need to make an order']},
-        {'source': 1, 'target': 2, 'utterances': ['I want to order from you']},
-        {'source': 2, 'target': 3, 'utterances': ['I would like to purchase Pale Fire and Anna Karenina, please']},
-        {"source": 3, "target": 4, "utterances": ["With credit card, please"]},
+        {'source': 1, 'target': 2, 'utterances': ['I need to make an order', 'I want to order from you']},
+        {'source': 2, 'target': 3, 'utterances': ['I would like to purchase Pale Fire and Anna Karenina, please', 'One War and Piece in hard cover and one Pride and Prejudice']},
+        {"source": 3, "target": 4, "utterances": ["With credit card, please", "Cash"]},
         {"source": 4, "target": 2, "utterances": ["Start new order"]}
     ],
     'nodes':
@@ -855,32 +854,610 @@ prompts["options_graph_generation_prompt"] = PromptTemplate.from_template(
     "List of dialogues: {dialog}"
 )
 
+# 9) Number of nodes is always equal to the amount of unique assistant's utterances in all the dialogues.
+# However, close utterances according to point 4 above must remain in one node and thus constitute unique
+# sets of utterances. Then the number of such sets must correspond to the number of nodes.
+#or are different ways to answer to same or similar user's utterance,
+# 6) Group of utterances from single node as indicated in point 5 above constitute unique
+# set of utterances. Then the number of such sets must correspond to the number of nodes.
 part_1 = """Your input is a list of dialogues from customer chatbot system.
-Your task is to create a dialogue graph corresponding to these dialogues.
-If the dialogue is cyclic the graph shall be cyclic as well.
+Your task is to genearate set of nodes for the dialogue graph corresponding to these dialogues.
 Next is an example of the graph (set of rules) how chatbot system looks like - it is
-a set of nodes with chatbot system utterances and a set of edges that are
+a set of nodes with assistant's utterances and a set of edges that are
 triggered by user requests: """
+# part_2 = """This is the end of the example.
+# Note that is_start field in the node is an entry point to the whole graph, not to the cycle.
+# **Rules:**
+# 1) Nodes must be assistant's utterances, edges must be utterances from the user.
+# 2) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph.
+# 3) Every user's utterance from the dialogue shall be present in at least one edge of a graph.
+# 4) Never create nodes with user's utterances.
+# 5) We allow multiple utterances in one node.
+# So if two or more assistance's utterances from same or different dialogues are interchangeable
+# and lead to interchangeable transitions, they must be grouped into single node for sure.
+# Don't miss any assistant's utterance in any of the groups.
+# 6) We allow multiple utterances in one edge.
+# So if two or more user's utterances from same or different dialogues are interchangeable
+# and follow interchangeable assistance's utterances, they must be grouped into one edge for sure.
+# Don't miss any user's utterance in any of the groups.
+# 7) Group of utterances from single node as indicated at point 6 above constitute unique
+# set of utterances. Then the number of such sets must correspond to the number of nodes.
+# 8) Usually graph has branches, and different dialogues can present different branches.
+# 9) Cyclic graph means you connect new edge to one of previously created nodes.
+# When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes.
+# If you see it is possible not to create new node with same or similar utterance,
+# but instead create next edge connecting back to one of previous nodes, then it is place for a cycle here.
+# 10) The starting node of a cycle cannot be the entry point to the whole graph.
+# It means that starting node typically does not have label "start" where is_start is True.
+# Instead it must be a continuation of the user's previous phrase, kind of problem elaboration stage.
+# Typically it is clarifying question to previous user's phrase.
+# So cycle start cannot be greeting (first) node of the whole graph, it shall be another one node.
+# 11) Resulting graph shall not loop any node back to same node.
+# 12) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 13) Add reason point to the graph with explanation why you didn't combine similar utterances in one edge or node.
+# I will give a list of dialogues, your task is to build a graph for this list according to the rules and examples above.
+# List of dialogues: """
+
+# 7) Group of utterances from single node as indicated at point 5 above constitute unique
+# set of utterances. Then the number of such sets must correspond to the number of nodes.
+#The number of these groups must correspond to the number of nodes.
+
+# Find all user's utterances from all the dialogues so, that:
+# their following nodes have interchangeable utterances,
+# their preceding nodes have interchangeable utterances,
+# and group them.
+#  Keep in mind that adjacent utterances from assistant cannot be included in the same group.
+
+# part_2 = """This is the end of the example.
+# Note that is_start field in the node is an entry point to the whole graph, not to the cycle.
+# **Rules:**
+# 1) Nodes must be assistant's utterances, edges must be utterances from the user.
+# 2) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph.
+# 3) Every user's utterance from the dialogue shall be present in at least one edge of a graph.
+# 4) Never create nodes with user's utterances.
+# 5) We allow multiple utterances in one node.
+# Group all the assistant's utterances from all the dialogues so, that:
+# For any pair of items in a group the following is true:
+# two sets of user's utterances immediately following the item in a pair (every entrance of the item builds pair) have at least one common utterance.  
+# two sets of user's utterances immediately preceding the item in a pair (every entrance of the item builds pair) have at least one common utterance.
+# At the same time, the interchangeability of the two utterances ensures commonality.
+# When both items in a pair don't have following utterances, they shall be grouped together based on immediately preceding utterances.
+# When both items in a pair don't have preceding utterances, they shall be grouped together based on immediately following utterances.
+# Every assitant's utterance must be part of one of the groups for sure.
+# Form nodes from the resulting groups.
+# Remove duplicates inside any of the groups.
+# 6) We allow multiple utterances in one edge.
+# Group all the user's utterances from all the dialogues so, that:
+# For any pair of items in a group the following is true:
+# two sets of assistant's utterances immediately following the item in a pair (every entrance of the item builds pair) have at least one common utterance.
+# two sets of assistant's utterances immediately preceding the item in a pair (every entrance of the item builds pair) have at least one common utterance.
+# At the same time, the interchangeability of the two utterances ensures commonality.
+# When both items in a pair don't have following utterances, they shall be grouped together based on immediately preceding utterances.
+# When both items in a pair don't have preceding utterances, they shall be grouped together based on immediately following utterances.
+# Every user's utterance must be part of one of the groups for sure.
+# Form edges from the resulting groups. Remove duplicates inside any of the groups.
+# 7) Usually graph has branches, and different dialogues can present different branches.
+# 8) Cyclic graph means you connect new edge to one of previously created nodes.
+# When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes.
+# If you see it is possible not to create new node with same or similar utterance,
+# but instead create next edge connecting back to one of previous nodes, then it is place for a cycle here.
+# 9) The starting node of a cycle cannot be the entry point to the whole graph.
+# It means that starting node typically does not have label "start" where is_start is True.
+# Instead it must be a continuation of the user's previous phrase, kind of problem elaboration stage.
+# Typically it is clarifying question to previous user's phrase.
+# So cycle start cannot be greeting (first) node of the whole graph, it shall be another one node.
+# 10) Resulting graph shall not loop any node back to same node.
+# 11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 12) Add reason point to the graph with explanation why you didn't combine similar utterances in one edge or node.
+# I will give a list of dialogues, your task is to build a graph for this list according to the rules and examples above.
+# List of dialogues: """
+
+# part_2 = """This is the end of the example.
+# Note that is_start field in the node is an entry point to the whole graph, not to the cycle.
+# **Rules:**
+# 1) Nodes must be assistant's utterances, edges must be utterances from the user.
+# 2) Every assistance's utterance from the dialogue shall be present in its original unmodified form in one and only one node of a graph.
+# 3) Every user's utterance from the dialogue shall be present in at least one edge of a graph.
+# 4) Never create nodes with user's utterances.
+# 5) We allow more than one assistant's utterances in one node.
+# Group all assistant's utterances in all dialogues according to the following scheme:
+# a. Go through all assistant's utterances.
+# b. For each assistant's utterance go through all its occurrences in all dialogues.
+# c. For each assistant's utterance make up the first set of user's utterances immediately following its occurrences
+# and the second set of user's utterances immediately preceding its occurrences.
+# d. Two assistant's utterances are included in one group when the both intersections of the first two sets and the second two sets are not empty.
+# For intersection, interchangeable user's utterances are considered to be the same. Opposite version of same utterance fits as well.
+# e. If both first sets are empty, only the intersection of the second sets is considered.
+# f. If both second sets are empty, only the intersection of the first sets is considered.
+# g. Every unique assitant's utterance must be part of one of the groups for sure.
+# h. Duplicates inside any of the groups must be removed.
+# Form nodes from the resulting groups. The number of groups must correspond to the number of nodes.
+# 6) We allow more than one user's utterances in one edge.
+# Group all user's utterances in all dialogues according to the following scheme:
+# a. Go through all user's utterances.
+# b. For each user's utterance go through all its occurrences in all dialogues.
+# c. For each user's utterance make up the first set of assistant's utterances immediately following its occurrences
+# and the second set of assistant's utterances immediately preceding its occurrences.
+# d. Two user's utterances are included in one group when the both intersections of the first two sets and the second two sets are not empty.
+# For intersection, interchangeable assistant's utterances are considered to be the same.
+# e. If both first sets are empty, only the intersection of the second sets is considered.
+# f. If both second sets are empty, only the intersection of the first sets is considered.
+# g. Every user's utterance must be part of one of the groups for sure.
+# h. Duplicates inside any of the groups must be removed.
+# Form edges from the resulting groups. The number of groups must correspond to the number of edges.
+# 7) Usually graph has branches, and different dialogues can present different branches.
+# 8) Cyclic graph means you connect new edge to one of previously created nodes.
+# When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes.
+# If you see it is possible not to create new node with same or similar utterance,
+# but instead create next edge connecting back to one of previous nodes, then it is place for a cycle here.
+# 9) The starting node of a cycle cannot be the entry point to the whole graph.
+# It means that starting node typically does not have label "start" where is_start is True.
+# Instead it must be a continuation of the user's previous phrase, kind of problem elaboration stage.
+# Typically it is clarifying question to previous user's phrase.
+# So cycle start cannot be greeting (first) node of the whole graph, it shall be another one node.
+# 10) Resulting graph shall not loop any node back to same node.
+# 11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 12) Add reason point to the graph with explanation why you didn't combine similar utterances in one edge or node.
+# I will give a list of dialogues, your task is to build a graph for this list according to the rules and examples above.
+# List of dialogues: """
+# 7) Usually graph has branches, and different dialogues can present different branches.
+# For the second set, user's utterances with opposite intent fit as well.
+# 2) Every assistance's utterance from the dialogue shall be present in its original unmodified form in one and only one node of a graph.
+# 3) Every user's utterance from the dialogue shall be present in at least one edge of a graph.
+# 4) Never create nodes with user's utterances.
+#b. For each assistant's utterance go through all its occurrences in all dialogues.
+#For each occurence of every assistant's utterance
+# 2) Group all assistant's utterances in all dialogues according to the following scheme:
+# a. Go through all unique assistant's utterances.
+# b. Make up the first set of unique user's utterances immediately following current assistant's utterance
+# and the second set of unique user's utterances immediately preceding current assistant's utterance.
+# d. Two assistant's utterances are included in one group then and only then when two following conditions are met:
+# intersection of the two first sets is not empty,
+# intersection of the two second sets is not empty.
+# For intersection, user's utterances with same intent are considered to be the same as well.
+# For the first set, user's utterances with opposite intent are considered to be the same as well.
+# If both first sets are empty, only the intersection of the second sets is considered.
+# If both second sets are empty, only the intersection of the first sets is considered.
+# e. Of the three types of utterances:
+# with a question mark at the end,
+# with an excalamation mark at the end,
+# affirmative without exclamation mark,
+# each group can contain only one.
+# f. If two utterances from assistant are separated with just one user's utterance in any of the dialogues, they must be in different groups.
+# g. Every unique assistant's utterance must be part of only one group for sure.
+# h. Duplicates inside any of the groups must be removed.
+# i. All the nodes for the graph must be created from the resulting groups exclusively with assistant's utterances only.
+# j. The number of groups must correspond to the number of nodes.
+
+# 3) Group all user's utterances in all dialogues according to the following scheme:
+# a. Go through all unique user's utterances.
+# b. Make up the first set of unique assistant's utterances immediately following current user's utterance
+# and the second set of unique assistant's utterances immediately preceding current user's utterance.
+# c. Two user's utterances with same intent are included in one group then and only then when two following conditions are met:
+# intersection of the two first sets is not empty,
+# intersection of the two second sets is not empty.
+# For intersection here, assistant's utterances are considered equal when exact match or with the exactly same intent, and only these.
+# If both first sets are empty, only the intersection of the second sets is considered.
+# If both second sets are empty, only the intersection of the first sets is considered.
+# d. Two user's utterances with opposite intent must be in different groups.
+# e. Of the three types of utterances:
+# with a question mark at the end,
+# with an excalamation mark at the end,
+# affirmative without exclamation mark,
+# each group can contain only one.
+# f. Every unique user's utterance must be part of only one group for sure.
+# g. Duplicates inside any of the groups must be removed.
+# h. All the edges for the graph must be created from the resulting groups exclusively with user's utterances only.
+# i. The number of groups must correspond to the number of edges.
+
+# 4) Group all user's utterances in all dialogues according to the the following scheme:
+# a. User's utterances outgoing from one node belong to one group.
+# b. Then split user's utterances with opposite intents into two different groups.
+# c. All the edges for the graph must be created from the resulting groups with exclusively user's utterances only.
+
+# d. Of the three types of utterances:
+# with a question mark at the end,
+# with an excalamation mark at the end,
+# affirmative without exclamation mark,
+# each group can contain only one.
+# e. If two utterances from assistant are separated with just one user's utterance in any of the dialogues, they must be in different groups.
+# f. Every unique assistant's utterance must be part of only one group for sure.
+# g. Duplicates inside any of the groups must be removed.
+
+# не придумывай новые фразы пользователя
+#Each user utterance is part of an edge that comes out of the node with the previous assistant utterance and enters the node with the next assistant utterance.
+
+# a. Go through all nodes.
+# b. Go through all utterances in node (call it "source node").
+# c. Go through all occurences of the utterance in assistant's utterances in all the dialogues.
+# d. Take user's utterance following current occurance of assistant's utterance.
+# e. Find node with assistant's utterance following this user's utterance. Will call this node "target node".
+# f. Create an edge with this user's utterance. Source for this edge will be source node, and target is target node.
+# g. If edge with these source and target already exists,
+# just add new user's utterance to this edge if different from utterances existing in the edge. 
+# h. If user's utterance is last utterance in a dialogue, go to point 6) and create a cycling edge.
+# i. Go to next occurence in point c.
+# j. Go to next utterance in point b.
+# k. Go to next node in point a.
+# a. If in any of the dialogues between two utterances from assistant is just one user's utterance and nothing else,
+# these utterances must be in different groups.
+# i. Two assistant's utterances with different or opposite intents must be in different groups.
+# j. Two assistant's utterances with different either subjects, topics or differing details must be in different groups.
+# 6) Nodes with user's utterances must be removed.
+
+# For example, different drinks, or different rooms, etc, these are different details and make utterances containing them 
+# separated in different groups.
+# g. two utteranceshave have same essential details,
+# o. When one assistant's utterance contains some important detail that is missed in the other assistant's utterance,
+# these two assistant's utterances must be in different groups.
+
 part_2 = """This is the end of the example.
-Note that is_start field in the node is an entry point to the whole graph, not to the cycle.
 **Rules:**
-1) Nodes must be assistant's utterances, edges must be utterances from the user.
-2) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph. 
-3) Never create nodes with user's utterances.
-4) Usually graph has branches, and different dialogues can present different branches.
-5) Cyclic graph means you connect new edge to one of previously created nodes.
-When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes.
-If you see it is possible not to create new node with same or similar utterance,
-but instead create next edge connecting back to one of previous nodes, then it is place for a cycle here.
-6) The starting node of a cycle cannot be the entry point to the whole graph. It means that starting node typically does not have label "start" where is_start is True.
-Instead it must be a continuation of the user's previous phrase, kind of problem elaboration stage.
-Typically it is clarifying question to previous users' phrase.
-So cycle start cannot be greeting (first) node of the whole graph, it shall be another one node.
-7) Resulting graph shall not loop any node back to same node.
-8) Number of nodes is always equal to the amount of unique assistant's utterances in all the dialogues.
+1) is_start field in the node is an entry point to the whole graph.
+2) Nodes must be assistant's utterances only.
+3) All the nodes for the graph are created from the resulting groups in point 5) with exclusively assistant's utterances only.
+4) Don't use user's utterances for grouping process in point 5).
+5) Take all assistant's utterances in all dialogues, each in one copy, and group them according to the following scheme:
+a. Go through all assistant's utterances, take every utterance just in one copy.
+b. Make up the set of user's utterances immediately following current assistant's utterance from point 5a.
+c. Adjacent assistant's utterances are those which have just one utterance between them and nothing more in at least one of the dialogues.
+d. Two assistant's utterances with same intent are included in one group when conditions below are met:
+e. two utterances are not adjacent,
+f. two utterances have similar meanings,
+g. and one of next two conditions are met as well:
+h. Either intersection of their two sets is not empty,
+i. Or both sets are empty.
+j. For intersection in point 5h only, user's utterances with same or similar intents
+and user's utterances with opposite intents are considered to be the same.
+k. Adjacent assistant's utterances are directly connected to each other by the utterance between them
+so they cannot be in one node, meaning adjacent assistant's utterances must be in different groups strictly.
+l. Two assistant's utterances with different intents must be in different groups.
+m. When one assistant's utterance is the negation of another, these two assistant's utterances must be in different groups.
+n. Two assistant's utterances with different general meanings must be in different groups.
+o. Don't miss any assistant's utterance in all the dialogues.
+p. Of the three types of assistant's utterances:
+with a question mark at the end,
+with an exclamation mark at the end,
+affirmative without exclamation mark,
+each group can contain only one.
+q. Duplicates inside any of the groups must be removed.
+r. Adjacent assistant's utterances must be in different groups.
+6) It is forbidden to create nodes from user's utterances.
+7) There should not be any duplicated groups.
+8) Duplicates in the resulting nodes must be removed.
 9) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
-10) Add reason point to the graph with explanation how cycle start points have been chosen.
-I will give a list of dialogues, your task is to build a graph for this list according to the rules and examples above.
+10) Add reason point to the graph with your explanation why you didn't combine utterances in one node according to the rules.
+I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+List of dialogues: """
+
+auto_nodes = {
+    "nodes": [
+                            {
+                                "id": 1,
+                                "label": "start",
+                                "is_start": True,
+                                "utterances": [
+                                    "Welcome to AutoCare Service Center! How can I help you today?"
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "label": "ask_car_info",
+                                "is_start": False,
+                                "utterances": [
+                                    "Could you please provide your car's make, model and year?"
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "label": "ask_service_type",
+                                "is_start": False,
+                                "utterances": [
+                                    "What type of service do you need? We offer diagnostics, repairs, and routine maintenance."
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "label": "check_time_slots",
+                                "is_start": False,
+                                "utterances": [
+                                    "Let me check our available time slots for this service."
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "label": "offer_urgent_slot",
+                                "is_start": False,
+                                "utterances": [
+                                    "I notice this is a critical repair. We have an urgent slot available today at 4 PM with a 20% rush fee. Would you like this option, or prefer a regular appointment next week?"
+                                ]
+                            },
+                            {
+                                "id": 6,
+                                "label": "offer_regular_slots",
+                                "is_start": False,
+                                "utterances": [
+                                    "We have slots available tomorrow at 10 AM or Friday at 2 PM. Which would you prefer?"
+                                ]
+                            },
+                            {
+                                "id": 7,
+                                "label": "schedule_appointment",
+                                "is_start": False,
+                                "utterances": [
+                                    "I've scheduled your appointment. Would you like to add any additional services while your car is here?"
+                                ]
+                            },
+                            {
+                                "id": 8,
+                                "label": "oil_recommendation",
+                                "is_start": False,
+                                "utterances": [
+                                    "While your car is here, we recommend an oil change and filter replacement. Would you like to add these services?"
+                                ]
+                            },
+                            {
+                                "id": 9,
+                                "label": "ask_proceed_appointment",
+                                "is_start": False,
+                                "utterances": [
+                                    "The estimated cost for all services will be $X. Would you like to proceed with the appointment?"
+                                ]
+                            },
+                            {
+                                "id": 10,
+                                "label": "confirm_appointment",
+                                "is_start": False,
+                                "utterances": [
+                                    "Your appointment is confirmed. We'll see you then. Have a great day!"
+                                ]
+                            }
+                        ]
+}
+
+# Your task is to create a set of edges for dialogue graph corresponding to these dialogues.
+
+edges_1 = """Your input is a list of dialogues from customer chatbot system.
+Next is an example of the graph (set of rules) how chatbot system looks like - it is
+a set of nodes with assistant's utterances and a set of edges that are
+triggered by user requests: """
+
+edges_2 = """This is the end of the example. Next is set of nodes for the target graph: """
+
+# There can't be other edges or made up utterances in edges.
+# 3) Don't create edges with non existing or modified utterances.
+# Each user utterance is part of an edge that comes out of the node with the previous assistant utterance and enters the node with the next assistant utterance.
+# h. If user's utterance is last utterance in a dialogue, try to find an answer to the utterance with utterance from one of nodes.
+# Then create next edge connecting back to that node.
+
+# k. Don't miss any user's utterance in all the dialogues.
+# l. Don't create edges with non existing or modified utterances.
+# Don't try to modify edges based on your own uderstanding. Follow the instructions strictly.
+#Don't use grouping of utterances based on intents. Don't use intents at all. Use letter by letter comparison of utterances only.
+#  Don't modify source and target nodes, use them strictly as in dialogues.
+#Don't modifiy existing utterances. Use only original utterances.
+# Don't make up new utterances.
+# Follow these instructions strictly.
+
+
+
+# Go through all the specific occurencies of user's utterances in all the dialogues.
+# In given nodes part find node with assistant's utterance immediately preceding current ocurrence. This node will be source. 
+# In given nodes part find node with assistant's utterance immediately following current occurence. This node will be target.
+# Create edge with current user's utterance, source and target.
+# If edge with these source and target already exists,
+# just add current user's utterance to this edge if it is different from utterances existing in the edge.
+# Don't modify edge with these source and target which already has this utterance.
+#3) Resulting graph shall not loop any node back to same node.
+
+
+
+
+# Let's call a pair of user's utterance and previous assistant's utterance an occurence.
+# User's utterance of each occurence in dialogues is part of an edge that comes out of the node with the previous assistant utterance
+# and enters the node with the next assistant utterance.
+# If occurence doesn't have following assistant's utterances in all dialogues, you must find a continuation of 
+# this occurence with assistant's utterance from one of nodes and connect new edge with this user's utterance
+# to that node. This node is kind of problem elaboration stage. Typically it is clarifying question to previous user's phrase.
+
+# Go through all the specific occurencies of user's utterances in all the dialogues.
+# In given nodes part find node with assistant's utterance previous to current ocurrence. This node will be source. 
+# In given nodes part find node with assistant's utterance next to following current occurence. This node will be target.
+# Create edge with current user's utterance, source and target.
+# If edge with these source and target already exists,
+# just add current user's utterance to this edge if it is different from utterances existing in the edge.
+
+
+# Don't modify source and target in edges, use them strictly as in dialogues.
+# Don't miss any occurence of user's utterances in all the dialogues.
+
+# edges_3 = """This is the end of nodes part.
+# So your task is to add edges part to these nodes.
+# **Rules:**
+# 1) Nodes must be assistant's utterances, edges must be utterances from the user.
+# 2) Edges of the graph shall be created only as follows:
+# User's utterance in dialogues is part of an edge that comes out of the node with the previous assistant utterance
+# and enters the node with the next assistant utterance.
+# Pay attention to the fact that same user's utterance can connect different pairs of assistant's utterances
+# so can be part of several different edges.
+# When several different utterances connect one pair of nodes, edge must contain all these utterances.
+# In case of just one node match don't combine several utterances in one edge.
+# If specific pair of user's utterance and previous assistant's utterance doesn't have following assistant's utterances in all dialogues, you must find a continuation of 
+# this pair with assistant's utterance from one of nodes and connect new edge with this user's utterance
+# to that node. This node is kind of problem elaboration stage.
+# Typically it is clarifying question to previous user's phrase.
+# 3) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 4) Add reason point to the graph with your explanation why you missed some occurences of user's utterances.
+# I will give a list of dialogues, your task is to build a graph for this list and nodes part above according to the rules and examples above.
+# List of dialogues: """
+# b. Pay attention to the fact that same user's utterance can connect different pairs of assistant's utterances
+# so can be part of several different edges.
+# c. When several different utterances connect one pair of nodes, edge must contain all these utterances.
+# d. In case of just one node (source or target) match don't combine several utterances in one edge,
+# but instead build several edges going out of the source or entering the target, even if user's utterances match.
+# b. Same user's utterance can connect different pairs of nodes
+# so be an utterance in several different edges.
+
+
+# f. If specific pair of user's utterance and previous assistant's utterance terminates a dialogue,
+# you must find the most suitable continuation of a dialogue flow
+# for this pair with assistant's utterance from one of nodes and create new edge connecting this user's utterance
+# to that node.
+# g. To find such a node for the closing user's utterance try to find direct or indirect answer
+# to this user's query in some of dialogues and use node with that answer.
+# It is necessary to choose the most suitable answer.
+# h. In case of the terminal user's utterance, from two equal candidates choose:
+# firstly - one with similar phrases, then one closest to the beginning of the graph.
+# i. If nothing is found for our closing utterance, search for a node with current problem elaboration step.
+# Typically it is a clarifying question to current terminal user's utterance.
+# c. Don't try connecting nodes using logical reasoning, use rule 2a only.
+
+# b. Don't connect nodes using logical reasoning, use rule 2a only.
+# c. Different user's utterances are combined in one edge if only both their previous utterances match
+# and both their next utterances match, at the same time.
+
+# All user responses were categorized based on their corresponding assistant prompts. Special attention was given to user utterances that caused the dialogue flow to loop back
+# or branch differently, such as changing the service type, ensuring that all possible paths taken in the dialogues are accurately represented in the graph
+
+
+# a. Every user's utterance in dialogues is one of utterances of an edge that comes out of the node with the previous assistant utterance
+# and enters the node with the next assistant utterance.
+
+
+# 3) Not a single utterance can be missed in created edges.
+# 4) Don't create edges with non-existent or modified utterances.
+
+# f. Next 4 steps are for terminal utterances only.
+# g. If user's utterance terminates a dialogue, you must find the most suitable continuation of a dialogue flow
+# for the pair source-user's utterance, with assistant's utterance from one of nodes and create new edge connecting this user's utterance
+# to that node.
+# h. To find such a node for the closing user's utterance try to find direct or indirect answer
+# to this user's query in some of dialogues and use node with that answer.
+# It is necessary to choose the most suitable answer.
+# i. In case of the terminal user's utterance, from two equal candidates choose:
+# firstly - one with similar phrases, then one closest to the beginning of the graph.
+# j. If nothing is found for our closing utterance, search for a node with current problem elaboration step.
+# Typically it is a clarifying question to current terminal user's utterance.  
+
+# 3) Don't modify source and target in edges, use them strictly as in dialogues.
+# 4) Don't create edges with non-existent or modified utterances.
+
+# 3) Don't modify source or target in edges, use them strictly as in dialogues
+# 4) In case when two or more user's utterances have common source only, but not target, don't combine several utterances in one edge,
+# but instead build several edges going out of the source, even if user's utterances match.
+# 5) In case when two or more user's utterances have common target only, but not source, don't combine several utterances in one edge,
+# but instead build several edges entering the target, even if user's utterances match.
+# 3) No edges can be created except according to points 2a-2f. 
+
+# h. In case of the terminal user's utterance, from two equal candidates choose:
+# firstly - one with similar phrases, then one closest to the beginning of the graph
+
+# f. If user's utterance terminates a dialogue, you must find the most suitable continuation of a dialogue flow
+# for the pair source-user's utterance, with assistant's utterance from one of nodes and create new edge connecting this user's utterance
+# to that node.
+# g. To find such a node for the closing user's utterance try to find direct or indirect answer
+# to this user's query in some of dialogues and use node with that answer.
+# It is necessary to choose the most suitable answer.
+# h. In case of the terminal user's utterance, from two equal candidates choose one with similar phrases.
+# i. If nothing is found for our closing utterance, search for a node with current problem elaboration step.
+# Typically it is a clarifying question to current terminal user's utterance.  
+# 3) To create nodes in ways other than in point 2 is forbidden.
+
+# 2) The edges are created according to the following cycle only:
+# a. Take user's utterance from dialogue.
+# b. Source of an edge is node with immediately previous assistant's utterance in dialogue.
+# c. Target of an edge is node with next assistant's utterance in dialogue.
+# d. If edge with source from point 2b and target from point 2c doesn't exist yet, create a new edge with parameters from 2a-2c.
+# e. If edge with source from point 2b and target from point 2c already exists, just add user's utterance from 2a to the edge.
+# f. Take next user's utterance and go back to step 2a until all user's utterances in dialogues are through.
+
+# 5) In case when two or more user's utterances have common source only (targets are different), don't combine several utterances in one edge,
+# but instead build several edges going out of the source, even if user's utterances match.
+# 6) In case when two or more user's utterances have common target only (sources are different), don't combine several utterances in one edge,
+# but instead build several edges entering the target, even if user's utterances match.
+
+# 6) One of utterances of an edge is an user's utterance between node in point 4) and node in point 5).
+# 7) There cannot be other utterances in any edge other than defined in point 6).
+# 1) To generate edges of a dialogue don't use any other matching between utterances other than letter by letter comparison.
+# 2) It is forbidden to use intents or any other fuzzy comparison.
+
+# edges_3 = """This is the end of nodes part.
+# So your task is to add edges part to these nodes.
+# **Rules:**
+
+# 1) Nodes are assistant's utterances, edges are utterances from the user.
+# 2) Source of an edge is node with immediately previous assistant's utterance in a dialogue.
+# 3) Target of an edge is node with next assistant's utterance in dialogue.
+# 4) Triggering the transition from source to target is defined exclusively
+# based on conversation flow from dialogues in your input.
+# 5) There can be more than one utterance in one edge.
+# 6) Not a single utterance from all dialogues to be missed in created edges.
+# 7) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 8) Add reason point to the graph with your explanation why utterance
+# "Okay, please check availability" triggers transition from node 4 to node 5.
+# Why utterance "Yes, add the oil change please" triggers transition from node 7 to node 8.
+# Why utterance  "Yes, I'll take the urgent slot" triggers transition from node 5 to node 6.
+# Why utterance  "Actually, I'd like to change the service type" triggers transition from node 7 to node 3.
+# I will give a list of dialogues, your task is to build a graph based on the list and set of nodes above according to the rules and examples above.
+# List of dialogues: """
+
+# 5) There can be more than one utterance in one edge.
+
+# edges_3 = """This is the end of nodes part.
+# **Rules:**
+
+# 1) Nodes are assistant's utterances, edges are utterances from the user.
+# 2) Source of an edge is node with immediately previous assistant's utterance in a dialogue.
+# 3) Target of an edge is node with next assistant's utterance in dialogue.
+# 4) Triggering the transition from source to target is defined exclusively
+# based on conversation flow from dialogues in your input.
+
+# Your task is to create set of edges based on rules 1-4 only. Don't use any other considerations to create edges.
+# It is forbidden to create edges based on some other reasoning.
+
+# 5) Not a single utterance from all dialogues to be missed in created edges.
+# 6) Don't create edges with non existent or modified utterances.
+# 7) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 8) Add reason point to the graph with your explanation if you ignore my task and answer arbitrarily.
+# I will give a list of dialogues, your return is a ready dialogue graph (set of nodes with set of edges you generated above).
+# List of dialogues: """
+
+
+edges_3 = """This is the end of nodes part.
+
+Please do the following:
+Enumerate all the unique triplets (first assitant's utterance, next user's utterance, next assistant's utterance) from all the dialogues.
+For every node find triplet with first assistant's utterance from that node, and create edge with source as the node,
+utterance as next user's utterance from the triplet, and target as node with next assistant's utterance from triplet.
+If edge with such source and target already exists, just add next user's utterance to the edge.
+You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+Add reason point to the graph with your explanation if you ignore my task and answer arbitrarily.
+I will give a list of dialogues, your return is a ready dialogue graph (set of nodes with set of edges you generated above).
+List of dialogues: """
+
+three_1 = """Your input is a dialogue graph from customer chatbot system - it is
+a set of nodes with assistant's utterances and a set of edges that are
+triggered by user requests: """
+
+three_2 = """This is the end of input graph.
+**Rules:**
+1) is_start field in the node is an entry point to the whole graph.
+2) Nodes are assistant's utterances, edges are utterances from the user.
+Please consider the graph above, list of dialogues below and do the following:
+
+3) For every user's utterance not present in input graph, you must find the most suitable continuation of a dialogue flow
+for the sequence of immediately previous assistant's utterance and user's utterance,
+with assistant's utterance from one of nodes, and create new edge connecting this user's utterance to that node.
+4) To find such a node try to find direct or indirect answer
+to this user's query in some of dialogues and use node with that answer.
+5) It is necessary to choose the most suitable answer.
+From two equal candidates choose:
+firstly - one with similar phrases, then one closest to the beginning of the graph.
+6) If nothing is found, search for a node with current problem elaboration step.
+7) Typically it is a clarifying question to current user's utterance.
+8) So it is necessary to add edges to the input graph from utterances which exist in dialogues but absent in the graph. 
+9) Add reason point to the graph with your explanation if you ignore my task and answer arbitrarily.
+I will give a list of dialogues, your return is a fixed version of dialogue graph above according to the rules above.
 List of dialogues: """
 
 

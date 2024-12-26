@@ -5,7 +5,9 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 #import chatsky_llm_autoconfig.algorithms.dialogue_augmentation
 # import chatsky_llm_autoconfig.algorithms.graph_generation
 # import chatsky_llm_autoconfig.algorithms.single_graph_generation
-import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
+#import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
+# import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
+import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
 
 import json
 from datasets import load_dataset
@@ -22,11 +24,11 @@ from chatsky_llm_autoconfig.metrics.automatic_metrics import (
 )
 from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, are_theme_valid
 from chatsky_llm_autoconfig.utils import (
-    EnvSettings,
     save_json,
     read_json,
     # graph2comparable
 )
+from chatsky_llm_autoconfig.settings import EnvSettings
 import datetime
 from colorama import Fore
 from langchain_openai  import ChatOpenAI
@@ -57,7 +59,6 @@ def run_all_algorithms():
     total_metrics = {}
     for class_ in algorithms:
 
-        print("TYPE: ", algorithms[class_]["input_type"], algorithms[class_]["output_type"])
         class_instance = algorithms[class_]["type"]()
         metrics = {}
 
@@ -121,12 +122,11 @@ def run_all_algorithms():
                 if result:
                     test_list =  [{next(iter(case)): [Graph(graph_dict=r) for r in case[next(iter(case))]]} for case in result]
 
-            print("LIST: ", test_list)
+            # print("LIST: ", test_list)
             if not test_list:
                 for case in dialogue_to_graph:
                     case_list = []
                     cur_list = []
-                    print("TYPE: ", algorithms[class_]["input_type"])
                     if algorithms[class_]["input_type"] is Dialogue:
                         for test_dialogue in [Dialogue.from_list(c["messages"]) for c in case["dialogues"]]:
                             result_graph = class_instance.invoke(test_dialogue)

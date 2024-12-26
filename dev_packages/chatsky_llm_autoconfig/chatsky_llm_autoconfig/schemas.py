@@ -20,6 +20,10 @@ class DialogueGraph(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
+class DialogueNodes(BaseModel):
+    nodes: List[Node] = Field(description="List of nodes representing assistant states")
+    reason: str = Field(description="explanation")
+
 class CompareResponse(BaseModel):
     result: bool = Field(description="compare result")
     reason: str = Field(description="explanation")

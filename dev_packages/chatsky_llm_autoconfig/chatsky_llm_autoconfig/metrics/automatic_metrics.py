@@ -11,11 +11,12 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 
 import networkx as nx
 from chatsky_llm_autoconfig.metrics.jaccard import jaccard_edges, jaccard_nodes, collapse_multiedges
-from chatsky_llm_autoconfig.metrics.embedder import emb_list, get_embedding, get_reranking
+from chatsky_llm_autoconfig.metrics.embedder import emb_list, get_embedding, get_reranking, get_2_rerankings
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.schemas import CompareResponse
-from chatsky_llm_autoconfig.utils import call_llm_api, EnvSettings, graph2list, nodes2list, get_diagonals, get_diagonal, graph_order
+from chatsky_llm_autoconfig.utils import call_llm_api, graph2list, nodes2list, get_diagonals, get_diagonal, graph_order
+from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.prompts import (
     compare_graphs_prompt, graph_example_1, result_form
 )
@@ -161,21 +162,29 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
     nodes1_list = nodes2list(g1)
     nodes2_list = nodes2list(g2)
 
+    g1_list, n1, len1 = graph2list(g1)
+    g2_list, n2, len2 = graph2list(g2)
+
     # print("G1: ", g1_list, "\n")
     # print("G2: ", g2_list, "\n")
 
-    nodes_matrix = get_reranking(nodes1_list, nodes2_list)
+    nodes_matrix, matrix = get_2_rerankings(nodes1_list, nodes2_list, g1_list, g2_list)
     nodes_max = list(np.argmax(nodes_matrix, axis=1))
     if len(set(nodes_max)) < len(nodes1_list):
         return False
 
-    g1_list, n1 = graph2list(g1)
-    g2_list, n2 = graph2list(g2)
+
+    print("LENS: ", len1, len2)
     if n1 != n2:
         return False
-    matrix = get_reranking(g1_list, g2_list)
+    
+
+    # matrix = get_reranking(g1_list, g2_list)
     max = list(np.argmax(matrix, axis=1))
+    print("MAX: ", max)
     if len(set(max)) < len(g1_list) or nodes_max != max:
+        return False
+    if any([len1[i] != len2[max[i]] for i in range(len(max))]):
         return False
     print("NODES: ", np.min(np.max(nodes_matrix, axis=1)))
     print("ALL: ", np.min(np.max(matrix, axis=1)))

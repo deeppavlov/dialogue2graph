@@ -1,0 +1,568 @@
+{
+    "o1-mini": {
+        "list_graph_generation_prompt": [
+            {
+                "booking a hotel room": [
+                    {
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2,
+                                "utterances": [
+                                    "I want to book a duplex room"
+                                ]
+                            },
+                            {
+                                "source": 4,
+                                "target": 5,
+                                "utterances": [
+                                    "Here it is"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 3,
+                                "utterances": [
+                                    "One night",
+                                    "Three nights"
+                                ]
+                            },
+                            {
+                                "source": 3,
+                                "target": 4,
+                                "utterances": [
+                                    "No, thanks",
+                                    "Okay, it will do"
+                                ]
+                            },
+                            {
+                                "source": 3,
+                                "target": 6,
+                                "utterances": [
+                                    "No, thanks, this does not suit me"
+                                ]
+                            },
+                            {
+                                "source": 6,
+                                "target": 7,
+                                "utterances": [
+                                    "No, thanks"
+                                ]
+                            }
+                        ],
+                        "nodes": [
+                            {
+                                "id": 1,
+                                "label": "start",
+                                "is_start": true,
+                                "utterances": [
+                                    "Good evening, how can I help?"
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "label": "ask_duration",
+                                "is_start": false,
+                                "utterances": [
+                                    "How long are you going to stay?"
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "label": "provide_room_info",
+                                "is_start": false,
+                                "utterances": [
+                                    "We have a vacant room. Do you need anything else?",
+                                    "Unfortunately we do not have a vacant room for these dates, but we can offer two separate single rooms. Would this be acceptable?"
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "label": "request_ID",
+                                "is_start": false,
+                                "utterances": [
+                                    "Okay, now I need your ID card."
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "label": "farewell",
+                                "is_start": false,
+                                "utterances": [
+                                    "Thank you. This is your key, have a good stay!"
+                                ]
+                            },
+                            {
+                                "id": 6,
+                                "label": "offer_help",
+                                "is_start": false,
+                                "utterances": [
+                                    "Can I help you with anything else?"
+                                ]
+                            },
+                            {
+                                "id": 7,
+                                "label": "goodbye",
+                                "is_start": false,
+                                "utterances": [
+                                    "Okay, goodbye!"
+                                ]
+                            }
+                        ],
+                        "reason": ""
+                    }
+                ]
+            },
+            {
+                "abstract purchase": [
+                    {
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2,
+                                "utterances": [
+                                    "Yes"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 3,
+                                "utterances": [
+                                    "I want X"
+                                ]
+                            },
+                            {
+                                "source": 3,
+                                "target": 5,
+                                "utterances": [
+                                    "Yes"
+                                ]
+                            },
+                            {
+                                "source": 4,
+                                "target": 6,
+                                "utterances": [
+                                    "No"
+                                ]
+                            },
+                            {
+                                "source": 5,
+                                "target": 4,
+                                "utterances": [
+                                    "I want to add Y"
+                                ]
+                            },
+                            {
+                                "source": 6,
+                                "target": 7,
+                                "utterances": [
+                                    "No"
+                                ]
+                            },
+                            {
+                                "source": 3,
+                                "target": 6,
+                                "utterances": [
+                                    "No"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 4,
+                                "utterances": [
+                                    "I want X"
+                                ]
+                            },
+                            {
+                                "source": 4,
+                                "target": 5,
+                                "utterances": [
+                                    "Yes"
+                                ]
+                            },
+                            {
+                                "source": 5,
+                                "target": 6,
+                                "utterances": [
+                                    "I want to add Y"
+                                ]
+                            }
+                        ],
+                        "nodes": [
+                            {
+                                "id": 1,
+                                "label": "start",
+                                "is_start": true,
+                                "utterances": [
+                                    "Good morning, would you like to make an order?"
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "label": "ask_order",
+                                "is_start": false,
+                                "utterances": [
+                                    "What would you like to order?"
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "label": "ask_add_to_order_specific",
+                                "is_start": false,
+                                "utterances": [
+                                    "Do you want to add anything to X?"
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "label": "ask_add_to_order_general",
+                                "is_start": false,
+                                "utterances": [
+                                    "Do you want to add anything else?"
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "label": "ask_what_to_add",
+                                "is_start": false,
+                                "utterances": [
+                                    "What would you like to add?"
+                                ]
+                            },
+                            {
+                                "id": 6,
+                                "label": "ask_order_something_else",
+                                "is_start": false,
+                                "utterances": [
+                                    "Do you want to order something else?"
+                                ]
+                            },
+                            {
+                                "id": 7,
+                                "label": "provide_check",
+                                "is_start": false,
+                                "utterances": [
+                                    "Here is your check, we will call you when it will be ready"
+                                ]
+                            }
+                        ],
+                        "reason": ""
+                    }
+                ]
+            },
+            {
+                "chatting with a smart assistant": [
+                    {
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 1,
+                                "utterances": [
+                                    "Chatting"
+                                ]
+                            },
+                            {
+                                "source": 1,
+                                "target": 2,
+                                "utterances": [
+                                    "What is the weather today?"
+                                ]
+                            },
+                            {
+                                "source": 1,
+                                "target": 3,
+                                "utterances": [
+                                    "Turn on the music"
+                                ]
+                            },
+                            {
+                                "source": 1,
+                                "target": 4,
+                                "utterances": [
+                                    "I want to set up a timer"
+                                ]
+                            }
+                        ],
+                        "nodes": [
+                            {
+                                "id": 1,
+                                "label": "start",
+                                "is_start": true,
+                                "utterances": [
+                                    "Chatting"
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "label": "proceeding_to_weather_skill",
+                                "is_start": false,
+                                "utterances": [
+                                    "Proceeding to weather skill"
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "label": "proceeding_to_music_skill",
+                                "is_start": false,
+                                "utterances": [
+                                    "Proceeding to music skill"
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "label": "proceeding_to_timer_skill",
+                                "is_start": false,
+                                "utterances": [
+                                    "Proceeding to timer skill"
+                                ]
+                            }
+                        ],
+                        "reason": "Combined multiple instances of the 'Chatting' utterance into a single node, which violates Rule h that requires adjacent assistant utterances to be in different groups."
+                    }
+                ]
+            },
+            {
+                "taking a loan in a bank": [
+                    {
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2,
+                                "utterances": [
+                                    "I want to take a loan"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 3,
+                                "utterances": [
+                                    "No"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 2,
+                                "utterances": [
+                                    "Yes"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 4,
+                                "utterances": [
+                                    "No"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 5,
+                                "utterances": [
+                                    "Yes"
+                                ]
+                            },
+                            {
+                                "source": 5,
+                                "target": 6,
+                                "utterances": [
+                                    "Ready"
+                                ]
+                            }
+                        ],
+                        "nodes": [
+                            {
+                                "id": 1,
+                                "label": "start",
+                                "is_start": true,
+                                "utterances": [
+                                    "Is there anything I can help you with?"
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "label": "client_status",
+                                "is_start": false,
+                                "utterances": [
+                                    "Are you a client of our bank?",
+                                    "Have you filled a loan application form?"
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "label": "create_deposit",
+                                "is_start": false,
+                                "utterances": [
+                                    "To become a client you need to create a deposit in our bank"
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "label": "send_form",
+                                "is_start": false,
+                                "utterances": [
+                                    "I will send you the form and you can come back once you fill it"
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "label": "loan_proceed",
+                                "is_start": false,
+                                "utterances": [
+                                    "Are you ready to proceed with your loan application form, or you have other questions?"
+                                ]
+                            },
+                            {
+                                "id": 6,
+                                "label": "contact_manager",
+                                "is_start": false,
+                                "utterances": [
+                                    "Okay, I will contact you with our manager"
+                                ]
+                            }
+                        ],
+                        "reason": ""
+                    }
+                ]
+            },
+            {
+                "coffee shop": [
+                    {
+                        "edges": [
+                            {
+                                "source": 1,
+                                "target": 2,
+                                "utterances": [
+                                    "Tea"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 3,
+                                "utterances": [
+                                    "Green tea"
+                                ]
+                            },
+                            {
+                                "source": 1,
+                                "target": 4,
+                                "utterances": [
+                                    "Coffee"
+                                ]
+                            },
+                            {
+                                "source": 5,
+                                "target": 6,
+                                "utterances": [
+                                    "Yes"
+                                ]
+                            },
+                            {
+                                "source": 6,
+                                "target": 8,
+                                "utterances": [
+                                    "No, thanks"
+                                ]
+                            },
+                            {
+                                "source": 4,
+                                "target": 5,
+                                "utterances": [
+                                    "Espresso",
+                                    "Latte"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 5,
+                                "utterances": [
+                                    "Latte tea"
+                                ]
+                            },
+                            {
+                                "source": 2,
+                                "target": 7,
+                                "utterances": [
+                                    "Black tea"
+                                ]
+                            },
+                            {
+                                "source": 7,
+                                "target": 8,
+                                "utterances": [
+                                    "Tea bags please"
+                                ]
+                            }
+                        ],
+                        "nodes": [
+                            {
+                                "id": 1,
+                                "label": "start",
+                                "is_start": true,
+                                "utterances": [
+                                    "Welcome to our coffee shop, what would you like?"
+                                ]
+                            },
+                            {
+                                "id": 2,
+                                "label": "ask_tea",
+                                "is_start": false,
+                                "utterances": [
+                                    "Which tea would you like?"
+                                ]
+                            },
+                            {
+                                "id": 3,
+                                "label": "out_of_green_tea",
+                                "is_start": false,
+                                "utterances": [
+                                    "Sorry, but we are out of green tea at the moment"
+                                ]
+                            },
+                            {
+                                "id": 4,
+                                "label": "ask_coffee",
+                                "is_start": false,
+                                "utterances": [
+                                    "Which coffee would you like?"
+                                ]
+                            },
+                            {
+                                "id": 5,
+                                "label": "ask_addons",
+                                "is_start": false,
+                                "utterances": [
+                                    "Would you need a glass of water?",
+                                    "Do you need lactoze-free milk?"
+                                ]
+                            },
+                            {
+                                "id": 6,
+                                "label": "ask_syrup",
+                                "is_start": false,
+                                "utterances": [
+                                    "Do you need any syrup?"
+                                ]
+                            },
+                            {
+                                "id": 7,
+                                "label": "ask_tea_preparation",
+                                "is_start": false,
+                                "utterances": [
+                                    "Tea bags or loose tea?"
+                                ]
+                            },
+                            {
+                                "id": 8,
+                                "label": "ask_here_or_takeaway",
+                                "is_start": false,
+                                "utterances": [
+                                    "Here or takeaway?"
+                                ]
+                            }
+                        ],
+                        "reason": ""
+                    }
+                ]
+            }
+        ]
+    }
+}

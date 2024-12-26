@@ -4,32 +4,18 @@ import networkx as nx
 import random
 import json
 from chatsky_llm_autoconfig.graph import Graph
+from chatsky_llm_autoconfig.dialogue import Dialogue
+from chatsky_llm_autoconfig.vectors import DialogueStore, NodeStore
+from chatsky_llm_autoconfig.settings import EnvSettings
+from chatsky_llm_autoconfig.metrics.embedder import compare_strings
+
 from langchain.schema import HumanMessage
-from typing import Optional
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
+from langchain_community.cross_encoders.huggingface import HuggingFaceCrossEncoder
 
-class EnvSettings(BaseSettings, case_sensitive=True):
-
-    model_config = SettingsConfigDict(env_file='dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/.env', env_file_encoding='utf-8')
-
-    OPENAI_API_KEY: Optional[str]
-    OPENAI_BASE_URL: Optional[str]
-    GENERATION_MODEL_NAME: Optional[str]
-    COMPARE_MODEL_NAME: Optional[str]
-    GENERATION_SAVE_PATH: Optional[str]
-    FORMATTER_MODEL_NAME: Optional[str]
-    TEST_DATA_PATH: Optional[str]
-    RESULTS_PATH: Optional[str]
-    EMBEDDER_MODEL: Optional[str]
-    EMBEDDER_THRESHOLD: Optional[float]
-    EMBEDDER_DEVICE: Optional[str]
-    RERANKER_MODEL: Optional[str]
-    RERANKER_THRESHOLD: Optional[float]
-    SIM_THRESHOLD: Optional[float]
-    HUGGINGFACE_TOKEN: Optional[str]
-    TEST_DATASET: Optional[str] 
-
+env_settings = EnvSettings()
+# evaluator = HuggingFaceCrossEncoder(model_name=env_settings.RERANKER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
 
 # all func are currently unused
 def check_if_nodes_identical(graph_1: Graph, graph_2: Graph):
@@ -216,6 +202,7 @@ def graph_order(graph: dict) -> dict:
 def graph2list(graph: dict) -> tuple[list,int]:
     res = []
     n_edges = 0
+    lens = []
 
     # node = [node for node in graph["nodes"] if node["is_start"]][0]
     for node in graph["nodes"]:
@@ -224,13 +211,14 @@ def graph2list(graph: dict) -> tuple[list,int]:
         for n_utt in node['utterances']:
             utt += n_utt + " "
         for edge in edges:
+            lens.append(len(edge['utterances']))
             for e_utt in edge['utterances']:
                 utt += e_utt + " "
                 n_edges += 1
         res.append(utt)
 
         # node = [node for node in graph["nodes"] if node["id"]==edge['target']][0] 
-    return res, n_edges
+    return res, n_edges, lens
     # return [n['utterances'][0]+" "+e['utterances'][0] for n,e in zip(graph['nodes'], graph['edges'])]
 
 def nodes2list(graph: dict) -> list:
@@ -256,3 +244,36 @@ def get_diagonal(graph, i):
     result['edges'] = graph['edges'][i:] + graph['edges'][:i]
     result['nodes'] = graph['nodes'][i:] + graph['nodes'][:i]
     return result
+
+def nodes2graph(nodes: list, dialogues: list[Dialogue], reason: str, embeddings: HuggingFaceEmbeddings):
+    edges = []
+    node_store = NodeStore(nodes, embeddings)
+    for d in dialogues:
+        texts = d.to_list()
+        print("LEN: ", len(texts))
+        store = DialogueStore(texts, embeddings)
+        for n in nodes:
+            for u in n['utterances']:
+                ids = store.search_assistant(u)
+                print("ASSISTANT: ", u, ids)
+                if ids:
+                    print("IF")
+                    for id,s in zip(ids, store.get_user(ids=ids)):
+                        print("USER: ",s, id)
+                        if len(texts) > 2*(int(id)+1):
+                            target = node_store.find_node(texts[2*(int(id)+1)]['text'])
+                            print("TARGET: ", target, n["id"])
+                            existing = [e for e in edges if e['source']==n['id'] and e['target']==target]
+                            print("EXIST: ", edges)
+                            if existing:
+
+                                # to_score = [(e,s) for e in existing[0]['utterances']]
+                                # score = evaluator.score(to_score)
+                                # if np.max(np.array(score)) < env_settings.EMBEDDER_TYPO:
+                                if not any([compare_strings(e,s,embeddings) for e in existing[0]['utterances']]):
+                                    # print("COMP: ", to_score, score)
+                                    edges = [e for e in edges if e['source']!=n['id'] or e['target']!=target]
+                                    edges.append({'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
+                            else:
+                                edges.append({'source': n['id'], 'target':target, 'utterances': [s]})
+    return {"edges": edges, "nodes": nodes, "reason": reason}

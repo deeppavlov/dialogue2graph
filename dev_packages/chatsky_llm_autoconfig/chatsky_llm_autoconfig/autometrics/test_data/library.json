@@ -1,0 +1,647 @@
+[
+    {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "welcome",
+              "is_start": true,
+              "utterances": [
+                "Welcome to the City Library! How may I assist you today?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "request_card_number",
+              "is_start": false,
+              "utterances": [
+                "Could you please provide your library card number?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "ask_book_details",
+              "is_start": false,
+              "utterances": [
+                "What book are you looking for?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "check_availability",
+              "is_start": false,
+              "utterances": [
+                "Let me check if the book is currently available."
+              ]
+            },
+            {
+              "id": 5,
+              "label": "offer_alternatives",
+              "is_start": false,
+              "utterances": [
+                "This book is currently checked out. Would you like to place a hold, or would you prefer to see similar books that are available now?"
+              ]
+            },
+            {
+              "id": 6,
+              "label": "place_hold",
+              "is_start": false,
+              "utterances": [
+                "I've placed a hold on the book for you. You'll be notified by email when it becomes available. Would you like to search for any other books?"
+              ]
+            },
+            {
+              "id": 7,
+              "label": "show_similar",
+              "is_start": false,
+              "utterances": [
+                "We have these similar books available. Would you like to check out any of them?"
+              ]
+            },
+            {
+              "id": 8,
+              "label": "checkout_process",
+              "is_start": false,
+              "utterances": [
+                "Great! The book is available. Would you like to check it out now?"
+              ]
+            },
+            {
+              "id": 9,
+              "label": "confirm_checkout",
+              "is_start": false,
+              "utterances": [
+                "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?"
+              ]
+            },
+            {
+              "id": 10,
+              "label": "end",
+              "is_start": false,
+              "utterances": [
+                "Thank you for using our library services. Have a great day!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'd like to borrow a book"
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "My card number is L123456"
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "I'm looking for The Great Gatsby",
+                "I'm looking for To Kill a Mockingbird",
+                "I'm looking for 1984"
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Okay, please check"
+              ]
+            },
+            {
+              "source": 4,
+              "target": 8,
+              "utterances": [
+                "Alright"
+              ]
+            },
+            {
+              "source": 5,
+              "target": 6,
+              "utterances": [
+                "I'd like to place a hold"
+              ]
+            },
+            {
+              "source": 5,
+              "target": 7,
+              "utterances": [
+                "I'd like to see similar books"
+              ]
+            },
+            {
+              "source": 6,
+              "target": 3,
+              "utterances": [
+                "Yes, I'd like to find another book"
+              ]
+            },
+            {
+              "source": 6,
+              "target": 10,
+              "utterances": [
+                "No, that's all for today"
+              ]
+            },
+            {
+              "source": 7,
+              "target": 8,
+              "utterances": [
+                "Yes, I'll take this one"
+              ]
+            },
+            {
+              "source": 7,
+              "target": 3,
+              "utterances": [
+                "No, I'd like to look for something else"
+              ]
+            },
+            {
+              "source": 8,
+              "target": 9,
+              "utterances": [
+                "Yes, I'd like to check it out"
+              ]
+            },
+            {
+              "source": 9,
+              "target": 3,
+              "utterances": [
+                "Yes, I'd like to find another book"
+              ]
+            },
+            {
+              "source": 9,
+              "target": 10,
+              "utterances": [
+                "No, that's all for today"
+              ]
+            }
+          ]
+        },
+        "topic": "library",
+        "dialogues": [
+        {
+          "messages": [
+            {
+              "text": "Welcome to the City Library! How may I assist you today?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to borrow a book",
+              "participant": "user"
+            },
+            {
+              "text": "Could you please provide your library card number?",
+              "participant": "assistant"
+            },
+            {
+              "text": "My card number is L123456",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for The Great Gatsby",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Alright",
+              "participant": "user"
+            },
+            {
+              "text": "Great! The book is available. Would you like to check it out now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to check it out",
+              "participant": "user"
+            },
+            {
+              "text": "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "No, that's all for today",
+              "participant": "user"
+            },
+            {
+              "text": "Thank you for using our library services. Have a great day!",
+              "participant": "assistant"
+            }
+          ],
+          "topic": "Simple checkout path"
+        },
+        {
+          "messages": [
+            {
+              "text": "Welcome to the City Library! How may I assist you today?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to borrow a book",
+              "participant": "user"
+            },
+            {
+              "text": "Could you please provide your library card number?",
+              "participant": "assistant"
+            },
+            {
+              "text": "My card number is L123456",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for The Great Gatsby",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Okay, please check",
+              "participant": "user"
+            },
+            {
+              "text": "This book is currently checked out. Would you like to place a hold, or would you prefer to see similar books that are available now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to place a hold",
+              "participant": "user"
+            },
+            {
+              "text": "I've placed a hold on the book for you. You'll be notified by email when it becomes available. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "No, that's all for today",
+              "participant": "user"
+            },
+            {
+              "text": "Thank you for using our library services. Have a great day!",
+              "participant": "assistant"
+            }
+          ],
+          "topic": "Place hold path"
+        },
+        {
+          "messages": [
+            {
+              "text": "Welcome to the City Library! How may I assist you today?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to borrow a book",
+              "participant": "user"
+            },
+            {
+              "text": "Could you please provide your library card number?",
+              "participant": "assistant"
+            },
+            {
+              "text": "My card number is L123456",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for The Great Gatsby",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Okay, please check",
+              "participant": "user"
+            },
+            {
+              "text": "This book is currently checked out. Would you like to place a hold, or would you prefer to see similar books that are available now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to place a hold",
+              "participant": "user"
+            },
+            {
+              "text": "I've placed a hold on the book for you. You'll be notified by email when it becomes available. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to find another book",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for 1984",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Alright",
+              "participant": "user"
+            },
+            {
+              "text": "Great! The book is available. Would you like to check it out now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to check it out",
+              "participant": "user"
+            },
+            {
+              "text": "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "No, that's all for today",
+              "participant": "user"
+            },
+            {
+              "text": "Thank you for using our library services. Have a great day!",
+              "participant": "assistant"
+            }
+          ],
+          "topic": "Place hold path"
+        },
+        {
+          "messages": [
+            {
+              "text": "Welcome to the City Library! How may I assist you today?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to borrow a book",
+              "participant": "user"
+            },
+            {
+              "text": "Could you please provide your library card number?",
+              "participant": "assistant"
+            },
+            {
+              "text": "My card number is L123456",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for The Great Gatsby",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Okay, please check",
+              "participant": "user"
+            },
+            {
+              "text": "This book is currently checked out. Would you like to place a hold, or would you prefer to see similar books that are available now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to see similar books",
+              "participant": "user"
+            },
+            {
+              "text": "We have these similar books available. Would you like to check out any of them?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'll take this one",
+              "participant": "user"
+            },
+            {
+              "text": "Great! The book is available. Would you like to check it out now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to check it out",
+              "participant": "user"
+            },
+            {
+              "text": "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "No, that's all for today",
+              "participant": "user"
+            },
+            {
+              "text": "Thank you for using our library services. Have a great day!",
+              "participant": "assistant"
+            }
+          ],
+          "topic": "Similar book checkout path"
+        },
+        {
+          "messages": [
+            {
+              "text": "Welcome to the City Library! How may I assist you today?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to borrow a book",
+              "participant": "user"
+            },
+            {
+              "text": "Could you please provide your library card number?",
+              "participant": "assistant"
+            },
+            {
+              "text": "My card number is L123456",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for The Great Gatsby",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Okay, please check",
+              "participant": "user"
+            },
+            {
+              "text": "This book is currently checked out. Would you like to place a hold, or would you prefer to see similar books that are available now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to see similar books",
+              "participant": "user"
+            },
+            {
+              "text": "We have these similar books available. Would you like to check out any of them?",
+              "participant": "assistant"
+            },
+            {
+              "text": "No, I'd like to look for something else",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for To Kill a Mockingbird",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Alright",
+              "participant": "user"
+            },
+            {
+              "text": "Great! The book is available. Would you like to check it out now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to check it out",
+              "participant": "user"
+            },
+            {
+              "text": "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "No, that's all for today",
+              "participant": "user"
+            },
+            {
+              "text": "Thank you for using our library services. Have a great day!",
+              "participant": "assistant"
+            }
+          ],
+          "topic": "Reject similar books and find another path"
+        },
+        {
+          "messages": [
+            {
+              "text": "Welcome to the City Library! How may I assist you today?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'd like to borrow a book",
+              "participant": "user"
+            },
+            {
+              "text": "Could you please provide your library card number?",
+              "participant": "assistant"
+            },
+            {
+              "text": "My card number is L123456",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for The Great Gatsby",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Alright",
+              "participant": "user"
+            },
+            {
+              "text": "Great! The book is available. Would you like to check it out now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to check it out",
+              "participant": "user"
+            },
+            {
+              "text": "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to find another book",
+              "participant": "user"
+            },
+            {
+              "text": "What book are you looking for?",
+              "participant": "assistant"
+            },
+            {
+              "text": "I'm looking for 1984",
+              "participant": "user"
+            },
+            {
+              "text": "Let me check if the book is currently available.",
+              "participant": "assistant"
+            },
+            {
+              "text": "Alright",
+              "participant": "user"
+            },
+            {
+              "text": "Great! The book is available. Would you like to check it out now?",
+              "participant": "assistant"
+            },
+            {
+              "text": "Yes, I'd like to check it out",
+              "participant": "user"
+            },
+            {
+              "text": "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?",
+              "participant": "assistant"
+            },
+            {
+              "text": "No, that's all for today",
+              "participant": "user"
+            },
+            {
+              "text": "Thank you for using our library services. Have a great day!",
+              "participant": "assistant"
+            }
+          ],
+          "topic": "Multiple book checkout path"
+        }
+      ]
+      }    
+]
