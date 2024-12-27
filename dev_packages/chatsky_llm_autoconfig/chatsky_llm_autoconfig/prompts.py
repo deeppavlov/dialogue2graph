@@ -1098,35 +1098,51 @@ part_2 = """This is the end of the example.
 3) All the nodes for the graph are created from the resulting groups in point 5) with exclusively assistant's utterances only.
 4) Don't use user's utterances for grouping process in point 5).
 5) Take all assistant's utterances in all dialogues, each in one copy, and group them according to the following scheme:
-a. Go through all assistant's utterances, take every utterance just in one copy.
+a. Go through all assistant's utterances, take every utterance just in one copy. Duplicates shall be ignored.
 b. Make up the set of user's utterances immediately following current assistant's utterance from point 5a.
-c. Adjacent assistant's utterances are those which have just one utterance between them and nothing more in at least one of the dialogues.
-d. Two assistant's utterances with same intent are included in one group when conditions below are met:
-e. two utterances are not adjacent,
-f. two utterances have similar meanings,
-g. and one of next two conditions are met as well:
-h. Either intersection of their two sets is not empty,
-i. Or both sets are empty.
-j. For intersection in point 5h only, user's utterances with same or similar intents
+c. Two utterances with same intent have same essential details when their main attributes match.
+To undertand an essential detail you shall select the main attribute: it can be action or object, or action with
+some extra attribute, something that defines the idea of utterance.
+For example,
+if utterances ask about the need of some object, then objects shall match,
+if they ask about accessability of something, the objects shall be close by meaning to each other,
+if they ask about the need in some action, then there shall match objects and their attributes, by meaning,
+if they ask whether something is done, then the words denoting this action shall be close by meaning to each other,
+if they ask about posession of some object, these meanings shall be close to each other,
+if something is going to happen, this something shall match by meaning,
+if something is done, the objects and actions shall match.
+d. Adjacent assistant's utterances are those which have just one utterance between them and nothing more in at least one of the dialogues.
+e. Two assistant's utterances with same intent are included in one group when
+all conditions below (points f., g., h., and i. with either j. or k.) are met:
+f. two utterances are not adjacent,
+g. two utterances have similar meanings,
+h. two utterances have have same essential details,
+i. and one of next two conditions are met as well:
+j. Either intersection of their two sets is not empty,
+k. Or both sets are empty.
+l. For intersection in point 5i only, user's utterances with same or similar intents
 and user's utterances with opposite intents are considered to be the same.
-k. Adjacent assistant's utterances are directly connected to each other by the utterance between them
+m. Adjacent assistant's utterances are directly connected to each other by the utterance between them
 so they cannot be in one node, meaning adjacent assistant's utterances must be in different groups strictly.
-l. Two assistant's utterances with different intents must be in different groups.
-m. When one assistant's utterance is the negation of another, these two assistant's utterances must be in different groups.
-n. Two assistant's utterances with different general meanings must be in different groups.
-o. Don't miss any assistant's utterance in all the dialogues.
-p. Of the three types of assistant's utterances:
+n. Two assistant's utterances with different intents must be in different groups.
+o. When one assistant's utterance is the negation of another, these two assistant's utterances must be in different groups.
+p. Two assistant's utterances with different general meanings must be in different groups.
+q. When one assistant's utterance contains some important detail that is missed in the other assistant's utterance,
+these two assistant's utterances must be in different groups.
+r. Don't miss any assistant's utterance in all the dialogues.
+s. Of the three types of assistant's utterances:
 with a question mark at the end,
 with an exclamation mark at the end,
 affirmative without exclamation mark,
 each group can contain only one.
-q. Duplicates inside any of the groups must be removed.
-r. Adjacent assistant's utterances must be in different groups.
-6) It is forbidden to create nodes from user's utterances.
-7) There should not be any duplicated groups.
-8) Duplicates in the resulting nodes must be removed.
-9) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
-10) Add reason point to the graph with your explanation why you didn't combine utterances in one node according to the rules.
+t. Duplicates inside any of the groups must be removed.
+u. Adjacent assistant's utterances must be in different groups.
+6) Nodes cannot contain user's utterances.
+7) Don't create nodes with non existent or modified utterances.
+8) There should not be any duplicated groups.
+9) Duplicates in the resulting nodes must be removed.
+10) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+11) Add reason point to the graph with your explanation why you created nodes with user's utterances.
 I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
 List of dialogues: """
 

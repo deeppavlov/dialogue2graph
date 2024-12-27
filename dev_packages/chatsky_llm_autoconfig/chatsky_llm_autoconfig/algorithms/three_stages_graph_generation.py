@@ -171,11 +171,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         # print("RESULT: ", result)
         if result is None:
             return Graph(graph_dict={})
+        result.reason = reason + " Fixes: " + result.reason
         graph_dict=result.model_dump()
         if not all([e['target'] for e in graph_dict['edges']]):
             print("NONE!!!!!")
             return Graph(graph_dict={})
-        result.reason = reason + " Fixes: " + result.reason
         result_graph = Graph(graph_dict=graph_dict)
         #result_graph = Graph(graph_dict=json.loads(result))
         return result_graph

@@ -66,5 +66,11 @@ o1-mini works well with 3 prepared examples
 New prompt to handle all existing 27 examples along with new complex examples is developed.
 Prompt handles no-cycles as well.
 
+Dec 27: 
+ready_graphs.json 5/5
+complex_graphs.json 5/5
+internet_installation_setup.json 0/1
+
+
 ## Future plans
 All things to be considered by future researchers, plans on next experiments and so on
