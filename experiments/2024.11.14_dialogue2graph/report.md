@@ -66,11 +66,23 @@ o1-mini works well with 3 prepared examples
 New prompt to handle all existing 27 examples along with new complex examples is developed.
 Prompt handles no-cycles as well.
 
-Dec 27: 
+Dec 27:
+three stages algo:
+1. Generate nodes with gpt-o1
+2. Connect nodes with edges via algo with usage of bge-m3 fo searching typo utterances
+3. Add missing edges (loops) with gpt-o1
+Results:
 ready_graphs.json 5/5
 complex_graphs.json 5/5
 internet_installation_setup.json 0/1
 
+Are_triplets_valid:
+ready_graphs.json 2/5
+complex_graphs_original.json 2/5
+
+Are_theme_valid:
+ready_graphs.json 5/5
+complex_graphs_original.json 5/5
 
 ## Future plans
 All things to be considered by future researchers, plans on next experiments and so on
