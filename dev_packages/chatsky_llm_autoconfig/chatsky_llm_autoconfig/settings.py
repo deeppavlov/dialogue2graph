@@ -20,6 +20,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     EMBEDDER_DEVICE: Optional[str]
     RERANKER_MODEL: Optional[str]
     RERANKER_THRESHOLD: Optional[float]
+    NEXT_RERANKER_THRESHOLD: Optional[float]
     SIM_THRESHOLD: Optional[float]
     HUGGINGFACE_TOKEN: Optional[str]
     TEST_DATASET: Optional[str] 

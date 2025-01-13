@@ -6,10 +6,11 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from chatsky_llm_autoconfig.algorithms.base import GraphGenerator
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
+from chatsky_llm_autoconfig.metrics.embedder import nodes2groups, nodes2clusters
 from chatsky_llm_autoconfig.schemas import DialogueGraph, DialogueNodes
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
-from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph
+from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph, dialogues2list
 from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.prompts import (
     prompts, graph_example_1, part_1, part_2, dialogue_example_2, graph_example_2, edges_1, edges_2, edges_3, auto_nodes, three_1, three_2
@@ -133,24 +134,43 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, topic: str = "") -> BaseGraph:
 
 
-        partial_variables = {}
-        prompt_extra = part_2
-        for idx, dial in enumerate(dialogue):
-            partial_variables[f"var_{idx}"] = dial.to_list()
-            prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-        prompt = PromptTemplate(template=part_1+"{graph_example_1}. "+prompt_extra, input_variables=["graph_example_1"], partial_variables=partial_variables)
+        # partial_variables = {}
+        # prompt_extra = part_2
+        # for idx, dial in enumerate(dialogue):
+        #     partial_variables[f"var_{idx}"] = dial.to_list()
+        #     prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
+        # prompt = PromptTemplate(template=part_1+"{graph_example_1}. "+prompt_extra, input_variables=["graph_example_1"], partial_variables=partial_variables)
 
         base_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1)
-        model = base_model | PydanticOutputParser(pydantic_object=DialogueNodes)
-        nodes = call_llm_api(prompt.format(graph_example_1=graph_example_1), model, temp=0)
+        # model = base_model | PydanticOutputParser(pydantic_object=DialogueNodes)
+        # nodes = call_llm_api(prompt.format(graph_example_1=graph_example_1), model, temp=0)
 
-        reason = nodes.reason
+        # reason = nodes.reason
 
-        nodes = [n.model_dump() for n in nodes.nodes]
+        nexts, nodes, starts = dialogues2list(dialogue)
+        
+        print("LISTS_N: ",[(i,n) for i,n in enumerate(nexts)])
+        print("LISTS: ",[(i,n) for i,n in enumerate(nodes)])
+
+        groups = nodes2groups(nodes, [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)])
+        # groups = nodes2clusters(nodes, [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)])
+        # groups = nodes2clusters(nodes)
+        # mix = nodes2clusters([n+ " ".join(p) + " " for p,n in zip(nexts, nodes)])
+        print ("NODES: ", groups)
+        # print ("MIX: ", mix)
+        nodes = []
+        for idx, group in enumerate(groups):
+            if any([gr in starts for gr in group]):
+                start = True
+            else:
+                start = False
+            nodes.append({"id":idx+1, "label": "", "is_start": start, "utterances": group})
+
+        # nodes = [n.model_dump() for n in nodes.nodes]
         print("NODES: ", nodes)
-        print("REASON: ", reason)
+        # print("REASON: ", reason)
         embeddings = HuggingFaceEmbeddings(model_name=env_settings.EMBEDDER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
-        graph_dict = nodes2graph(nodes, dialogue, reason, embeddings)
+        graph_dict = nodes2graph(nodes, dialogue, '', embeddings)
         print("RESULT: ", graph_dict)
         graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
     
@@ -171,7 +191,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         # print("RESULT: ", result)
         if result is None:
             return Graph(graph_dict={})
-        result.reason = reason + " Fixes: " + result.reason
+        result.reason = "Fixes: " + result.reason
         graph_dict=result.model_dump()
         if not all([e['target'] for e in graph_dict['edges']]):
             print("NONE!!!!!")

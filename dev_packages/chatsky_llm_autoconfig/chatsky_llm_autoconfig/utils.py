@@ -277,3 +277,51 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], reason: str, embeddings:
                             else:
                                 edges.append({'source': n['id'], 'target':target, 'utterances': [s]})
     return {"edges": edges, "nodes": nodes, "reason": reason}
+
+# def dialogues2list(dialogues: list[Dialogue]):
+    # nodes = []
+    # prevs = []
+    # starts = []
+    # for d in dialogues:
+    #     start = 1
+    #     texts = d.to_list()
+    #     prev = ''
+    #     for t in texts:
+    #         cur = t['text']
+    #         if t['participant'] == 'assistant':
+    #             if cur in nodes:
+    #                 if prev not in prevs[nodes.index(cur)]:
+    #                     prevs[nodes.index(cur)].append(prev)
+    #             else:
+    #                 prevs.append([prev])
+    #                 nodes.append(t['text'])
+    #                 if start:
+    #                     starts.append(t['text'])
+    #                     start = 0
+    #         else:
+    #             prev = t['text']
+    # return prevs, nodes, starts
+
+def dialogues2list(dialogues: list[Dialogue]):
+    nodes = []
+    nexts = []
+    starts = []
+    for d in dialogues:
+        start = 1
+        texts = d.to_list()
+        for idx,t in enumerate(texts):
+            cur = t['text']
+            next = ''
+            if t['participant'] == 'assistant':
+                if idx < len(texts)-1:
+                    next = texts[idx+1]['text']
+                if cur in nodes:
+                    if next and next not in nexts[nodes.index(cur)]:
+                        nexts[nodes.index(cur)].append(next)
+                else:
+                    nexts.append([next])
+                    nodes.append(t['text'])
+                    if start:
+                        starts.append(t['text'])
+                        start = 0
+    return nexts, nodes, starts

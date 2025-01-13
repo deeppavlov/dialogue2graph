@@ -1091,58 +1091,251 @@ triggered by user requests: """
 # o. When one assistant's utterance contains some important detail that is missed in the other assistant's utterance,
 # these two assistant's utterances must be in different groups.
 
+#  Two utterances with same intent have same essential details when their main attributes match.
+# To undertand an essential detail you shall select the main attribute: it can be action or object, or action with
+# some extra attribute, something that defines the idea of utterance.
+
+# part_2 = """This is the end of the example.
+# **Rules:**
+# 1) is_start field in the node is an entry point to the whole graph.
+# 2) Nodes must be assistant's utterances only.
+# 3) All the nodes for the graph are created from the resulting groups in point 5) with exclusively assistant's utterances only.
+# 4) Don't use user's utterances for grouping process in point 5).
+# 5) Take all assistant's utterances in all dialogues, each in one copy, and group them according to the following scheme:
+# a. Go through all assistant's utterances, take every utterance just in one copy. Duplicates shall be ignored.
+# b. Make up the set of user's utterances immediately following current assistant's utterance from point 5a.
+# c. Two utterances with same intent have same essential details when their main words match.
+# To understand an essential detail you shall select the word or phrase that carries the main idea.
+# d. If main idea in one utterance is expressed by a noun, and by verb in another utterance, essential details are different.
+# e. Below are examples of essential details match:
+# f. if utterances ask about the need of some object, then objects shall match,
+# g. if they ask about accessability of something, the objects shall be close by meaning to each other,
+# h. if they ask about the need in some action, then there shall match objects and their attributes, by meaning,
+# i. if they ask whether something is done, then the words denoting this action shall be close by meaning to each other,
+# j. if they ask about posession of some object, these meanings shall be close to each other,
+# k. if something is going to happen, this something shall match by meaning,
+# l. if something is done, the objects and actions shall match.
+# m. Adjacent assistant's utterances are those which have just one utterance between them and nothing more in at least one of the dialogues.
+# n. Two assistant's utterances with same intent are included in one group when
+# all conditions below (points o-1., o-2., o-3., and o-4. with either o-5. or o-6.) are met:
+# o-1. two utterances are not adjacent,
+# o-2. two utterances have similar meanings,
+# o-3. two utterances have have same essential details,
+# o-4. and one of next two conditions are met as well:
+# o-5. Either intersection of their two sets is not empty,
+# o-6. Or both sets are empty.
+# o-7. For intersection in point 5o-5 only, user's utterances with same or similar intents
+# and user's utterances with opposite intents are considered to be the same.
+# p. Adjacent assistant's utterances are directly connected to each other by the utterance between them
+# so they cannot be in one node, meaning adjacent assistant's utterances must be in different groups strictly.
+# q. Two assistant's utterances with different intents must be in different groups.
+# r. When one assistant's utterance is the negation of another, these two assistant's utterances must be in different groups.
+# s. Two assistant's utterances with different general meanings must be in different groups.
+# t. When one assistant's utterance contains some important detail that is missed in the other assistant's utterance,
+# these two assistant's utterances must be in different groups.
+# u. Don't miss any assistant's utterance in all the dialogues.
+# v. Of the three types of assistant's utterances:
+# with a question mark at the end,
+# with an exclamation mark at the end,
+# affirmative without exclamation mark,
+# each group can contain only one.
+# w. Duplicates inside any of the groups must be removed.
+# x. Adjacent assistant's utterances must be in different groups.
+# 6) Nodes cannot contain user's utterances.
+# 7) Don't create nodes with non existent or modified utterances.
+# 8) There should not be any duplicated groups.
+# 9) Duplicates in the resulting nodes must be removed.
+# 10) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 11) Add reason point to the graph with your explanation why you created nodes with user's utterances.
+# I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+# List of dialogues: """
+
+# c. Two utterances with same intent have same essential details when their main words match.
+# d. Below are examples of essential details:
+# Next two utterances have same essential detail:
+# Do you see holes in the wall?
+# Is the wall intact?
+# The main word in them is 'the wall', so the main idea is about the wall,
+# and the question of both sentences is whether the wall is whole.
+# Next utterance has different idea:
+# I can see thru the wall
+# The wall can have holes so you can see thru it, but it have transparent parts which are not holes,
+# and you can see thru it. So holes in the wall are just one option when you see thru the wall,
+# and the main word in this utterance is to see, which is different from the wall,
+# so this utterance cannot be part of same group as two previous ones.
+# e. Below are examples of essential details match:
+# if utterances ask about the need of some object, then objects shall match,
+# if they ask about accessability of something, the objects shall be close by meaning to each other,
+# if they ask about the need in some action, then there shall match objects and their attributes, by meaning,
+# if they ask whether something is done, then the words denoting this action shall be close by meaning to each other,
+# if they ask about posession of some object, these meanings shall be close to each other,
+# if something is going to happen, this something shall match by meaning,
+# if something is done, the objects and actions shall match.
+# b. Go through all assistant's utterances, take every utterance just in one copy. Duplicates shall be ignored.
+
+# part_2 = """This is the end of the example.
+# **Rules:**
+# 1) is_start field in the node is an entry point to the whole graph.
+# 2) Nodes must be assistant's utterances only.
+# 3) All the nodes for the graph are created from the resulting groups in point 5) with exclusively assistant's utterances only.
+# 4) Don't use user's utterances for grouping process in point 5).
+# 5) Take all assistant's utterances in all dialogues, each in one copy, and group them according to the following scheme:
+# a. Two utterances are interchangeable when any occurrence of one utterance can be swapped with any occurence of the other utterance,
+# while preserving the meaning of the dialogue.
+# b. Two assistant's utterances are included in one group when
+# all conditions below (points c-1, c-2 and c-3) are met:
+# c-1. they are not adjacent,
+# c-2. they have similar meanings.
+# c-3. they are interchangeable. 
+# d. Don't miss any assistant's utterance in all the dialogues.
+# e. Of the three types of assistant's utterances:
+# with a question mark at the end,
+# with an exclamation mark at the end,
+# affirmative without exclamation mark,
+# each group can contain only one.
+# f. Duplicates inside any of the groups must be removed.
+# g. Adjacent assistant's utterances must be in different groups.
+# 6) Nodes cannot contain user's utterances.
+# 7) Don't create nodes with non existent or modified utterances.
+# 8) There should not be any duplicated groups.
+# 9) Duplicates in the resulting nodes must be removed.
+# 10) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 11) Add reason point to the graph with your explanation why you placed interchangeable utterances in different groups.
+# I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+# List of dialogues: """
+# 4) Don't use user's utterances for grouping process in point 5).
+# d. Don't miss any assistant's utterance in all the dialogues.
+# g. Adjacent assistant's utterances must be in different groups.
+
+# 6) Nodes cannot contain user's utterances.
+# 7) Don't create nodes with non existent or modified utterances.
+# 8) There should not be any duplicated groups.
+# 9) Duplicates in the resulting nodes must be removed.
+
+
+
+# c. Two utterances with same intent have same essential details when their main words match.
+# 
+# e. Below are examples of essential details match:
+# if utterances ask about the need of some object, then objects shall match,
+# if they ask about accessability of something, the objects shall be close by meaning to each other,
+# if they ask about the need in some action, then there shall match objects and their attributes, by meaning,
+# if they ask whether something is done, then the words denoting this action shall be close by meaning to each other,
+# if they ask about posession of some object, these meanings shall be close to each other,
+# if something is going to happen, this something shall match by meaning,
+# if something is done, the objects and actions shall match.
+# Two utterances are interchangeable in next two cases:
+# when any occurrence of one utterance can be swapped with any occurence of the other utterance,
+# while preserving the main idea of the dialogue;
+# two utterances have same main idea.
+
+
+# part_2 = """This is the end of the example.
+# **Rules:**
+# 1) is_start field in the node is an entry point to the whole graph.
+# 2) Nodes must be assistant's utterances only.
+# 3) All the nodes for the graph are created from the resulting groups in points 7)-8) with exclusively assistant's utterances only.
+# 4) Below are examples when two utterances have common main idea:
+# if they ask about the need of some object, and the objects match;
+# if they ask about accessability of some objects, and the objects are close by in-context meaning to each other;
+# if they ask about posession of some objects, these objects are close by in-context meaning to each other;
+# if they have common objects, the remainders are close by meaning to each other;
+# if they ask whether something is going to happen, these somethings are close by in-context meaning to each other;
+# if they ask whether something has been done and have synonymous verbal forms;
+# when they both ask for something and have common synonyms.
+# 5) Below is another example explaining the fact when two utterances have common main idea.
+# Next two utterances have common idea:
+# - Do you see holes in the wall?
+# - Is the wall intact?
+# The main word in them is 'the wall', so the main idea is about the wall,
+# and the question of both sentences is whether the wall is whole.
+# Next utterance has different idea:
+# Can you see thru the wall?
+# The wall can have holes so you can see thru it, but instead it has transparent part which are not holes,
+# and you can see thru it. So holes in the wall are just one option when you see thru the wall,
+# and the main word in this utterance is to see, which is different from the wall, so the main idea is different from two previous utterances.
+# 6) Two utterances are interchangeable in next two cases:
+# when any occurrence of one utterance can be swapped with any occurence of the other utterance,
+# while preserving the main idea of the surrounding context;
+# two utterances have common main idea.
+# 7) Assistant's utterances must be grouped according to the following scheme:
+# Two assistant's utterances are included in one group when
+# they are interchangeable and are not adjacent.
+# 8) So the grouping process looks like follows:
+# a. Go over all the dialogues, take first assistant's utterance.
+# b. Search for all assistant's utterances interchangeable with current utterance,
+# and not adjacent with it.
+# c. Form one group from current utterance and interchangeable with it.
+# d. Of the three types of assistant's utterances:
+# with a question mark at the end,
+# with an exclamation mark at the end,
+# affirmative without exclamation mark,
+# each group can contain only one.
+# So if two different types encounter in one group, you shall separate them into different groups.
+# e. If one utterance mentions a problem and the other does not imply any problem, then they should be in different groups.
+# f. Go to next utterance in step 8a, not from groups already created.  
+# 9) Duplicates inside any of the groups must be removed.
+# 10) Don't create new or modify existing utterances.
+# 11) Don't use user's utterances for grouping process in points 7)-8).
+# 12) Don't miss any assistant's utterance in all the dialogues.
+# 13) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 14) Add reason point to the graph with your explanation why you placed interchangeable utterances in different groups.
+# I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+# List of dialogues: """
+
+# if they ask about the need of some object, and the objects match;
+# if they ask about accessability of something similar by in-context meaning to each other;
+# if they ask about posession of some objects, and these objects are close by in-context meaning to each other:
+# for example, one object can be a particular case of the other;
+# if they have common objects, the remainders of each utterance are close by meaning to each other;
+# if they ask whether something is going to happen, these somethings are close by in-context meaning to each other;
+# if they ask whether something is done or about status of something, and have synonymous words formed from a verb;
+# when they both are requests and have common words or synonyms.
+
+# if one utterance can be obtained from the other by:
+# - morphology-based changes,
+# - a paraphrase with in-context synonyms (lexicon-based changes),
+# - lexico-syntactic-based changes;
+
+# Entities with different parts of speech can be synonyms as well.
+
+
 part_2 = """This is the end of the example.
 **Rules:**
 1) is_start field in the node is an entry point to the whole graph.
 2) Nodes must be assistant's utterances only.
-3) All the nodes for the graph are created from the resulting groups in point 5) with exclusively assistant's utterances only.
-4) Don't use user's utterances for grouping process in point 5).
-5) Take all assistant's utterances in all dialogues, each in one copy, and group them according to the following scheme:
-a. Go through all assistant's utterances, take every utterance just in one copy. Duplicates shall be ignored.
-b. Make up the set of user's utterances immediately following current assistant's utterance from point 5a.
-c. Two utterances with same intent have same essential details when their main attributes match.
-To undertand an essential detail you shall select the main attribute: it can be action or object, or action with
-some extra attribute, something that defines the idea of utterance.
-For example,
-if utterances ask about the need of some object, then objects shall match,
-if they ask about accessability of something, the objects shall be close by meaning to each other,
-if they ask about the need in some action, then there shall match objects and their attributes, by meaning,
-if they ask whether something is done, then the words denoting this action shall be close by meaning to each other,
-if they ask about posession of some object, these meanings shall be close to each other,
-if something is going to happen, this something shall match by meaning,
-if something is done, the objects and actions shall match.
-d. Adjacent assistant's utterances are those which have just one utterance between them and nothing more in at least one of the dialogues.
-e. Two assistant's utterances with same intent are included in one group when
-all conditions below (points f., g., h., and i. with either j. or k.) are met:
-f. two utterances are not adjacent,
-g. two utterances have similar meanings,
-h. two utterances have have same essential details,
-i. and one of next two conditions are met as well:
-j. Either intersection of their two sets is not empty,
-k. Or both sets are empty.
-l. For intersection in point 5i only, user's utterances with same or similar intents
-and user's utterances with opposite intents are considered to be the same.
-m. Adjacent assistant's utterances are directly connected to each other by the utterance between them
-so they cannot be in one node, meaning adjacent assistant's utterances must be in different groups strictly.
-n. Two assistant's utterances with different intents must be in different groups.
-o. When one assistant's utterance is the negation of another, these two assistant's utterances must be in different groups.
-p. Two assistant's utterances with different general meanings must be in different groups.
-q. When one assistant's utterance contains some important detail that is missed in the other assistant's utterance,
-these two assistant's utterances must be in different groups.
-r. Don't miss any assistant's utterance in all the dialogues.
-s. Of the three types of assistant's utterances:
+3) All the nodes for the graph are created from the resulting groups in point 4) according to the rules 6,7,8,9
+with exclusively assistant's utterances only in their original unmodified form.
+4) The grouping process looks like follows:
+a. Go over all the dialogues, take every assistant's utterance one by one.
+b. Search for all assistant's utterances having common basic idea with current utterance,
+and not adjacent with it. It is forbidden to select groups based on intents.
+c. Form one group from current utterance and all utterances found in 4b.
+d. Of the three types of assistant's utterances:
 with a question mark at the end,
 with an exclamation mark at the end,
 affirmative without exclamation mark,
 each group can contain only one.
-t. Duplicates inside any of the groups must be removed.
-u. Adjacent assistant's utterances must be in different groups.
-6) Nodes cannot contain user's utterances.
-7) Don't create nodes with non existent or modified utterances.
-8) There should not be any duplicated groups.
-9) Duplicates in the resulting nodes must be removed.
-10) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
-11) Add reason point to the graph with your explanation why you created nodes with user's utterances.
+So if two different types encounter in one group, you shall separate them into different groups.
+e. Don't miss any assistant's utterance in all the dialogues.
+f. Go to next utterance in step 4a, skip those present in existing groups. Don't miss any utterance.
+5) Below are examples when two utterances have common basic idea:
+if they ask about posession or obtaining of some entities, and these entities are close by in-context meaning to each other:
+for example, one entity can be a particular case of the other in the dialogue conext;
+when they both are requests without ending question mark and have common words or synonyms;
+if they ask whether something is done or about status of something, and have common or synonymous words;
+if they ask about accessability of something similar by in-context meaning to each other;
+if they have common objects and the remainders of each utterance are close by meaning to each other.
+6) If two utterances don't have common words or in-context synonyms,
+then they must be separated into different groups.
+If one entity is a particular case of the other in the dialogue conext, they are considered synonyms.
+7) Don't use user's utterances for grouping process in point 4).
+8) Duplicates inside any of the nodes must be removed.
+9) If one utterance mentions a problem and the other does not imply any problem, then they shall be separated into different groups.
+9) Empty groups shall be removed.
+10) Don't use new or modified utterances in the nodes.
+11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+12) Add reason point to the graph with your explanation why you placed utterances with common basic idea in different groups.
 I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
 List of dialogues: """
 
@@ -1460,19 +1653,25 @@ three_2 = """This is the end of input graph.
 1) is_start field in the node is an entry point to the whole graph.
 2) Nodes are assistant's utterances, edges are utterances from the user.
 Please consider the graph above, list of dialogues below and do the following:
-
-3) For every user's utterance not present in input graph, you must find the most suitable continuation of a dialogue flow
-for the sequence of immediately previous assistant's utterance and user's utterance,
-with assistant's utterance from one of nodes, and create new edge connecting this user's utterance to that node.
-4) To find such a node try to find direct or indirect answer
+3) For every user's utterance not present in input graph, firstly you must find
+immediately previous assistant's utterance and its node,
+then find the most suitable continuation of a dialogue flow,
+with assistant's utterance from one of nodes, and create new edge connecting these two nodes with current user's utterance.
+4) To find most suitable continuation node:
+try to find good answer
 to this user's query in some of dialogues and use node with that answer.
+It is advisable firstly try to find in a graph user's utterance most similar
+to current user's utterance missing in the graph and check if target node
+of that similar utterance is a good answer to current user's utterance.
+If it is so you must use this node as a target in point 3.
 5) It is necessary to choose the most suitable answer.
 From two equal candidates choose:
 firstly - one with similar phrases, then one closest to the beginning of the graph.
 6) If nothing is found, search for a node with current problem elaboration step.
 7) Typically it is a clarifying question to current user's utterance.
 8) So it is necessary to add edges to the input graph from utterances which exist in dialogues but absent in the graph. 
-9) Add reason point to the graph with your explanation if you ignore my task and answer arbitrarily.
+9) Also give all the nodes suitable labels.
+10) Add reason point to the graph with your explanation which edges you added and why.
 I will give a list of dialogues, your return is a fixed version of dialogue graph above according to the rules above.
 List of dialogues: """
 
