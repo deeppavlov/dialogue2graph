@@ -1672,9 +1672,11 @@ From two equal candidates choose:
 firstly - one with similar phrases, then one closest to the beginning of the graph.
 6) If nothing is found, search for a node with current problem elaboration step.
 7) Typically it is a clarifying question to current user's utterance.
-8) So it is necessary to add edges to the input graph from utterances which exist in dialogues but absent in the graph. 
-9) Also give all the nodes suitable labels.
-10) Add reason point to the graph with your explanation which edges you added and why.
+8) So it is necessary to add edges to the input graph from utterances which exist in dialogues but absent in the graph.
+9) When source and target of one added edge are both equal to source and target of another added edge, these edges shall be combined in one edge
+with list of utterances containing utterances from both edges.
+10) Also give all the nodes suitable labels.
+11) Add reason point to the graph with your explanation which edges you added and why.
 I will give a list of dialogues, your return is a fixed version of dialogue graph above according to the rules above.
 List of dialogues: """
 
