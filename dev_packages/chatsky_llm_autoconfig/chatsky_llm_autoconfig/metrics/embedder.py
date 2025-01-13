@@ -97,7 +97,7 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
         list2 = [p for p in cur if x[1] in p and x!=p]
         print("LIST1: ", list1)
         print("LIST2: ", list2)
-        # to_add = []
+        to_add = []
         for y in list1:
             to_add = []
             for el in x:
@@ -224,7 +224,7 @@ def nodes2groups(nodes_list: list[str], mix_list: list[str]):
     print("PAIRS: ", pairs)
 
     groups = unite_pairs(pairs)
-    grouped = ()
+    grouped = []
     for el in groups:
         grouped += el
     singles = [[idx] for idx in range(len(nodes_list)) if idx not in grouped]

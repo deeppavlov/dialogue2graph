@@ -1631,6 +1631,12 @@ edges_2 = """This is the end of the example. Next is set of nodes for the target
 # I will give a list of dialogues, your return is a ready dialogue graph (set of nodes with set of edges you generated above).
 # List of dialogues: """
 
+# try to find good answer
+# to this user's query in some of dialogues and use node with that answer.
+# Try to find in a graph user's utterance most similar
+# to current user's utterance missing in the graph and check if target node
+# of that similar utterance is a good answer to current user's utterance.
+# If it is so you must use this node as a target in point 3.
 
 edges_3 = """This is the end of nodes part.
 
@@ -1653,17 +1659,14 @@ three_2 = """This is the end of input graph.
 1) is_start field in the node is an entry point to the whole graph.
 2) Nodes are assistant's utterances, edges are utterances from the user.
 Please consider the graph above, list of dialogues below and do the following:
-3) For every user's utterance not present in input graph, firstly you must find
+3) For every user's utterance (let's call it current utterance) not present in input graph, firstly you must find
 immediately previous assistant's utterance and its node,
 then find the most suitable continuation of a dialogue flow,
 with assistant's utterance from one of nodes, and create new edge connecting these two nodes with current user's utterance.
 4) To find most suitable continuation node:
-try to find good answer
-to this user's query in some of dialogues and use node with that answer.
-It is advisable firstly try to find in a graph user's utterance most similar
-to current user's utterance missing in the graph and check if target node
-of that similar utterance is a good answer to current user's utterance.
-If it is so you must use this node as a target in point 3.
+Firstly try to find in the graph user's utterance most similar
+to current utterance and set target node
+of an edge with that similar utterance as a target in point 3.
 5) It is necessary to choose the most suitable answer.
 From two equal candidates choose:
 firstly - one with similar phrases, then one closest to the beginning of the graph.
