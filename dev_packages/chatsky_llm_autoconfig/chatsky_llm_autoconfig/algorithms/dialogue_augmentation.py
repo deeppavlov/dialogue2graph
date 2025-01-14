@@ -31,7 +31,7 @@ INSTRUCTIONS:
 2. The output must be a list of dictionaries, where each dictionary has:
    - 'text': string
    - 'participant': either 'user' or 'assistant'
-   
+
 3. Ensure all utterance variations:
    - Are appropriate for the theme
    - Maintain consistency in tone and style

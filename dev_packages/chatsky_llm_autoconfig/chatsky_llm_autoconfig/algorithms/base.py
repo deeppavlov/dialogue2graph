@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import abc
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.dialogue import Dialogue
+from langchain_core.language_models.chat_models import BaseChatModel
 
 
 class BaseAlgorithm(BaseModel, abc.ABC):
@@ -71,7 +72,7 @@ class GraphAugmentation(BaseAlgorithm):
 class TopicGraphGenerator(BaseAlgorithm):
     """Graph generator that works only with topics."""
 
-    def invoke(self, topic: str) -> BaseGraph:
+    def invoke(self, topic: str, model: BaseChatModel) -> BaseGraph:
         raise NotImplementedError
 
     async def ainvoke(self, topic: str) -> BaseGraph:

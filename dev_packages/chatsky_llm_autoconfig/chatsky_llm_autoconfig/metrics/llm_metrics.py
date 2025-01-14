@@ -5,121 +5,110 @@ LLM Metrics.
 This module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
 """
 
-from chatsky_llm_autoconfig.graph import BaseGraph
-from typing import List, Tuple
+import logging
+import json
+from chatsky_llm_autoconfig.graph import BaseGraph, Graph
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
 from pydantic import BaseModel, Field
-from typing import List
 from langchain_core.output_parsers import PydanticOutputParser
-import logging
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
 
-def are_triplets_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
+def are_triplets_valid(G: Graph, model: BaseChatModel) -> dict[str]:
     """
-    Validates the dialog graph structure and logical transitions between nodes.
+    Validates dialogue graph structure and logical transitions between nodes.
 
     Parameters:
-        G (BaseGraph): The dialog graph to validate
+        G (BaseGraph): The dialogue graph to validate
         model (BaseChatModel): The LLM model to use for validation
-        topic (str): The topic of the dialog
 
     Returns:
         dict: {'value': bool, 'description': str}
     """
-    # Define prompt template and parser inside the function since they're only used here
+
+    # Define validation result model
+    class TransitionValidationResult(BaseModel):
+        isValid: bool = Field(description="Whether the transition is valid or not")
+        description: str = Field(description="Explanation of why it's valid or invalid")
+
+    # Create prompt template
     triplet_validate_prompt_template = """
-    You are given a dialog between assistant and a user.
-    source_utterances, edge_utterances, target_utterances are dialog parts and each contains an array with exactly one utterance.
-    They should be read left to right.
+    You are evaluating if dialog transitions make logical sense.
+    
+    Given this conversation graph in JSON:
+    {json_graph}
+    
+    For the current transition:
+    Source (Assistant): {source_utterances}
+    User Response: {edge_utterances}
+    Target (Assistant): {target_utterances}
 
-    - source_utterances are assistant phrases 
-    - edge_utterances are user phrases
-    - target_utterances are assistant phrases 
+    EVALUATE: Do these three messages form a logical sequence in the conversation?
+    Consider:
+    1. Does the assistant's first response naturally lead to the user's response?
+    2. Does the user's response logically connect to the assistant's next message?
+    3. Is the overall flow natural and coherent?
 
-    TASK. Evaluate if the transition makes a logical connection when reading from Source utterances to Target utterances through Edge utterances
 
-    this is an invalid transition:
-    {{
-        'source_utterances': ['Welcome to our online bookstore. How can I assist you today?'],
-        'edge_utterances': ['Hello! Are you looking for any book recommendations?'],
-        'target_utterances': ['We have a wide selection of genres. Which do you prefer?'],
-        'topic': 'Dialog about purchasing books between assistant and customer'
-    }}
-
-    Provide your answer in the following JSON format:
-    {{"isValid": true or false, "description": "Explanation of why it's valid or invalid."}}
-
-    Dialog topic: {topic}
-
-    (source_utterances) {source_utterances} -> (edge_utterances) {edge_utterances} -> (target_utterances) {target_utterances}
-
-    Your answer:"""
+    Reply in JSON format:
+    {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
+    """
 
     triplet_validate_prompt = PromptTemplate(
-        input_variables=["source_utterances", "edge_utterances", "target_utterances", "topic"],
-        template=triplet_validate_prompt_template,
+        input_variables=["json_graph", "source_utterances", "edge_utterances", "target_utterances"], template=triplet_validate_prompt_template
     )
-
-    class TransitionValidationResult(BaseModel):
-        isValid: bool = Field(description="Whether the transition is valid or not.")
-        description: str = Field(description="Explanation of why it's valid or invalid.")
 
     parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
 
-    graph = G.graph_dict
-    # Create a mapping from node IDs to node data for quick access
-    node_map = {node["id"]: node for node in graph["nodes"]}
+    # Convert graph to JSON string
+    graph_json = json.dumps(G.graph_dict)
+
+    # Create node mapping
+    node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
+
     overall_valid = True
     descriptions = []
 
-    for edge in graph["edges"]:
+    for edge in G.graph_dict["edges"]:
         source_id = edge["source"]
         target_id = edge["target"]
+
+        if source_id not in node_map or target_id not in node_map:
+            description = f"Invalid edge: missing node reference {source_id} -> {target_id}"
+            overall_valid = False
+            descriptions.append(description)
+            continue
+
+        # Get utterances
+        source_utterances = node_map[source_id]["utterances"]
+        target_utterances = node_map[target_id]["utterances"]
         edge_utterances = edge["utterances"]
 
-        # Check if source and target nodes exist
-        if source_id not in node_map:
-            description = f"Invalid edge: source node {source_id} does not exist."
-            logging.info(description)
-            overall_valid = False
-            descriptions.append(description)
-            continue
-        if target_id not in node_map:
-            description = f"Invalid edge: target node {target_id} does not exist."
-            logging.info(description)
-            overall_valid = False
-            descriptions.append(description)
-            continue
-
-        source_node = node_map[source_id]
-        target_node = node_map[target_id]
-
-        # Get utterances from nodes
-        source_utterances = source_node.get("utterances", [])
-        target_utterances = target_node.get("utterances", [])
-
-        # Prepare input data for the chain
+        # Prepare input for validation
         input_data = {
+            "json_graph": graph_json,
             "source_utterances": source_utterances,
             "edge_utterances": edge_utterances,
             "target_utterances": target_utterances,
-            "topic": topic,
         }
 
+        # print(triplet_validate_prompt.format(**input_data))
+
+        # Run validation
         triplet_check_chain = triplet_validate_prompt | model | parser
         response = triplet_check_chain.invoke(input_data)
 
         if not response.isValid:
             overall_valid = False
-            description = f"Invalid transition from {source_utterances} to {target_utterances} via edge '{edge_utterances}': {response.description}"
+            description = f"Invalid transition: {response.description}"
             logging.info(description)
             descriptions.append(description)
 
     result = {"value": overall_valid, "description": " ".join(descriptions) if descriptions else "All transitions are valid."}
+
     return result
 
 

@@ -1,29 +1,22 @@
+from typing import Optional
 from chatsky_llm_autoconfig.algorithms.base import TopicGraphGenerator
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 from chatsky_llm_autoconfig.schemas import DialogueGraph
-from langchain_openai import ChatOpenAI
-
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
-import os
+from langchain_core.language_models.chat_models import BaseChatModel
 
-from pydantic import SecretStr
+from pydantic import Field
+from typing import ClassVar
 
 
 @AlgorithmRegistry.register(input_type=str, output_type=BaseGraph)
 class CycleGraphGenerator(TopicGraphGenerator):
     """Generator specifically for topic-based cyclic graphs"""
 
-    prompt: str = ""
-    cycle_graph_generation_prompt: str = ""
-
-    def __init__(self):
-        super().__init__()
-        self.cycle_graph_generation_prompt = PromptTemplate.from_template(
-            """
-    Create a cyclic dialogue graph where the conversation MUST return to an existing node.
+    DEFAULT_TEMPLATE: ClassVar[str] = """
+    Create a complex dialogue graph where the conversation MUST return to an existing node.
 
     **CRITICAL: Response Specificity**
     Responses must acknowledge and build upon what the user has already specified:
@@ -63,26 +56,36 @@ class CycleGraphGenerator(TopicGraphGenerator):
 
     **Your task is to create a cyclic dialogue graph about the following topic:** {topic}.
     """
-        )
 
-    def invoke(self, topic: str) -> BaseGraph:
+    cycle_graph_generation_prompt: PromptTemplate = Field(
+        default_factory=lambda: PromptTemplate.from_template(CycleGraphGenerator.DEFAULT_TEMPLATE)
+    )
+
+    def __init__(self, prompt: Optional[PromptTemplate] = None):
+        super().__init__()
+        if prompt is not None:
+            self.cycle_graph_generation_prompt = prompt
+
+    def invoke(self, topic: str, model: BaseChatModel) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
 
-        :param input_data: TopicInput containing the topic
-        :return: Generated Graph object with cyclic structure
+        Args:
+            topic (str): The topic for the dialogue graph
+            model_name (str): The name of the model to use
+
+        Returns:
+            BaseGraph: Generated Graph object with cyclic structure
         """
         parser = JsonOutputParser(pydantic_object=DialogueGraph)
-        model = ChatOpenAI(model="gpt-4o", api_key=SecretStr(os.getenv("OPENAI_API_KEY") or ""), base_url=os.getenv("OPENAI_BASE_URL"), temperature=0)
+
         chain = self.cycle_graph_generation_prompt | model | parser
 
         generated_graph = chain.invoke({"topic": topic})
-
         return Graph(generated_graph)
 
     async def ainvoke(self, *args, **kwargs):
+        """
+        Async version of invoke - to be implemented
+        """
         pass
-
-
-if __name__ == "__main__":
-    cycle_graph_generator = CycleGraphGenerator()
