@@ -195,7 +195,7 @@ def nodes2groups(nodes_list: list[str], mix_list: list[str]):
     #         nodes_back_score[idx] = 0
 
 
-
+#  >= env_settings.RERANKER_THRESHOLD
     # print("SCORE: ", score)
     print("finished")
 
@@ -205,7 +205,11 @@ def nodes2groups(nodes_list: list[str], mix_list: list[str]):
         sz = len([o for o in orig_index if index[idx] == o])
 
         max_n = max(nodes_score[orig_idx], nodes_back_score[orig_idx])
-        nodes_condition = all([max(el[0],el[1]) >= env_settings.RERANKER_THRESHOLD for el in zip(nodes_score[orig_idx:orig_idx+sz],nodes_back_score[orig_idx:orig_idx+sz])])
+        maxes = [max(el[0],el[1]) for el in zip(nodes_score[orig_idx:orig_idx+sz],nodes_back_score[orig_idx:orig_idx+sz])]
+        if sz > 1:
+            nodes_condition = max(maxes[1:]) >= 0.9 and min(maxes[1:]) >= 0.05 and maxes[0] >= env_settings.RERANKER_THRESHOLD
+        else:
+            nodes_condition = maxes[0] >= env_settings.RERANKER_THRESHOLD
         orig_idx += sz
 
         # print("MIX: ",max(en[0],en[1]),max(en[2],en[3]),nodes_to_score[idx])

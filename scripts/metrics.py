@@ -20,12 +20,14 @@ def _run_check():
                 "all_roles_correct_diff": metrics.get("all_roles_correct_avg", 0) - previous_metrics[algorithm].get("all_roles_correct_avg", 0),
                 "is_correct_length_diff": metrics.get("is_correct_lenght_avg", 0) - previous_metrics[algorithm].get("is_correct_lenght_avg", 0),
                 "are_triplets_valid_diff": metrics.get("are_triplets_valid", 0) - previous_metrics[algorithm].get("are_triplets_valid", 0),
+                "is_theme_valid_diff": metrics.get("is_theme_valid_avg", 0) - previous_metrics[algorithm].get("is_theme_valid_avg", 0),
                 "total_diff": (
                     metrics.get("all_paths_sampled_avg", 0)
                     + metrics.get("all_utterances_present_avg", 0)
                     + metrics.get("all_roles_correct_avg", 0)
                     + metrics.get("is_correct_lenght_avg", 0)
                     + metrics.get("are_triplets_valid", 0)
+                    + metrics.get("is_theme_valid_avg", 0)
                 )
                 - (
                     previous_metrics[algorithm].get("all_paths_sampled_avg", 0)
@@ -33,6 +35,7 @@ def _run_check():
                     + previous_metrics[algorithm].get("all_roles_correct_avg", 0)
                     + previous_metrics[algorithm].get("is_correct_lenght_avg", 0)
                     + previous_metrics[algorithm].get("are_triplets_valid", 0)
+                    + metrics.get("is_theme_valid_avg", 0)
                 ),
             }
 

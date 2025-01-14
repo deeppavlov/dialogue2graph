@@ -40,7 +40,7 @@ class DialogueSampler(DialogueGenerator):
                         )
                         path.append({"text": last_edge_utterance, "participant": "user"})
 
-                    all_dialogues.append(Dialogue(dialogue=path.copy()))
+                    all_dialogues.append(Dialogue().from_list(path))
                     path.pop()
                     continue
 

@@ -1,8 +1,10 @@
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.schemas import DialogueMessage
+from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
+
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-from typing import List
+from typing import List, Callable
 
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel
@@ -53,16 +55,19 @@ class DialogueSequence(BaseModel):
     result: List[DialogueMessage]
 
 
-class DialogAugmentation(BaseModel):
+@AlgorithmRegistry.register(input_type=Dialogue, output_type=Dialogue)
+class DialogAugmentator(BaseModel):
     """Base class for augmenting Dialogues."""
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.parser = JsonOutputParser(pydantic_object=DialogueSequence)
-        self.model = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"), temperature=0.7)
-        self.chain = augmentation_prompt | self.model | self.parser
+    chain: Callable = None
 
-    def invoke(self, *, dialogue: Dialogue, topic: str = "") -> Dialogue:
+    def __init__(self, **data):
+        parser = JsonOutputParser(pydantic_object=DialogueSequence)
+        model = ChatOpenAI(model="gpt-4o-mini", api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"), temperature=0.7)
+        super().__init__(**data)
+        self.chain = augmentation_prompt | model | parser
+
+    def invoke(self, dialogue: Dialogue, topic: str = "") -> Dialogue:
         """
         Augment the input dialogue with variations.
 

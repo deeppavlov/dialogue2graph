@@ -123,7 +123,7 @@ def are_triplets_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[s
     return result
 
 
-def are_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
+def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
     """
     Validates if the dialog stays on theme/topic throughout the conversation.
 

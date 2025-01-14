@@ -12,7 +12,7 @@ import os
 from pydantic import SecretStr
 
 
-@AlgorithmRegistry.register(input_type=str, output_type=Graph)
+@AlgorithmRegistry.register(input_type=str, output_type=BaseGraph)
 class CycleGraphGenerator(TopicGraphGenerator):
     """Generator specifically for topic-based cyclic graphs"""
 
