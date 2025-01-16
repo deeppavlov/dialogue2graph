@@ -216,7 +216,6 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
 def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
     return True
 
-
 def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
     """
     Check if all graph elements (nodes and edges) appear in at least one dialogue.
@@ -254,6 +253,87 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
         return False
         # return graph_utterances.difference(dialogue_utterances)
 
+def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
+    """
+    Check if there is a connection from user message to assistant message.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        user, assistant: pair of neighboring utterances in a dialogue 
+
+    Returns:
+        list: True if there is connection, False otherwise 
+    """
+
+    nodes = G.nodes_by_utterance(assistant)
+
+    for node in nodes:
+        edges = G.edges_by_utterance(user)
+        for edge in edges:           
+            if edge['target'] == node['id']:
+                return True
+    return False
+
+def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
+    """
+    Check if there is a connection from assistant message to user message.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        assistant, user: pair of neighboring utterances in a dialogue 
+
+    Returns:
+        list: True if there is connection, False otherwise 
+    """
+
+    nodes = G.nodes_by_utterance(assistant)
+
+    for node in nodes:
+        edges = G.edges_by_utterance(user)
+        for edge in edges:           
+            if edge['source'] == node['id']:
+                return True
+    return False
+
+def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
+    """
+    Check if there is a connection from msg1 to msg2.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        msg1, msg2: pair of neighboring utterances in a dialogue 
+
+    Returns:
+        list: True if there is connection, False otherwise 
+    """
+    if msg1.participant == 'assistant' and msg2.participant == 'user':
+        return au_match(G, msg1.text, msg2.text)
+    if msg1.participant == 'user' and msg2.participant == 'assistant':
+        return ua_match(G, msg1.text, msg2.text)
+    return False
+
+def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> list:
+    """
+    Check if all dialogues are valid paths in the graph.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        dialogues: List of Dialogue objects to check against
+
+    Returns:
+        list: for every dialogue either [True] or [False, message1, message2], when there is no connection from message1 to message2
+    """
+
+
+    result = []
+
+    for dialogue in dialogues:
+        idx = 0
+        for idx in range(len(dialogue.messages)-1):
+            if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx+1]):
+                result.append([False, dialogue.messages[idx].text, dialogue.messages[idx+1].text])
+        result.append([True])
+    return result
 
 def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
     for phrase_1, phrase_2 in zip(D1.messages, D2.messages):

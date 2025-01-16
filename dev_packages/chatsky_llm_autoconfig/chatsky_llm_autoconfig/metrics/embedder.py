@@ -13,8 +13,6 @@ env_settings = EnvSettings()
 embedding = {}
 
 
-
-
 nlp = spacy.load('en_core_web_sm')
 evaluator = HuggingFaceCrossEncoder(model_name=env_settings.RERANKER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
 
@@ -137,13 +135,15 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
         print("LEFT: ", pairs_in)
     return groups
 
-def nodes2groups(nodes_list: list[str], mix_list: list[str]):
+def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str]):
     
-    # sz = len(nodes_list)
+    sz = len(nodes_list)
     nodes_to_score = []
     nodes_to_back_score = []   
     mix_to_score = []
     mix_to_back_score = []
+    next_to_score = []
+    next_to_back_score = []
     index = []
     orig_index = []
     for ind1, en in enumerate(zip(mix_list, nodes_list)):
@@ -152,6 +152,14 @@ def nodes2groups(nodes_list: list[str], mix_list: list[str]):
         cur_mix_list = mix_list[ind1+1:]
         cur_nodes_list = nodes_list[ind1+1:]
         for ind2, mix2, node2 in zip(range(ind1+1,ind1+1+len(cur_mix_list)), cur_mix_list, cur_nodes_list):
+            print("NNODES: ", node1, node2, ind1, ind2)
+            set1 = set(node1.split())
+            set2 = set(node2.split())
+            dif = list(set1.symmetric_difference(set2))
+            first = re.sub(r'[^\w\s]','',dif[0])
+            second = re.sub(r'[^\w\s]','',dif[1])
+            dif_score = min(evaluator.score([(first,second)]), evaluator.score([(second,first)]))
+            print("DIF: ", dif, dif_score)
             end1 = node1.rstrip()
             end2 = node2.rstrip()
             doc1 = nlp(node1)
@@ -159,30 +167,54 @@ def nodes2groups(nodes_list: list[str], mix_list: list[str]):
             sents1 = [str(sent) for sent in doc1.sents]
             sents2 = [str(sent) for sent in doc2.sents]
             signs = re.match("^.*(?<![!?])$",node1) and re.match("^.*(?<![!?])$",node2) or all([end1,end2,end1[-1] == end2[-1]])
-            to_score = [(node1,node2)]
-            to_back_score = [(node2,node1)]
-            if len(sents1) == len(sents2) and signs:
+
+            orig_index.append((ind1, ind2))
+            one_word = len(dif) == 2 and dif_score < env_settings.RERANKER_THRESHOLD
+            if one_word:
+                print("ONE_WORD: ", node1, node2)
+            if ind1 < sz-1 and nodes_list[ind1+1] == node2:
+                print("Neighbors: ", node1, node2)
+            if not signs:
+                print("Signs: ", node1, node2)                
+            if one_word or len(sents1) != len(sents2) or not signs \
+                or ind1 < sz-1 and nodes_list[ind1+1] == node2: # adjacent utterances cannot be one node:
+                
+                nodes_to_score.append(("no","yes"))
+                nodes_to_back_score.append(("no","yes"))
+
+            else:
+
+
+
+
+                to_score = [(node1,node2)]
+                to_back_score = [(node2,node1)]
+                
                 if len(sents1) > 1:
                     for s1,s2 in zip(sents1,sents2):
                         to_score.append((s1,s2))
                         to_back_score.append((s2,s1))
                         orig_index.append((ind1, ind2))
+
                 nodes_to_score.extend(to_score)
                 nodes_to_back_score.extend(to_back_score)
-            else:
-                nodes_to_score.append(("0","a"))
-                nodes_to_back_score.append(("0","a"))
+
+
             mix_to_back_score.append((mix2,mix1))
             mix_to_score.append((mix1,mix2))
+            next_to_back_score.append((mix2,mix1))
+            next_to_score.append((mix1,mix2))
             index.append((ind1, ind2))
-            orig_index.append((ind1, ind2))
+
     print("SCORING...")
     # print(to_score)
     nodes_score = evaluator.score(nodes_to_score)
     mix_score = evaluator.score(mix_to_score)
     nodes_back_score = evaluator.score(nodes_to_back_score)
     mix_back_score = evaluator.score(mix_to_back_score)
-    # for idx, n in enumerate(nodes_to_score):
+    next_score = evaluator.score(next_to_score)
+    next_back_score = evaluator.score(next_to_back_score)
+
     #     n_0 = n[0].rstrip()
     #     n_1 = n[1].rstrip()
     #     doc1 = nlp(n[0])
@@ -201,7 +233,7 @@ def nodes2groups(nodes_list: list[str], mix_list: list[str]):
 
     pairs = []
     orig_idx = 0
-    for idx, mix in enumerate(zip(mix_score, mix_back_score)):
+    for idx, mix in enumerate(zip(mix_score, mix_back_score, next_score, next_back_score)):
         sz = len([o for o in orig_index if index[idx] == o])
 
         max_n = max(nodes_score[orig_idx], nodes_back_score[orig_idx])
@@ -214,9 +246,14 @@ def nodes2groups(nodes_list: list[str], mix_list: list[str]):
 
         # print("MIX: ",max(en[0],en[1]),max(en[2],en[3]),nodes_to_score[idx])
         max_m = max(mix[0],mix[1])
-        if max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition:
+        min_e = min(mix[2],mix[3])
+        if min_e < 0.06:
+            condition = nodes_condition
+        else:
+            condition = max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition
+        if condition:
             pairs.append(((max_n+max_m)/2,index[idx]))
-
+        print("SCORES: ",max_m,max_n,min_e, nodes_to_score[idx])
 
     # for idx, en in enumerate(zip(mix_score, mix_back_score, nodes_score, nodes_back_score)):
     #     print("MIX: ",max(en[0],en[1]),max(en[2],en[3]),nodes_to_score[idx])

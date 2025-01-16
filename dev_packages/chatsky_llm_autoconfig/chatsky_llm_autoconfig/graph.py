@@ -24,6 +24,17 @@ class BaseGraph(BaseModel, abc.ABC):
     def visualise(self, *args, **kwargs):
         raise NotImplementedError
 
+    def nodes_by_utterance(self, utterance: str) -> list[dict]:
+        return [node for node in self.graph_dict['nodes'] if utterance in node['utterances']]
+            
+    def edges_by_utterance(self, utterance: str) -> list[dict]:
+        return [edge for edge in self.graph_dict['edges'] if utterance in edge['utterances']]
+            
+    def node_bi_id(self, id: int):
+        for node in self.graph_dict['nodes']:
+            if node['id'] == id:
+                return node
+
 
 class Graph(BaseGraph):
 

@@ -1,9 +1,10 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Optional
+from typing import Optional, Any
+import os
 
 class EnvSettings(BaseSettings, case_sensitive=True):
 
-    model_config = SettingsConfigDict(env_file='dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/.env', env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
 
     OPENAI_API_KEY: Optional[str]
     OPENAI_BASE_URL: Optional[str]
@@ -23,4 +24,4 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     NEXT_RERANKER_THRESHOLD: Optional[float]
     SIM_THRESHOLD: Optional[float]
     HUGGINGFACE_TOKEN: Optional[str]
-    TEST_DATASET: Optional[str] 
+    TEST_DATASET: Optional[str]

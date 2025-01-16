@@ -22,7 +22,7 @@ from chatsky_llm_autoconfig.metrics.automatic_metrics import (
     triplet_match,
     llm_match
 )
-from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, are_theme_valid
+from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 from chatsky_llm_autoconfig.utils import (
     save_json,
     read_json,
@@ -91,16 +91,16 @@ def run_all_algorithms():
             metrics["is_correct_lenght_avg"] = sum(metrics["is_correct_lenght"]) / len(metrics["is_correct_lenght"])
 
         elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
-            metrics = {"are_theme_valid": [], "are_triplets_valid": []}
+            metrics = {"is_theme_valid": [], "are_triplets_valid": []}
             for case in graph_to_dialogue:
                 test_graph = Graph(graph_dict=case["graph"])
                 result = class_instance.invoke(test_graph)
 
                 metrics["are_triplets_valid"].append(are_triplets_valid(result, model, topic="")["value"])
-                metrics["are_theme_valid"].append(are_theme_valid(result, model, topic="")["value"])
+                metrics["is_theme_valid"].append(is_theme_valid(result, model, topic="")["value"])
 
             metrics["are_triplets_valid"] = sum(metrics["are_triplets_valid"]) / len(metrics["are_triplets_valid"])
-            metrics["are_theme_valid_avg"] = sum(metrics["are_theme_valid"]) / len(metrics["are_theme_valid"])
+            metrics["is_theme_valid_avg"] = sum(metrics["is_theme_valid"]) / len(metrics["is_theme_valid"])
 
         elif algorithms[class_]["input_type"] in [Dialogue,list[Dialogue]] and algorithms[class_]["output_type"] is BaseGraph:
             tp = algorithms[class_]["type"]
@@ -171,16 +171,16 @@ def run_all_algorithms():
             metrics["is_same_structure"] = sum(metrics["is_same_structure"]) / len(metrics["is_same_structure"])
 
         elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
-            metrics = {"are_theme_valid": [], "are_triplets_valid": []}
+            metrics = {"is_theme_valid": [], "are_triplets_valid": []}
             for case in graph_to_dialogue:
                 test_graph = Graph(graph_dict=case["graph"])
                 result = class_instance.invoke(test_graph)
 
                 metrics["are_triplets_valid"].append(are_triplets_valid(result, model, topic="")["value"])
-                metrics["are_theme_valid"].append(are_theme_valid(result, model, topic="")["value"])
+                metrics["is_theme_valid"].append(is_theme_valid(result, model, topic="")["value"])
 
             metrics["are_triplets_valid"] = sum(metrics["are_triplets_valid"]) / len(metrics["are_triplets_valid"])
-            metrics["are_theme_valid_avg"] = sum(metrics["are_theme_valid"]) / len(metrics["are_theme_valid"])
+            metrics["is_theme_valid_avg"] = sum(metrics["is_theme_valid"]) / len(metrics["is_theme_valid"])
         total_metrics[class_] = metrics
 
     return total_metrics
