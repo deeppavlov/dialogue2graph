@@ -135,8 +135,10 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
         print("LEFT: ", pairs_in)
     return groups
 
-def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str]):
+def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str], neigbhours: dict):
     
+    print("DICT: ", neigbhours)
+
     sz = len(nodes_list)
     nodes_to_score = []
     nodes_to_back_score = []   
@@ -146,20 +148,22 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
     next_to_back_score = []
     index = []
     orig_index = []
-    for ind1, en in enumerate(zip(mix_list, nodes_list)):
+    for ind1, en in enumerate(zip(mix_list, nodes_list, next_list)):
         mix1 = en[0]
         node1 = en[1]
+        next1 = en[2]
         cur_mix_list = mix_list[ind1+1:]
+        cur_next_list = next_list[ind1+1:]
         cur_nodes_list = nodes_list[ind1+1:]
-        for ind2, mix2, node2 in zip(range(ind1+1,ind1+1+len(cur_mix_list)), cur_mix_list, cur_nodes_list):
-            print("NNODES: ", node1, node2, ind1, ind2)
+        for ind2, mix2, next2, node2 in zip(range(ind1+1,ind1+1+len(cur_mix_list)), cur_mix_list, cur_next_list, cur_nodes_list):
+            # print("NNODES: ", node1, node2, ind1, ind2)
             set1 = set(node1.split())
             set2 = set(node2.split())
             dif = list(set1.symmetric_difference(set2))
             first = re.sub(r'[^\w\s]','',dif[0])
             second = re.sub(r'[^\w\s]','',dif[1])
             dif_score = min(evaluator.score([(first,second)]), evaluator.score([(second,first)]))
-            print("DIF: ", dif, dif_score)
+            # print("DIF: ", dif, dif_score)
             end1 = node1.rstrip()
             end2 = node2.rstrip()
             doc1 = nlp(node1)
@@ -172,20 +176,37 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             one_word = len(dif) == 2 and dif_score < env_settings.RERANKER_THRESHOLD
             if one_word:
                 print("ONE_WORD: ", node1, node2)
-            if ind1 < sz-1 and nodes_list[ind1+1] == node2:
-                print("Neighbors: ", node1, node2)
+            if node1 in neigbhours[node2]:
+                print("Neighbours: ", node1, node2)
+            yn = re.compile(r'\b(where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
+            if (re.search(yn, node1) is None) is not (re.search(yn, node2) is None):
+                yes_no = True
+            else:
+                yes_no = False
+            greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey)\b', re.IGNORECASE)
+            else_re = re.compile(r'\b(else|add|another|more|other)\b', re.IGNORECASE)
+            if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
+                greetings_cond = True
+            else:
+                greetings_cond = False
+            if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
+                else_cond = True
+            else:
+                else_cond = False
             if not signs:
-                print("Signs: ", node1, node2)                
-            if one_word or len(sents1) != len(sents2) or not signs \
-                or ind1 < sz-1 and nodes_list[ind1+1] == node2: # adjacent utterances cannot be one node:
+                print("Signs: ", node1, node2)
+            if greetings_cond:
+                print("GREETINGS: ", node1, node2)
+            if else_cond:
+                print("ELSE: ", node1, node2)
+            if yes_no:
+                print("YESNO: ", node1, node2)
+            if greetings_cond or else_cond or yes_no or one_word or len(sents1) != len(sents2) or not signs or node1 in neigbhours[node2]:
                 
                 nodes_to_score.append(("no","yes"))
                 nodes_to_back_score.append(("no","yes"))
 
             else:
-
-
-
 
                 to_score = [(node1,node2)]
                 to_back_score = [(node2,node1)]
@@ -202,8 +223,8 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
 
             mix_to_back_score.append((mix2,mix1))
             mix_to_score.append((mix1,mix2))
-            next_to_back_score.append((mix2,mix1))
-            next_to_score.append((mix1,mix2))
+            next_to_back_score.append((next2,next1))
+            next_to_score.append((next1,next2))
             index.append((ind1, ind2))
 
     print("SCORING...")
@@ -215,20 +236,6 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
     next_score = evaluator.score(next_to_score)
     next_back_score = evaluator.score(next_to_back_score)
 
-    #     n_0 = n[0].rstrip()
-    #     n_1 = n[1].rstrip()
-    #     doc1 = nlp(n[0])
-    #     doc2 = nlp(n[1])
-    #     tokens1 = [[token.text for token in sent] for sent in doc1.sents]
-    #     tokens2 = [[token.text for token in sent] for sent in doc2.sents]
-    #     signs = n_0 and n_1 and ((n_0[-1] == '!' and n_1[-1] != '!') or (n_0[-1] == '?' and n_1[-1] != '?') or (n_1[-1] == '!' and n_0[-1] != '!') or (n_1[-1] == '?' and n_0[-1] != '?'))
-    #     if signs or len(tokens1)!=len(tokens2):
-    #         nodes_score[idx] = 0
-    #         nodes_back_score[idx] = 0
-
-
-#  >= env_settings.RERANKER_THRESHOLD
-    # print("SCORE: ", score)
     print("finished")
 
     pairs = []
@@ -244,9 +251,10 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             nodes_condition = maxes[0] >= env_settings.RERANKER_THRESHOLD
         orig_idx += sz
 
-        # print("MIX: ",max(en[0],en[1]),max(en[2],en[3]),nodes_to_score[idx])
+
         max_m = max(mix[0],mix[1])
         min_e = min(mix[2],mix[3])
+        print("MIX: ",max_n,max_m,min_e,nodes_to_score[idx])
         if min_e < 0.06:
             condition = nodes_condition
         else:
@@ -254,13 +262,6 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
         if condition:
             pairs.append(((max_n+max_m)/2,index[idx]))
         print("SCORES: ",max_m,max_n,min_e, nodes_to_score[idx])
-
-    # for idx, en in enumerate(zip(mix_score, mix_back_score, nodes_score, nodes_back_score)):
-    #     print("MIX: ",max(en[0],en[1]),max(en[2],en[3]),nodes_to_score[idx])
-    #     max1 = max(en[0],en[1])
-    #     max2 = max(en[2],en[3])
-    #     if max1 >= env_settings.NEXT_RERANKER_THRESHOLD and max2 >= env_settings.RERANKER_THRESHOLD:
-    #         pairs.append(((max1+max2)/2,index[idx]))
 
     print("PAIRS: ", pairs)
 
@@ -273,126 +274,17 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
     print("INDEX: ", groups)
     groups = [[nodes_list[el] for el in g] for g in groups]
 
-    # groups = []
-    # firsts = [p[0] for p in pairs]
-    # for idx, g in enumerate(nodes_list):
-    #     if idx in firsts:
-    #         flag = 0
-    #         node = nodes_list[pairs[firsts.index(idx)][1]]
-    #         for idx_2, gr in enumerate(groups):
-    #             if any([g==el for el in gr]):
-    #                 flag = 1
-    #                 if node not in groups[idx_2]:
-    #                     groups[idx_2].append(node)
-    #                     print("ANY adding  ",node,idx_2)
-    #                 break
-    #         if not flag:
-    #             groups.append([node,g])
-    #             print("flag adding:  ",node,g)
-    #     else:
-    #         if all([g!=el for group in groups for el in group]):
-    #             groups.append([g])
-    #             print("else adding:  ",g)
     return groups
 
-from sklearn.cluster import DBSCAN
-
-# def nodes2clusters(nodes_list: list[str], mix_list: list[str]):
+# def nodes2clusters(nodes_list: list[str]):
 #     # nodes_scores = get_reranking(nodes_list,nodes_list)
 #     # mix_scores = get_reranking(mix_list,mix_list)
 
 #     nodes_scores = get_embedding(nodes_list,nodes_list, "BAAI/bge-m3", 'cpu')
-#     mix_scores = get_embedding(mix_list,mix_list, "BAAI/bge-m3", 'cpu')
-
-#     scores = np.mean( np.array([ nodes_scores, mix_scores ]), axis=0 )
-
-#     return DBSCAN(min_samples=1).fit_predict(scores)
-
-def nodes2clusters(nodes_list: list[str]):
-    # nodes_scores = get_reranking(nodes_list,nodes_list)
-    # mix_scores = get_reranking(mix_list,mix_list)
-
-    nodes_scores = get_embedding(nodes_list,nodes_list, "BAAI/bge-m3", 'cpu')
-    # mix_scores = get_embedding(mix_list,mix_list, "BAAI/bge-m3", 'cpu')
+#     # mix_scores = get_embedding(mix_list,mix_list, "BAAI/bge-m3", 'cpu')
 
 
-    return DBSCAN(min_samples=1).fit_predict(nodes_scores)
-
-
-# def nodes2groups(nodes_list: list[str], mix_list: list[str]):
-    
-#     sz = len(nodes_list)
-#     nodes_to_score = []  
-#     mix_to_score = []
-#     nodes_scores = get_reranking(nodes_list,nodes_list)
-#     mix_scores = get_reranking(mix_list,mix_list)
-#     index = []
-#     for ind1, en in enumerate(zip(mix_list, nodes_list)):
-#         mix1 = en[0]
-#         node1 = en[1]
-#         cur_mix_list = mix_list[ind1+1:]
-#         cur_nodes_list = nodes_list[ind1+1:]
-#         for ind2, mix2, node2 in zip(range(ind1+1,ind1+1+len(cur_mix_list)), cur_mix_list, cur_nodes_list):
-#             mix_to_score.append((mix1,mix2))
-#             nodes_to_score.append((node1,node2))
-#             mix_to_back_score.append((mix2,mix1))
-#             nodes_to_back_score.append((node2,node1))
-#             index.append((ind1, ind2))
-#     print("SCORING...")
-#     # print(to_score)
-#     nodes_score = evaluator.score(nodes_to_score)
-#     mix_score = evaluator.score(mix_to_score)
-#     nodes_back_score = evaluator.score(nodes_to_back_score)
-#     mix_back_score = evaluator.score(mix_to_back_score)
-#     for idx, n in enumerate(nodes_to_score):
-#         n_0 = n[0].rstrip()
-#         n_1 = n[1].rstrip()
-#         doc1 = nlp(n[0])
-#         doc2 = nlp(n[1])
-#         tokens1 = [[token.text for token in sent] for sent in doc1.sents]
-#         tokens2 = [[token.text for token in sent] for sent in doc2.sents]
-#         signs = n_0 and n_1 and ((n_0[-1] == '!' and n_1[-1] != '!') or (n_0[-1] == '?' and n_1[-1] != '?') or (n_1[-1] == '!' and n_0[-1] != '!') or (n_1[-1] == '?' and n_0[-1] != '?'))
-#         if signs or len(tokens1)!=len(tokens2):
-#             nodes_score[idx] = 0
-#             nodes_back_score[idx] = 0
-
-
-
-#     # print("SCORE: ", score)
-#     print("finished")
-
-#     pairs = []
-#     for idx, en in enumerate(zip(mix_score, mix_back_score, nodes_score, nodes_back_score)):
-#         print("MIX: ",max(en[0],en[1]),max(en[2],en[3]),nodes_to_score[idx])
-#         if max(en[0],en[1]) >= env_settings.NEXT_RERANKER_THRESHOLD and max(en[2],en[3]) >= env_settings.RERANKER_THRESHOLD:
-#             pairs.append(index[idx])
-
-#     print("PAIRS: ", pairs)
-
-#     groups = []
-#     firsts = [p[0] for p in pairs]
-#     for idx, g in enumerate(nodes_list):
-#         if idx in firsts:
-#             flag = 0
-#             node = nodes_list[pairs[firsts.index(idx)][1]]
-#             for idx_2, gr in enumerate(groups):
-#                 if any([g==el for el in gr]):
-#                     flag = 1
-#                     if node not in groups[idx_2]:
-#                         groups[idx_2].append(node)
-#                         print("ANY adding  ",node,idx_2)
-#                     break
-#             if not flag:
-#                 groups.append([node,g])
-#                 print("flag adding:  ",node,g)
-#         else:
-#             if all([g!=el for group in groups for el in group]):
-#                 groups.append([g])
-#                 print("else adding:  ",g)
-#     return groups
-
-
-
+#     return DBSCAN(min_samples=1).fit_predict(nodes_scores)
 
 def get_2_rerankings(generated1: list[str], golden1: list[str], generated2: list[str], golden2: list[str]):
     

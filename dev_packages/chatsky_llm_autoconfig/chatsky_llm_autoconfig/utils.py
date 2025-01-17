@@ -306,6 +306,7 @@ def dialogues2list(dialogues: list[Dialogue]):
     nodes = []
     nexts = []
     starts = []
+    neighbours = {}
     for d in dialogues:
         start = 1
         texts = d.to_list()
@@ -313,6 +314,15 @@ def dialogues2list(dialogues: list[Dialogue]):
             cur = t['text']
             next = ''
             if t['participant'] == 'assistant':
+                neigh_nodes = []
+                if idx > 1:
+                    neigh_nodes.append(texts[idx-2]['text'])
+                if idx < len(texts) - 2:
+                    neigh_nodes.append(texts[idx+2]['text'])
+                if cur in neighbours:
+                    neighbours[cur] = neighbours[cur].union(set(neigh_nodes))
+                else:
+                    neighbours[cur] = set(neigh_nodes)
                 if idx < len(texts)-1:
                     next = texts[idx+1]['text']
                 if cur in nodes:
@@ -324,4 +334,5 @@ def dialogues2list(dialogues: list[Dialogue]):
                     if start:
                         starts.append(t['text'])
                         start = 0
-    return nexts, nodes, starts
+    neighbours
+    return nexts, nodes, starts, neighbours

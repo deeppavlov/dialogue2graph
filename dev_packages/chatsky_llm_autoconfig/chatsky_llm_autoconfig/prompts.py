@@ -1659,8 +1659,8 @@ three_2 = """This is the end of input graph.
 1) is_start field in the node is an entry point to the whole graph.
 2) Nodes are assistant's utterances, edges are utterances from the user.
 Please consider the graph above, list of dialogues below and do the following:
-3) For every user's utterance (let's call it current utterance) not present in input graph, firstly you must find
-immediately previous assistant's utterance and its node,
+3) For every user's utterance (let's call it current utterance) not present in input graph, firstly you must find in any of the dialogues
+immediately previous assistant's utterance and its existing node from the graph above,
 then find the most suitable continuation of a dialogue flow,
 with assistant's utterance from one of nodes, and create new edge connecting these two nodes with current user's utterance.
 4) To find most suitable continuation node:
@@ -1672,11 +1672,12 @@ From two equal candidates choose:
 firstly - one with similar phrases, then one closest to the beginning of the graph.
 6) If nothing is found, search for a node with current problem elaboration step.
 7) Typically it is a clarifying question to current user's utterance.
-8) So it is necessary to add edges to the input graph from utterances which exist in dialogues but absent in the graph.
-9) When source and target of one added edge are both equal to source and target of another added edge, these edges shall be combined in one edge
+8) You must use existing nodes only, don't create new nodes.
+9) So it is necessary to add edges to the input graph from utterances which exist in dialogues but absent in the graph.
+10) When source and target of one added edge are both equal to source and target of another added edge, these edges shall be combined in one edge
 with list of utterances containing utterances from both edges.
-10) Also give all the nodes suitable labels.
-11) Add reason point to the graph with your explanation which edges you added and why.
+11) Also give all the nodes suitable labels.
+12) Add reason point to the graph with your explanation which edges you added and why.
 I will give a list of dialogues, your return is a fixed version of dialogue graph above according to the rules above.
 List of dialogues: """
 

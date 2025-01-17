@@ -6,7 +6,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from chatsky_llm_autoconfig.algorithms.base import GraphGenerator
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
-from chatsky_llm_autoconfig.metrics.embedder import nodes2groups, nodes2clusters
+from chatsky_llm_autoconfig.metrics.embedder import nodes2groups
 from chatsky_llm_autoconfig.schemas import DialogueGraph, DialogueNodes
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
@@ -147,12 +147,12 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
         # reason = nodes.reason
 
-        nexts, nodes, starts = dialogues2list(dialogue)
+        nexts, nodes, starts, neigbhours = dialogues2list(dialogue)
         
         print("LISTS_N: ",[(i,n) for i,n in enumerate(nexts)])
         print("LISTS: ",[(i,n) for i,n in enumerate(nodes)])
 
-        groups = nodes2groups(nodes, nexts, [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)])
+        groups = nodes2groups(nodes, [" ".join(p) for p in nexts], [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)], neigbhours)
         # groups = nodes2clusters(nodes, [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)])
         # groups = nodes2clusters(nodes)
         # mix = nodes2clusters([n+ " ".join(p) + " " for p,n in zip(nexts, nodes)])
