@@ -18,6 +18,10 @@ class Dialogue(BaseModel):
         frozen=False,  # Dialogue needs to be mutable to append messages
     )
 
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.__validate(self.messages)
+
     @classmethod
     def from_string(cls, string: str) -> "Dialogue":
         """Creates a Dialogue from a tab-separated string format.
@@ -70,7 +74,23 @@ class Dialogue(BaseModel):
             messages: List of DialogueMessage objects or dicts to add
         """
         new_messages = [msg if isinstance(msg, DialogueMessage) else DialogueMessage(**msg) for msg in messages]
+        self.__validate(new_messages)
         self.messages.extend(new_messages)
+    
+    def __validate(self, messages):
+        """Ensure that messages meets expectations.
+        """
+        if not messages:
+            return
+
+        # Check if first message is from assistant
+        if messages[0].participant != "assistant":
+            raise ValueError(f"First message must be from assistant, got: {messages[0]}")
+
+        # Check for consecutive messages from same participant
+        for i in range(len(messages) - 1):
+            if messages[i].participant == messages[i + 1].participant:
+                raise ValueError(f"Cannot have consecutive messages from the same participant. Messages: {messages[i]}, {messages[i + 1]}")
 
 
 # Type-safe usage examples
