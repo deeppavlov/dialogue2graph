@@ -12,6 +12,7 @@ class Dialogue(BaseModel):
 
     messages: List[DialogueMessage] = Field(default_factory=list)
     topic: str = ""
+    validate: bool = Field(default=True, description="Whether to validate messages upon initialization")
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
@@ -20,7 +21,8 @@ class Dialogue(BaseModel):
 
     def __init__(self, **data):
         super().__init__(**data)
-        self.__validate(self.messages)
+        if self.validate:
+            self.__validate(self.messages)
 
     @classmethod
     def from_string(cls, string: str) -> "Dialogue":
@@ -38,17 +40,10 @@ class Dialogue(BaseModel):
         return cls(messages=messages)
 
     @classmethod
-    def from_list(cls, dialogue_list: List[Dict[str, str]]) -> "Dialogue":
-        """Creates a Dialogue from a list of message dictionaries.
-
-        Args:
-            dialogue_list: List of dicts with 'text' and 'participant' keys
-
-        Returns:
-            Dialogue object with parsed messages
-        """
-        messages = [DialogueMessage(**msg) for msg in dialogue_list]
-        return cls(messages=messages)
+    def from_list(cls, messages: List[Dict[str, str]], validate: bool = True) -> "Dialogue":
+        """Create a Dialogue from a list of dictionaries."""
+        dialogue_messages = [DialogueMessage(**m) for m in messages]
+        return cls(messages=dialogue_messages, validate=validate)
 
     def to_list(self) -> List[Dict[str, str]]:
         """Converts Dialogue to a list of message dictionaries."""
