@@ -88,7 +88,7 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
     groups = []
     while pairs_in:
         cur = [p for p in pairs_in if p[0] in p or p[1] in p]
-        print("CUR: ", cur)
+        # print("CUR: ", cur)
         # for x in cur:
         x = cur[0]
         list1 = [p for p in cur if x[0] in p and x!=p]
@@ -141,6 +141,7 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
 
     sz = len(nodes_list)
     nodes_to_score = []
+    orig_to_score = []
     nodes_to_back_score = []   
     mix_to_score = []
     mix_to_back_score = []
@@ -156,14 +157,14 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
         cur_next_list = next_list[ind1+1:]
         cur_nodes_list = nodes_list[ind1+1:]
         for ind2, mix2, next2, node2 in zip(range(ind1+1,ind1+1+len(cur_mix_list)), cur_mix_list, cur_next_list, cur_nodes_list):
-            # print("NNODES: ", node1, node2, ind1, ind2)
+            print("NNODES: ", node1, node2, ind1, ind2)
             set1 = set(node1.split())
             set2 = set(node2.split())
             dif = list(set1.symmetric_difference(set2))
             first = re.sub(r'[^\w\s]','',dif[0])
             second = re.sub(r'[^\w\s]','',dif[1])
-            dif_score = min(evaluator.score([(first,second)]), evaluator.score([(second,first)]))
-            # print("DIF: ", dif, dif_score)
+            dif_score = max(evaluator.score([(first,second)]), evaluator.score([(second,first)]))
+            print("DIF: ", dif, dif_score)
             end1 = node1.rstrip()
             end2 = node2.rstrip()
             doc1 = nlp(node1)
@@ -173,7 +174,7 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             signs = re.match("^.*(?<![!?])$",node1) and re.match("^.*(?<![!?])$",node2) or all([end1,end2,end1[-1] == end2[-1]])
 
             orig_index.append((ind1, ind2))
-            one_word = len(dif) == 2 and dif_score < env_settings.RERANKER_THRESHOLD
+            one_word = len(dif) == 2 and dif_score < env_settings.ONE_WORD_TH
             if one_word:
                 print("ONE_WORD: ", node1, node2)
             if node1 in neigbhours[node2]:
@@ -183,8 +184,13 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
                 yes_no = True
             else:
                 yes_no = False
-            greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey)\b', re.IGNORECASE)
-            else_re = re.compile(r'\b(else|add|another|more|other)\b', re.IGNORECASE)
+            greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|great|awesome|perfect|fantastic|wonderful)\b', re.IGNORECASE)
+            else_re = re.compile(r'\b(else|add|another|more|other|extra|additional)\b', re.IGNORECASE)
+            if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
+            if (re.search(if_re, node1) is None) is not (re.search(if_re, node2) is None):
+                if_cond = True
+            else:
+                if_cond = False
             if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
                 greetings_cond = True
             else:
@@ -201,7 +207,8 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
                 print("ELSE: ", node1, node2)
             if yes_no:
                 print("YESNO: ", node1, node2)
-            if greetings_cond or else_cond or yes_no or one_word or len(sents1) != len(sents2) or not signs or node1 in neigbhours[node2]:
+            # if greetings_cond or else_cond or yes_no or one_word or len(sents1) != len(sents2) or not signs or node1 in neigbhours[node2]:
+            if greetings_cond or if_cond or else_cond or yes_no or one_word or (len(sents1) == 1 and len(sents2) == 1 and not signs) or node1 in neigbhours[node2]:
                 
                 nodes_to_score.append(("no","yes"))
                 nodes_to_back_score.append(("no","yes"))
@@ -226,15 +233,19 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             next_to_back_score.append((next2,next1))
             next_to_score.append((next1,next2))
             index.append((ind1, ind2))
+            orig_to_score.append((node1,node2))
 
     print("SCORING...")
     # print(to_score)
     nodes_score = evaluator.score(nodes_to_score)
+    orig_score = evaluator.score(orig_to_score)
     mix_score = evaluator.score(mix_to_score)
     nodes_back_score = evaluator.score(nodes_to_back_score)
     mix_back_score = evaluator.score(mix_to_back_score)
     next_score = evaluator.score(next_to_score)
     next_back_score = evaluator.score(next_to_back_score)
+
+
 
     print("finished")
 
@@ -254,14 +265,17 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
 
         max_m = max(mix[0],mix[1])
         min_e = min(mix[2],mix[3])
-        print("MIX: ",max_n,max_m,min_e,nodes_to_score[idx])
+        max_e = max(mix[2],mix[3])
+        # print("MIX: ",max_n,max_m,min_e,nodes_to_score[idx])
         if min_e < 0.06:
             condition = nodes_condition
+        elif max_e > 0.9:
+            condition = max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > 0.05
         else:
             condition = max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition
         if condition:
             pairs.append(((max_n+max_m)/2,index[idx]))
-        print("SCORES: ",max_m,max_n,min_e, nodes_to_score[idx])
+        print("SCORES: ",max_m,max_n,min_e,max_e, nodes_to_score[idx])
 
     print("PAIRS: ", pairs)
 

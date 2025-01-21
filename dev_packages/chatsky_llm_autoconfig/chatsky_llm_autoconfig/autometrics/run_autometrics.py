@@ -1,4 +1,5 @@
 print("start")
+import logging
 from pathlib import Path
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 #import chatsky_llm_autoconfig.algorithms.dialogue_generation
@@ -32,6 +33,9 @@ from chatsky_llm_autoconfig.settings import EnvSettings
 import datetime
 from colorama import Fore
 from langchain_openai  import ChatOpenAI
+
+logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
+
 print("modules loaded")
 env_settings = EnvSettings()
 print("settings")

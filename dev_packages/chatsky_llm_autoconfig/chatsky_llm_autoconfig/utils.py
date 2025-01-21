@@ -250,21 +250,21 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], reason: str, embeddings:
     node_store = NodeStore(nodes, embeddings)
     for d in dialogues:
         texts = d.to_list()
-        print("LEN: ", len(texts))
+        # print("LEN: ", len(texts))
         store = DialogueStore(texts, embeddings)
         for n in nodes:
             for u in n['utterances']:
                 ids = store.search_assistant(u)
-                print("ASSISTANT: ", u, ids)
+                # print("ASSISTANT: ", u, ids)
                 if ids:
-                    print("IF")
+                    # print("IF")
                     for id,s in zip(ids, store.get_user(ids=ids)):
-                        print("USER: ",s, id)
+                        # print("USER: ",s, id)
                         if len(texts) > 2*(int(id)+1):
                             target = node_store.find_node(texts[2*(int(id)+1)]['text'])
-                            print("TARGET: ", target, n["id"])
+                            # print("TARGET: ", target, n["id"])
                             existing = [e for e in edges if e['source']==n['id'] and e['target']==target]
-                            print("EXIST: ", edges)
+                            # print("EXIST: ", edges)
                             if existing:
 
                                 # to_score = [(e,s) for e in existing[0]['utterances']]
@@ -307,6 +307,7 @@ def dialogues2list(dialogues: list[Dialogue]):
     nexts = []
     starts = []
     neighbours = {}
+    last_user = False
     for d in dialogues:
         start = 1
         texts = d.to_list()
@@ -334,5 +335,8 @@ def dialogues2list(dialogues: list[Dialogue]):
                     if start:
                         starts.append(t['text'])
                         start = 0
-    neighbours
-    return nexts, nodes, starts, neighbours
+        if t['participant'] == 'user':
+            last_user = True
+    return nexts, nodes, starts, neighbours, last_user
+
+
