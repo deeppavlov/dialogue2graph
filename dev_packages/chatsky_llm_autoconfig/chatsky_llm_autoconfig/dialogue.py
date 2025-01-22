@@ -12,11 +12,17 @@ class Dialogue(BaseModel):
 
     messages: List[DialogueMessage] = Field(default_factory=list)
     topic: str = ""
+    validate: bool = Field(default=True, description="Whether to validate messages upon initialization")
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
         frozen=False,  # Dialogue needs to be mutable to append messages
     )
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        if self.validate:
+            self.__validate(self.messages)
 
     @classmethod
     def from_string(cls, string: str) -> "Dialogue":
@@ -34,17 +40,10 @@ class Dialogue(BaseModel):
         return cls(messages=messages)
 
     @classmethod
-    def from_list(cls, dialogue_list: List[Dict[str, str]]) -> "Dialogue":
-        """Creates a Dialogue from a list of message dictionaries.
-
-        Args:
-            dialogue_list: List of dicts with 'text' and 'participant' keys
-
-        Returns:
-            Dialogue object with parsed messages
-        """
-        messages = [DialogueMessage(**msg) for msg in dialogue_list]
-        return cls(messages=messages)
+    def from_list(cls, messages: List[Dict[str, str]], validate: bool = True) -> "Dialogue":
+        """Create a Dialogue from a list of dictionaries."""
+        dialogue_messages = [DialogueMessage(**m) for m in messages]
+        return cls(messages=dialogue_messages, validate=validate)
 
     def to_list(self) -> List[Dict[str, str]]:
         """Converts Dialogue to a list of message dictionaries."""
@@ -70,7 +69,23 @@ class Dialogue(BaseModel):
             messages: List of DialogueMessage objects or dicts to add
         """
         new_messages = [msg if isinstance(msg, DialogueMessage) else DialogueMessage(**msg) for msg in messages]
+        self.__validate(new_messages)
         self.messages.extend(new_messages)
+    
+    def __validate(self, messages):
+        """Ensure that messages meets expectations.
+        """
+        if not messages:
+            return
+
+        # Check if first message is from assistant
+        if messages[0].participant != "assistant":
+            raise ValueError(f"First message must be from assistant, got: {messages[0]}")
+
+        # Check for consecutive messages from same participant
+        for i in range(len(messages) - 1):
+            if messages[i].participant == messages[i + 1].participant:
+                raise ValueError(f"Cannot have consecutive messages from the same participant. Messages: {messages[i]}, {messages[i + 1]}")
 
 
 # Type-safe usage examples
