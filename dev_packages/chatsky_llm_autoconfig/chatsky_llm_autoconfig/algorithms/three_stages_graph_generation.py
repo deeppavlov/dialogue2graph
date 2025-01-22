@@ -147,7 +147,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
         # reason = nodes.reason
 
-        nexts, nodes, starts, neigbhours = dialogues2list(dialogue)
+        nexts, nodes, starts, neigbhours, last_user = dialogues2list(dialogue)
         
         print("LISTS_N: ",[(i,n) for i,n in enumerate(nexts)])
         print("LISTS: ",[(i,n) for i,n in enumerate(nodes)])
@@ -174,6 +174,20 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         print("RESULT: ", graph_dict)
         graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
     
+        # graph_utterances = [e["utterances"] for e in graph_dict["edges"]]
+        # graph_utterances = [x for xs in graph_utterances for x in xs]
+        # dialogue_utterances = [x for xs in nexts for x in xs if x!='']
+        # print("GRAPH_UTT: ", graph_utterances)
+        # print("DIA_UTT: ", dialogue_utterances)
+        # if all([d in graph_utterances for d in dialogue_utterances]):
+        #     result_graph = Graph(graph_dict=graph_dict)
+        #     print("SKIP")
+        #     return result_graph
+
+        if not last_user:
+            result_graph = Graph(graph_dict=graph_dict)
+            print("SKIP")
+            return result_graph    
         partial_variables = {}
         prompt_extra = ""
         for idx, dial in enumerate(dialogue):

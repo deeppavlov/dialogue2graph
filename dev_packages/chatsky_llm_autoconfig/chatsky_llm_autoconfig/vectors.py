@@ -4,6 +4,7 @@ from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from chatsky_llm_autoconfig.settings import EnvSettings
+
 env_settings = EnvSettings()
 
 
@@ -11,6 +12,8 @@ class DialogueStore:
 
     assistant_store: Chroma
     user_store: Chroma
+    assistant_size: int
+    user_size: int
 
     # def _normalize(self):
     #     done = {}
@@ -31,19 +34,20 @@ class DialogueStore:
         )
         assistant = [Document(page_content=d['text'], id=id, metadata={"id":id}) for id,d in enumerate([d for d in dialogue if d['participant']=='assistant'])]
         user = [Document(page_content=d['text'], id=id, metadata={"id":id}) for id,d in enumerate(d for d in dialogue if d['participant']=='user')]
-
+        self.assistant_size = len(assistant)
+        self.user_size = len(user)
         self.assistant_store.add_documents(documents=assistant)
-        print("ASSISTANT_STORE: ", self.assistant_store.get())
+        # print("ASSISTANT_STORE: ", self.assistant_store.get())
         self.user_store.add_documents(documents=user)
-        print("USER_STORE: ", self.user_store.get())
+        # print("USER_STORE: ", self.user_store.get())
 
     def __init__(self, dialogue: list, embeddings: HuggingFaceEmbeddings):
         self._load_dialogue(dialogue, embeddings)
 
     def search_assistant(self, utterance):
-        docs = self.assistant_store.similarity_search_with_relevance_scores(utterance, k=env_settings.DIALOGUE_MAX, score_threshold=env_settings.EMBEDDER_TYPO)
-        print("DOCS: ", docs)
-        print("UTT: ", utterance)
+        docs = self.assistant_store.similarity_search_with_relevance_scores(utterance, k=self.assistant_size, score_threshold=env_settings.EMBEDDER_TYPO)
+        # print("DOCS: ", docs)
+        # print("UTT: ", utterance)
         res = [d[0].metadata['id'] for d in docs]
         res.sort()
         res = [str(r) for r in res]
@@ -59,7 +63,7 @@ class DialogueStore:
 
     def get_user(self, ids: list[str]):
         res = self.user_store.get(ids=ids)['documents']
-        print(res)
+        # print(res)
         return res
 
 class NodeStore:

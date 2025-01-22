@@ -18,6 +18,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     RESULTS_PATH: Optional[str]
     EMBEDDER_MODEL: Optional[str]
     EMBEDDER_THRESHOLD: Optional[float]
+    ONE_WORD_TH: Optional[float]
     EMBEDDER_TYPO: Optional[float]
     DIALOGUE_MAX: Optional[int]
     EMBEDDER_DEVICE: Optional[str]

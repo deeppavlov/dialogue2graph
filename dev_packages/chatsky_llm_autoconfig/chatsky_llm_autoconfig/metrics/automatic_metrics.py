@@ -177,14 +177,14 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
         return False
 
 
-    print("LENS: ", len1, len2)
+    # print("LENS: ", len1, len2)
     if n1 != n2:
         return False
     
 
     # matrix = get_reranking(g1_list, g2_list)
     max = list(np.argmax(matrix, axis=1))
-    print("MAX: ", max)
+    # print("MAX: ", max)
     if len(set(max)) < len(g1_list) or nodes_max != max:
         return False
     if any([len1[i] != len2[max[i]] for i in range(len(max))]):
