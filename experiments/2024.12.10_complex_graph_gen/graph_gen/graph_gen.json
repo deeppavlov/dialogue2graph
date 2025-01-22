@@ -1,0 +1,219 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "welcome",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the City Library! How may I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "request_card_number",
+          "is_start": false,
+          "utterances": [
+            "Could you please provide your library card number?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "ask_book_details",
+          "is_start": false,
+          "utterances": [
+            "What book are you looking for?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "check_availability",
+          "is_start": false,
+          "utterances": [
+            "Let me check if the book is currently available."
+          ]
+        },
+        {
+          "id": 11,
+          "label": "book_available",
+          "is_start": false,
+          "utterances": [
+            "I've checked and the book is available."
+          ]
+        },
+        {
+          "id": 12,
+          "label": "book_unavailable",
+          "is_start": false,
+          "utterances": [
+            "I've checked and the book is currently unavailable."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "offer_alternatives",
+          "is_start": false,
+          "utterances": [
+            "Would you like to place a hold, or would you prefer to see similar books that are available now?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "place_hold",
+          "is_start": false,
+          "utterances": [
+            "I've placed a hold on the book for you. You'll be notified by email when it becomes available. Would you like to search for any other books?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "show_similar",
+          "is_start": false,
+          "utterances": [
+            "We have similar books available: 'This Side of Paradise' and 'The Beautiful and Damned'. Would you like to check out any of them?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "checkout_process",
+          "is_start": false,
+          "utterances": [
+            "Would you like to check it out now?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "confirm_checkout",
+          "is_start": false,
+          "utterances": [
+            "I've checked out the book to your account. It's due in 3 weeks. Would you like to search for any other books?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "end",
+          "is_start": false,
+          "utterances": [
+            "Thank you for using our library services. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to borrow a book"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "My card number is L123456"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'm looking for The Great Gatsby"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 11,
+          "utterances": [
+            "Okay, please check"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 12,
+          "utterances": [
+            "Okay, please check"
+          ]
+        },
+        {
+          "source": 11,
+          "target": 8,
+          "utterances": [
+            "Great, I'd like to proceed"
+          ]
+        },
+        {
+          "source": 12,
+          "target": 5,
+          "utterances": [
+            "Oh, I see"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "I'd like to place a hold"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "I'd like to see similar books"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 3,
+          "utterances": [
+            "Yes, I'd like to find another book"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 10,
+          "utterances": [
+            "No, that's all for today"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Yes, I'll take 'This Side of Paradise'"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 3,
+          "utterances": [
+            "No, I'd like to look for something else"
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "Yes, I'd like to check it out"
+          ]
+        },
+        {
+          "source": 9,
+          "target": 3,
+          "utterances": [
+            "Yes, I'd like to find another book"
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "No, that's all for today"
+          ]
+        }
+      ]
+    },
+    "topic": "library"
+  }
+]

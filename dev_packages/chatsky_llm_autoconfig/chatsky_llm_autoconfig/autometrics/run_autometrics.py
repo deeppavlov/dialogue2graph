@@ -9,6 +9,9 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
 import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
 
+from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
+from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
+from chatsky_llm_autoconfig.algorithms.dialogue_generation import DialogueSampler
 import json
 from datasets import load_dataset
 from chatsky_llm_autoconfig.graph import Graph, BaseGraph
@@ -29,6 +32,8 @@ from chatsky_llm_autoconfig.utils import (
     # graph2comparable
 )
 from chatsky_llm_autoconfig.settings import EnvSettings
+from chatsky_llm_autoconfig.metrics.automatic_metrics import *
+from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 import datetime
 from colorama import Fore
 from langchain_openai  import ChatOpenAI
@@ -47,6 +52,15 @@ print("json read")
 
 #graph_to_graph = test_data["graph_to_graph"]
 #dialogue_to_dialogue = test_data["dialogue_to_dialogue"]
+
+model = ChatOpenAI(model="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"), temperature=0)
+
+with open("dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/autometrics/test_data/data.json") as f:
+    test_data = json.load(f)
+    graph_to_dialogue = test_data["graph_to_dialogue"]
+    # graph_to_graph = test_data["graph_to_graph"]
+    dialogue_to_dialogue = test_data["dialogue_to_dialogue"]
+    topic_to_graph = test_data["topic_to_graph"]
 
 
 def run_all_algorithms():
@@ -69,10 +83,10 @@ def run_all_algorithms():
                 test_graph = Graph(graph_dict=case["graph"])
                 result = class_instance.invoke(test_graph)
 
-                metrics["all_paths_sampled"].append(all_paths_sampled(test_graph, result[0]))
+                # metrics["all_paths_sampled"].append(all_paths_sampled(test_graph, result[0]))
                 metrics["all_utterances_present"].append(all_utterances_present(test_graph, result))
 
-            metrics["all_paths_sampled_avg"] = sum(metrics["all_paths_sampled"]) / len(metrics["all_paths_sampled"])
+            # metrics["all_paths_sampled_avg"] = sum(metrics["all_paths_sampled"]) / len(metrics["all_paths_sampled"])
             metrics["all_utterances_present_avg"] = sum(metrics["all_utterances_present"]) / len(metrics["all_utterances_present"])
 
         elif algorithms[class_]["input_type"] is Dialogue and algorithms[class_]["output_type"] is Dialogue:
@@ -82,7 +96,7 @@ def run_all_algorithms():
             }
             for case in dialogue_to_dialogue:
                 test_dialogue = Dialogue(dialogue=case["dialogue"])
-                result = class_instance.invoke(test_dialogue)
+                result = class_instance.invoke(dialogue=test_dialogue)
 
                 metrics["all_roles_correct"].append(all_roles_correct(test_dialogue, result))
                 metrics["is_correct_lenght"].append(is_correct_length(test_dialogue, result))
@@ -99,6 +113,16 @@ def run_all_algorithms():
                 metrics["are_triplets_valid"].append(are_triplets_valid(result, model, topic="")["value"])
                 metrics["is_theme_valid"].append(is_theme_valid(result, model, topic="")["value"])
 
+        elif algorithms[class_]["input_type"] is str and algorithms[class_]["output_type"] is BaseGraph:
+            metrics = {"is_theme_valid": [], "are_triplets_valid": []}
+            for case in topic_to_graph:
+                test_topic = case["topic"]
+                result = class_instance.invoke(test_topic)
+
+                metrics["are_triplets_valid"].append(are_triplets_valid(result, model)["value"])
+                metrics["is_theme_valid"].append(is_theme_valid(result, model, topic=test_topic)["value"])
+
+            metrics["is_theme_valid_avg"] = sum(metrics["is_theme_valid"]) / len(metrics["is_theme_valid"])
             metrics["are_triplets_valid"] = sum(metrics["are_triplets_valid"]) / len(metrics["are_triplets_valid"])
             metrics["is_theme_valid_avg"] = sum(metrics["is_theme_valid"]) / len(metrics["is_theme_valid"])
 
