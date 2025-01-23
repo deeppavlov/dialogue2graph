@@ -60,10 +60,10 @@ class Dialogue(BaseModel):
                 if graph.graph.has_edge(node_list[node], node_list[0]):
                     utts.append({
                         "participant": "user",
-                        "text": edges_attributes[(node_list[node], node_list[0])]})
+                        "text": edges_attributes[(node_list[node], node_list[0])][0]})
             else:
                 if graph.graph.has_edge(node_list[node], node_list[node+1]):
-                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[node+1])]})
+                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[node+1])][0]})
             
         return cls(messages=utts, validate=validate)
         

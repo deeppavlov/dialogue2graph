@@ -1,4 +1,5 @@
 import random
+import itertools
 import networkx as nx
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.algorithms.base import DialogueGenerator
@@ -118,3 +119,41 @@ class DialoguePathSampler(DialogueGenerator):
         
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
+    
+
+@AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
+class RecursiveDialogueSampler(DialogueGenerator):
+    def _list_in(self, a: list, b: list) -> bool:
+        """Check if sequence a exists within sequence b."""
+        return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
+
+    
+
+    def invoke(self, graph: BaseGraph, start_node: int = 1, end_node: int = -1, topic="") -> list[Dialogue]:
+        starts = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
+        visitedList = [[]]
+        def all_paths(graph, start: int, visited: list):
+            # print("start: ", start, len(visitedList))
+            if len(visited) < 2 or not self._list_in(visited[-2:]+[start],visited):
+                visited.append(start)
+                # print("visited:", visited)
+                for edge in graph.edge_by_source(start):
+
+                # if [start,edge['target']] not in visited:           
+                    all_paths(graph, edge['target'], visited.copy())
+            visitedList.append(visited)
+
+        all_paths(graph, starts[0]['id'], [])
+        visitedList.sort()
+        final = list(k for k,_ in itertools.groupby(visitedList))[1:]
+        
+        dialogues = []
+        for nodes in final:
+            dialogues.append(Dialogue().from_nodes_ids(graph=graph, node_list=nodes))
+
+        return dialogues
+
+    async def ainvoke(self, *args, **kwargs):
+        return self.invoke(*args, **kwargs)
+    
+
