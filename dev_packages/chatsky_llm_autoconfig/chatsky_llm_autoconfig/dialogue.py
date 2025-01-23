@@ -52,24 +52,15 @@ class Dialogue(BaseModel):
         nodes_attributes = nx.get_node_attributes(graph.graph, "utterances")
         edges_attributes = nx.get_edge_attributes(graph.graph, "utterances")
         for node in range(len(node_list)):
-            utts.append({
-                "participant": "assistant",
-                "text": nodes_attributes[node_list[node]][0]
-                })
+            utts.append({"participant": "assistant", "text": nodes_attributes[node_list[node]][0]})
             if node == len(node_list) - 1:
                 if graph.graph.has_edge(node_list[node], node_list[0]):
-                    utts.append({
-                        "participant": "user",
-                        "text": edges_attributes[(node_list[node], node_list[0])][0]})
+                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[0])][0]})
             else:
-                if graph.graph.has_edge(node_list[node], node_list[node+1]):
-                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[node+1])][0]})
-            
+                if graph.graph.has_edge(node_list[node], node_list[node + 1]):
+                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[node + 1])][0]})
+
         return cls(messages=utts, validate=validate)
-        
-        
-                
-            
 
     def to_list(self) -> List[Dict[str, str]]:
         """Converts Dialogue to a list of message dictionaries."""
@@ -97,10 +88,9 @@ class Dialogue(BaseModel):
         new_messages = [msg if isinstance(msg, DialogueMessage) else DialogueMessage(**msg) for msg in messages]
         self.__validate(new_messages)
         self.messages.extend(new_messages)
-    
+
     def __validate(self, messages):
-        """Ensure that messages meets expectations.
-        """
+        """Ensure that messages meets expectations."""
         if not messages:
             return
 

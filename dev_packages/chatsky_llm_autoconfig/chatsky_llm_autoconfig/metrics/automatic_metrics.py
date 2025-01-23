@@ -156,8 +156,8 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
     if graph_utterances.issubset(dialogue_utterances):
         return True
     else:
-        return False
-        # return graph_utterances.difference(dialogue_utterances)
+        # return False
+        return graph_utterances.difference(dialogue_utterances)
 
 
 def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
