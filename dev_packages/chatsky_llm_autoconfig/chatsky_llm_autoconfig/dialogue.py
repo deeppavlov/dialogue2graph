@@ -1,3 +1,4 @@
+import networkx as nx
 from typing import List, Union, Dict
 from chatsky_llm_autoconfig.schemas import DialogueMessage
 from pydantic import BaseModel, Field, ConfigDict
@@ -44,6 +45,31 @@ class Dialogue(BaseModel):
         """Create a Dialogue from a list of dictionaries."""
         dialogue_messages = [DialogueMessage(**m) for m in messages]
         return cls(messages=dialogue_messages, validate=validate)
+
+    @classmethod
+    def from_nodes_ids(cls, graph, node_list, validate: bool = True) -> "Dialogue":
+        utts = []
+        nodes_attributes = nx.get_node_attributes(graph.graph, "utterances")
+        edges_attributes = nx.get_edge_attributes(graph.graph, "utterances")
+        for node in range(len(node_list)):
+            utts.append({
+                "participant": "assistant",
+                "text": nodes_attributes[node_list[node]][0]
+                })
+            if node == len(node_list) - 1:
+                if graph.graph.has_edge(node_list[node], node_list[0]):
+                    utts.append({
+                        "participant": "user",
+                        "text": edges_attributes[(node_list[node], node_list[0])]})
+            else:
+                if graph.graph.has_edge(node_list[node], node_list[node+1]):
+                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[node+1])]})
+            
+        return cls(messages=utts, validate=validate)
+        
+        
+                
+            
 
     def to_list(self) -> List[Dict[str, str]]:
         """Converts Dialogue to a list of message dictionaries."""
