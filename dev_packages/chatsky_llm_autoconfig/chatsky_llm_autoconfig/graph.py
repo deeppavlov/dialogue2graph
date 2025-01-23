@@ -96,3 +96,9 @@ class Graph(BaseGraph):
         for node in self.graph_dict['nodes']:
             if node['id'] == id:
                 return node
+    
+    def edge_by_source(self, id: int):
+        return [edge for edge in self.graph_dict['edges'] if edge['source']==id]
+    
+    def edge_by_target(self, id: int):
+        return [edge for edge in self.graph_dict['edges'] if edge['target']==id]
