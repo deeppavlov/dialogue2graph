@@ -17,7 +17,7 @@ from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.schemas import CompareResponse
 from chatsky_llm_autoconfig.utils import call_llm_api, graph2list, nodes2list, get_diagonals, get_diagonal, graph_order
 from chatsky_llm_autoconfig.settings import EnvSettings
-from chatsky_llm_autoconfig.prompts import (
+from chatsky_llm_autoconfig.compare_prompt import (
     compare_graphs_prompt, graph_example_1, result_form
 )
 

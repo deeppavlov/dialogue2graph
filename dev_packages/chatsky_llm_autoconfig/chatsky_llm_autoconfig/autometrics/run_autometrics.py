@@ -10,9 +10,9 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
 import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
 
-from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
-from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
-from chatsky_llm_autoconfig.algorithms.dialogue_generation import DialogueSampler
+# from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
+# from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
+# from chatsky_llm_autoconfig.algorithms.dialogue_generation import DialogueSampler
 import json
 from datasets import load_dataset
 from chatsky_llm_autoconfig.graph import Graph, BaseGraph
@@ -57,7 +57,7 @@ print("json read")
 #graph_to_graph = test_data["graph_to_graph"]
 #dialogue_to_dialogue = test_data["dialogue_to_dialogue"]
 
-model = ChatOpenAI(model="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"), temperature=0)
+# model = ChatOpenAI(model="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"), temperature=0)
 
 with open("dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/autometrics/test_data/data.json") as f:
     test_data = json.load(f)
