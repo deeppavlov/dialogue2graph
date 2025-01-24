@@ -22,7 +22,7 @@ from chatsky_llm_autoconfig.metrics.automatic_metrics import (
     all_utterances_present,
     all_roles_correct,
     is_same_structure,
-    is_correct_length,
+    is_correct_lenght,
     triplet_match,
     llm_match
 )
@@ -103,7 +103,7 @@ def run_all_algorithms():
                 result = class_instance.invoke(dialogue=test_dialogue)
 
                 metrics["all_roles_correct"].append(all_roles_correct(test_dialogue, result))
-                metrics["is_correct_lenght"].append(is_correct_length(test_dialogue, result))
+                metrics["is_correct_lenght"].append(is_correct_lenght(test_dialogue, result))
 
             metrics["all_roles_correct_avg"] = sum(metrics["all_roles_correct"]) / len(metrics["all_roles_correct"])
             metrics["is_correct_lenght_avg"] = sum(metrics["is_correct_lenght"]) / len(metrics["is_correct_lenght"])

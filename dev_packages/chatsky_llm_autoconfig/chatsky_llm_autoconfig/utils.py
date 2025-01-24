@@ -245,64 +245,41 @@ def get_diagonal(graph, i):
     result['nodes'] = graph['nodes'][i:] + graph['nodes'][:i]
     return result
 
-def nodes2graph(nodes: list, dialogues: list[Dialogue], reason: str, embeddings: HuggingFaceEmbeddings):
+def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceEmbeddings):
+    """  Connecting nodes with edges for searching dialogue utterances in list of nodes based on embedding similarity
+    Input: nodes and list of dialogues
+    """
     edges = []
     node_store = NodeStore(nodes, embeddings)
     for d in dialogues:
         texts = d.to_list()
-        # print("LEN: ", len(texts))
         store = DialogueStore(texts, embeddings)
         for n in nodes:
             for u in n['utterances']:
                 ids = store.search_assistant(u)
-                # print("ASSISTANT: ", u, ids)
                 if ids:
-                    # print("IF")
                     for id,s in zip(ids, store.get_user(ids=ids)):
-                        # print("USER: ",s, id)
                         if len(texts) > 2*(int(id)+1):
                             target = node_store.find_node(texts[2*(int(id)+1)]['text'])
-                            # print("TARGET: ", target, n["id"])
                             existing = [e for e in edges if e['source']==n['id'] and e['target']==target]
-                            # print("EXIST: ", edges)
                             if existing:
-
-                                # to_score = [(e,s) for e in existing[0]['utterances']]
-                                # score = evaluator.score(to_score)
-                                # if np.max(np.array(score)) < env_settings.EMBEDDER_TYPO:
                                 if not any([compare_strings(e,s,embeddings) for e in existing[0]['utterances']]):
-                                    # print("COMP: ", to_score, score)
                                     edges = [e for e in edges if e['source']!=n['id'] or e['target']!=target]
                                     edges.append({'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
                             else:
                                 edges.append({'source': n['id'], 'target':target, 'utterances': [s]})
-    return {"edges": edges, "nodes": nodes, "reason": reason}
+    return {"edges": edges, "nodes": nodes}
 
-# def dialogues2list(dialogues: list[Dialogue]):
-    # nodes = []
-    # prevs = []
-    # starts = []
-    # for d in dialogues:
-    #     start = 1
-    #     texts = d.to_list()
-    #     prev = ''
-    #     for t in texts:
-    #         cur = t['text']
-    #         if t['participant'] == 'assistant':
-    #             if cur in nodes:
-    #                 if prev not in prevs[nodes.index(cur)]:
-    #                     prevs[nodes.index(cur)].append(prev)
-    #             else:
-    #                 prevs.append([prev])
-    #                 nodes.append(t['text'])
-    #                 if start:
-    #                     starts.append(t['text'])
-    #                     start = 0
-    #         else:
-    #             prev = t['text']
-    # return prevs, nodes, starts
 
 def dialogues2list(dialogues: list[Dialogue]):
+    """ Helper pre-pocessing list of dialogues for grouping.
+    Returns:
+    nodes - list of assistant utterances
+    nexts - list of following user's utterances
+    starts - list of starting utterances
+    neigbhours - dictionary of adjacent assistants utterances
+    last_user - sign of that dialogue finishes with user's utterance
+    """
     nodes = []
     nexts = []
     starts = []

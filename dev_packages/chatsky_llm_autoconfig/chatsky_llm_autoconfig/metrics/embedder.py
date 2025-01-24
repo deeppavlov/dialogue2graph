@@ -136,6 +136,13 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
     return groups
 
 def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str], neigbhours: dict):
+    """ Rule based algorithm to group graph nodes
+    nodes_list: list of assistant's utterances
+    next_list: list of user's utterances
+    mix_list: list of nodes and edges concatenation
+    neighbours: dictionary of adjacent nodes
+    Based on cross-encoder similarity and some more empirical rules
+    """
     
     print("DICT: ", neigbhours)
 
