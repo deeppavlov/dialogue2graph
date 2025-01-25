@@ -135,6 +135,61 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
         print("LEFT: ", pairs_in)
     return groups
 
+def sym_dif(node1: str, node2: str):
+    set1 = set(node1.split())
+    set2 = set(node2.split())
+    dif = list(set1.symmetric_difference(set2))
+    first = re.sub(r'[^\w\s]','',dif[0])
+    second = re.sub(r'[^\w\s]','',dif[1])
+    score = max(evaluator.score([(first,second)]), evaluator.score([(second,first)]))
+    one_word = len(dif) == 2 and score < env_settings.ONE_WORD_TH
+    return one_word
+
+def ends_match(node1: str, node2: str):
+    end1 = node1.rstrip()
+    end2 = node2.rstrip()
+    doc1 = nlp(node1)
+    doc2 = nlp(node2)
+    sents1 = [str(sent) for sent in doc1.sents]
+    sents2 = [str(sent) for sent in doc2.sents]
+    return re.match("^.*(?<![!?])$",node1) and re.match("^.*(?<![!?])$",node2) or all([end1,end2,end1[-1] == end2[-1]]), sents1, sents2
+
+def if_greetings(node1: str, node2:str):
+    greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|great|awesome|perfect|fantastic|wonderful)\b', re.IGNORECASE)
+    if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
+        greetings_cond = True
+        print("GREETINGS")
+    else:
+        greetings_cond = False
+    return greetings_cond
+
+def if_else(node1: str, node2:str):
+    else_re = re.compile(r'\b(else|add|another|more|other|extra|additional)\b', re.IGNORECASE)
+    if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
+        else_cond = True
+        print("ELSE")
+    else:
+       else_cond = False
+    return else_cond
+
+def y_n(node1: str, node2:str):
+    yn = re.compile(r'\b(where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
+    if (re.search(yn, node1) is None) is not (re.search(yn, node2) is None):
+        yes_no = True
+        print("Y_N")
+    else:
+        yes_no = False
+    return yes_no
+
+def if_if(node1: str, node2:str):
+    if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
+    if (re.search(if_re, node1) is None) is not (re.search(if_re, node2) is None):
+        if_cond = True
+        print("IF")
+    else:
+        if_cond = False
+    return if_cond
+
 def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str], neigbhours: dict):
     """ Rule based algorithm to group graph nodes
     nodes_list: list of assistant's utterances
@@ -143,149 +198,60 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
     neighbours: dictionary of adjacent nodes
     Based on cross-encoder similarity and some more empirical rules
     """
-    
-    print("DICT: ", neigbhours)
 
-    sz = len(nodes_list)
-    nodes_to_score = []
-    orig_to_score = []
-    nodes_to_back_score = []   
-    mix_to_score = []
-    mix_to_back_score = []
-    next_to_score = []
-    next_to_back_score = []
-    index = []
-    orig_index = []
-    for ind1, en in enumerate(zip(mix_list, nodes_list, next_list)):
-        mix1 = en[0]
-        node1 = en[1]
-        next1 = en[2]
-        cur_mix_list = mix_list[ind1+1:]
-        cur_next_list = next_list[ind1+1:]
-        cur_nodes_list = nodes_list[ind1+1:]
-        for ind2, mix2, next2, node2 in zip(range(ind1+1,ind1+1+len(cur_mix_list)), cur_mix_list, cur_next_list, cur_nodes_list):
-            print("NNODES: ", node1, node2, ind1, ind2)
-            set1 = set(node1.split())
-            set2 = set(node2.split())
-            dif = list(set1.symmetric_difference(set2))
-            first = re.sub(r'[^\w\s]','',dif[0])
-            second = re.sub(r'[^\w\s]','',dif[1])
-            dif_score = max(evaluator.score([(first,second)]), evaluator.score([(second,first)]))
-            print("DIF: ", dif, dif_score)
-            end1 = node1.rstrip()
-            end2 = node2.rstrip()
-            doc1 = nlp(node1)
-            doc2 = nlp(node2)
-            sents1 = [str(sent) for sent in doc1.sents]
-            sents2 = [str(sent) for sent in doc2.sents]
-            signs = re.match("^.*(?<![!?])$",node1) and re.match("^.*(?<![!?])$",node2) or all([end1,end2,end1[-1] == end2[-1]])
-
-            orig_index.append((ind1, ind2))
-            one_word = len(dif) == 2 and dif_score < env_settings.ONE_WORD_TH
-            if one_word:
-                print("ONE_WORD: ", node1, node2)
-            if node1 in neigbhours[node2]:
-                print("Neighbours: ", node1, node2)
-            yn = re.compile(r'\b(where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
-            if (re.search(yn, node1) is None) is not (re.search(yn, node2) is None):
-                yes_no = True
-            else:
-                yes_no = False
-            greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|great|awesome|perfect|fantastic|wonderful)\b', re.IGNORECASE)
-            else_re = re.compile(r'\b(else|add|another|more|other|extra|additional)\b', re.IGNORECASE)
-            if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
-            if (re.search(if_re, node1) is None) is not (re.search(if_re, node2) is None):
-                if_cond = True
-            else:
-                if_cond = False
-            if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
-                greetings_cond = True
-            else:
-                greetings_cond = False
-            if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
-                else_cond = True
-            else:
-                else_cond = False
-            if not signs:
-                print("Signs: ", node1, node2)
-            if greetings_cond:
-                print("GREETINGS: ", node1, node2)
-            if else_cond:
-                print("ELSE: ", node1, node2)
-            if yes_no:
-                print("YESNO: ", node1, node2)
-            # if greetings_cond or else_cond or yes_no or one_word or len(sents1) != len(sents2) or not signs or node1 in neigbhours[node2]:
-            if greetings_cond or if_cond or else_cond or yes_no or one_word or (len(sents1) == 1 and len(sents2) == 1 and not signs) or node1 in neigbhours[node2]:
-                
-                nodes_to_score.append(("no","yes"))
-                nodes_to_back_score.append(("no","yes"))
-
-            else:
-
-                to_score = [(node1,node2)]
-                to_back_score = [(node2,node1)]
-                
-                if len(sents1) > 1:
-                    for s1,s2 in zip(sents1,sents2):
-                        to_score.append((s1,s2))
-                        to_back_score.append((s2,s1))
-                        orig_index.append((ind1, ind2))
-
-                nodes_to_score.extend(to_score)
-                nodes_to_back_score.extend(to_back_score)
-
-
-            mix_to_back_score.append((mix2,mix1))
-            mix_to_score.append((mix1,mix2))
-            next_to_back_score.append((next2,next1))
-            next_to_score.append((next1,next2))
-            index.append((ind1, ind2))
-            orig_to_score.append((node1,node2))
-
-    print("SCORING...")
-    # print(to_score)
-    nodes_score = evaluator.score(nodes_to_score)
-    orig_score = evaluator.score(orig_to_score)
-    mix_score = evaluator.score(mix_to_score)
-    nodes_back_score = evaluator.score(nodes_to_back_score)
-    mix_back_score = evaluator.score(mix_to_back_score)
-    next_score = evaluator.score(next_to_score)
-    next_back_score = evaluator.score(next_to_back_score)
-
-
-
-    print("finished")
-
+    nodes_score = get_reranking(nodes_list, nodes_list)
+    next_score = get_reranking(next_list, next_list)
+    mix_score = get_reranking(mix_list, mix_list)
     pairs = []
-    orig_idx = 0
-    for idx, mix in enumerate(zip(mix_score, mix_back_score, next_score, next_back_score)):
-        sz = len([o for o in orig_index if index[idx] == o])
 
-        max_n = max(nodes_score[orig_idx], nodes_back_score[orig_idx])
-        maxes = [max(el[0],el[1]) for el in zip(nodes_score[orig_idx:orig_idx+sz],nodes_back_score[orig_idx:orig_idx+sz])]
-        if sz > 1:
-            nodes_condition = max(maxes[1:]) >= 0.9 and min(maxes[1:]) >= 0.05 and maxes[0] >= env_settings.RERANKER_THRESHOLD
-        else:
-            nodes_condition = maxes[0] >= env_settings.RERANKER_THRESHOLD
-        orig_idx += sz
+    for ind1, node1 in enumerate(nodes_list):
+        cur_nodes_list = nodes_list[ind1+1:]
+        for ind2, node2 in zip(range(ind1+1,ind1+1+len(cur_nodes_list)),cur_nodes_list):
+
+            max_n = max(nodes_score[ind1][ind2],nodes_score[ind2][ind1])
+            max_m = max(mix_score[ind1][ind2],mix_score[ind2][ind1])
+            min_e = min(next_score[ind1][ind2],next_score[ind2][ind1])
+            max_e = max(next_score[ind1][ind2],next_score[ind2][ind1])
+
+            print(f"MIX: max_n:{max_n},max_m:{max_m},min_e:{min_e},max_e:{max_e}",nodes_list[ind1],nodes_list[ind2])
+            one_word = sym_dif(node1, node2)
+            signs, sents1, sents2 = ends_match(node1, node2)
+            if not signs:
+                print("SIGNS")
+            len1 = len(sents1)
+            len2 = len(sents2)
+            greetings_cond = if_greetings(node1, node2)
+            if_cond = if_if(node1, node2)
+            else_cond = if_else(node1, node2)
+            yes_no = y_n(node1, node2)
+
+            condition = not (greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
+            cond_1 = len1 == len2 and len1 == 1 and min_e >= 0.06 and max_e > 0.9 and max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > 0.05 or len1!=len2 and max_n > 0.99
+            if cond_1:
+                condition = not (greetings_cond or if_cond or else_cond or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
+
+            if condition:
+                if cond_1:
+                    print("FIRST: ", node1, node2)
+                    pairs.append(((max_n+max_m)/2,(ind1,ind2)))
+                else:
+
+                    sent_score = []
+                    if len1 > 1 and len1 == len2:
 
 
-        max_m = max(mix[0],mix[1])
-        min_e = min(mix[2],mix[3])
-        max_e = max(mix[2],mix[3])
-        # print("MIX: ",max_n,max_m,min_e,nodes_to_score[idx])
-        if min_e < 0.06:
-            condition = nodes_condition
-        elif max_e > 0.9:
-            condition = max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > 0.05
-        else:
-            condition = max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition
-        if condition:
-            pairs.append(((max_n+max_m)/2,index[idx]))
-        print("SCORES: ",max_m,max_n,min_e,max_e, nodes_to_score[idx])
+                        for s1,s2 in zip(sents1,sents2):
+                            sent_score.append((s1,s2))
+                            sent_score.append((s2,s1))
+                        sent_score = evaluator.score(sent_score)
+                        maxes = [max(el[0],el[1]) for el in zip(sent_score[::2],sent_score[1::2])]
+                        nodes_condition = max(maxes) >= 0.9 and min(maxes) >= 0.05 and max_n >= env_settings.RERANKER_THRESHOLD
+                    else:
+                        nodes_condition = len1==len2 and max_n >= env_settings.RERANKER_THRESHOLD 
 
-    print("PAIRS: ", pairs)
-
+                    if max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition:
+                        print("SECOND: ", node1, node2)
+                        pairs.append(((max_n+max_m)/2,(ind1,ind2)))
     groups = unite_pairs(pairs)
     grouped = []
     for el in groups:
