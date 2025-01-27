@@ -6,15 +6,15 @@ from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_pres
 def list_in(a, b):
     return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
 
-# def all_paths(graph: Graph, start: int, visited: list, repeats: int):
-#     global visited_list   
-#     # print("start: ", start, len(visited_list))
-#     if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
-#         visited.append(start)
-#         # print("visited:", visited)
-#         for edge in graph.edge_by_source(start):
-#             all_paths(graph, edge['target'], visited.copy(), repeats)
-#     visited_list.append(visited)
+def all_paths(graph: Graph, start: int, visited: list, repeats: int):
+    global visited_list   
+    # print("start: ", start, len(visited_list))
+    if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
+        visited.append(start)
+        # print("visited:", visited)
+        for edge in graph.edge_by_source(start):
+            all_paths(graph, edge['target'], visited.copy(), repeats)
+    visited_list.append(visited)
 
 def count_sublists(lst, sublist):
   if len(lst) < len(sublist):
@@ -24,53 +24,46 @@ def count_sublists(lst, sublist):
   else:
      return count_sublists(lst[1:], sublist)
 
-def all_paths(graph: Graph, start: int, visited: list[int], repeats: int, addition: list[int]):
-    global visited_list   
-    # print("start: ", start, len(visited_list))
-    if visited:
-        before = count_sublists(visited,[visited[-1],start])
-        p_len = graph.pair_number(visited[-1],start)
-        print("PAIR: ", before, start, visited, addition)
-        if before >= 0:
-            if addition[0] <= 0:
-                addition[0] += 1
-        if p_len > 1:
-            comp_add = 0
-        else:
-            comp_add = addition[0]
+# def all_paths(graph: Graph, start: int, visited: list[int], repeats: int, addition: list[int]):
+#     global visited_list   
+#     # print("start: ", start, len(visited_list))
+#     if visited:
+#         before = count_sublists(visited,[visited[-1],start])
+#         p_len = graph.pair_number(visited[-1],start)
+#         print("PAIR: ", before, start, visited, addition)
+#         if before >= 0:
+#             if addition[0] <= 0:
+#                 addition[0] += 1
+#         if p_len > 1:
+#             comp_add = 0
+#         else:
+#             comp_add = addition[0]
 
 
-        if before == 0:
-            if addition[0] == -1 and not list_in(visited[-repeats:]+[start],visited):
-                visited.append(start)
-                print("NOT")
-                for edge in graph.edge_by_source(start):
-                    all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-            elif before < p_len + comp_add and not list_in(visited[-repeats:]+[start],visited):
-                print("SMALLER")
-                visited.append(start)
-                for edge in graph.edge_by_source(start):
-                    all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-        else:
-            print("+++")
-            if before < p_len + comp_add and not list_in(visited[-repeats:]+[start],visited):
-                print("SMALLER")
-                visited.append(start)
-                for edge in graph.edge_by_source(start):
-                    all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-    elif not list_in(visited[-repeats:]+[start],visited):
-        print("NOT")
-        visited.append(start)
-        for edge in graph.edge_by_source(start):
-            all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-    # if not visited or len([e for e in visited if e==start]) < graph.pair_number(visited[-1],start):
-    # if start not in visited:
-    # if not visited or len([e for e in visited if e==start]) < 2:
-            # visited.append(start)
-        # print("visited:", visited)
-            # for edge in graph.edge_by_source(start):
-            #     all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-    visited_list.append(visited)
+#         if before == 0:
+#             if addition[0] == -1 and not list_in(visited[-repeats:]+[start],visited):
+#                 visited.append(start)
+#                 print("NOT")
+#                 for edge in graph.edge_by_source(start):
+#                     all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
+#             elif before < p_len + comp_add and not list_in(visited[-repeats:]+[start],visited):
+#                 print("SMALLER")
+#                 visited.append(start)
+#                 for edge in graph.edge_by_source(start):
+#                     all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
+#         else:
+#             print("+++")
+#             if before < p_len + comp_add and not list_in(visited[-repeats:]+[start],visited):
+#                 print("SMALLER")
+#                 visited.append(start)
+#                 for edge in graph.edge_by_source(start):
+#                     all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
+#     elif not list_in(visited[-repeats:]+[start],visited):
+#         print("NOT")
+#         visited.append(start)
+#         for edge in graph.edge_by_source(start):
+#             all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
+#     visited_list.append(visited)
 
 def all_combinations(path: list, start: dict, next: int, visited: list):
     global visited_list
@@ -98,7 +91,7 @@ def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
     starts = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
     for s in starts:
         visited_list = [[]]
-        all_paths(graph, s['id'], [], repeats, [-1])
+        all_paths(graph, s['id'], [], repeats)
         paths.extend(visited_list)
 
     paths.sort()
