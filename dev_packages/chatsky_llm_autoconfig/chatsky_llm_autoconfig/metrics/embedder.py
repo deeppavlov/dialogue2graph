@@ -244,11 +244,12 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
                             sent_score.append((s1,s2))
                             sent_score.append((s2,s1))
                         sent_score = evaluator.score(sent_score)
-                        maxes = [max(el[0],el[1]) for el in zip(sent_score[::2],sent_score[1::2])]
-                        nodes_condition = max(maxes) >= 0.9 and min(maxes) >= 0.05 and max_n >= env_settings.RERANKER_THRESHOLD
+                        # maxes = [max(el[0],el[1]) for el in zip(sent_score[::2],sent_score[1::2])]
+                        print("MAXES: ", sent_score)
+                        nodes_condition = max(sent_score) >= 0.9 and min(sent_score) >= 0.05 and max_n >= env_settings.RERANKER_THRESHOLD
                     else:
                         nodes_condition = len1==len2 and max_n >= env_settings.RERANKER_THRESHOLD 
-
+                    print("NODCOND: ", nodes_condition)
                     if max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition:
                         print("SECOND: ", node1, node2)
                         pairs.append(((max_n+max_m)/2,(ind1,ind2)))
