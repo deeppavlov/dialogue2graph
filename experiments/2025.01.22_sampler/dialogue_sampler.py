@@ -8,82 +8,57 @@ def list_in(a, b):
 
 def all_paths(graph: Graph, start: int, visited: list, repeats: int):
     global visited_list   
-    # print("start: ", start, len(visited_list))
     if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
         visited.append(start)
-        # print("visited:", visited)
         for edge in graph.edge_by_source(start):
             all_paths(graph, edge['target'], visited.copy(), repeats)
     visited_list.append(visited)
 
-def count_sublists(lst, sublist):
-  if len(lst) < len(sublist):
-    return 0
-  if lst[:len(sublist)] == sublist:
-      return 1 + count_sublists(lst[len(sublist):], sublist)
-  else:
-     return count_sublists(lst[1:], sublist)
-
-# def all_paths(graph: Graph, start: int, visited: list[int], repeats: int, addition: list[int]):
-#     global visited_list   
-#     # print("start: ", start, len(visited_list))
-#     if visited:
-#         before = count_sublists(visited,[visited[-1],start])
-#         p_len = graph.pair_number(visited[-1],start)
-#         print("PAIR: ", before, start, visited, addition)
-#         if before >= 0:
-#             if addition[0] <= 0:
-#                 addition[0] += 1
-#         if p_len > 1:
-#             comp_add = 0
-#         else:
-#             comp_add = addition[0]
-
-
-#         if before == 0:
-#             if addition[0] == -1 and not list_in(visited[-repeats:]+[start],visited):
-#                 visited.append(start)
-#                 print("NOT")
-#                 for edge in graph.edge_by_source(start):
-#                     all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-#             elif before < p_len + comp_add and not list_in(visited[-repeats:]+[start],visited):
-#                 print("SMALLER")
-#                 visited.append(start)
-#                 for edge in graph.edge_by_source(start):
-#                     all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-#         else:
-#             print("+++")
-#             if before < p_len + comp_add and not list_in(visited[-repeats:]+[start],visited):
-#                 print("SMALLER")
-#                 visited.append(start)
-#                 for edge in graph.edge_by_source(start):
-#                     all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-#     elif not list_in(visited[-repeats:]+[start],visited):
-#         print("NOT")
-#         visited.append(start)
-#         for edge in graph.edge_by_source(start):
-#             all_paths(graph, edge['target'], visited.copy(), repeats, addition.copy())
-#     visited_list.append(visited)
-
 def all_combinations(path: list, start: dict, next: int, visited: list):
     global visited_list
-    # print("start: ", start, next)
     visited.append(start)
     if next < len(path):
         for utt in path[next]['text']:
             all_combinations(path, {"participant": path[next]['participant'], "text": utt}, next+1, visited.copy())
     visited_list.append(visited)
 
-# def all_combinations(path: list, start: int, utt: str, visited: list):
-#     global visited_list
-#     visited.append({"participant": path[start]['participant'], "text": utt})
-#     # print("start: ", start, next)
-#     for utt in path[start]['text']:
-#         print("ADDED: ", path[start]['participant'], utt)
-#         if start < len(path)-1:
-#             all_combinations(path, start+1, utt, visited.copy())
-#     print("FINISHED")
-#     visited_list.append(visited)
+def get_edges(dialogues: list[list[int]]) -> set[tuple]:
+    pairs = []
+    for dialogue in dialogues:
+        for idx,n in enumerate(dialogue[:-1]):
+            pairs.append((n,dialogue[idx+1]))
+    return set(pairs)
+
+def edges_in(dialogue: list[int], dialogues: list[list[int]]) -> bool:
+    return get_edges([dialogue]).issubset(get_edges(dialogues))
+
+def remove_duplicates(dialogues: list[list[int]]) -> list[list[int]]:
+    ds_copy = dialogues.copy()
+    idx = 0
+    for dialogue in dialogues:
+        if edges_in(dialogue, ds_copy[:idx]+ds_copy[idx+1:]):
+            ds_copy = ds_copy[:idx]+ds_copy[idx+1:]
+        else:
+            idx += 1
+    return ds_copy
+
+def get_utts(seq: list[list[dict]]) -> set[tuple[str]]:
+    res = []
+    for dialogue in seq:
+         user_texts = [d['text'] for d in dialogue if d['participant']=='user']
+         assist_texts = [d['text'] for d in dialogue if d['participant']=='assistant']
+         res.extend([(a,u) for u,a in zip(user_texts,assist_texts)])
+    return set(res)
+
+def remove_duplicated_utts(seq: list[list[dict]]):
+    seq_copy = seq.copy()
+    idx = 0
+    for s in seq:
+        if get_utts([s]).issubset(get_utts(seq_copy[:idx]+seq_copy[idx+1:])):
+            seq_copy = seq_copy[:idx]+seq_copy[idx+1:]
+        else:
+            idx += 1
+    return seq_copy
 
 def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
     global visited_list
@@ -96,22 +71,18 @@ def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
 
     paths.sort()
     final = list(k for k,_ in itertools.groupby(paths))[1:]
-    # print("FINAL:", final)
+    final.sort(key=len,reverse=True)
     sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
     ends = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
-    # print("ENDS: ", ends)
     node_paths = [f for f in final if f[-1] in ends]
-    for n in node_paths:
-        print("NODES: ", n)
+    node_paths = remove_duplicates(node_paths)
     full_paths = []
     for p in node_paths:
         path = []
         for idx,s in enumerate(p[:-1]):
             path.append({"participant": "assistant", "text": graph.node_by_id(s)['utterances']})
-            # path.append({"user": list(set(gr.edge_by_source(s)) & set(gr.edge_by_target(p[idx+1])))[0]['utterances']})
             sources = graph.edge_by_source(s)
             targets = graph.edge_by_target(p[idx+1])
-            # targets = set([(e['source'],e['target']) for e in gr.edge_by_target(p[idx+1])])
             edge = [e for e in sources if e in targets][0]
             path.append(({"participant": "user", "text": edge['utterances']}))
         path.append({"participant": "assistant", "text": graph.node_by_id(p[-1])['utterances']})
@@ -122,21 +93,22 @@ def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
         all_combinations(f, {}, 0, [])
         dialogue = [el[1:] for el in visited_list if len(el)==len(f)+1]
         dialogues.extend(dialogue)
-    # for d in dialogues:
-    #     print("DIAL: ", d)
     final = list(k for k,_ in itertools.groupby(dialogues))
+    final = remove_duplicated_utts(final)
     result = [Dialogue.from_list(seq) for seq in final]
     return result
 
 def get_full_dialogues(graph: Graph, upper_limit: int):
     repeats = 1
     while repeats <= upper_limit:
-        print("REPEAT: ", repeats)
         dialogues = get_dialogues(graph,repeats)
         if all_utterances_present(graph, dialogues):
-            print(f"{repeats} repeats used")            
+            print(f"{repeats} repeats works!")            
             break
         repeats += 1
     if repeats >= upper_limit:
         print("Not all utterances present")
     return dialogues
+
+
+
