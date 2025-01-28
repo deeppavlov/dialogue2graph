@@ -171,6 +171,67 @@ def is_dialogue_valid(dialogue: Dialogue, model: BaseChatModel) -> dict[str]:
 
     return result
 
+def find_graph_ends(dialogue: Dialogue, model: BaseChatModel) -> dict[str]:
+    """
+    Validates dialogue graph structure and logical transitions between nodes.
+
+    Parameters:
+        G (BaseGraph): The dialogue graph to validate
+        model (BaseChatModel): The LLM model to use for validation
+
+    Returns:
+        dict: {'value': bool, 'description': str}
+    """
+
+    # Define validation result model
+    class DialogueValidationResult(BaseModel):
+        isValid: bool = Field(description="Whether the dialogue is valid or not")
+        description: str = Field(description="Explanation of why it's valid or invalid")
+
+    # Create prompt template
+    dialogue_validate_prompt_template = """
+    You are evaluating if beginning and ending of dialogue are logical and consistent.
+    
+    Given this dialogue in JSON:
+    {dialogue}
+ 
+    EVALUATE: Are the first and final dialogue messages logical in the conversation?
+    Consider:
+    1. Does the first message naturally start the dialogue?
+    2. Does the final message logically connect to the previous dialogue?
+    3. Does the dialogue look logically finished?
+
+
+    Reply in JSON format:
+    {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
+    """
+
+    dialogue_validate_prompt = PromptTemplate(
+        input_variables=["json_dialogue"], template=dialogue_validate_prompt_template
+    )
+
+    parser = PydanticOutputParser(pydantic_object=DialogueValidationResult)
+
+    # Convert graph to JSON string
+    dialogue_json = json.dumps(dialogue)
+
+        # Prepare input for validation
+    input_data = {
+        "dialogue": dialogue_json,
+    }
+
+        # print(triplet_validate_prompt.format(**input_data))
+
+        # Run validation
+    dialogue_check_chain = dialogue_validate_prompt | model | parser
+    response = dialogue_check_chain.invoke(input_data)
+
+    result = {"value": response.isValid, "description": response.description}
+
+    return result
+
+
+
 
 
 def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:

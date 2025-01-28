@@ -73,9 +73,10 @@ def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
     final = list(k for k,_ in itertools.groupby(paths))[1:]
     final.sort(key=len,reverse=True)
     sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
-    ends = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
-    node_paths = [f for f in final if f[-1] in ends]
-    node_paths = remove_duplicates(node_paths)
+    # ends = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
+    # node_paths = [f for f in final if f[-1] in ends]
+    node_paths = remove_duplicates(final)
+    # node_paths = remove_duplicates(node_paths)
     full_paths = []
     for p in node_paths:
         path = []
