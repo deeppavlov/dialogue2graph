@@ -2,6 +2,12 @@ import itertools
 from chatsky_llm_autoconfig.graph import Graph
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
+from chatsky_llm_autoconfig.metrics.llm_metrics import find_graph_ends
+from chatsky_llm_autoconfig.settings import EnvSettings
+from langchain_openai  import ChatOpenAI
+env_settings = EnvSettings()
+
+model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
 
 def list_in(a, b):
     return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
@@ -60,7 +66,7 @@ def remove_duplicated_utts(seq: list[list[dict]]):
             idx += 1
     return seq_copy
 
-def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
+def get_dialogues(graph: Graph, repeats: int, ends: list[int]) -> list[Dialogue]:
     global visited_list
     paths = []
     starts = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
@@ -72,11 +78,18 @@ def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
     paths.sort()
     final = list(k for k,_ in itertools.groupby(paths))[1:]
     final.sort(key=len,reverse=True)
-    sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
+    # for f in final:
+    #     print("FINAL: ", f)
+    # sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
     # ends = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
-    # node_paths = [f for f in final if f[-1] in ends]
-    node_paths = remove_duplicates(final)
-    # node_paths = remove_duplicates(node_paths)
+
+    node_paths = [f for f in final if f[-1] in ends]
+    # for n in node_paths:
+    #     print("NODE_PATH: ", n)
+    # node_paths = remove_duplicates(final)
+    node_paths = remove_duplicates(node_paths)
+    # print("REMOVED: ", node_paths)
+    # print("\n")
     full_paths = []
     for p in node_paths:
         path = []
@@ -96,18 +109,23 @@ def get_dialogues(graph: Graph, repeats: int) -> list[Dialogue]:
         dialogues.extend(dialogue)
     final = list(k for k,_ in itertools.groupby(dialogues))
     final = remove_duplicated_utts(final)
+    # for f in final:
+    #     print("FINAL: ", [t['text'] for t in f])
+    # print("\n")
     result = [Dialogue.from_list(seq) for seq in final]
     return result
 
 def get_full_dialogues(graph: Graph, upper_limit: int):
     repeats = 1
+    ends = find_graph_ends(graph, model=model)
+    print("ENDS: ", ends['value'], ends['description'])
     while repeats <= upper_limit:
-        dialogues = get_dialogues(graph,repeats)
+        dialogues = get_dialogues(graph,repeats, ends['value'])
         if all_utterances_present(graph, dialogues):
             print(f"{repeats} repeats works!")            
             break
         repeats += 1
-    if repeats >= upper_limit:
+    if repeats > upper_limit:
         print("Not all utterances present")
     return dialogues
 

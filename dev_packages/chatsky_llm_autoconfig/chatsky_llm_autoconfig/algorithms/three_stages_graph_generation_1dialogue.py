@@ -16,7 +16,7 @@ from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
 
 env_settings = EnvSettings()
 
-@AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
+@AlgorithmRegistry.register(input_type=Dialogue, path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class ThreeStagesGraphGenerator(GraphGenerator):
     """Graph generator based on list of diaolgues.
     Thee stages:
@@ -30,10 +30,10 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         super().__init__()
         self.prompt_name = prompt_name
 
-    def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, topic: str = "") -> BaseGraph:
+    def invoke(self, dialogue: Dialogue = None, graph: DialogueGraph = None, topic: str = "") -> BaseGraph:
 
         base_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1)
-        nexts, nodes, starts, neigbhours, last_user = dialogues2list(dialogue)
+        nexts, nodes, starts, neigbhours, last_user = dialogues2list([dialogue])
         
         print("LISTS_N: ",[(i,n) for i,n in enumerate(nexts)])
         print("LISTS: ",[(i,n) for i,n in enumerate(nodes)])
@@ -52,21 +52,20 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
         print("NODES: ", nodes)
         embeddings = HuggingFaceEmbeddings(model_name=env_settings.EMBEDDER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
-        graph_dict = nodes2graph(nodes, dialogue, embeddings)
-        print("RESULT: ", graph_dict, "\n")
+        graph_dict = nodes2graph(nodes, [dialogue], embeddings)
+        print("RESULT: ", graph_dict)
         graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
 
-        result_graph = Graph(graph_dict=graph_dict)
-        print("SKIP")
-        return result_graph 
 
+        # result_graph = Graph(graph_dict=graph_dict)
+        # return result_graph 
         if not last_user:
             result_graph = Graph(graph_dict=graph_dict)
             print("SKIP")
             return result_graph    
         partial_variables = {}
         prompt_extra = ""
-        for idx, dial in enumerate(dialogue):
+        for idx, dial in enumerate([dialogue]):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
         prompt = PromptTemplate(template=three_1+"{graph_dict}. "+three_2+prompt_extra, input_variables=["graph_dict"], partial_variables=partial_variables)

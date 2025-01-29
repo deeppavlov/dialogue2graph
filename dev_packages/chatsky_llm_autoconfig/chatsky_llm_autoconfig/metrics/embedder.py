@@ -139,6 +139,9 @@ def sym_dif(node1: str, node2: str):
     set1 = set(node1.split())
     set2 = set(node2.split())
     dif = list(set1.symmetric_difference(set2))
+    print("DIF: ", dif)
+    if len(dif) < 2:
+        return False
     first = re.sub(r'[^\w\s]','',dif[0])
     second = re.sub(r'[^\w\s]','',dif[1])
     score = max(evaluator.score([(first,second)]), evaluator.score([(second,first)]))
@@ -155,7 +158,7 @@ def ends_match(node1: str, node2: str):
     return re.match("^.*(?<![!?])$",node1) and re.match("^.*(?<![!?])$",node2) or all([end1,end2,end1[-1] == end2[-1]]), sents1, sents2
 
 def if_greetings(node1: str, node2:str):
-    greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|great|awesome|perfect|fantastic|wonderful)\b', re.IGNORECASE)
+    greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|great|awesome|excellent|perfect|glad|nice|fantastic|wonderful)\b', re.IGNORECASE)
     if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
         greetings_cond = True
         print("GREETINGS")
@@ -164,7 +167,7 @@ def if_greetings(node1: str, node2:str):
     return greetings_cond
 
 def if_else(node1: str, node2:str):
-    else_re = re.compile(r'\b(else|add|another|more|other|extra|additional)\b', re.IGNORECASE)
+    else_re = re.compile(r'\b(else|add|increase|increased|another|more|other|extra|additional)\b', re.IGNORECASE)
     if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
         else_cond = True
         print("ELSE")
@@ -199,22 +202,25 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
     Based on cross-encoder similarity and some more empirical rules
     """
 
-    nodes_score = get_reranking(nodes_list, nodes_list)
-    next_score = get_reranking(next_list, next_list)
-    mix_score = get_reranking(mix_list, mix_list)
+    nodes_score = get_reranking(nodes_list, nodes_list) # Scoring of assistant utterances
+    next_score = get_reranking(next_list, next_list) # Scoring of user utterances following each assistant utterance 
+    mix_score = get_reranking(mix_list, mix_list) # Scoring of concatenations of assistant and user together
     pairs = []
 
     for ind1, node1 in enumerate(nodes_list):
         cur_nodes_list = nodes_list[ind1+1:]
         for ind2, node2 in zip(range(ind1+1,ind1+1+len(cur_nodes_list)),cur_nodes_list):
 
-            max_n = max(nodes_score[ind1][ind2],nodes_score[ind2][ind1])
-            max_m = max(mix_score[ind1][ind2],mix_score[ind2][ind1])
-            min_e = min(next_score[ind1][ind2],next_score[ind2][ind1])
-            max_e = max(next_score[ind1][ind2],next_score[ind2][ind1])
+            max_n = max(nodes_score[ind1][ind2],nodes_score[ind2][ind1]) # Maximum in pair of cross encoding pairs (node1,node2) and (node2,node1)
+            max_m = max(mix_score[ind1][ind2],mix_score[ind2][ind1]) # Maximum in pair of cross encoding pairs (mix1,mix2) and (mix2,mix1)
+            min_e = min(next_score[ind1][ind2],next_score[ind2][ind1]) # Minimum in pair of cross encoding pairs (next1,next2) and (next2,next1)
+            max_e = max(next_score[ind1][ind2],next_score[ind2][ind1]) # Maximum in pair of cross encoding pairs (next1,next2) and (next2,next1)
 
             print(f"MIX: max_n:{max_n},max_m:{max_m},min_e:{min_e},max_e:{max_e}",nodes_list[ind1],nodes_list[ind2])
-            one_word = sym_dif(node1, node2)
+            if max_n > 0.999:
+                one_word = False
+            else:
+                one_word = sym_dif(node1, node2)
             signs, sents1, sents2 = ends_match(node1, node2)
             if not signs:
                 print("SIGNS")
@@ -226,6 +232,12 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             yes_no = y_n(node1, node2)
 
             condition = not (greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
+            print("CONDITION: ", condition)
+            print("ADJACENT: ", node1 in neigbhours[node2])
+            # print("GREEINGS: ", greetings_cond)
+            # print("IF: ", if_cond)
+            # print("ELSE: ", else_cond)
+            print("ONE_WORD: ", one_word)
             cond_1 = len1 == len2 and len1 == 1 and min_e >= 0.06 and max_e > 0.9 and max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > 0.05 or len1!=len2 and max_n > 0.99
             if cond_1:
                 condition = not (greetings_cond or if_cond or else_cond or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])

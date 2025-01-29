@@ -171,7 +171,9 @@ def is_dialogue_valid(dialogue: Dialogue, model: BaseChatModel) -> dict[str]:
 
     return result
 
-def find_graph_ends(dialogue: Dialogue, model: BaseChatModel) -> dict[str]:
+    # Your task is to find all the nodes which are the last in the dialogue flow.
+
+def find_graph_ends(G: Graph, model: BaseChatModel) -> dict[str]:
     """
     Validates dialogue graph structure and logical transitions between nodes.
 
@@ -184,49 +186,46 @@ def find_graph_ends(dialogue: Dialogue, model: BaseChatModel) -> dict[str]:
     """
 
     # Define validation result model
-    class DialogueValidationResult(BaseModel):
-        isValid: bool = Field(description="Whether the dialogue is valid or not")
-        description: str = Field(description="Explanation of why it's valid or invalid")
+    class GraphEndsResult(BaseModel):
+        ends: list = Field(description="IDs of ending nodes")
+        description: str = Field(description="Explanation of model's decision")
 
     # Create prompt template
-    dialogue_validate_prompt_template = """
-    You are evaluating if beginning and ending of dialogue are logical and consistent.
+    graph_ends_prompt_template = """
+    Your task is to find IDs of all the nodes satisfying condition below:
+    Let's consider node with id A.
+    There is only edge with source=A in the whole graph, and target of this edge is located earlier in the dialogue flow.
     
-    Given this dialogue in JSON:
-    {dialogue}
+    Given this conversation graph in JSON:
+    {json_graph}
  
-    EVALUATE: Are the first and final dialogue messages logical in the conversation?
-    Consider:
-    1. Does the first message naturally start the dialogue?
-    2. Does the final message logically connect to the previous dialogue?
-    3. Does the dialogue look logically finished?
-
+ 
 
     Reply in JSON format:
-    {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
+    {{"ends": [id1, id2, ...], "description": "Brief explanation of your decision"}}
     """
 
-    dialogue_validate_prompt = PromptTemplate(
-        input_variables=["json_dialogue"], template=dialogue_validate_prompt_template
+    graph_ends_prompt = PromptTemplate(
+        input_variables=["json_graph"], template=graph_ends_prompt_template
     )
 
-    parser = PydanticOutputParser(pydantic_object=DialogueValidationResult)
+    parser = PydanticOutputParser(pydantic_object=GraphEndsResult)
 
     # Convert graph to JSON string
-    dialogue_json = json.dumps(dialogue)
+    graph_json = json.dumps(G.graph_dict)
 
         # Prepare input for validation
     input_data = {
-        "dialogue": dialogue_json,
+        "json_graph": graph_json,
     }
 
         # print(triplet_validate_prompt.format(**input_data))
 
         # Run validation
-    dialogue_check_chain = dialogue_validate_prompt | model | parser
-    response = dialogue_check_chain.invoke(input_data)
+    find_ends_chain = graph_ends_prompt | model | parser
+    response = find_ends_chain.invoke(input_data)
 
-    result = {"value": response.isValid, "description": response.description}
+    result = {"value": response.ends, "description": response.description}
 
     return result
 
