@@ -84,15 +84,15 @@ Are_theme_valid:
 ready_graphs.json 5/5
 complex_graphs_original.json 5/5
 
-Jan 29:
-`dialogue_dataset_10_topics_3_dialogue.json` 0.87
-`ready_graphs.json` 1.0
+Jan 29:\
+`dialogue_dataset_10_topics_3_dialogue.json` 0.87\
+`ready_graphs.json` 1.0\
 `complex_graphs.json` 0.6 found an error in nodes2graph, abstract purchase graph, 1 edge missed
 
-Jan 30:
-These datasets are in experiments/2025.01.22/sampler
-`dialogue_dataset_10_topics_3_dialogue.json` 0.97
-`ready_graphs.json` 1.0
+Jan 30:\
+These datasets are in experiments/2025.01.22/sampler\
+`dialogue_dataset_10_topics_3_dialogue.json` 0.97\
+`ready_graphs.json` 1.0\
 `complex_graphs.json` 1.0
 
 ## Future plans
