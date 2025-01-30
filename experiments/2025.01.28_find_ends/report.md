@@ -7,7 +7,7 @@ Dialogues are sampled from the graphs generated from scratch by LLM.
 Dialogue sampler used so far and based on networkx gives poor results: not all dialogues are sampled.
 So it was decided to try new way.
 
-## Hypothesises and steps
+## Hypotheses and steps
 
 Will use regular recursion.
 1. Find finishing nodes with the help of LLM based find_graph_ends().

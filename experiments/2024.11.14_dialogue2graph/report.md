@@ -13,7 +13,7 @@ My understanding of reasons for this experiment is:
 4. Select embedding model
 5. Getting criteria for such selection process
 
-## Hypothesises and steps
+## Hypotheses and steps
 
 Approaches we would try to solve the issues.
 
