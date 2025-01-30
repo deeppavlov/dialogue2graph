@@ -95,5 +95,10 @@ These datasets are in experiments/2025.01.22/sampler\
 `ready_graphs.json` 1.0\
 `complex_graphs.json` 1.0
 
+This is result of three stages algorithm:
+1. Group assistant's utterances with nodes2groups
+2. Connect nodes by edges with nodes2graph
+3. Add missing edges with LLM
+
 ## Future plans
 All things to be considered by future researchers, plans on next experiments and so on
