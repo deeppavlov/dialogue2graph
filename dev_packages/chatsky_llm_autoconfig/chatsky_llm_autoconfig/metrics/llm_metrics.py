@@ -7,6 +7,7 @@ This module contains functions that checks Graphs and Dialogues for various metr
 
 import logging
 import json
+from typing import List, TypedDict
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
@@ -172,3 +173,113 @@ def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
     response = theme_check_chain.invoke(input_data)
 
     return {"value": response.isValid, "description": response.description}
+
+
+
+class InvalidTransition(TypedDict):
+    from_: List[str]  # Using from_ because 'from' is reserved
+    user: List[str]
+    to: List[str]
+    reason: str
+
+
+class GraphValidationResult(TypedDict):
+    is_valid: bool
+    invalid_transitions: List[InvalidTransition]
+
+
+def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResult:
+    """
+    Проверяет валидность графа диалога
+    Возвращает:
+    {
+        "is_valid": bool,  # валиден ли граф в целом
+        "invalid_transitions": [  # список невалидных переходов
+            {
+                "from": ["source utterance"],
+                "user": ["user utterance"],
+                "to": ["target utterance"],
+                "reason": "причина невалидности"
+            },
+            ...
+        ]
+    }
+    """
+    # Define validation result model
+    class TransitionValidationResult(BaseModel):
+        isValid: bool = Field(description="Whether the transition is valid or not")
+        description: str = Field(description="Explanation of why it's valid or invalid")
+
+    # Create prompt template
+    triplet_validate_prompt = PromptTemplate(
+        input_variables=["json_graph", "source_utterances", "edge_utterances", "target_utterances"],
+        template="""
+    You are evaluating if dialog transitions make logical sense.
+    
+    Given this conversation graph in JSON:
+    {json_graph}
+    
+    For the current transition:
+    Source (Assistant): {source_utterances}
+    User Response: {edge_utterances}
+    Target (Assistant): {target_utterances}
+
+    EVALUATE: Do these three messages form a logical sequence in the conversation?
+    Consider:
+    1. Does the assistant's first response naturally lead to the user's response?
+    2. Does the user's response logically connect to the assistant's next message?
+    3. Is the overall flow natural and coherent?
+
+    Reply in JSON format:
+    {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
+    """
+    )
+
+    parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
+
+    # Convert graph to JSON string
+    graph_json = json.dumps(G.graph_dict)
+
+    # Create node mapping
+    node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
+    invalid_transitions = []
+    is_valid = True
+
+    for edge in G.graph_dict["edges"]:
+        source_id = edge["source"]
+        target_id = edge["target"]
+
+        # Проверяем существование узлов
+        if source_id not in node_map or target_id not in node_map:
+            is_valid = False
+            continue
+
+        # Get utterances
+        source_node = node_map[source_id]
+        target_node = node_map[target_id]
+
+        # Prepare input for validation
+        input_data = {
+            "json_graph": graph_json,
+            "source_utterances": source_node["utterances"],
+            "edge_utterances": edge["utterances"],
+            "target_utterances": target_node["utterances"]
+        }
+
+        # Run validation
+        triplet_check_chain = triplet_validate_prompt | model | parser
+        result = triplet_check_chain.invoke(input_data)
+
+        if not result.isValid:
+            is_valid = False
+            invalid_transitions.append({
+                "from": source_node["utterances"],
+                "user": edge["utterances"],
+                "to": target_node["utterances"],
+                "reason": result.description
+            })
+    print("is_valid: ", is_valid)
+    return {
+        "is_valid": is_valid,
+        "invalid_transitions": invalid_transitions
+    }
