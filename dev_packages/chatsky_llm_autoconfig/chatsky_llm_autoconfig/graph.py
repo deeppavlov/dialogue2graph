@@ -36,10 +36,6 @@ class BaseGraph(BaseModel, abc.ABC):
     def node_by_id(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def edge_by_target(self):
-        raise NotImplementedError
-
 
 class Graph(BaseGraph):
 
@@ -79,7 +75,7 @@ class Graph(BaseGraph):
 
     def visualise(self, *args, **kwargs):
         plt.figure(figsize=(17, 11))  # Make the plot bigger
-        pos = nx.spring_layout(self.graph)
+        pos = nx.kamada_kawai_layout(self.graph)
         nx.draw(self.graph, pos, with_labels=False, node_color="lightblue", node_size=500, font_size=8, arrows=True)
         edge_labels = nx.get_edge_attributes(self.graph, "utterances")
         node_labels = nx.get_node_attributes(self.graph, "utterances")
@@ -91,18 +87,25 @@ class Graph(BaseGraph):
         plt.show()
 
     def nodes_by_utterance(self, utterance: str) -> list[dict]:
-        return [node for node in self.graph_dict["nodes"] if utterance in node["utterances"]]
-
+        return [node for node in self.graph_dict['nodes'] if utterance in node['utterances']]
+            
     def edges_by_utterance(self, utterance: str) -> list[dict]:
-        return [edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]]
-
+        return [edge for edge in self.graph_dict['edges'] if utterance in edge['utterances']]
+            
     def node_by_id(self, id: int):
-        for node in self.graph_dict["nodes"]:
-            if node["id"] == id:
+        for node in self.graph_dict['nodes']:
+            if node['id'] == id:
                 return node
-
-    def edge_by_source(self, source: int):
-        return [edge for edge in self.graph_dict["edges"] if source == edge["source"]]
-
-    def edge_by_target(self, target: int):
-        return [edge for edge in self.graph_dict["edges"] if target == edge["target"]]
+    
+    def edge_by_source(self, id: int):
+        return [edge for edge in self.graph_dict['edges'] if edge['source']==id]
+    
+    def edge_by_target(self, id: int):
+        return [edge for edge in self.graph_dict['edges'] if edge['target']==id]
+    
+    def pair_number(self, id1: int, id2: int):
+        # return 1
+        edges = [e for e in self.edge_by_source(id1) if e in self.edge_by_target(id2)]
+        if edges:
+            return len(edges[0]['utterances'])
+        return 0

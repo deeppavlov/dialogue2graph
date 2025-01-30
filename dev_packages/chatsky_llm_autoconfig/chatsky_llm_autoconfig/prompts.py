@@ -283,3 +283,81 @@ cycle_graph_generation_prompt = PromptTemplate.from_template(
     "IMPORTANT: all the dialogues you've prompted are cyclic. Before answering you must check where the dialog can loop or cycle and make the first node of a cycle a target node for the last node of the cycle. Brackets must be changed back into curly braces to create a valid JSON string. Return ONLY JSON string in plain text (no code blocks) without any additional commentaries."
     "Dialogue: {dialog}"
 )
+
+cycle_graph_generation_prompt_enhanced = PromptTemplate.from_template(
+    """
+Create a dialogue graph for a {topic} conversation that will be used for training data generation. The graph must follow these requirements:
+
+1. Dialogue Flow Requirements:
+   - Each assistant message (node) must be a precise question or statement that expects a specific type of response
+   - Each user message (edge) must logically and directly respond to the previous assistant message
+   - All paths must maintain clear context and natural conversation flow
+   - Avoid any ambiguous or overly generic responses
+
+2. Graph Structure Requirements:
+   - Must contain at least 2 distinct cycles (return paths)
+   - Each cycle should allow users to:
+     * Return to previous choices for modification
+     * Restart specific parts of the conversation
+     * Change their mind about earlier decisions
+   - Include clear exit points from each major decision path
+   
+3. Core Path Types:
+   - Main success path (completing the intended task)
+   - Multiple modification paths (returning to change choices)
+   - Early exit paths (user decides to stop)
+   - Alternative success paths (achieving goal differently)
+
+Example of a good cycle structure:
+Assistant: "What size coffee would you like?"
+User: "Medium please"
+Assistant: "Would you like that hot or iced?"
+User: "Actually, can I change my size?"
+Assistant: "Of course! What size would you like instead?"
+
+Format:
+{{
+    "edges": [
+        {{
+            "source": "node_id",
+            "target": "node_id",
+            "utterances": ["User response text"]
+        }}
+    ],
+    "nodes": [
+        {{
+            "id": "node_id",
+            "label": "semantic_label",
+            "is_start": boolean,
+            "utterances": ["Assistant message text"]
+        }}
+    ]
+}}
+
+Requirements for node IDs:
+- Must be unique integers
+- Start node should have ID 1
+- IDs should increment sequentially
+
+Return ONLY the valid JSON without any additional text, commentaries or explanations.
+"""
+)
+
+cycle_graph_repair_prompt = PromptTemplate.from_template("""
+Fix the invalid transitions in this dialogue graph while keeping its structure.
+
+Current invalid transitions that need to be fixed:
+{invalid_transitions}
+
+Original graph structure:
+{graph_json}
+
+Requirements for the fix:
+1. Keep all node IDs and structure the same
+2. Fix ONLY the invalid transitions
+3. Make sure the fixed transitions are logical and natural
+4. Each user response must logically follow from the assistant's previous message
+5. Each assistant response must properly address the user's input
+
+Return ONLY the complete fixed graph JSON with the same structure.
+""")
