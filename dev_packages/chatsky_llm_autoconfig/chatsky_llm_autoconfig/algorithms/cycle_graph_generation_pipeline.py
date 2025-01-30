@@ -5,7 +5,6 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
 from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
 from chatsky_llm_autoconfig.algorithms.dialogue_generation import RecursiveDialogueSampler
-from chatsky_llm_autoconfig.algorithms.experimental_sampler import get_dialogues, get_full_dialogues
 from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
 from chatsky_llm_autoconfig.metrics.llm_metrics import graph_validation, is_theme_valid
 from chatsky_llm_autoconfig.graph import BaseGraph
