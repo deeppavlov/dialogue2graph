@@ -58,7 +58,7 @@ class GraphGenerationPipeline:
         self.generation_model = generation_model
         self.validation_model = validation_model
         self.graph_generator = CycleGraphGenerator()
-        self.dialogue_sampler = get_full_dialogues
+        self.dialogue_sampler = RecursiveDialogueSampler()
 
         self.generation_prompt = generation_prompt or cycle_graph_generation_prompt_enhanced
         self.repair_prompt = repair_prompt or cycle_graph_repair_prompt
@@ -195,7 +195,7 @@ class GraphGenerationPipeline:
 
             # 3. Generate and validate dialogues
             print("Sampling dialogues...")
-            sampled_dialogues = self.dialogue_sampler(graph, 15)
+            sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             print(f"Sampled {len(sampled_dialogues)} dialogues")
             print(sampled_dialogues)
             if not all_utterances_present(graph, sampled_dialogues):
