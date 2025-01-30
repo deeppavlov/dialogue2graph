@@ -56,9 +56,9 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         print("RESULT: ", graph_dict, "\n")
         graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
 
-        result_graph = Graph(graph_dict=graph_dict)
-        print("SKIP")
-        return result_graph 
+        # result_graph = Graph(graph_dict=graph_dict)
+        # print("SKIP")
+        # return result_graph 
 
         if not last_user:
             result_graph = Graph(graph_dict=graph_dict)

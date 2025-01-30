@@ -256,12 +256,14 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceE
         print("TEXTS: ", texts)
         store = DialogueStore(texts, embeddings)
         for n in nodes:
+            print("NODE: ", n)
             for u in n['utterances']:
                 print("UTT: ", u)
                 ids = store.search_assistant(u)
                 print("IDS: ", ids)
                 if ids:
                     for id,s in zip(ids, store.get_user(ids=ids)):
+                        print("USER: ", s)
                         if len(texts) > 2*(int(id)+1):
                             target = node_store.find_node(texts[2*(int(id)+1)]['text'])
                             print("find_node: ", "target: ", target, texts[2*(int(id)+1)]['text'], n['id'], id, s)

@@ -8,8 +8,8 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 # import chatsky_llm_autoconfig.algorithms.single_graph_generation
 #import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
-import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
-# import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
+# import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
+import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
 
 # from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
 # from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator

@@ -89,5 +89,11 @@ Jan 29:
 `ready_graphs.json` 1.0
 `complex_graphs.json` 0.6 found an error in nodes2graph, abstract purchase graph, 1 edge missed
 
+Jan 30:
+These datasets are in experiments/2025.01.22/sampler
+`dialogue_dataset_10_topics_3_dialogue.json` 0.97
+`ready_graphs.json` 1.0
+`complex_graphs.json` 1.0
+
 ## Future plans
 All things to be considered by future researchers, plans on next experiments and so on
