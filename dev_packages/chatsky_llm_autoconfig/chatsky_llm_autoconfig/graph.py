@@ -75,7 +75,7 @@ class Graph(BaseGraph):
 
     def visualise(self, *args, **kwargs):
         plt.figure(figsize=(17, 11))  # Make the plot bigger
-        pos = nx.spring_layout(self.graph)
+        pos = nx.kamada_kawai_layout(self.graph)
         nx.draw(self.graph, pos, with_labels=False, node_color="lightblue", node_size=500, font_size=8, arrows=True)
         edge_labels = nx.get_edge_attributes(self.graph, "utterances")
         node_labels = nx.get_node_attributes(self.graph, "utterances")
