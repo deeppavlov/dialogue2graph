@@ -9,7 +9,8 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 #import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
 # import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
-import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
+# import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
+import chatsky_llm_autoconfig.algorithms.topic_graph_generation
 
 # from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
 # from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
@@ -48,6 +49,10 @@ print("settings")
 model = ChatOpenAI(model="gpt-4o", api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0)
 print("model loaded")
 
+generation_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0.2)
+validation_model = ChatOpenAI(model=env_settings.FORMATTER_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0)
+
+
 # dialogue_to_graph = read_json(env_settings.TEST_DATA_PATH)["graph_to_dialogue"]
 dialogue_to_graph = read_json(env_settings.TEST_DATA_PATH)
 print("json read")
@@ -60,12 +65,12 @@ print("json read")
 
 # model = ChatOpenAI(model="gpt-4o", api_key=os.getenv("OPENAI_API_KEY"), base_url=os.getenv("OPENAI_BASE_URL"), temperature=0)
 
-with open("dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/autometrics/test_data/data.json") as f:
+with open(env_settings.TOPICS_DATA) as f:
     test_data = json.load(f)
-    graph_to_dialogue = test_data["graph_to_dialogue"]
+    # graph_to_dialogue = test_data["graph_to_dialogue"]
     # graph_to_graph = test_data["graph_to_graph"]
-    dialogue_to_dialogue = test_data["dialogue_to_dialogue"]
-    topic_to_graph = test_data["topic_to_graph"]
+    # dialogue_to_dialogue = test_data["dialogue_to_dialogue"]
+    topic_to_graph = test_data
 
 
 def run_all_algorithms():
@@ -78,7 +83,7 @@ def run_all_algorithms():
     total_metrics = {}
     for class_ in algorithms:
 
-        class_instance = algorithms[class_]["type"]()
+        # class_instance = algorithms[class_]["type"]()
         metrics = {}
 
         if algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is Dialogue:
@@ -199,6 +204,16 @@ def run_all_algorithms():
             metrics["llm_match"] = sum(metrics["llm_match"]) / len(metrics["llm_match"])
             metrics["is_same_structure"] = sum(metrics["is_same_structure"]) / len(metrics["is_same_structure"])
 
+        elif algorithms[class_]["input_type"] is str and algorithms[class_]["output_type"] is list:
+            tp = algorithms[class_]["type"]
+            class_instance = tp(generation_model, validation_model)
+            result = []
+            for case in topic_to_graph:
+                test_topic = case["topic"]
+                result.append(class_instance.invoke(test_topic))
+            save_json(data=result, filename=env_settings.GRAPH_SAVED)
+
+
         elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
             metrics = {"is_theme_valid": [], "are_triplets_valid": []}
             for case in graph_to_dialogue:
@@ -213,7 +228,6 @@ def run_all_algorithms():
         total_metrics[class_] = metrics
 
     return total_metrics
-
 
 def compare_results(date, old_data, compare_to: str = ""):
 

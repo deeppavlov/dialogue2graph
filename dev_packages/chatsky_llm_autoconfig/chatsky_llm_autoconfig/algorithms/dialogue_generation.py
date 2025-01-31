@@ -104,7 +104,7 @@ def get_dialogues(graph: BaseGraph, repeats: int) -> list[Dialogue]:
     return result
 
 
-@AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
+# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class DialogueSampler(DialogueGenerator):
 
     def invoke(self, graph: BaseGraph, start_node: int = 1, end_node: int = -1, topic="") -> list[Dialogue]:
@@ -172,7 +172,7 @@ class DialogueSampler(DialogueGenerator):
         return self.invoke(*args, **kwargs)
 
 
-@AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
+# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class DialoguePathSampler(DialogueGenerator):
     def invoke(self, graph: BaseGraph, start_node: int = 1, end_node: int = -1, topic="") -> list[Dialogue]:
         nx_graph = graph.graph
@@ -214,7 +214,7 @@ class DialoguePathSampler(DialogueGenerator):
         return self.invoke(*args, **kwargs)
 
 
-@AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
+# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class RecursiveDialogueSampler(DialogueGenerator):
     def _list_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""

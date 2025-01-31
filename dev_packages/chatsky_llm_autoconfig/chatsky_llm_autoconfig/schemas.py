@@ -240,7 +240,7 @@ class GraphGenerationResult(BaseModel):
     topic: str
     dialogues: List[Dialogue]
 
-    class DialogueGraph(BaseModel):
+class DialogueGraph(BaseModel):
     edges: List[Edge] = Field(description="List of transitions between nodes")
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")

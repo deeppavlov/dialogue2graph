@@ -28,3 +28,5 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     SIM_THRESHOLD: Optional[float]
     HUGGINGFACE_TOKEN: Optional[str]
     TEST_DATASET: Optional[str]
+    GRAPH_SAVED: Optional[str]
+    TOPICS_DATA: Optional[str]

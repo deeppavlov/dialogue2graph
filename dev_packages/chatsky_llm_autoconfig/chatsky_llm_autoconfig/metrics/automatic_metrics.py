@@ -5,17 +5,16 @@ Automatic Metrics.
 This module contains functions that automatically (without using LLMs) checks Graphs and Dialogues
 for various metrics.
 """
-
 import numpy as np
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
-
 import networkx as nx
 from chatsky_llm_autoconfig.metrics.jaccard import jaccard_edges, jaccard_nodes, collapse_multiedges
-from chatsky_llm_autoconfig.metrics.embedder import emb_list, get_embedding, get_reranking, get_2_rerankings
+from chatsky_llm_autoconfig.metrics.embedder import get_2_rerankings
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.dialogue import Dialogue
+
 from chatsky_llm_autoconfig.schemas import CompareResponse
-from chatsky_llm_autoconfig.utils import call_llm_api, graph2list, nodes2list, get_diagonals, get_diagonal, graph_order
+from chatsky_llm_autoconfig.utils import call_llm_api, graph2list, nodes2list
 from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.compare_prompt import (
     compare_graphs_prompt, graph_example_1, result_form
@@ -23,6 +22,7 @@ from chatsky_llm_autoconfig.compare_prompt import (
 
 env_settings = EnvSettings()
 from langchain.chat_models import ChatOpenAI
+
 
 def edge_match_for_multigraph(x, y):
     if isinstance(x, dict) and isinstance(y, dict):
@@ -38,26 +38,14 @@ def parse_edge(edge):
     src, trg = map(int, edge.split("->"))
     return src - 1, trg - 1
 
-def check_mapping(mapping):
-    return all(x == y for x,y in mapping.items())
 
 def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
     g1 = G1.graph
     g2 = G2.graph
-
-    print("\nTRIPLETS: ", G1.graph_dict, "\n")
-    print("TRIPLETS: ", G2.graph_dict, "\n")
-
     node_mapping = {node: None for node in g1.nodes}
     node_mapping.update({node: None for node in g2.nodes})
-    if type(g1) is nx.DiGraph:
-
-        # print("type1")
-
-        #GM = nx.isomorphism.DiGraphMatcher(g1, g2, node_match=lambda x, y: emb_list(x))
-        #GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: set(x["utterances"]).intersection(set(y["utterances"])) is not None)
-        GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: set(emb_list(x['utterances'])).intersection(set(emb_list(y['utterances']))) is not None)
-        #GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: set(emb_list(x['utterances'],x)).intersection(set(emb_list(y['utterances'],y))) is not None)
+    if type(g1) is nx.DiGraph():
+        GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: set(x["utterances"]).intersection(set(y["utterances"])) is not None)
         are_isomorphic = GM.is_isomorphic()
     else:
         GM = nx.isomorphism.MultiDiGraphMatcher(g1, g2, edge_match=edge_match_for_multigraph)
@@ -72,15 +60,10 @@ def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
     edges1 = list(collapse_multiedges(g1.edges(data=True)).keys())
     edges2 = list(collapse_multiedges(g2.edges(data=True)).keys())
 
+    _, _, matrix_edges = jaccard_edges(g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True)
 
-    try:
-        _, _, matrix_edges = jaccard_edges(g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True)
+    _, _, matrix_nodes = jaccard_nodes(g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True)
 
-        _, _, matrix_nodes = jaccard_nodes(g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True)
-    except Exception as e:
-        print("Exception: ", e)
-        return False
-    # print("MATRIX: ", g1.nodes(data=True))
     for i, edge1 in enumerate(edges1):
         edge_mapping[edge1] = None
         mapping_jaccard_values[edge1] = 0
@@ -119,7 +102,7 @@ def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
         new_node_mapping = {}
         new_edge_mapping = {}
 
-        # какому ключу в старом графе соответствует новый ключ в перенумерованном графе
+        # какому ключу в старом графе соовтетвует новый ключ в перенумерованном графе
         inverse_mapping = {v: k for k, v in G1.node_mapping.items()}
         # {1: 1, 3: 2} -> {1: 1, 4:2} если в g1 4 перенумеровалась в 3
         for k, v in node_mapping.items():
@@ -136,19 +119,72 @@ def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
                 f"""{
                 inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"""
             ] = edge2
-        return check_mapping(new_node_mapping) and check_mapping(new_edge_mapping)
+        return new_node_mapping, new_edge_mapping
 
-    # print("MAPS: ", node_mapping, edge_mapping)
-    return check_mapping(node_mapping) and check_mapping(edge_mapping)
+    return node_mapping, edge_mapping
 
 
 def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
-    if not G2.graph_dict and G1.graph_dict:
-        return False
     g1 = G1.graph
     g2 = G2.graph
     return nx.is_isomorphic(g1, g2)
 
+
+def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
+    return True
+
+
+def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
+    """
+    Check if all graph elements (nodes and edges) appear in at least one dialogue.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        dialogues: List of Dialogue objects to check against
+
+    Returns:
+        bool: True if all graph elements are present in at least one dialogue
+    """
+    # Get all unique utterances from nodes and edges in the graph
+    graph_utterances = set()
+
+    # Add node utterances
+    for node_id, node_data in G.graph.nodes(data=True):
+        graph_utterances.update(node_data["utterances"])
+
+    # Add edge utterances
+    for _, _, edge_data in G.graph.edges(data=True):
+        if isinstance(edge_data["utterances"], list):
+            graph_utterances.update(edge_data["utterances"])
+        else:
+            graph_utterances.add(edge_data["utterances"])
+
+    # Collect all utterances from dialogues
+    dialogue_utterances = set()
+    for dialogue in dialogues:
+        dialogue_utterances.update(utt.text for utt in dialogue.messages)
+
+    # Check if all graph utterances are present in dialogues
+    if graph_utterances.issubset(dialogue_utterances):
+        return True
+    else:
+        # return False
+        return graph_utterances.difference(dialogue_utterances)
+
+
+def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
+    for phrase_1, phrase_2 in zip(D1.messages, D2.messages):
+        if phrase_1.participant != phrase_2.participant:
+            return False
+    return True
+
+
+def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> bool:
+    return len(D1.messages) == len(D2.messages)
+
+
+def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
+    raise NotImplementedError
 
 
 def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
@@ -216,138 +252,3 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
     return result['result']
 
 
-def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
-    return True
-
-def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
-    """
-    Check if all graph elements (nodes and edges) appear in at least one dialogue.
-
-    Args:
-        G: BaseGraph object containing the dialogue graph
-        dialogues: List of Dialogue objects to check against
-
-    Returns:
-        bool: True if all graph elements are present in at least one dialogue
-    """
-    # Get all unique utterances from nodes and edges in the graph
-    graph_utterances = set()
-
-    # Add node utterances
-    for node_id, node_data in G.graph.nodes(data=True):
-        graph_utterances.update(node_data["utterances"])
-
-    # Add edge utterances
-    for _, _, edge_data in G.graph.edges(data=True):
-        if isinstance(edge_data["utterances"], list):
-            graph_utterances.update(edge_data["utterances"])
-        else:
-            graph_utterances.add(edge_data["utterances"])
-
-    # Collect all utterances from dialogues
-    dialogue_utterances = set()
-    for dialogue in dialogues:
-        dialogue_utterances.update(utt.text for utt in dialogue.messages)
-
-    # Check if all graph utterances are present in dialogues
-    if graph_utterances.issubset(dialogue_utterances):
-        return True
-    else:
-        return False
-        # return graph_utterances.difference(dialogue_utterances)
-
-def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
-    """
-    Check if there is a connection from user message to assistant message.
-
-    Args:
-        G: BaseGraph object containing the dialogue graph
-        user, assistant: pair of neighboring utterances in a dialogue 
-
-    Returns:
-        list: True if there is connection, False otherwise 
-    """
-
-    nodes = G.nodes_by_utterance(assistant)
-
-    for node in nodes:
-        edges = G.edges_by_utterance(user)
-        for edge in edges:           
-            if edge['target'] == node['id']:
-                return True
-    return False
-
-def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
-    """
-    Check if there is a connection from assistant message to user message.
-
-    Args:
-        G: BaseGraph object containing the dialogue graph
-        assistant, user: pair of neighboring utterances in a dialogue 
-
-    Returns:
-        list: True if there is connection, False otherwise 
-    """
-
-    nodes = G.nodes_by_utterance(assistant)
-
-    for node in nodes:
-        edges = G.edges_by_utterance(user)
-        for edge in edges:           
-            if edge['source'] == node['id']:
-                return True
-    return False
-
-def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
-    """
-    Check if there is a connection from msg1 to msg2.
-
-    Args:
-        G: BaseGraph object containing the dialogue graph
-        msg1, msg2: pair of neighboring utterances in a dialogue 
-
-    Returns:
-        list: True if there is connection, False otherwise 
-    """
-    if msg1.participant == 'assistant' and msg2.participant == 'user':
-        return au_match(G, msg1.text, msg2.text)
-    if msg1.participant == 'user' and msg2.participant == 'assistant':
-        return ua_match(G, msg1.text, msg2.text)
-    return False
-
-def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> list:
-    """
-    Check if all dialogues are valid paths in the graph.
-
-    Args:
-        G: BaseGraph object containing the dialogue graph
-        dialogues: List of Dialogue objects to check against
-
-    Returns:
-        list: for every dialogue either [True] or [False, message1, message2], when there is no connection from message1 to message2
-    """
-
-
-    result = []
-
-    for dialogue in dialogues:
-        idx = 0
-        for idx in range(len(dialogue.messages)-1):
-            if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx+1]):
-                result.append([False, dialogue.messages[idx].text, dialogue.messages[idx+1].text])
-        result.append([True])
-    return result
-
-def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
-    for phrase_1, phrase_2 in zip(D1.messages, D2.messages):
-        if phrase_1.participant != phrase_2.participant:
-            return False
-    return True
-
-
-def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> bool:
-    return len(D1.messages) == len(D2.messages)
-
-
-def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
-    raise NotImplementedError
