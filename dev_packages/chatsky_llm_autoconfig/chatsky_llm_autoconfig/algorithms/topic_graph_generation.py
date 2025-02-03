@@ -6,7 +6,7 @@ from langchain.prompts import PromptTemplate
 from chatsky_llm_autoconfig.schemas import DialogueGraph
 from chatsky_llm_autoconfig.schemas import GraphGenerationResult
 from chatsky_llm_autoconfig.algorithms.cycle_graph_generation_pipeline import GraphGenerationPipeline
-from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
 from langchain_core.language_models.chat_models import BaseChatModel
 
@@ -34,7 +34,7 @@ class CycleGraphGenerator(TopicGraphGenerator):
             BaseGraph: Generated Graph object with cyclic structure
         """
         # Создаем цепочку: промпт -> модель -> парсер
-        parser = JsonOutputParser(pydantic_object=DialogueGraph)
+        parser = PydanticOutputParser(pydantic_object=DialogueGraph)
         chain = prompt | model | parser
 
         # Передаем kwargs как входные данные для цепочки
