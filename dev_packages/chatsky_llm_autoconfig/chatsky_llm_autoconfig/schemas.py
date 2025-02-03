@@ -1,6 +1,7 @@
 import networkx as nx
 from typing import List, Union, Dict
 from pydantic import BaseModel, Field, ConfigDict
+
 # from chatsky_llm_autoconfig.dialogue import Dialogue
 
 
@@ -236,6 +237,7 @@ class DialogueGraph(BaseModel):
 
 class GraphGenerationResult(BaseModel):
     """Complete result with graph and dialogues"""
+
     graph: DialogueGraph
     topic: str
     dialogues: List[Dialogue]

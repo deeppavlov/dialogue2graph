@@ -87,25 +87,25 @@ class Graph(BaseGraph):
         plt.show()
 
     def nodes_by_utterance(self, utterance: str) -> list[dict]:
-        return [node for node in self.graph_dict['nodes'] if utterance in node['utterances']]
-            
+        return [node for node in self.graph_dict["nodes"] if utterance in node["utterances"]]
+
     def edges_by_utterance(self, utterance: str) -> list[dict]:
-        return [edge for edge in self.graph_dict['edges'] if utterance in edge['utterances']]
-            
+        return [edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]]
+
     def node_by_id(self, id: int):
-        for node in self.graph_dict['nodes']:
-            if node['id'] == id:
+        for node in self.graph_dict["nodes"]:
+            if node["id"] == id:
                 return node
-    
+
     def edge_by_source(self, id: int):
-        return [edge for edge in self.graph_dict['edges'] if edge['source']==id]
-    
+        return [edge for edge in self.graph_dict["edges"] if edge["source"] == id]
+
     def edge_by_target(self, id: int):
-        return [edge for edge in self.graph_dict['edges'] if edge['target']==id]
-    
+        return [edge for edge in self.graph_dict["edges"] if edge["target"] == id]
+
     def pair_number(self, id1: int, id2: int):
         # return 1
         edges = [e for e in self.edge_by_source(id1) if e in self.edge_by_target(id2)]
         if edges:
-            return len(edges[0]['utterances'])
+            return len(edges[0]["utterances"])
         return 0

@@ -343,7 +343,8 @@ Return ONLY the valid JSON without any additional text, commentaries or explanat
 """
 )
 
-cycle_graph_repair_prompt = PromptTemplate.from_template("""
+cycle_graph_repair_prompt = PromptTemplate.from_template(
+    """
 Fix the invalid transitions in this dialogue graph while keeping its structure.
 
 Current invalid transitions that need to be fixed:
@@ -360,4 +361,5 @@ Requirements for the fix:
 5. Each assistant response must properly address the user's input
 
 Return ONLY the complete fixed graph JSON with the same structure.
-""")
+"""
+)
