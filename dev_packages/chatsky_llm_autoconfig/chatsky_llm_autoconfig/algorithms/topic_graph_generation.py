@@ -52,11 +52,8 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         super().__init__()
         self.generation_model = generation_model
         self.validation_model = validation_model
-        self.pipeline = GraphGenerationPipeline(
-                    generation_model=generation_model,
-                    validation_model=validation_model
-                )
-    
+        self.pipeline = GraphGenerationPipeline(generation_model=generation_model, validation_model=validation_model)
+
     def invoke(self, topic) -> list[dict]:
         print(f"\n{'='*50}")
         print(f"Generating graph for topic: {topic}")
@@ -64,21 +61,19 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         successful_generations = []
         try:
             result = self.pipeline(topic)
-            
+
             # Проверяем тип результата
             if isinstance(result, GraphGenerationResult):
                 print(f"✅ Successfully generated graph for {topic}")
                 # Сохраняем полный результат с графом и диалогами
-                successful_generations.append({
-                    "graph": result.graph.model_dump(),
-                    "topic": result.topic,
-                    "dialogues": [d.model_dump() for d in result.dialogues]
-                })
+                successful_generations.append(
+                    {"graph": result.graph.model_dump(), "topic": result.topic, "dialogues": [d.model_dump() for d in result.dialogues]}
+                )
             else:  # isinstance(result, GenerationError)
                 print(f"❌ Failed to generate graph for {topic}")
                 print(f"Error type: {result.error_type}")
                 print(f"Error message: {result.message}")
-                    
+
         except Exception as e:
             print(f"❌ Unexpected error processing topic '{topic}': {str(e)}")
 
