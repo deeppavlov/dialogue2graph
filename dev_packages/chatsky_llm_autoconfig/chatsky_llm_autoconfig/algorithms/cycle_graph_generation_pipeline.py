@@ -11,7 +11,8 @@ from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_pres
 from chatsky_llm_autoconfig.metrics.llm_metrics import graph_validation, is_theme_valid
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
 from chatsky_llm_autoconfig.schemas import DialogueGraph
-from langchain_core.output_parsers import JsonOutputParser
+# from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 from chatsky_llm_autoconfig.prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
 from openai import BaseModel
 
@@ -59,9 +60,16 @@ class CycleGraphGenerator(TopicGraphGenerator):
             BaseGraph: Generated Graph object with cyclic structure
         """
         # Создаем цепочку: промпт -> модель -> парсер
-        parser = JsonOutputParser(pydantic_object=DialogueGraph)
+        parser = PydanticOutputParser(pydantic_object=DialogueGraph)
+        # parser = JsonOutputParser(pydantic_object=DialogueGrah)
         chain = prompt | model | parser
 
+        res = chain.invoke(kwargs).model_dump()
+        for edge in res['edges']:
+            print("EDGES: ", edge)
+        for node in res['nodes']:
+            print("NODES: ", node)
+        return Graph(res)
         # Передаем kwargs как входные данные для цепочки
         return Graph(chain.invoke(kwargs))
 
@@ -159,7 +167,7 @@ class GraphGenerationPipeline:
                     "fixed_count": 0
                 }
             }
-
+        print("NOT vALID: ",initial_validation["invalid_transitions"],"\n")
         initial_invalid_count = len(initial_validation["invalid_transitions"])
         current_graph = graph
         current_attempt = 0
@@ -178,6 +186,7 @@ class GraphGenerationPipeline:
 
                 # Проверяем исправленный граф используя validation_model
                 validation = graph_validation(current_graph, self.validation_model)
+                # validation = {"is_valid": True}
                 if validation["is_valid"]:
                     return {
                         "is_valid": True,
@@ -222,6 +231,8 @@ class GraphGenerationPipeline:
                 topic=topic
             )
 
+            print("GRAPH: ", graph)
+
             # 2. Validate cycles
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)
             if not cycle_validation["meets_requirements"]:
@@ -234,7 +245,8 @@ class GraphGenerationPipeline:
             print("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             print(f"Sampled {len(sampled_dialogues)} dialogues")
-            print(sampled_dialogues)
+            for s in sampled_dialogues:
+                print(s)
             if not all_utterances_present(graph, sampled_dialogues):
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED,
@@ -269,6 +281,12 @@ class GraphGenerationPipeline:
                 topic=topic,
                 dialogues=sampled_dialogues
             )
+            # print("ALMOST: ", graph.graph_dict)
+            # return GraphGenerationResult(
+            #     graph=graph.graph_dict,
+            #     topic=topic,
+            #     dialogues=sampled_dialogues
+            # )
 
         except Exception as e:
             return GenerationError(

@@ -1,0 +1,3543 @@
+[
+    [
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "My account ID is 12345"
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 3,
+                        "utterances": [
+                            "user@example.com"
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 4,
+                        "utterances": [
+                            "My account was accessed without my permission and I was charged for unauthorized purchases."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 5,
+                        "utterances": [
+                            "No, thank you."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 6,
+                        "utterances": [
+                            "Actually, I need to change my account ID."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 2,
+                        "utterances": [
+                            "My new account ID is 67890"
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 7,
+                        "utterances": [
+                            "Actually, I need to update my email address."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 3,
+                        "utterances": [
+                            "newuser@example.com"
+                        ]
+                    },
+                    {
+                        "source": 1,
+                        "target": 5,
+                        "utterances": [
+                            "I want to cancel my refund request."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 5,
+                        "utterances": [
+                            "I changed my mind, I'd like to stop."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 5,
+                        "utterances": [
+                            "Never mind, I'm fine now."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 8,
+                        "utterances": [
+                            "I would like to speak to a security specialist."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 5,
+                        "utterances": [
+                            "No, thank you."
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "initiate_refund",
+                        "is_start": true,
+                        "utterances": [
+                            "I'm sorry to hear that your account has been compromised. I can help you request a refund. Can you please provide your account ID?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "request_email",
+                        "is_start": false,
+                        "utterances": [
+                            "Thank you. Can you please verify your email address associated with the account?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "request_issue_description",
+                        "is_start": false,
+                        "utterances": [
+                            "We've verified your account. Could you please describe the issue you've encountered?"
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "refund_processed",
+                        "is_start": false,
+                        "utterances": [
+                            "I'm sorry for the inconvenience. I have processed your refund request. You will receive a confirmation email shortly. Is there anything else I can help you with?"
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "end_conversation",
+                        "is_start": false,
+                        "utterances": [
+                            "Thank you for contacting support. Have a great day!"
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "update_account_id",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! What is your new account ID?"
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "label": "update_email",
+                        "is_start": false,
+                        "utterances": [
+                            "Sure! What is your new email address?"
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "label": "escalate_security",
+                        "is_start": false,
+                        "utterances": [
+                            "I have escalated your request to our security team. They will contact you within 24 hours regarding your refund. Is there anything else I can assist you with?"
+                        ]
+                    }
+                ]
+            },
+            "topic": "Requesting a refund for a compromised account",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your account has been compromised. I can help you request a refund. Can you please provide your account ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account ID is 12345",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Can you please verify your email address associated with the account?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "user@example.com",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "We've verified your account. Could you please describe the issue you've encountered?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I need to update my email address.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure! What is your new email address?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "newuser@example.com",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "We've verified your account. Could you please describe the issue you've encountered?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I would like to speak to a security specialist.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I have escalated your request to our security team. They will contact you within 24 hours regarding your refund. Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your account has been compromised. I can help you request a refund. Can you please provide your account ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account ID is 12345",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Can you please verify your email address associated with the account?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "user@example.com",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "We've verified your account. Could you please describe the issue you've encountered?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account was accessed without my permission and I was charged for unauthorized purchases.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry for the inconvenience. I have processed your refund request. You will receive a confirmation email shortly. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you for contacting support. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your account has been compromised. I can help you request a refund. Can you please provide your account ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account ID is 12345",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Can you please verify your email address associated with the account?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "user@example.com",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "We've verified your account. Could you please describe the issue you've encountered?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I would like to speak to a security specialist.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I have escalated your request to our security team. They will contact you within 24 hours regarding your refund. Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you for contacting support. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your account has been compromised. I can help you request a refund. Can you please provide your account ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account ID is 12345",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Can you please verify your email address associated with the account?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I need to change my account ID.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! What is your new account ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My new account ID is 67890",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Can you please verify your email address associated with the account?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I changed my mind, I'd like to stop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you for contacting support. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your account has been compromised. I can help you request a refund. Can you please provide your account ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account ID is 12345",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Can you please verify your email address associated with the account?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "user@example.com",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "We've verified your account. Could you please describe the issue you've encountered?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Never mind, I'm fine now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you for contacting support. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your account has been compromised. I can help you request a refund. Can you please provide your account ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to cancel my refund request.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you for contacting support. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "I want to recover a deleted Facebook post."
+                        ]
+                    },
+                    {
+                        "source": 1,
+                        "target": 3,
+                        "utterances": [
+                            "I want to recover a deleted Instagram post."
+                        ]
+                    },
+                    {
+                        "source": 1,
+                        "target": 4,
+                        "utterances": [
+                            "I changed my mind, I don't need help."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 5,
+                        "utterances": [
+                            "Yes, it was last week."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 6,
+                        "utterances": [
+                            "Actually, can I change to Instagram?"
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 7,
+                        "utterances": [
+                            "I don't remember the date."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 8,
+                        "utterances": [
+                            "Yes, it was last week."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 9,
+                        "utterances": [
+                            "Actually, can I change to Facebook?"
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 10,
+                        "utterances": [
+                            "I don't remember the date."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 11,
+                        "utterances": [
+                            "Thank you, that worked!"
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 12,
+                        "utterances": [
+                            "Actually, I need to change something."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 3,
+                        "utterances": [
+                            "Sure, let's switch to Instagram."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 13,
+                        "utterances": [
+                            "Yes, please."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 14,
+                        "utterances": [
+                            "No, I need to stop here."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 11,
+                        "utterances": [
+                            "Thank you, that worked!"
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 12,
+                        "utterances": [
+                            "Actually, I need to change something."
+                        ]
+                    },
+                    {
+                        "source": 9,
+                        "target": 2,
+                        "utterances": [
+                            "Sure, let's switch to Facebook."
+                        ]
+                    },
+                    {
+                        "source": 10,
+                        "target": 13,
+                        "utterances": [
+                            "Yes, please."
+                        ]
+                    },
+                    {
+                        "source": 10,
+                        "target": 14,
+                        "utterances": [
+                            "No, I need to stop here."
+                        ]
+                    },
+                    {
+                        "source": 11,
+                        "target": 15,
+                        "utterances": [
+                            "You're welcome!"
+                        ]
+                    },
+                    {
+                        "source": 12,
+                        "target": 12,
+                        "utterances": [
+                            "I'd like to change my Facebook recovery process."
+                        ]
+                    },
+                    {
+                        "source": 13,
+                        "target": 11,
+                        "utterances": [
+                            "Thanks, that's helpful."
+                        ]
+                    },
+                    {
+                        "source": 13,
+                        "target": 14,
+                        "utterances": [
+                            "I still need help."
+                        ]
+                    },
+                    {
+                        "source": 14,
+                        "target": 16,
+                        "utterances": [
+                            "Alright, thank you."
+                        ]
+                    },
+                    {
+                        "source": 15,
+                        "target": 16,
+                        "utterances": [
+                            "Goodbye!"
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "start",
+                        "is_start": true,
+                        "utterances": [
+                            "Hello! How can I assist you with recovering your deleted social media posts today?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "help_facebook_initial",
+                        "is_start": false,
+                        "utterances": [
+                            "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "help_instagram_initial",
+                        "is_start": false,
+                        "utterances": [
+                            "Sure, I can help you recover a deleted Instagram post. Do you remember when you deleted it?"
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "exit_no_help",
+                        "is_start": false,
+                        "utterances": [
+                            "No problem! If you need assistance in the future, feel free to reach out."
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "help_facebook_with_date",
+                        "is_start": false,
+                        "utterances": [
+                            "Great! To recover your Facebook post from last week, please follow these steps: [instructions]. Let me know if you need further help."
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "change_to_instagram",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! Let's switch to recovering your Instagram post. Do you remember when you deleted it?"
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "label": "help_facebook_without_date",
+                        "is_start": false,
+                        "utterances": [
+                            "No worries. If you can provide the approximate date later, I can help you better. Would you like general recovery tips?"
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "label": "help_instagram_with_date",
+                        "is_start": false,
+                        "utterances": [
+                            "Great! To recover your Instagram post from last week, please follow these steps: [instructions]. Let me know if you need further help."
+                        ]
+                    },
+                    {
+                        "id": 9,
+                        "label": "change_to_facebook",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! Let's switch to recovering your Facebook post. Do you remember when you deleted it?"
+                        ]
+                    },
+                    {
+                        "id": 10,
+                        "label": "help_instagram_without_date",
+                        "is_start": false,
+                        "utterances": [
+                            "No worries. If you can provide the approximate date later, I can help you better. Would you like general recovery tips for Instagram?"
+                        ]
+                    },
+                    {
+                        "id": 11,
+                        "label": "success_end",
+                        "is_start": false,
+                        "utterances": [
+                            "You're welcome! I'm glad I could help. If you have any other questions, feel free to ask."
+                        ]
+                    },
+                    {
+                        "id": 12,
+                        "label": "change_process",
+                        "is_start": false,
+                        "utterances": [
+                            "Sure, what would you like to change?"
+                        ]
+                    },
+                    {
+                        "id": 13,
+                        "label": "general_tips",
+                        "is_start": false,
+                        "utterances": [
+                            "Here are some general recovery tips: [tips]. Let me know if you need further assistance."
+                        ]
+                    },
+                    {
+                        "id": 14,
+                        "label": "session_end",
+                        "is_start": false,
+                        "utterances": [
+                            "Alright, if you need assistance in the future, feel free to reach out. Have a great day!"
+                        ]
+                    },
+                    {
+                        "id": 15,
+                        "label": "handoff",
+                        "is_start": false,
+                        "utterances": [
+                            "You're welcome!"
+                        ]
+                    },
+                    {
+                        "id": 16,
+                        "label": "goodbye",
+                        "is_start": false,
+                        "utterances": [
+                            "Goodbye!"
+                        ]
+                    }
+                ]
+            },
+            "topic": "Recovering deleted social media posts",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Instagram post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I don't remember the date.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No worries. If you can provide the approximate date later, I can help you better. Would you like general recovery tips for Instagram?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Here are some general recovery tips: [tips]. Let me know if you need further assistance.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Thanks, that's helpful.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome! I'm glad I could help. If you have any other questions, feel free to ask.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "You're welcome!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome!",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Facebook post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, it was last week.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! To recover your Facebook post from last week, please follow these steps: [instructions]. Let me know if you need further help.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Thank you, that worked!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome! I'm glad I could help. If you have any other questions, feel free to ask.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "You're welcome!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome!",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Facebook post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I don't remember the date.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No worries. If you can provide the approximate date later, I can help you better. Would you like general recovery tips?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Here are some general recovery tips: [tips]. Let me know if you need further assistance.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I still need help.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need assistance in the future, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Alright, thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Instagram post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, it was last week.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! To recover your Instagram post from last week, please follow these steps: [instructions]. Let me know if you need further help.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Thank you, that worked!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome! I'm glad I could help. If you have any other questions, feel free to ask.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "You're welcome!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome!",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Instagram post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, it was last week.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! To recover your Instagram post from last week, please follow these steps: [instructions]. Let me know if you need further help.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I need to change something.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to change?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to change my Facebook recovery process.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change to Instagram?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Let's switch to recovering your Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Facebook post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change to Instagram?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Let's switch to recovering your Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Sure, let's switch to Instagram.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change to Facebook?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Let's switch to recovering your Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Facebook post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I don't remember the date.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No worries. If you can provide the approximate date later, I can help you better. Would you like general recovery tips?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I need to stop here.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need assistance in the future, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Alright, thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Instagram post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change to Facebook?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Let's switch to recovering your Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Sure, let's switch to Facebook.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change to Instagram?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Let's switch to recovering your Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Instagram post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Instagram post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I don't remember the date.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No worries. If you can provide the approximate date later, I can help you better. Would you like general recovery tips for Instagram?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I need to stop here.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need assistance in the future, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Alright, thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Goodbye!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to recover a deleted Facebook post.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, I can help you recover a deleted Facebook post. Do you remember when you deleted it?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, it was last week.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! To recover your Facebook post from last week, please follow these steps: [instructions]. Let me know if you need further help.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I need to change something.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to change?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with recovering your deleted social media posts today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I changed my mind, I don't need help.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem! If you need assistance in the future, feel free to reach out.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "Yes, please."
+                        ]
+                    },
+                    {
+                        "source": 1,
+                        "target": 6,
+                        "utterances": [
+                            "No, thank you."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 3,
+                        "utterances": [
+                            "Select specific apps."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 4,
+                        "utterances": [
+                            "Optimize all apps."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 6,
+                        "utterances": [
+                            "I want to exit."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 5,
+                        "utterances": [
+                            "I've selected the apps."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 2,
+                        "utterances": [
+                            "Actually, I want to change my selection."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 6,
+                        "utterances": [
+                            "No, that's all."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 2,
+                        "utterances": [
+                            "I want to make some changes."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 6,
+                        "utterances": [
+                            "No, thank you."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 2,
+                        "utterances": [
+                            "Actually, I want to modify the apps."
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "assistant_prompt_enable_battery_optimization",
+                        "is_start": true,
+                        "utterances": [
+                            "Would you like to enable battery optimization for your background apps?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "assistant_choose_apps",
+                        "is_start": false,
+                        "utterances": [
+                            "Which apps would you like to optimize?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "assistant_select_specific_apps",
+                        "is_start": false,
+                        "utterances": [
+                            "Please select the apps you want to optimize."
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "assistant_optimize_all_apps",
+                        "is_start": false,
+                        "utterances": [
+                            "All background apps have been optimized for better battery performance. Do you need anything else?"
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "assistant_specific_apps_optimized",
+                        "is_start": false,
+                        "utterances": [
+                            "The selected apps have been optimized for battery usage. Is there anything else I can help you with?"
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "assistant_exit",
+                        "is_start": false,
+                        "utterances": [
+                            "Alright, let me know if you need anything else."
+                        ]
+                    }
+                ]
+            },
+            "topic": "Enabling battery optimization for background apps",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "Would you like to enable battery optimization for your background apps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Select specific apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please select the apps you want to optimize.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've selected the apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "The selected apps have been optimized for battery usage. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to modify the apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to exit.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, let me know if you need anything else.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Would you like to enable battery optimization for your background apps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Select specific apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please select the apps you want to optimize.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change my selection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to exit.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, let me know if you need anything else.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Would you like to enable battery optimization for your background apps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Select specific apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please select the apps you want to optimize.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've selected the apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "The selected apps have been optimized for battery usage. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, let me know if you need anything else.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Would you like to enable battery optimization for your background apps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Optimize all apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "All background apps have been optimized for better battery performance. Do you need anything else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to make some changes.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to exit.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, let me know if you need anything else.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Would you like to enable battery optimization for your background apps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Which apps would you like to optimize?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Optimize all apps.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "All background apps have been optimized for better battery performance. Do you need anything else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, that's all.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, let me know if you need anything else.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Would you like to enable battery optimization for your background apps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, let me know if you need anything else.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "I want to report an incorrect product dimension listing."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 3,
+                        "utterances": [
+                            "The product ID is 12345."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 4,
+                        "utterances": [
+                            "The listed height is 10cm, but it's actually 15cm."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 5,
+                        "utterances": [
+                            "Please correct the listing."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 6,
+                        "utterances": [
+                            "Contact the manufacturer."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 7,
+                        "utterances": [
+                            "No, that's all. Thank you."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 7,
+                        "utterances": [
+                            "No, that's all. Thank you."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 8,
+                        "utterances": [
+                            "Actually, I want to change the product ID."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 8,
+                        "utterances": [
+                            "Actually, I want to change the product ID."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 9,
+                        "utterances": [
+                            "Actually, I want to change the dimension information."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 9,
+                        "utterances": [
+                            "Actually, I want to change the dimension information."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 3,
+                        "utterances": [
+                            "The product ID is 67890."
+                        ]
+                    },
+                    {
+                        "source": 9,
+                        "target": 4,
+                        "utterances": [
+                            "The listed height is 12cm, but it's actually 15cm."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 7,
+                        "utterances": [
+                            "Cancel"
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 7,
+                        "utterances": [
+                            "Cancel"
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 7,
+                        "utterances": [
+                            "Cancel"
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 7,
+                        "utterances": [
+                            "Cancel"
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 7,
+                        "utterances": [
+                            "Cancel"
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 7,
+                        "utterances": [
+                            "Cancel"
+                        ]
+                    },
+                    {
+                        "source": 9,
+                        "target": 7,
+                        "utterances": [
+                            "Cancel"
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "greeting",
+                        "is_start": true,
+                        "utterances": [
+                            "Hello! How can I assist you today?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "ask_product_id",
+                        "is_start": false,
+                        "utterances": [
+                            "Sure, could you please provide the product ID or name?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "ask_incorrect_dimension",
+                        "is_start": false,
+                        "utterances": [
+                            "Thank you. What is the incorrect dimension you observed?"
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "choose_correction_or_contact",
+                        "is_start": false,
+                        "utterances": [
+                            "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?"
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "confirm_submission",
+                        "is_start": false,
+                        "utterances": [
+                            "Got it. Your request has been submitted. Is there anything else I can help you with?"
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "forward_to_manufacturer",
+                        "is_start": false,
+                        "utterances": [
+                            "Understood. We've forwarded your request to the manufacturer. Is there anything else I can help you with?"
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "label": "exit_conversation",
+                        "is_start": false,
+                        "utterances": [
+                            "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!"
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "label": "modify_product_id",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! Could you please provide the correct product ID?"
+                        ]
+                    },
+                    {
+                        "id": 9,
+                        "label": "modify_dimension_info",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! What is the correct dimension information?"
+                        ]
+                    }
+                ]
+            },
+            "topic": "Reporting an incorrect product dimension listing",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to report an incorrect product dimension listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, could you please provide the product ID or name?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The product ID is 12345.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. What is the incorrect dimension you observed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The listed height is 10cm, but it's actually 15cm.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Contact the manufacturer.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. We've forwarded your request to the manufacturer. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change the product ID.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Could you please provide the correct product ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The product ID is 67890.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. What is the incorrect dimension you observed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Cancel",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to report an incorrect product dimension listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, could you please provide the product ID or name?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The product ID is 12345.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. What is the incorrect dimension you observed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The listed height is 10cm, but it's actually 15cm.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Contact the manufacturer.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. We've forwarded your request to the manufacturer. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change the dimension information.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! What is the correct dimension information?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The listed height is 12cm, but it's actually 15cm.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Cancel",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to report an incorrect product dimension listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, could you please provide the product ID or name?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The product ID is 12345.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. What is the incorrect dimension you observed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The listed height is 10cm, but it's actually 15cm.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Please correct the listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Got it. Your request has been submitted. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change the product ID.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Could you please provide the correct product ID?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Cancel",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to report an incorrect product dimension listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, could you please provide the product ID or name?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The product ID is 12345.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. What is the incorrect dimension you observed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The listed height is 10cm, but it's actually 15cm.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Please correct the listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Got it. Your request has been submitted. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change the dimension information.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! What is the correct dimension information?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Cancel",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to report an incorrect product dimension listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, could you please provide the product ID or name?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The product ID is 12345.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. What is the incorrect dimension you observed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The listed height is 10cm, but it's actually 15cm.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Please correct the listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Got it. Your request has been submitted. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, that's all. Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to report an incorrect product dimension listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, could you please provide the product ID or name?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The product ID is 12345.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. What is the incorrect dimension you observed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The listed height is 10cm, but it's actually 15cm.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I apologize for the inconvenience. Would you like us to correct the listing or contact the manufacturer?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Contact the manufacturer.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. We've forwarded your request to the manufacturer. Is there anything else I can help you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, that's all. Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to report an incorrect product dimension listing.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, could you please provide the product ID or name?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Cancel",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that. If you need assistance later, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "Yes, I have tried restarting, but it didn't help."
+                        ]
+                    },
+                    {
+                        "source": 1,
+                        "target": 6,
+                        "utterances": [
+                            "No, I haven't tried restarting yet."
+                        ]
+                    },
+                    {
+                        "source": 1,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 3,
+                        "utterances": [
+                            "Yes, please."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 7,
+                        "utterances": [
+                            "Actually, can I change my choice?"
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 4,
+                        "utterances": [
+                            "I've reopened the application, but it's still not responding."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 8,
+                        "utterances": [
+                            "Actually, I want to try something else first."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 5,
+                        "utterances": [
+                            "Yes, check for updates."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 7,
+                        "utterances": [
+                            "Actually, can I change my choice?"
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 10,
+                        "utterances": [
+                            "I've checked for updates, but the system is still frozen."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 11,
+                        "utterances": [
+                            "The updates are installed, and the system is working now."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 3,
+                        "utterances": [
+                            "I've restarted and it's still frozen."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 2,
+                        "utterances": [
+                            "Change my decision about resetting the application."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 8,
+                        "utterances": [
+                            "Instead of checking updates, I'd like to try something else."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 5,
+                        "utterances": [
+                            "I'd like to check the network connection."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 3,
+                        "utterances": [
+                            "I'd like to restart the application again."
+                        ]
+                    },
+                    {
+                        "source": 10,
+                        "target": 11,
+                        "utterances": [
+                            "Yes, proceed with reinstallation."
+                        ]
+                    },
+                    {
+                        "source": 10,
+                        "target": 7,
+                        "utterances": [
+                            "Actually, can I change my choice?"
+                        ]
+                    },
+                    {
+                        "source": 10,
+                        "target": 9,
+                        "utterances": [
+                            "I want to stop for now."
+                        ]
+                    },
+                    {
+                        "source": 11,
+                        "target": 9,
+                        "utterances": [
+                            "No, that's all. Thank you!"
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "initial_prompt",
+                        "is_start": true,
+                        "utterances": [
+                            "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "tried_restarting",
+                        "is_start": false,
+                        "utterances": [
+                            "Understood. Let's try resetting the application. Do you want me to guide you through the steps?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "guide_reset",
+                        "is_start": false,
+                        "utterances": [
+                            "Please close the POS application completely and then reopen it. Let me know once you've done that."
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "reopened_not_help",
+                        "is_start": false,
+                        "utterances": [
+                            "Let's check for any pending updates. Would you like to check for updates now?"
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "check_updates",
+                        "is_start": false,
+                        "utterances": [
+                            "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that."
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "have_not_restarted",
+                        "is_start": false,
+                        "utterances": [
+                            "No problem. Please try restarting the system first and let me know if that resolves the issue."
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "label": "modify_choice",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! What would you like to change?"
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "label": "alternative_step",
+                        "is_start": false,
+                        "utterances": [
+                            "Sure, what would you like to try instead?"
+                        ]
+                    },
+                    {
+                        "id": 9,
+                        "label": "exit",
+                        "is_start": false,
+                        "utterances": [
+                            "If you need further assistance, feel free to reach out. Have a great day!"
+                        ]
+                    },
+                    {
+                        "id": 10,
+                        "label": "updates_not_help",
+                        "is_start": false,
+                        "utterances": [
+                            "Since updates didn't resolve the issue, let's try reinstalling the application. Do you want to proceed?"
+                        ]
+                    },
+                    {
+                        "id": 11,
+                        "label": "system_fixed",
+                        "is_start": false,
+                        "utterances": [
+                            "I'm glad to hear the system is working now! Is there anything else I can assist you with?"
+                        ]
+                    }
+                ]
+            },
+            "topic": "Fixing a frozen point-of-sale system",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to try something else first.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to check the network connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've checked for updates, but the system is still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Since updates didn't resolve the issue, let's try reinstalling the application. Do you want to proceed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change my choice?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! What would you like to change?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to try something else first.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to check the network connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've checked for updates, but the system is still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Since updates didn't resolve the issue, let's try reinstalling the application. Do you want to proceed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to try something else first.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to check the network connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've checked for updates, but the system is still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Since updates didn't resolve the issue, let's try reinstalling the application. Do you want to proceed?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, proceed with reinstallation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm glad to hear the system is working now! Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to try something else first.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to check the network connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The updates are installed, and the system is working now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm glad to hear the system is working now! Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, that's all. Thank you!",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, I have tried restarting, but it didn't help.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Let's try resetting the application. Do you want me to guide you through the steps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change my choice?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! What would you like to change?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Instead of checking updates, I'd like to try something else.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to check the network connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The updates are installed, and the system is working now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm glad to hear the system is working now! Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've reopened the application, but it's still not responding.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's check for any pending updates. Would you like to check for updates now?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, check for updates.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "The updates are installed, and the system is working now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm glad to hear the system is working now! Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've reopened the application, but it's still not responding.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's check for any pending updates. Would you like to check for updates now?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change my choice?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! What would you like to change?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to try something else first.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to restart the application again.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to try something else first.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, what would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to check the network connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great. Please navigate to the settings menu and select 'Check for updates'. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, I have tried restarting, but it didn't help.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Let's try resetting the application. Do you want me to guide you through the steps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change my choice?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! What would you like to change?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Change my decision about resetting the application.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Let's try resetting the application. Do you want me to guide you through the steps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted and it's still frozen.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've reopened the application, but it's still not responding.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's check for any pending updates. Would you like to check for updates now?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, I have tried restarting, but it didn't help.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Let's try resetting the application. Do you want me to guide you through the steps?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, please.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please close the POS application completely and then reopen it. Let me know once you've done that.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I haven't tried restarting yet.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. Please try restarting the system first and let me know if that resolves the issue.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear that your POS system is frozen. Let's try to resolve this. Have you tried restarting the system?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to stop for now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you need further assistance, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "My account number is 123456."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 3,
+                        "utterances": [
+                            "I wasn't using the service."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 4,
+                        "utterances": [
+                            "Actually, I want to change my account number."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 6,
+                        "utterances": [
+                            "Nevermind, I don't want a refund anymore."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 7,
+                        "utterances": [
+                            "Can I take store credit instead?"
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 6,
+                        "utterances": [
+                            "No, that's all. Thank you."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 5,
+                        "utterances": [
+                            "My new account number is 654321."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 3,
+                        "utterances": [
+                            "I decided to cancel because I wasn't satisfied."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 6,
+                        "utterances": [
+                            "Actually, I changed my mind and don't want a refund anymore."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 7,
+                        "utterances": [
+                            "Can I take store credit instead?"
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 8,
+                        "utterances": [
+                            "Yes, I'd like store credit."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 3,
+                        "utterances": [
+                            "No, I want the refund."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 6,
+                        "utterances": [
+                            "No, that's all. Thank you."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 9,
+                        "utterances": [
+                            "Actually, I want to change my reason for the refund."
+                        ]
+                    },
+                    {
+                        "source": 9,
+                        "target": 2,
+                        "utterances": [
+                            "I realized it's because of billing issues."
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "start_refund",
+                        "is_start": true,
+                        "utterances": [
+                            "I'm sorry to hear you'd like to request a refund for your canceled subscription. Could you please provide your account number?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "ask_reason",
+                        "is_start": false,
+                        "utterances": [
+                            "Thank you. Could you please tell me the reason for your refund request?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "confirmation_refund",
+                        "is_start": false,
+                        "utterances": [
+                            "I understand. I've processed your refund. You should see it in your account within 5-7 business days. Is there anything else I can assist you with?"
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "modify_account_number",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! Could you please provide your updated account number?"
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "ask_reason_after_update",
+                        "is_start": false,
+                        "utterances": [
+                            "Thank you. Could you please tell me the reason for your refund request?"
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "exit_conversation",
+                        "is_start": false,
+                        "utterances": [
+                            "I understand. If you need any further assistance in the future, feel free to reach out. Have a great day!"
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "label": "alternative_refund_path",
+                        "is_start": false,
+                        "utterances": [
+                            "We can also offer a store credit instead of a refund. Would you prefer that?"
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "label": "confirmation_store_credit",
+                        "is_start": false,
+                        "utterances": [
+                            "Understood. I've issued a store credit to your account. Is there anything else I can assist you with?"
+                        ]
+                    },
+                    {
+                        "id": 9,
+                        "label": "modify_reason",
+                        "is_start": false,
+                        "utterances": [
+                            "Certainly. Could you please provide the new reason for your refund request?"
+                        ]
+                    }
+                ]
+            },
+            "topic": "Requesting a refund for a canceled subscription perk",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear you'd like to request a refund for your canceled subscription. Could you please provide your account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account number is 123456.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I wasn't using the service.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. I've processed your refund. You should see it in your account within 5-7 business days. Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change my reason for the refund.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Certainly. Could you please provide the new reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I realized it's because of billing issues.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Nevermind, I don't want a refund anymore.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. If you need any further assistance in the future, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear you'd like to request a refund for your canceled subscription. Could you please provide your account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account number is 123456.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change my account number.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Could you please provide your updated account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My new account number is 654321.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I decided to cancel because I wasn't satisfied.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. I've processed your refund. You should see it in your account within 5-7 business days. Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change my reason for the refund.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Certainly. Could you please provide the new reason for your refund request?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear you'd like to request a refund for your canceled subscription. Could you please provide your account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account number is 123456.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change my account number.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Could you please provide your updated account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My new account number is 654321.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I changed my mind and don't want a refund anymore.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. If you need any further assistance in the future, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear you'd like to request a refund for your canceled subscription. Could you please provide your account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account number is 123456.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I take store credit instead?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "We can also offer a store credit instead of a refund. Would you prefer that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, I want the refund.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. I've processed your refund. You should see it in your account within 5-7 business days. Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to change my reason for the refund.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Certainly. Could you please provide the new reason for your refund request?",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear you'd like to request a refund for your canceled subscription. Could you please provide your account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account number is 123456.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I take store credit instead?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "We can also offer a store credit instead of a refund. Would you prefer that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, I'd like store credit.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. I've issued a store credit to your account. Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, that's all. Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. If you need any further assistance in the future, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "I'm sorry to hear you'd like to request a refund for your canceled subscription. Could you please provide your account number?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "My account number is 123456.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you. Could you please tell me the reason for your refund request?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I wasn't using the service.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. I've processed your refund. You should see it in your account within 5-7 business days. Is there anything else I can assist you with?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No, that's all. Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. If you need any further assistance in the future, feel free to reach out. Have a great day!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+    ],
+    []
+]

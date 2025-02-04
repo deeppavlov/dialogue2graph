@@ -284,19 +284,101 @@ cycle_graph_generation_prompt = PromptTemplate.from_template(
     "Dialogue: {dialog}"
 )
 
+# cycle_graph_generation_prompt_enhanced = PromptTemplate.from_template(
+#     """
+# Create a dialogue graph for a {topic} conversation that will be used for training data generation. The graph must follow these requirements:
+
+# 1. Dialogue Flow Requirements:
+#    - Each assistant message (node) must be a precise question or statement that expects a specific type of response
+#    - Each user message (edge) must logically and directly respond to the previous assistant message
+#    - All paths must maintain clear context and natural conversation flow
+#    - Avoid any ambiguous or overly generic responses
+
+# 2. Graph Structure Requirements:
+#    - Must contain at least 2 distinct cycles (return paths)
+#    - Each cycle should allow users to:
+#      * Return to previous choices for modification
+#      * Restart specific parts of the conversation
+#      * Change their mind about earlier decisions
+#    - Include clear exit points from each major decision path
+   
+# 3. Core Path Types:
+#    - Main success path (completing the intended task)
+#    - Multiple modification paths (returning to change choices)
+#    - Early exit paths (user decides to stop)
+#    - Alternative success paths (achieving goal differently)
+
+# Example of a good cycle structure:
+# Assistant: "What size coffee would you like?"
+# User: "Medium please"
+# Assistant: "Would you like that hot or iced?"
+# User: "Actually, can I change my size?"
+# Assistant: "Of course! What size would you like instead?"
+
+# Format:
+# {{
+#     "edges": [
+#         {{
+#             "source": "node_id",
+#             "target": "node_id",
+#             "utterances": ["User response text"]
+#         }}
+#     ],
+#     "nodes": [
+#         {{
+#             "id": "node_id",
+#             "label": "semantic_label",
+#             "is_start": boolean,
+#             "utterances": ["Assistant message text"]
+#         }}
+#     ]
+# }}
+
+# Requirements for node IDs:
+# - Must be unique integers
+# - Start node should have ID 1
+# - IDs should increment sequentially
+
+# Return ONLY the valid JSON without any additional text, commentaries or explanations.
+# """
+# )
+
+# That means modification path connects another node with one of preceding nodes, it cannot stay with same node.
+#    - Each assistant message (node) must be a precise question or statement that expects a specific type of response  
+#    - The conversation should look logical and shall not contain unnecessary repetitions
+#    - All sources and targets in edges shall not be empty or null
+#    - All utterances shall not be empty lists
+#    - Each assistant message (node) must logically and directly respond to the immediately previous user message if such exists
+# Nodes must be assistant's utterances only and never repeat user's inputs.
+# Edges must be user's utterances only and never repeat previous assistant's utterances.
+#    - Each user message (edge) must be relevant reaction to the previous assistant message
+#    - All edges shall have IDs of existing nodes for source and target
+# There shouldn't be more than 20 nodes.
+# Target of any edge must be different from the edge's source.
+
+# 2. Graph Structure Requirements:
+#    - Must contain at least 2 distinct cycles (return paths)
+#    - Each cycle may allow users from none to all of the possibilities as follows:
+#      * Return to previous choices for modification
+#      * Restart specific parts of the conversation
+#      * Change their mind about earlier decisions (if only it is appropriate)
+#    - Include clear exit points from each major decision path
+
+
 cycle_graph_generation_prompt_enhanced = PromptTemplate.from_template(
     """
 Create a dialogue graph for a {topic} conversation that will be used for training data generation. The graph must follow these requirements:
 
 1. Dialogue Flow Requirements:
-   - Each assistant message (node) must be a precise question or statement that expects a specific type of response
-   - Each user message (edge) must logically and directly respond to the previous assistant message
-   - All paths must maintain clear context and natural conversation flow
+   - Each assistant message (node) must be reasonable and natural reaction to the immediately previous user message if such exists
+   - Each user message (edge) must be reasonable and conscious reaction to the previous assistant message
+   - All paths must maintain clear context and natural conversation flow without unnecessary repetitions
    - Avoid any ambiguous or overly generic responses
+
 
 2. Graph Structure Requirements:
    - Must contain at least 2 distinct cycles (return paths)
-   - Each cycle should allow users to:
+   - Each cycle may allow users to do the folllowing in a natural way only:
      * Return to previous choices for modification
      * Restart specific parts of the conversation
      * Change their mind about earlier decisions
@@ -308,12 +390,22 @@ Create a dialogue graph for a {topic} conversation that will be used for trainin
    - Early exit paths (user decides to stop)
    - Alternative success paths (achieving goal differently)
 
-Example of a good cycle structure:
+
+Example of a modification path:
 Assistant: "What size coffee would you like?"
 User: "Medium please"
 Assistant: "Would you like that hot or iced?"
 User: "Actually, can I change my size?"
 Assistant: "Of course! What size would you like instead?"
+
+In previous example of modification path pay attention that modificating question "Actually, can I change my size?"
+takes place after first choice "Medium please" and next assistant phrase "Would you like that hot or iced?" have been already spoken.
+The modificating question modifies previous user's choice so never immediately follows direct assistant's question
+answer to which it modifies, but follows next assistant's question "Would you like that hot or iced?" instead.
+After assistant's phrase first goes direct user's answer in any dialogue, "medium please" in the example above.
+Further after modification question goes additional assistant's reaction "Of course! What size would you like instead?" where
+assistant modifies their question two steps before: "What size coffee would you like?". 
+Further follows user's alternative answer then dialogue flow returns to its standard way.
 
 Format:
 {{
@@ -334,14 +426,21 @@ Format:
     ]
 }}
 
-Requirements for node IDs:
+Requirements for IDs:
 - Must be unique integers
 - Start node should have ID 1
 - IDs should increment sequentially
+- All edges shall have IDs of existing nodes for source and target
+- If a node doesn't have outgoing edge, don't create an edge with this node as a source
+
+Nodes must be assistant's utterances only and never repeat user's inputs.
+Edges must be user's utterances only and never repeat previous assistant's utterances.
+Target of any edge must be different from the edge's source.
 
 Return ONLY the valid JSON without any additional text, commentaries or explanations.
 """
 )
+
 
 cycle_graph_repair_prompt = PromptTemplate.from_template("""
 Fix the invalid transitions in this dialogue graph while keeping its structure.

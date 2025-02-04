@@ -49,8 +49,10 @@ print("settings")
 model = ChatOpenAI(model="gpt-4o", api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0)
 print("model loaded")
 
-generation_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0.2)
-validation_model = ChatOpenAI(model=env_settings.FORMATTER_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0)
+generation_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1)
+validation_model = ChatOpenAI(model=env_settings.FORMATTER_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
+# generation_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0.2)
+# validation_model = ChatOpenAI(model=env_settings.FORMATTER_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0)
 
 
 # dialogue_to_graph = read_json(env_settings.TEST_DATA_PATH)["graph_to_dialogue"]
@@ -211,7 +213,7 @@ def run_all_algorithms():
             for case in topic_to_graph:
                 test_topic = case["topic"]
                 result.append(class_instance.invoke(test_topic))
-            save_json(data=result, filename=env_settings.GRAPH_SAVED)
+                save_json(data=result, filename=env_settings.GRAPH_SAVED)
 
 
         elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:

@@ -155,8 +155,10 @@ class Dialogue(BaseModel):
     @classmethod
     def from_list(cls, messages: List[Dict[str, str]], validate: bool = True) -> "Dialogue":
         """Create a Dialogue from a list of dictionaries."""
-        dialogue_messages = [DialogueMessage(**m) for m in messages]
-        return cls(messages=dialogue_messages, validate=validate)
+        # dialogue_messages = [DialogueMessage(**m) for m in messages]
+        ret = cls(messages=messages, validate=validate)
+        # print("RET: ", ret)
+        return ret
 
     @classmethod
     def from_nodes_ids(cls, graph, node_list, validate: bool = True) -> "Dialogue":
@@ -240,10 +242,10 @@ class GraphGenerationResult(BaseModel):
     topic: str
     dialogues: List[Dialogue]
 
-class DialogueGraph(BaseModel):
-    edges: List[Edge] = Field(description="List of transitions between nodes")
-    nodes: List[Node] = Field(description="List of nodes representing assistant states")
-    reason: str = Field(description="explanation")
+# class DialogueGraph(BaseModel):
+#     edges: List[Edge] = Field(description="List of transitions between nodes")
+#     nodes: List[Node] = Field(description="List of nodes representing assistant states")
+#     reason: str = Field(description="explanation")
 
 class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")

@@ -3,9 +3,16 @@ import itertools
 import networkx as nx
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.algorithms.base import DialogueGenerator
-from chatsky_llm_autoconfig.dialogue import Dialogue
+# from chatsky_llm_autoconfig.dialogue import Dialogue
+from chatsky_llm_autoconfig.schemas import Dialogue
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
+from chatsky_llm_autoconfig.metrics.llm_metrics import find_graph_ends
+from chatsky_llm_autoconfig.settings import EnvSettings
+
+from langchain_openai  import ChatOpenAI
+
+env_settings = EnvSettings()
 
 def list_in(a, b):
     return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
@@ -64,7 +71,7 @@ def remove_duplicated_utts(seq: list[list[dict]]):
             idx += 1
     return seq_copy
 
-def get_dialogues(graph: BaseGraph, repeats: int) -> list[Dialogue]:
+def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialogue]:
     global visited_list
     paths = []
     starts = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
@@ -77,20 +84,21 @@ def get_dialogues(graph: BaseGraph, repeats: int) -> list[Dialogue]:
     final = list(k for k,_ in itertools.groupby(paths))[1:]
     final.sort(key=len,reverse=True)
     sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
-    # ends = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
-    # node_paths = [f for f in final if f[-1] in ends]
-    node_paths = remove_duplicates(final)
+    finishes = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources] + ends
+    print("ENDS: ", finishes)
+    node_paths = [f for f in final if f[-1] in finishes]
+    node_paths = remove_duplicates(node_paths)
     # node_paths = remove_duplicates(node_paths)
     full_paths = []
     for p in node_paths:
         path = []
         for idx,s in enumerate(p[:-1]):
-            path.append({"participant": "assistant", "text": graph.node_by_id(s)['utterances']})
+            path.append({"text": graph.node_by_id(s)['utterances'], "participant": "assistant"})
             sources = graph.edge_by_source(s)
             targets = graph.edge_by_target(p[idx+1])
             edge = [e for e in sources if e in targets][0]
-            path.append(({"participant": "user", "text": edge['utterances']}))
-        path.append({"participant": "assistant", "text": graph.node_by_id(p[-1])['utterances']})
+            path.append(({"text": edge['utterances'], "participant": "user"}))
+        path.append({"text": graph.node_by_id(p[-1])['utterances'], "participant": "assistant"})
         full_paths.append(path)
     dialogues = []
     for f in full_paths:
@@ -100,7 +108,7 @@ def get_dialogues(graph: BaseGraph, repeats: int) -> list[Dialogue]:
         dialogues.extend(dialogue)
     final = list(k for k,_ in itertools.groupby(dialogues))
     final = remove_duplicated_utts(final)
-    result = [Dialogue.from_list(seq) for seq in final]
+    result = [Dialogue().from_list(seq) for seq in final]
     return result
 
 
@@ -222,10 +230,12 @@ class RecursiveDialogueSampler(DialogueGenerator):
 
     def invoke(self, graph: BaseGraph, upper_limit: int) -> list[Dialogue]:
         repeats = 1
+        ends = find_graph_ends(graph, model=ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1))
+        print("ENDDS: ", ends)
         while repeats <= upper_limit:
-            dialogues = get_dialogues(graph,repeats)
+            dialogues = get_dialogues(graph,repeats,ends['value'])
             if all_utterances_present(graph, dialogues):
-                print(f"{repeats} repeats works!")            
+                print(f"{repeats} repeats works!")
                 break
             repeats += 1
         if repeats >= upper_limit:

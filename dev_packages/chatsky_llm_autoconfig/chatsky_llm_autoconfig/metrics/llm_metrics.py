@@ -113,6 +113,62 @@ def are_triplets_valid(G: Graph, model: BaseChatModel) -> dict[str]:
     return result
 
 
+def find_graph_ends(G: Graph, model: BaseChatModel) -> dict[str]:
+    """
+    Validates dialogue graph structure and logical transitions between nodes.
+
+    Parameters:
+        G (BaseGraph): The dialogue graph to validate
+        model (BaseChatModel): The LLM model to use for validation
+
+    Returns:
+        dict: {'value': bool, 'description': str}
+    """
+
+    # Define validation result model
+    class GraphEndsResult(BaseModel):
+        ends: list = Field(description="IDs of ending nodes")
+        description: str = Field(description="Explanation of model's decision")
+
+    # Create prompt template
+    graph_ends_prompt_template = """
+    Your task is to find IDs of all the nodes satisfying condition below:
+    Let's consider node with id A.
+    There is only edge with source=A in the whole graph, and target of this edge is located earlier in the dialogue flow.
+    
+    Given this conversation graph in JSON:
+    {json_graph}
+ 
+ 
+
+    Reply in JSON format:
+    {{"ends": [id1, id2, ...], "description": "Brief explanation of your decision"}}
+    """
+
+    graph_ends_prompt = PromptTemplate(
+        input_variables=["json_graph"], template=graph_ends_prompt_template
+    )
+
+    parser = PydanticOutputParser(pydantic_object=GraphEndsResult)
+
+    # Convert graph to JSON string
+    graph_json = json.dumps(G.graph_dict)
+    
+        # Prepare input for validation
+    input_data = {
+        "json_graph": graph_json,
+    }
+
+        # print(triplet_validate_prompt.format(**input_data))
+
+        # Run validation
+    find_ends_chain = graph_ends_prompt | model | parser
+    response = find_ends_chain.invoke(input_data)
+    result = {"value": response.ends, "description": response.description}
+
+    return result
+
+
 def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
     """
     Validates if the dialog stays on theme/topic throughout the conversation.
@@ -134,9 +190,9 @@ def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
         input_variables=["utterances", "topic"],
         template="""
         You are given a dialog between assistant and a user.
-        Analyze the following dialog and determine if it stays on the expected topic.
+        Analyze the following dialog and determine if it is connected to the topic below.
         
-        Expected Topic: {topic}
+        Topic: {topic}
         
         Dialog utterances:
         {utterances}
@@ -187,6 +243,102 @@ class GraphValidationResult(TypedDict):
     is_valid: bool
     invalid_transitions: List[InvalidTransition]
 
+    # 3. Is the overall flow natural and coherent?
+    # Consider:
+    # 1. Does the user's response looks as a natural answer human can give?
+    # 2. Does the assistant's response looks natural in a dialogue context?
+
+# def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResult:
+#     """
+#     Проверяет валидность графа диалога
+#     Возвращает:
+#     {
+#         "is_valid": bool,  # валиден ли граф в целом
+#         "invalid_transitions": [  # список невалидных переходов
+#             {
+#                 "from": ["source utterance"],
+#                 "user": ["user utterance"],
+#                 "to": ["target utterance"],
+#                 "reason": "причина невалидности"
+#             },
+#             ...
+#         ]
+#     }
+#     """
+#     # Define validation result model
+#     class TransitionValidationResult(BaseModel):
+#         isValid: bool = Field(description="Whether the transition is valid or not")
+#         description: str = Field(description="Explanation of why it's valid or invalid")
+
+#     # Create prompt template
+#     triplet_validate_prompt = PromptTemplate(
+#         input_variables=["json_graph", "source_utterances", "edge_utterances", "target_utterances"],
+#         template="""
+#     You are evaluating if dialog transitions make sense.
+    
+#     Given this conversation graph in JSON:
+#     {json_graph}
+    
+#     For the current transition:
+#     Source (Assistant): {source_utterances}
+#     User Response: {edge_utterances}
+#     Target (Assistant): {target_utterances}
+
+#     EVALUATE: Do these three messages look like a real conversation?
+
+#     Reply in JSON format:
+#     {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
+#     """
+#     )
+
+#     parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
+
+#     # Convert graph to JSON string
+#     graph_json = json.dumps(G.graph_dict)
+
+#     # Create node mapping
+#     node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
+#     invalid_transitions = []
+#     is_valid = True
+
+#     for edge in G.graph_dict["edges"]:
+#         source_id = edge["source"]
+#         target_id = edge["target"]
+
+#         # Проверяем существование узлов
+#         if source_id not in node_map or target_id not in node_map:
+#             is_valid = False
+#             continue
+
+#         # Get utterances
+#         source_node = node_map[source_id]
+#         target_node = node_map[target_id]
+
+#         # Prepare input for validation
+#         input_data = {
+#             "json_graph": graph_json,
+#             "source_utterances": source_node["utterances"],
+#             "edge_utterances": edge["utterances"],
+#             "target_utterances": target_node["utterances"]
+#         }
+
+#         # Run validation
+#         triplet_check_chain = triplet_validate_prompt | model | parser
+#         result = triplet_check_chain.invoke(input_data)
+
+#         if not result.isValid:
+#             is_valid = False
+#             invalid_transitions.append({
+#                 "from": source_node["utterances"],
+#                 "user": edge["utterances"],
+#                 "to": target_node["utterances"],
+#                 "reason": result.description
+#             })
+#     print("is_valid: ", is_valid)
+#     return {
+#         "is_valid": is_valid,
+#         "invalid_transitions": invalid_transitions
+#     }
 
 def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResult:
     """
@@ -212,23 +364,16 @@ def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResul
 
     # Create prompt template
     triplet_validate_prompt = PromptTemplate(
-        input_variables=["json_graph", "source_utterances", "edge_utterances", "target_utterances"],
+        input_variables=["source_utterances", "edge_utterances", "target_utterances"],
         template="""
-    You are evaluating if dialog transitions make logical sense.
-    
-    Given this conversation graph in JSON:
-    {json_graph}
-    
+    You are evaluating if dialog transitions make sense.
+
     For the current transition:
     Source (Assistant): {source_utterances}
     User Response: {edge_utterances}
     Target (Assistant): {target_utterances}
 
-    EVALUATE: Do these three messages form a logical sequence in the conversation?
-    Consider:
-    1. Does the assistant's first response naturally lead to the user's response?
-    2. Does the user's response logically connect to the assistant's next message?
-    3. Is the overall flow natural and coherent?
+    EVALUATE: Do these three messages look like a real conversation?
 
     Reply in JSON format:
     {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
@@ -236,9 +381,6 @@ def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResul
     )
 
     parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
-
-    # Convert graph to JSON string
-    graph_json = json.dumps(G.graph_dict)
 
     # Create node mapping
     node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
@@ -260,7 +402,6 @@ def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResul
 
         # Prepare input for validation
         input_data = {
-            "json_graph": graph_json,
             "source_utterances": source_node["utterances"],
             "edge_utterances": edge["utterances"],
             "target_utterances": target_node["utterances"]
