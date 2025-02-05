@@ -29,4 +29,5 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     HUGGINGFACE_TOKEN: Optional[str]
     TEST_DATASET: Optional[str]
     GRAPH_SAVED: Optional[str]
+    GRAPHS_TO_FIX: Optional[str]
     TOPICS_DATA: Optional[str]

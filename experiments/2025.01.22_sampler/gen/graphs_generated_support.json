@@ -1,0 +1,2578 @@
+[
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "I want to enable screen mirroring for my presentation.",
+                            "Enable screen mirroring for my presentation.",
+                            "I'd like to mirror my screen for a presentation."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 3,
+                        "utterances": [
+                            "Laptop",
+                            "I'm using a laptop.",
+                            "Use my laptop."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 9,
+                        "utterances": [
+                            "Smartphone",
+                            "I'd like to use my smartphone.",
+                            "Use my phone instead."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 7,
+                        "utterances": [
+                            "I changed my mind.",
+                            "Actually, I don't need screen mirroring.",
+                            "Never mind."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 4,
+                        "utterances": [
+                            "Windows",
+                            "I'm on Windows.",
+                            "Using Windows OS."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 7,
+                        "utterances": [
+                            "macOS",
+                            "I'm using a Mac.",
+                            "macOS on my laptop."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 5,
+                        "utterances": [
+                            "Wi-Fi",
+                            "Connect via Wi-Fi.",
+                            "I'd like to use Wi-Fi."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 6,
+                        "utterances": [
+                            "Wired connection",
+                            "Use a cable.",
+                            "I'd prefer a wired connection."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 8,
+                        "utterances": [
+                            "Actually, can I change my choice?",
+                            "I want to modify my connection type.",
+                            "Can I switch the connection method?"
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 7,
+                        "utterances": [
+                            "Thank you, that's all.",
+                            "I'm done.",
+                            "No further help needed."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 7,
+                        "utterances": [
+                            "Thank you, that's all.",
+                            "I'm done.",
+                            "No further help needed."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 4,
+                        "utterances": [
+                            "I'd like to use a wired connection instead.",
+                            "Let's switch to wired.",
+                            "Prefer a cable connection."
+                        ]
+                    },
+                    {
+                        "source": 9,
+                        "target": 7,
+                        "utterances": [
+                            "Let's use Bluetooth.",
+                            "Proceed with Bluetooth.",
+                            "Yes, set up Bluetooth mirroring."
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "greeting",
+                        "is_start": true,
+                        "utterances": [
+                            "Hello! How can I assist you with your presentation today?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "device_selection",
+                        "is_start": false,
+                        "utterances": [
+                            "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "laptop_os_selection",
+                        "is_start": false,
+                        "utterances": [
+                            "Great! Are you using Windows, macOS, or another operating system on your laptop?",
+                            "Okay, which operating system does your laptop run? Windows, macOS, or something else?"
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "windows_connection_type",
+                        "is_start": false,
+                        "utterances": [
+                            "Understood. Would you like to connect via Wi-Fi or using a wired connection?"
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "wi_fi_setup_windows",
+                        "is_start": false,
+                        "utterances": [
+                            "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network."
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "wired_setup_windows",
+                        "is_start": false,
+                        "utterances": [
+                            "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable."
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "label": "early_exit",
+                        "is_start": false,
+                        "utterances": [
+                            "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!"
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "label": "modify_connection_type",
+                        "is_start": false,
+                        "utterances": [
+                            "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?"
+                        ]
+                    },
+                    {
+                        "id": 9,
+                        "label": "alternative_success_path",
+                        "is_start": false,
+                        "utterances": [
+                            "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?"
+                        ]
+                    }
+                ]
+            },
+            "topic": "Enabling screen mirroring for presentations",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, can I change my choice?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Prefer a cable connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd prefer a wired connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to modify my connection type.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Prefer a cable connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd prefer a wired connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I switch the connection method?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use a wired connection instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd prefer a wired connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I switch the connection method?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Let's switch to wired.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd prefer a wired connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I switch the connection method?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Prefer a cable connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Wired connection",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I switch the connection method?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Prefer a cable connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use a cable.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I switch the connection method?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Prefer a cable connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd prefer a wired connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Thank you, that's all.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Can I switch the connection method?",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course! Would you prefer to connect via Wi-Fi or a wired connection instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Prefer a cable connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd prefer a wired connection.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring using a wired connection on your Windows laptop. Please connect your laptop to the projector with a compatible cable.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm done.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! Are you using Windows, macOS, or another operating system on your laptop?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Windows",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! Are you using Windows, macOS, or another operating system on your laptop?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm on Windows.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! Are you using Windows, macOS, or another operating system on your laptop?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Windows",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm on Windows.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Wi-Fi",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Connect via Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "No further help needed.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Thank you, that's all.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Using Windows OS.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Understood. Would you like to connect via Wi-Fi or using a wired connection?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use Wi-Fi.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's set up screen mirroring over Wi-Fi on your Windows laptop. Please ensure both devices are connected to the same network.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm done.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Laptop",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS on my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm using a laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS on my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS on my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Laptop",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS on my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm using a laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS on my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! Are you using Windows, macOS, or another operating system on your laptop?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! Are you using Windows, macOS, or another operating system on your laptop?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm using a Mac.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great! Are you using Windows, macOS, or another operating system on your laptop?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS on my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "macOS",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my laptop.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, which operating system does your laptop run? Windows, macOS, or something else?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm using a Mac.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Smartphone",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, set up Bluetooth mirroring.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use my smartphone.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, set up Bluetooth mirroring.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my phone instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, set up Bluetooth mirroring.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Smartphone",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, set up Bluetooth mirroring.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to use my smartphone.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Yes, set up Bluetooth mirroring.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my phone instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Let's use Bluetooth.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Use my phone instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "If you prefer, we can also use Bluetooth for screen mirroring. Would you like to proceed with that?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Proceed with Bluetooth.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I want to enable screen mirroring for my presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Never mind.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Enable screen mirroring for my presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Never mind.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I changed my mind.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I don't need screen mirroring.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Sure, which device would you like to mirror from? For example, a laptop, smartphone, or tablet.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Never mind.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I changed my mind.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your presentation today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to mirror my screen for a presentation.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Of course, which device are you planning to mirror your presentation from? A laptop, smartphone, or tablet?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I don't need screen mirroring.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+,
+        {
+            "graph": {
+                "edges": [
+                    {
+                        "source": 1,
+                        "target": 2,
+                        "utterances": [
+                            "I'm unable to connect to my WiFi network."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 3,
+                        "utterances": [
+                            "I've restarted the router, but it still can't connect.",
+                            "I restarted the router, but there's no improvement.",
+                            "I've tried restarting the router, but the issue persists."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 4,
+                        "utterances": [
+                            "Actually, I can't restart the router right now."
+                        ]
+                    },
+                    {
+                        "source": 2,
+                        "target": 5,
+                        "utterances": [
+                            "Actually, I'd like to try another troubleshooting step."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 5,
+                        "utterances": [
+                            "WiFi is on, but it still doesn't connect."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 7,
+                        "utterances": [
+                            "I'd like to update the router's firmware."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 6,
+                        "utterances": [
+                            "WiFi is on, but it still doesn't connect."
+                        ]
+                    },
+                    {
+                        "source": 6,
+                        "target": 8,
+                        "utterances": [
+                            "I've reset the network settings, and now it connects! Thank you."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 9,
+                        "utterances": [
+                            "I've updated the firmware, and it works now! Thank you."
+                        ]
+                    },
+                    {
+                        "source": 8,
+                        "target": 9,
+                        "utterances": [
+                            "I've reset the network settings, and now it connects! Thank you."
+                        ]
+                    },
+                    {
+                        "source": 5,
+                        "target": 3,
+                        "utterances": [
+                            "Actually, I want to restart the router instead."
+                        ]
+                    },
+                    {
+                        "source": 7,
+                        "target": 4,
+                        "utterances": [
+                            "Nevermind, let's try something else instead."
+                        ]
+                    },
+                    {
+                        "source": 3,
+                        "target": 10,
+                        "utterances": [
+                            "Nevermind, I fixed it myself."
+                        ]
+                    },
+                    {
+                        "source": 4,
+                        "target": 10,
+                        "utterances": [
+                            "I changed my mind; I don't need help anymore."
+                        ]
+                    }
+                ],
+                "nodes": [
+                    {
+                        "id": 1,
+                        "label": "greeting",
+                        "is_start": true,
+                        "utterances": [
+                            "Hello! How can I assist you with your technical issue today?"
+                        ]
+                    },
+                    {
+                        "id": 2,
+                        "label": "ask_problem_detail",
+                        "is_start": false,
+                        "utterances": [
+                            "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?"
+                        ]
+                    },
+                    {
+                        "id": 3,
+                        "label": "suggest_restart_router",
+                        "is_start": false,
+                        "utterances": [
+                            "Let's start by restarting your router. Please turn it off, wait for 30 seconds, and turn it back on.",
+                            "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on."
+                        ]
+                    },
+                    {
+                        "id": 4,
+                        "label": "ask_alternative_step",
+                        "is_start": false,
+                        "utterances": [
+                            "No problem. What would you like to try instead?"
+                        ]
+                    },
+                    {
+                        "id": 5,
+                        "label": "check_device_wifi",
+                        "is_start": false,
+                        "utterances": [
+                            "Thank you for trying that. Next, please check if your device's WiFi is turned on and airplane mode is disabled.",
+                            "Great, now please ensure that your device's WiFi is enabled and airplane mode is off."
+                        ]
+                    },
+                    {
+                        "id": 6,
+                        "label": "ensure_device_within_range",
+                        "is_start": false,
+                        "utterances": [
+                            "Okay, let's ensure your device is within range of the router and there are no obstructions."
+                        ]
+                    },
+                    {
+                        "id": 7,
+                        "label": "update_router_firmware",
+                        "is_start": false,
+                        "utterances": [
+                            "To update your router's firmware, please visit the manufacturer's website and follow their instructions."
+                        ]
+                    },
+                    {
+                        "id": 8,
+                        "label": "reset_network_settings",
+                        "is_start": false,
+                        "utterances": [
+                            "Please go to your device settings, navigate to network settings, and select 'Reset Network'."
+                        ]
+                    },
+                    {
+                        "id": 9,
+                        "label": "success_message",
+                        "is_start": false,
+                        "utterances": [
+                            "You're welcome! If you have any other issues, feel free to contact us again."
+                        ]
+                    },
+                    {
+                        "id": 10,
+                        "label": "offer_help",
+                        "is_start": false,
+                        "utterances": [
+                            "I understand. Let me know if there's anything else I can help you with."
+                        ]
+                    }
+                ]
+            },
+            "topic": "Technical Support & Troubleshooting",
+            "dialogues": [
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've restarted the router, but it still can't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "WiFi is on, but it still doesn't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great, now please ensure that your device's WiFi is enabled and airplane mode is off.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to restart the router instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Nevermind, I fixed it myself.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. Let me know if there's anything else I can help you with.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I restarted the router, but there's no improvement.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "WiFi is on, but it still doesn't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great, now please ensure that your device's WiFi is enabled and airplane mode is off.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to restart the router instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Nevermind, I fixed it myself.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. Let me know if there's anything else I can help you with.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've tried restarting the router, but the issue persists.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's start by restarting your router. Please turn it off, wait for 30 seconds, and turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "WiFi is on, but it still doesn't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great, now please ensure that your device's WiFi is enabled and airplane mode is off.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to restart the router instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Nevermind, I fixed it myself.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. Let me know if there's anything else I can help you with.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've tried restarting the router, but the issue persists.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "WiFi is on, but it still doesn't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you for trying that. Next, please check if your device's WiFi is turned on and airplane mode is disabled.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to restart the router instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Nevermind, I fixed it myself.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. Let me know if there's anything else I can help you with.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've tried restarting the router, but the issue persists.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "First, try restarting your router. Turn it off, wait for half a minute, and then turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "WiFi is on, but it still doesn't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great, now please ensure that your device's WiFi is enabled and airplane mode is off.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I want to restart the router instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Let's start by restarting your router. Please turn it off, wait for 30 seconds, and turn it back on.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Nevermind, I fixed it myself.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. Let me know if there's anything else I can help you with.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I can't restart the router right now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. What would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to update the router's firmware.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "To update your router's firmware, please visit the manufacturer's website and follow their instructions.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Nevermind, let's try something else instead.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. What would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I changed my mind; I don't need help anymore.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I understand. Let me know if there's anything else I can help you with.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I'd like to try another troubleshooting step.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Thank you for trying that. Next, please check if your device's WiFi is turned on and airplane mode is disabled.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "WiFi is on, but it still doesn't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, let's ensure your device is within range of the router and there are no obstructions.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've reset the network settings, and now it connects! Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please go to your device settings, navigate to network settings, and select 'Reset Network'.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've reset the network settings, and now it connects! Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome! If you have any other issues, feel free to contact us again.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I'd like to try another troubleshooting step.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Great, now please ensure that your device's WiFi is enabled and airplane mode is off.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "WiFi is on, but it still doesn't connect.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Okay, let's ensure your device is within range of the router and there are no obstructions.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've reset the network settings, and now it connects! Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "Please go to your device settings, navigate to network settings, and select 'Reset Network'.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've reset the network settings, and now it connects! Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome! If you have any other issues, feel free to contact us again.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                },
+                {
+                    "messages": [
+                        {
+                            "text": "Hello! How can I assist you with your technical issue today?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'm unable to connect to my WiFi network.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "I'm sorry to hear that you're experiencing connectivity issues. Can you please provide more details about the problem?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "Actually, I can't restart the router right now.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "No problem. What would you like to try instead?",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I'd like to update the router's firmware.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "To update your router's firmware, please visit the manufacturer's website and follow their instructions.",
+                            "participant": "assistant"
+                        },
+                        {
+                            "text": "I've updated the firmware, and it works now! Thank you.",
+                            "participant": "user"
+                        },
+                        {
+                            "text": "You're welcome! If you have any other issues, feel free to contact us again.",
+                            "participant": "assistant"
+                        }
+                    ],
+                    "topic": "",
+                    "validate": true
+                }
+            ]
+        }
+]

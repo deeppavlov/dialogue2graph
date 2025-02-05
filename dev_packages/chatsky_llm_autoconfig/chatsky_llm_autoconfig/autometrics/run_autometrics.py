@@ -57,6 +57,7 @@ validation_model = ChatOpenAI(model=env_settings.FORMATTER_MODEL_NAME, api_key=e
 
 # dialogue_to_graph = read_json(env_settings.TEST_DATA_PATH)["graph_to_dialogue"]
 dialogue_to_graph = read_json(env_settings.TEST_DATA_PATH)
+graph_to_graph = read_json(env_settings.GRAPHS_TO_FIX)
 print("json read")
 #dialogue_to_graph = [load_dataset(env_settings.TEST_DATASET, token=env_settings.HUGGINGFACE_TOKEN)['train'][4]]
 #graph_to_dialogue = test_data["graph_to_dialogue"]
@@ -117,13 +118,15 @@ def run_all_algorithms():
             metrics["is_correct_lenght_avg"] = sum(metrics["is_correct_lenght"]) / len(metrics["is_correct_lenght"])
 
         elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
-            metrics = {"is_theme_valid": [], "are_triplets_valid": []}
-            for case in graph_to_dialogue:
+            tp = algorithms[class_]["type"]
+            class_instance = tp(generation_model)
+            result = []
+            for case in graph_to_graph:
                 test_graph = Graph(graph_dict=case["graph"])
-                result = class_instance.invoke(test_graph)
+                result.append(class_instance.invoke(test_graph).graph_dict)
+                save_json(data=result, filename=env_settings.GRAPH_SAVED)
 
-                metrics["are_triplets_valid"].append(are_triplets_valid(result, model, topic="")["value"])
-                metrics["is_theme_valid"].append(is_theme_valid(result, model, topic="")["value"])
+
 
         elif algorithms[class_]["input_type"] is str and algorithms[class_]["output_type"] is BaseGraph:
             metrics = {"is_theme_valid": [], "are_triplets_valid": []}
@@ -212,21 +215,21 @@ def run_all_algorithms():
             result = []
             for case in topic_to_graph:
                 test_topic = case["topic"]
-                result.append(class_instance.invoke(test_topic))
+                result.extend(class_instance.invoke(test_topic))
                 save_json(data=result, filename=env_settings.GRAPH_SAVED)
 
 
-        elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
-            metrics = {"is_theme_valid": [], "are_triplets_valid": []}
-            for case in graph_to_dialogue:
-                test_graph = Graph(graph_dict=case["graph"])
-                result = class_instance.invoke(test_graph)
+        # elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
+        #     metrics = {"is_theme_valid": [], "are_triplets_valid": []}
+        #     for case in graph_to_dialogue:
+        #         test_graph = Graph(graph_dict=case["graph"])
+        #         result = class_instance.invoke(test_graph)
 
-                metrics["are_triplets_valid"].append(are_triplets_valid(result, model, topic="")["value"])
-                metrics["is_theme_valid"].append(is_theme_valid(result, model, topic="")["value"])
+        #         metrics["are_triplets_valid"].append(are_triplets_valid(result, model, topic="")["value"])
+        #         metrics["is_theme_valid"].append(is_theme_valid(result, model, topic="")["value"])
 
-            metrics["are_triplets_valid"] = sum(metrics["are_triplets_valid"]) / len(metrics["are_triplets_valid"])
-            metrics["is_theme_valid_avg"] = sum(metrics["is_theme_valid"]) / len(metrics["is_theme_valid"])
+        #     metrics["are_triplets_valid"] = sum(metrics["are_triplets_valid"]) / len(metrics["are_triplets_valid"])
+        #     metrics["is_theme_valid_avg"] = sum(metrics["is_theme_valid"]) / len(metrics["is_theme_valid"])
         total_metrics[class_] = metrics
 
     return total_metrics

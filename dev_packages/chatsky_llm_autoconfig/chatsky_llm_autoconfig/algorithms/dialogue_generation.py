@@ -18,10 +18,11 @@ def list_in(a, b):
     return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
 
 def all_paths(graph: BaseGraph, start: int, visited: list, repeats: int):
-    global visited_list   
+    global visited_list
     if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
         visited.append(start)
         for edge in graph.edge_by_source(start):
+            # print("TARGET: ", edge['target'])
             all_paths(graph, edge['target'], visited.copy(), repeats)
     visited_list.append(visited)
 
@@ -83,12 +84,13 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     paths.sort()
     final = list(k for k,_ in itertools.groupby(paths))[1:]
     final.sort(key=len,reverse=True)
-    sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
-    finishes = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources] + ends
-    print("ENDS: ", finishes)
-    node_paths = [f for f in final if f[-1] in finishes]
+    # cycles = list(nx.simple_cycles(graph.graph))
+    # cycles = [x for xs in cycles for x in xs]
+    # if all([f not in cycles for f in finishes]):
+    #     finishes += ends
+    print("ENDS: ", ends)
+    node_paths = [f for f in final if f[-1] in ends]
     node_paths = remove_duplicates(node_paths)
-    # node_paths = remove_duplicates(node_paths)
     full_paths = []
     for p in node_paths:
         path = []
@@ -230,14 +232,18 @@ class RecursiveDialogueSampler(DialogueGenerator):
 
     def invoke(self, graph: BaseGraph, upper_limit: int) -> list[Dialogue]:
         repeats = 1
-        ends = find_graph_ends(graph, model=ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1))
-        print("ENDDS: ", ends)
+        sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
+        finishes = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
+        if not finishes:
+            finishes = find_graph_ends(graph, model=ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1))['value']
+            print("ENDDS: ", finishes)
         while repeats <= upper_limit:
-            dialogues = get_dialogues(graph,repeats,ends['value'])
+            dialogues = get_dialogues(graph,repeats,finishes)
             if all_utterances_present(graph, dialogues):
                 print(f"{repeats} repeats works!")
                 break
             repeats += 1
+            print("REPEATS: ", repeats)
         if repeats >= upper_limit:
             print("Not all utterances present")
         return dialogues

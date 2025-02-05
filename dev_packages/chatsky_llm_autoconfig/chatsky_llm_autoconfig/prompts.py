@@ -364,19 +364,19 @@ cycle_graph_generation_prompt = PromptTemplate.from_template(
 #      * Change their mind about earlier decisions (if only it is appropriate)
 #    - Include clear exit points from each major decision path
 
-
 cycle_graph_generation_prompt_enhanced = PromptTemplate.from_template(
     """
 Create a dialogue graph for a {topic} conversation that will be used for training data generation. The graph must follow these requirements:
 
 1. Dialogue Flow Requirements:
-   - Each assistant message (node) must be reasonable and natural reaction to the immediately previous user message if such exists
-   - Each user message (edge) must be reasonable and conscious reaction to the previous assistant message
-   - All paths must maintain clear context and natural conversation flow without unnecessary repetitions
+   - Each assistant message (node) must be coherent, reasonable and natural reaction to the immediately previous user message if such exists
+   - Each user message (edge) must be coherent, reasonable and conscious reaction to the previous assistant message
+   - All paths must maintain clear context and natural flow as in real conversation without unnecessary repetitions
    - Avoid any ambiguous or overly generic responses
 
 
 2. Graph Structure Requirements:
+   - Must contain at least 8 nodes
    - Must contain at least 2 distinct cycles (return paths)
    - Each cycle may allow users to do the folllowing in a natural way only:
      * Return to previous choices for modification
@@ -426,16 +426,21 @@ Format:
     ]
 }}
 
+is_start field is mandatory for all the nodes
+
 Requirements for IDs:
 - Must be unique integers
 - Start node should have ID 1
 - IDs should increment sequentially
 - All edges shall have IDs of existing nodes for source and target
-- If a node doesn't have outgoing edge, don't create an edge with this node as a source
+- You must remove all edges where target is null
 
 Nodes must be assistant's utterances only and never repeat user's inputs.
 Edges must be user's utterances only and never repeat previous assistant's utterances.
 Target of any edge must be different from the edge's source.
+Just one of edges of the whole graph must have 2-3 different utterances meaning modified answers to the same user's utterance.
+Just one of nodes of the whole graph must have 2-3 different utterances meaning fluctuations in formulation of thoughts.
+So you need to rephrase utterance in those node while maintaining its general meaning and add rephrased utterances to the node. 
 
 Return ONLY the valid JSON without any additional text, commentaries or explanations.
 """
@@ -457,6 +462,22 @@ Requirements for the fix:
 3. Make sure the fixed transitions are logical and natural
 4. Each user response must logically follow from the assistant's previous message
 5. Each assistant response must properly address the user's input
+
+Return ONLY the complete fixed graph JSON with the same structure.
+""")
+
+extra_edge_prompt = PromptTemplate.from_template("""
+Add extra edges to this dialogue graph while keeping its structure.
+
+Original graph structure:
+{graph_json}
+
+Requirements for the modification:
+1. Find all nodes with no outgoing edges
+2. Add an edge to every found node looping back to the start node of the graph
+3. Make sure new transitions are logical and natural
+4. Utterances of newly added edges should be such that the phrase in start node following them looks like a continuation of the conversation
+5. Targets of new edges must properly address the user's input
 
 Return ONLY the complete fixed graph JSON with the same structure.
 """)

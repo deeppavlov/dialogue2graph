@@ -80,7 +80,6 @@ class CycleGraphGenerator(TopicGraphGenerator):
         pass
 
 
-
 @dataclass
 class GraphGenerationPipeline:
     generation_model: BaseChatModel
@@ -123,6 +122,7 @@ class GraphGenerationPipeline:
 
         try:
             cycles = list(nx.simple_cycles(graph.graph))
+            print("CCC: ", cycles)
             cycles_count = len(cycles)
 
             print(f"🔄 Found {cycles_count} cycles in the graph:")
