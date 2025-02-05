@@ -3,12 +3,13 @@ from typing import Optional, Dict, Any
 import networkx as nx
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
-from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
 from chatsky_llm_autoconfig.algorithms.dialogue_generation import RecursiveDialogueSampler
+from chatsky_llm_autoconfig.algorithms.base import TopicGraphGenerator
 from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
-from chatsky_llm_autoconfig.metrics.llm_metrics import are_triples_valid, is_theme_valid
+from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
+from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 from openai import BaseModel
 
 from enum import Enum
@@ -36,6 +37,37 @@ class GenerationError(BaseModel):
 
 PipelineResult = Union[GraphGenerationResult, GenerationError]
 
+@AlgorithmRegistry.register(input_type=str, output_type=BaseGraph)
+class CycleGraphGenerator(TopicGraphGenerator):
+    """Generator specifically for topic-based cyclic graphs"""
+
+    def __init__(self):
+        super().__init__()
+
+    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, **kwargs) -> BaseGraph:
+        """
+        Generate a cyclic dialogue graph based on the topic input.
+
+        Args:
+            model (BaseChatModel): The model to use for generation
+            prompt (PromptTemplate): Prepared prompt template
+            **kwargs: Additional arguments for formatting the prompt
+
+        Returns:
+            BaseGraph: Generated Graph object with cyclic structure
+        """
+        # Создаем цепочку: промпт -> модель -> парсер
+        parser = PydanticOutputParser(pydantic_object=DialogueGraph)
+        chain = prompt | model | parser
+
+        # Передаем kwargs как входные данные для цепочки
+        return Graph(chain.invoke(kwargs))
+
+    async def ainvoke(self, *args, **kwargs):
+        """
+        Async version of invoke - to be implemented
+        """
+        pass
 
 @dataclass
 class GraphGenerationPipeline:
