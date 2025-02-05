@@ -1,0 +1,1 @@
+from dialogue2graph.pipelines.core.dialogue import Dialogue
