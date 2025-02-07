@@ -1,8 +1,8 @@
 import itertools
-from dialogue2graph.pipelines.basic.graph import BaseGraph
-from dialogue2graph.pipelines.basic.dialogue import Dialogue
-from dialogue2graph.pipelines.basic.algorithms import DialogueGenerator
-from dialogue2graph.metrics.automatic_metrics import all_utterances_present
+from graph import BaseGraph
+from dialogue import Dialogue
+from algorithms import DialogueGenerator
+from metrics.automatic_metrics import all_utterances_present
 
 
 # @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)

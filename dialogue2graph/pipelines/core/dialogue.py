@@ -1,7 +1,7 @@
 import networkx as nx
 from typing import List, Union, Dict
 from pydantic import BaseModel, Field, ConfigDict
-from dialogue2graph.pipelines.basic.schemas import DialogueMessage
+from dialogue2graph.pipelines.core.schemas import DialogueMessage
 
 
 class Dialogue(BaseModel):
