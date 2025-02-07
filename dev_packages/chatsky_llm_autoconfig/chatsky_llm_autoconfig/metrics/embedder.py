@@ -152,7 +152,7 @@ def ends_match(node1: str, node2: str) -> tuple[bool,list[str],list[str]]:
 def if_greetings(node1: str, node2:str):
     """ Return True if only one node contains greeting words
     """
-    greetings = re.compile(r'\b(welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|great|awesome|excellent|perfect|glad|nice|fantastic|wonderful)\b', re.IGNORECASE)
+    greetings = re.compile(r'\b(let\'s|let us|let me|introduce|welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|no problem|great|awesome|excellent|perfect|glad|nice|fantastic|wonderful)\b', re.IGNORECASE)
     if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
         greetings_cond = True
         print("GREETINGS")
@@ -163,7 +163,7 @@ def if_greetings(node1: str, node2:str):
 def if_else(node1: str, node2:str):
     """ Return True if only one node contains "else" words
     """
-    else_re = re.compile(r'\b(else|add|increase|increased|another|more|other|extra|additional)\b', re.IGNORECASE)
+    else_re = re.compile(r'\b(else|change|exchange|further|add|increase|increased|another|more|other|extra|additional|alternative|alternatively)\b', re.IGNORECASE)
     if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
         else_cond = True
         print("ELSE")
@@ -174,7 +174,7 @@ def if_else(node1: str, node2:str):
 def y_n(node1: str, node2:str):
     """ Return True if only one node contains wh questions
     """
-    yn = re.compile(r'\b(where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
+    yn = re.compile(r'\b(preferred|prefer}where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
     if (re.search(yn, node1) is None) is not (re.search(yn, node2) is None):
         yes_no = True
         print("Y_N")
@@ -215,7 +215,8 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             max_m = max(mix_score[ind1][ind2],mix_score[ind2][ind1]) # Maximum in pair of cross encoding pairs (mix1,mix2) and (mix2,mix1) similarities
             min_e = min(next_score[ind1][ind2],next_score[ind2][ind1]) # Minimum in pair of pairs (next1,next2) and (next2,next1) similarities
             max_e = max(next_score[ind1][ind2],next_score[ind2][ind1]) # Maximum in pair of pairs (next1,next2) and (next2,next1) similarities
-
+            ABS = 0.99
+            absolute = max_n >= ABS and max_m >= ABS and min_e >= ABS
             print(f"MIX: max_n:{max_n},max_m:{max_m},min_e:{min_e},max_e:{max_e}",nodes_list[ind1],nodes_list[ind2])
             if max_n > 0.999: # When nodes are close enough, symmetric difference is ignored
                 one_word = False
@@ -231,7 +232,7 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             else_cond = if_else(node1, node2)
             yes_no = y_n(node1, node2)
             # If condition is False, nodes are not paired
-            condition = not (greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
+            condition = absolute or not (greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
             print("CONDITION: ", condition)
             print("ADJACENT: ", node1 in neigbhours[node2])
             # print("GREEINGS: ", greetings_cond)
@@ -239,7 +240,7 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             # print("ELSE: ", else_cond)
             print("ONE_WORD: ", one_word)
             # If cond_1 is True, wh check is ignored
-            cond_1 = len1 == len2 and len1 == 1 and min_e >= 0.06 and max_e > 0.9 and max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > 0.05 or len1!=len2 and max_n > 0.99
+            cond_1 = len1 == len2 and len1 == 1 and min_e >= 0.06 and max_e > 0.9 and max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > 0.05 or len1!=len2 and max_n > 0.996
             if cond_1:
                 condition = not (greetings_cond or if_cond or else_cond or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
 
@@ -258,7 +259,7 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
                             sent_score.append((s2,s1))
                         sent_score = evaluator.score(sent_score) # Scoring every pair of sentences between two nodes
                         # maxes = [max(el[0],el[1]) for el in zip(sent_score[::2],sent_score[1::2])]
-                        nodes_condition = max(sent_score) >= 0.9 and min(sent_score) >= 0.05 and max_n >= env_settings.RERANKER_THRESHOLD
+                        nodes_condition = max(sent_score) >= 0.9 and min(sent_score) >= 0.05 and max_n >= env_settings.RERANKER_THRESHOLD and min_e >= 0.06 and max_e > 0.9
                     else:
                         nodes_condition = len1==len2 and max_n >= env_settings.RERANKER_THRESHOLD 
                     # print("NODCOND: ", nodes_condition)

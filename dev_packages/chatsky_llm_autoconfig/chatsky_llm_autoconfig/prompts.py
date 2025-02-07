@@ -481,3 +481,65 @@ Requirements for the modification:
 
 Return ONLY the complete fixed graph JSON with the same structure.
 """)
+
+part_1 = """Your input is a list of dialogues from customer chatbot system.
+Your task is to genearate set of nodes for the dialogue graph corresponding to these dialogues.
+Next is an example of the graph (set of rules) how chatbot system looks like - it is
+a set of nodes with assistant's utterances and a set of edges that are
+triggered by user requests: """
+
+part_2 = """This is the end of the example.
+**Rules:**
+1) is_start field in the node is an entry point to the whole graph.
+2) Nodes must be assistant's utterances only.
+3) All the nodes for the graph are created from the resulting groups in point 4) according to the rules 6,7,8,9
+with exclusively assistant's utterances only in their original unmodified form.
+4) The grouping process looks like follows:
+a. Go over all the dialogues, take every assistant's utterance one by one.
+b. Search for all assistant's utterances having common basic idea with current utterance,
+and not adjacent with it. It is forbidden to select groups based on intents.
+c. Form one group from current utterance and all utterances found in 4b.
+d. Of the three types of assistant's utterances:
+with a question mark at the end,
+with an exclamation mark at the end,
+affirmative without exclamation mark,
+each group can contain only one.
+So if two different types encounter in one group, you shall separate them into different groups.
+e. Don't miss any assistant's utterance in all the dialogues.
+f. Go to next utterance in step 4a, skip those present in existing groups. Don't miss any utterance.
+5) Below are examples when two utterances have common basic idea:
+if they ask about posession or obtaining of some entities, and these entities are close by in-context meaning to each other:
+for example, one entity can be a particular case of the other in the dialogue conext;
+when they both are requests without ending question mark and have common words or synonyms;
+if they ask whether something is done or about status of something, and have common or synonymous words;
+if they ask about accessability of something similar by in-context meaning to each other;
+if they have common objects and the remainders of each utterance are close by meaning to each other.
+6) If two utterances don't have common words or in-context synonyms,
+then they must be separated into different groups.
+If one entity is a particular case of the other in the dialogue conext, they are considered synonyms.
+7) Don't use user's utterances for grouping process in point 4).
+8) Duplicates inside any of the nodes must be removed.
+9) If one utterance mentions a problem and the other does not imply any problem, then they shall be separated into different groups.
+9) Empty groups shall be removed.
+10) Don't use new or modified utterances in the nodes.
+11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+12) Add reason point to the graph with your explanation why you placed utterances with common basic idea in different groups.
+I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+List of dialogues: """
+
+graph_example_1 = {
+    "edges": [
+        {'source': 1, 'target': 2, 'utterances': ['I need to make an order', 'I want to order from you']},
+        {'source': 2, 'target': 3, 'utterances': ['I would like to purchase Pale Fire and Anna Karenina, please', 'One War and Piece in hard cover and one Pride and Prejudice']},
+        {"source": 3, "target": 4, "utterances": ["With credit card, please", "Cash"]},
+        {"source": 4, "target": 2, "utterances": ["Start new order"]}
+    ],
+    'nodes':
+      [
+          {'id': 1, 'label': 'start', 'is_start': True, 'utterances': [ 'How can I help?', 'Hello']},
+          {'id': 2, 'label': 'ask_books', 'is_start': False, 'utterances': [ 'What books do you like?']},
+          {'id': 3, 'label': 'ask_payment_method', 'is_start': False, 'utterances': [ 'Please, enter the payment method you would like to use: cash or credit card.']},
+          {"id": 4, "label": "ask_to_redo", "is_start": False, "utterances": [ "Something is wrong, can you please use other payment method or start order again"]}
+      ],
+      'reason': ""
+}

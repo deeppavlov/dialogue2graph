@@ -8,9 +8,10 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 # import chatsky_llm_autoconfig.algorithms.single_graph_generation
 #import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
-# import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
+import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
+import chatsky_llm_autoconfig.algorithms.three_stages_0
 # import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
-import chatsky_llm_autoconfig.algorithms.topic_graph_generation
+# import chatsky_llm_autoconfig.algorithms.topic_graph_generation
 
 # from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
 # from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
@@ -197,7 +198,9 @@ def run_all_algorithms():
                         metrics["is_same_structure"].append(comp)
                         if comp:
                             metrics["llm_match"].append(llm_match(Graph(graph_dict=result_graph.graph_dict), test_graph_orig))
+                            print("MATCH: ", case["topic"], metrics["llm_match"][-1])
                         else:
+                            print("STRUCTURE: ", case["topic"], "False")
                             metrics["llm_match"].append(False)                            
                     except Exception as e:
                         print("Exception: ", e)

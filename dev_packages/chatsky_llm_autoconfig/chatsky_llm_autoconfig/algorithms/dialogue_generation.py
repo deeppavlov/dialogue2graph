@@ -88,7 +88,7 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     # cycles = [x for xs in cycles for x in xs]
     # if all([f not in cycles for f in finishes]):
     #     finishes += ends
-    print("ENDS: ", ends)
+    # print("ENDS: ", ends)
     node_paths = [f for f in final if f[-1] in ends]
     node_paths = remove_duplicates(node_paths)
     full_paths = []
@@ -236,16 +236,17 @@ class RecursiveDialogueSampler(DialogueGenerator):
         finishes = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
         if not finishes:
             finishes = find_graph_ends(graph, model=ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1))['value']
-            print("ENDDS: ", finishes)
+            # print("ENDDS: ", finishes)
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph,repeats,finishes)
-            if all_utterances_present(graph, dialogues):
-                print(f"{repeats} repeats works!")
+            if all_utterances_present(graph, dialogues) == True:
+                # print(f"{repeats} repeats works!")
                 break
             repeats += 1
-            print("REPEATS: ", repeats)
+            # print("REPEATS: ", repeats)
         if repeats >= upper_limit:
             print("Not all utterances present")
+            return []
         return dialogues
 
     async def ainvoke(self, *args, **kwargs):

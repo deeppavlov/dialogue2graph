@@ -24,11 +24,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     2. Algorithmic connecting nodes by edges.
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
-    prompt_name: str = ""
+    # prompt_name: str = ""
 
-    def __init__(self, prompt_name: str=""):
-        super().__init__()
-        self.prompt_name = prompt_name
+    # def __init__(self, prompt_name: str=""):
+    #     super().__init__()
+    #     self.prompt_name = prompt_name
 
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, topic: str = "") -> BaseGraph:
 

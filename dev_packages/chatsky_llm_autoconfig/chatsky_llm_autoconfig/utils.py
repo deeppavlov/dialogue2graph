@@ -290,6 +290,7 @@ def dialogues2list(dialogues: list[Dialogue]):
     neigbhours - dictionary of adjacent assistants utterances
     last_user - sign of that dialogue finishes with user's utterance
     """
+    
     nodes = []
     nexts = []
     starts = []
@@ -302,6 +303,9 @@ def dialogues2list(dialogues: list[Dialogue]):
             cur = t['text']
             next = ''
             if t['participant'] == 'assistant':
+                if start:
+                    starts.append(t['text'])
+                    start = 0
                 neigh_nodes = []
                 if idx > 1:
                     neigh_nodes.append(texts[idx-2]['text'])
@@ -319,11 +323,8 @@ def dialogues2list(dialogues: list[Dialogue]):
                 else:
                     nexts.append([next])
                     nodes.append(t['text'])
-                    if start:
-                        starts.append(t['text'])
-                        start = 0
         if t['participant'] == 'user':
             last_user = True
-    return nexts, nodes, starts, neighbours, last_user
+    return nexts, nodes, list(set(starts)), neighbours, last_user
 
 

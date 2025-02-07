@@ -133,6 +133,13 @@ def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
 def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
     return True
 
+def edges_match_nodes(graph: dict) -> bool:
+
+    node_ids = set([n['id'] for n in graph['nodes']])
+    edge_ids = set([e['target'] for e in graph['edges']])
+    return node_ids == edge_ids
+
+
 
 def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
     """
