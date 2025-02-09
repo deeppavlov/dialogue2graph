@@ -17,9 +17,42 @@ env_settings = EnvSettings()
 def list_in(a, b):
     return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
 
+def len_in(a,b):
+    return sum([b[x:x + len(a)] == a for x in range(len(b) - len(a) + 1)])
+
+def find_path(graph: BaseGraph, start: int, end: int, visited: list):
+    global visited_list
+
+    if len(visited) <= len(graph.graph_dict['edges']) and end not in visited_list[-1]:
+    # if len(visited) < repeats or (not list_in(visited[-repeats:]+[start],visited) and len(visited) < n_nodes*2):
+        # print("LEN: ", len(visited))
+        visited.append(start)
+        if end not in visited:
+            for edge in graph.edge_by_source(start):
+                # print("TARGET: ", edge['target'])
+                find_path(graph, edge['target'], end, visited)
+    else:
+        visited.append(start)
+    visited_list.append(visited)
+    # print("VVV: ", visited_list)
+
+def mix_ends(graph: BaseGraph, ends: list[int], cycles: list[int]):
+    global visited_list
+    visited = []
+    for c in cycles:
+        for e in ends:
+            visited_list = [[]]
+            find_path(graph, c, e, [])
+            if any([e in v for v in visited_list]):
+                visited.append(c)
+    return [e for e in cycles if e not in visited] + ends
+
 def all_paths(graph: BaseGraph, start: int, visited: list, repeats: int):
     global visited_list
+
+    # if len(visited) < 1 or len_in([visited[-1],start],visited) < repeats:
     if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
+        # print("LEN: ", len(visited))
         visited.append(start)
         for edge in graph.edge_by_source(start):
             # print("TARGET: ", edge['target'])
@@ -29,6 +62,7 @@ def all_paths(graph: BaseGraph, start: int, visited: list, repeats: int):
 def all_combinations(path: list, start: dict, next: int, visited: list):
     global visited_list
     visited.append(start)
+    # print("APPEND: ", start)
     if next < len(path):
         for utt in path[next]['text']:
             all_combinations(path, {"participant": path[next]['participant'], "text": utt}, next+1, visited.copy())
@@ -57,20 +91,17 @@ def remove_duplicates(dialogues: list[list[int]]) -> list[list[int]]:
 def get_utts(seq: list[list[dict]]) -> set[tuple[str]]:
     res = []
     for dialogue in seq:
-         user_texts = [d['text'] for d in dialogue if d['participant']=='user']
-         assist_texts = [d['text'] for d in dialogue if d['participant']=='assistant']
-         res.extend([(a,u) for u,a in zip(user_texts,assist_texts)])
+         texts = [d['text'] for d in dialogue]
+         res.extend(texts)
     return set(res)
 
+
 def remove_duplicated_utts(seq: list[list[dict]]):
-    seq_copy = seq.copy()
-    idx = 0
-    for s in seq:
-        if get_utts([s]).issubset(get_utts(seq_copy[:idx]+seq_copy[idx+1:])):
-            seq_copy = seq_copy[:idx]+seq_copy[idx+1:]
-        else:
-            idx += 1
-    return seq_copy
+    single_seq = [seq[0]]
+    for s in seq[1:]:
+        if not get_utts([s]).issubset(get_utts(single_seq)):
+            single_seq.append(s)
+    return single_seq
 
 def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialogue]:
     global visited_list
@@ -90,7 +121,9 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     #     finishes += ends
     # print("ENDS: ", ends)
     node_paths = [f for f in final if f[-1] in ends]
+    # print("NODES: ", node_paths)
     node_paths = remove_duplicates(node_paths)
+    print("REM: ", node_paths)
     full_paths = []
     for p in node_paths:
         path = []
@@ -105,11 +138,20 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     dialogues = []
     for f in full_paths:
         visited_list = [[]]
+        # print("BEFORE comb")
         all_combinations(f, {}, 0, [])
+        # print("AFTER comb")
+        # for v in visited_list:
+        #     print("LIST: ", v)
+        # print("\n")
         dialogue = [el[1:] for el in visited_list if len(el)==len(f)+1]
         dialogues.extend(dialogue)
+    # for d in dialogues:
+    #     print("DGS: ", d)
     final = list(k for k,_ in itertools.groupby(dialogues))
     final = remove_duplicated_utts(final)
+    # for f in final:
+    #     print("FINAL: ", f)
     result = [Dialogue().from_list(seq) for seq in final]
     return result
 
@@ -231,20 +273,40 @@ class RecursiveDialogueSampler(DialogueGenerator):
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def invoke(self, graph: BaseGraph, upper_limit: int) -> list[Dialogue]:
+        global visited_list
         repeats = 1
         sources = list(set([g['source'] for g in graph.graph_dict['edges']]))
         finishes = [g['id'] for g in graph.graph_dict['nodes'] if g['id'] not in sources]
-        if not finishes:
-            finishes = find_graph_ends(graph, model=ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1))['value']
-            # print("ENDDS: ", finishes)
+        print("F: ", finishes)
+        visited = set(finishes.copy())
+        for f in finishes:
+            for n in graph.graph_dict['nodes']:
+                if n['id'] != f:
+                    visited_list = [[]]
+                    # print("TO: ", n['id'], f)
+                    find_path(graph, n['id'], f, [])
+                    # print("FFFF")
+                if any([f in v for v in visited_list]):
+                    # print("VV: ", n['id'])
+                    visited.add(n['id'])
+        print("VIS: ", visited)
+        if len(visited) < len(graph.graph_dict['nodes']) :
+            cycles = find_graph_ends(graph, model=ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1))['value']
+            finishes = mix_ends(graph, finishes, cycles)
+            print("ENDDS: ", finishes)
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph,repeats,finishes)
-            if all_utterances_present(graph, dialogues) == True:
+            # dialogues = get_dialogues(graph,repeats,[4,5,6,7])
+            pres = all_utterances_present(graph, dialogues)
+            if pres == True:
                 # print(f"{repeats} repeats works!")
                 break
-            repeats += 1
-            # print("REPEATS: ", repeats)
-        if repeats >= upper_limit:
+            # else:
+            #     print("DIF: ", pres)
+            else:
+                repeats += 1
+                # print("REPEATS: ", repeats)
+        if repeats > upper_limit:
             print("Not all utterances present")
             return []
         return dialogues
