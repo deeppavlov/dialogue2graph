@@ -7,13 +7,13 @@ Once you've decided to create an experiment to test a hypothesis you should stic
 3. Run the following with your experiment name as `exp<YYYY>_<MM>_<DD>_<hypothesis>`
 
     ```bash
-    poetry new --src <experiment_name>
+    poetry new <experiment_name>
     ```
 
     For example:
 
     ```bash
-    poetry new --src exp2025_01_01_concatenating_subchains_prompt
+    poetry new exp2025_01_01_concatenating_subchains_prompt
     ```
 
 4. Now you can go into your experiment folder and initialize your virtual environment
@@ -24,7 +24,19 @@ Once you've decided to create an experiment to test a hypothesis you should stic
     poetry install
     ```
 
-5. You can work in the Jupyter notebooks, but if needed you can create a pipeline folder from the `dialogue2graph/pipelines`. It should resemble this kind of structure if you want to bring results of your experiments as a new pipeline for the library:
+5. Add directories for data and metrics to your folder so it should look like so:
+
+    ```bash
+    experiment_name/
+    ├── data/
+    ├── metrics/
+    ├── experiment_name/
+        └── your_notebook.ipynb
+    ├── README.md
+    └── pyproject.toml
+    ```
+
+6. You can work in the Jupyter notebooks, but if needed you can create a pipeline folder from the `dialogue2graph/pipelines`. It should resemble this kind of structure if you want to bring results of your experiments as a new pipeline for the library:
 
     ```bash
     pipeline_name/
@@ -35,5 +47,5 @@ Once you've decided to create an experiment to test a hypothesis you should stic
         └── prompts.py
     ```
 
-6. Don't forget to track your progress and results in the README.md file in your experiment folder.
-7. Once you've finished your work create a pull request into `dev` branch. Don't forget to describe what have you done in the experiment in the PR description.
+7. Don't forget to track your progress and results in the README.md file in your experiment folder.
+8. Once you've finished your work create a pull request into `dev` branch. Don't forget to describe what have you done in the experiment in the PR description.
