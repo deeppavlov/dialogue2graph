@@ -1,7 +1,8 @@
 import abc
-from typing import List
+from typing import List, Literal, Union
 from pydantic import BaseModel
 from langchain_core.language_models.chat_models import BaseChatModel
+from pandas import DataFrame
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 
@@ -19,6 +20,10 @@ class BaseAlgorithm(BaseModel, abc.ABC):
 
     @abc.abstractmethod
     async def ainvoke(self, *args, **kwargs):
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def evaluate(self, *args, report_type: Literal["dict", "dataframe"] = "dict", **kwargs) -> Union[dict, DataFrame]:
         raise NotImplementedError
 
 

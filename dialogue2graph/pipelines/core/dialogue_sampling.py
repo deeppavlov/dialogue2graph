@@ -1,8 +1,9 @@
 import itertools
+import pandas as pd
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
-from dialogue2graph.metrics.automatic_metrics import all_utterances_present
+from dialogue2graph.metrics.automatic_metrics import all_utterances_present, all_roles_correct
 
 
 # @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
@@ -27,9 +28,18 @@ class RecursiveDialogueSampler(DialogueGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    # async def eval(self, graph, dialogues, report_type=Union[dict, DataFrame]) -> Union[dict, DataFrame]:
-    #     # return results of evaluation (metrics:results)
-    #     pass
+    async def evaluate(self, graph, upper_limit, target_dialogues, report_type = "dict"):
+        dialogues = self.invoke(graph, upper_limit)
+        report = {
+            "all_utterances_present": all_utterances_present(graph, dialogues),
+            "all_roles_correct": all_roles_correct(dialogues, target_dialogues),
+        }
+        if report_type == "dataframe":
+            report = pd.DataFrame(report, index=[0])
+        elif report_type == "dict":
+            return report
+        else:
+            raise ValueError(f"Invalid report_type: {report_type}")
 
 
 def list_in(a, b):
