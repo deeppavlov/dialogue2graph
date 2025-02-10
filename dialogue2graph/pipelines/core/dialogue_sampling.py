@@ -5,13 +5,14 @@ from algorithms import DialogueGenerator
 from metrics.automatic_metrics import all_utterances_present
 
 
-# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
+@AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class RecursiveDialogueSampler(DialogueGenerator):
     def _list_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def invoke(self, graph: BaseGraph, upper_limit: int) -> list[Dialogue]:
+        # TODO: how to add caching?
         repeats = 1
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph, repeats)
@@ -25,6 +26,10 @@ class RecursiveDialogueSampler(DialogueGenerator):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
+    
+    async def eval(self, graph, dialogues, report_type=Union[dict, DataFrame]) -> Union[dict, DataFrame]:
+        # return results of evaluation (metrics:results)
+        pass
 
 
 
