@@ -5,7 +5,7 @@ import black
 from flake8.main.cli import main as flake_main
 
 
-_STANDARD_PATHS = ["dev_packages/chatsky_llm_autoconfig", "scripts", "tests", ".github"]
+_STANDARD_PATHS = ["dialogue2graph", "scripts", "tests", ".github"]
 _STANDARD_PATHS_LEN = 150
 
 
