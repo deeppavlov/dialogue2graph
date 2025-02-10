@@ -102,4 +102,3 @@ class Dialogue(BaseModel):
         for i in range(len(messages) - 1):
             if messages[i].participant == messages[i + 1].participant:
                 raise ValueError(f"Cannot have consecutive messages from the same participant. Messages: {messages[i]}, {messages[i + 1]}")
-

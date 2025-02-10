@@ -3,6 +3,7 @@ from typing import Optional, Dict, Any
 import networkx as nx
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
+
 # from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
 # from chatsky_llm_autoconfig.algorithms.dialogue_generation import RecursiveDialogueSampler
 # from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present

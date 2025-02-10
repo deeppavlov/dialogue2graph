@@ -8,7 +8,7 @@ This module contains functions that checks Graphs and Dialogues for various metr
 import logging
 import json
 from typing import List, TypedDict, Union
-from chatsky_llm_autoconfig.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
 from pydantic import BaseModel, Field

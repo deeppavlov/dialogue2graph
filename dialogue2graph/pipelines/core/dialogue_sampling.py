@@ -1,11 +1,11 @@
 import itertools
-from graph import BaseGraph
-from dialogue import Dialogue
-from algorithms import DialogueGenerator
-from metrics.automatic_metrics import all_utterances_present
+from dialogue2graph.pipelines.core.graph import BaseGraph
+from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
+from dialogue2graph.metrics.automatic_metrics import all_utterances_present
 
 
-@AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
+# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class RecursiveDialogueSampler(DialogueGenerator):
     def _list_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
@@ -26,11 +26,10 @@ class RecursiveDialogueSampler(DialogueGenerator):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-    
-    async def eval(self, graph, dialogues, report_type=Union[dict, DataFrame]) -> Union[dict, DataFrame]:
-        # return results of evaluation (metrics:results)
-        pass
 
+    # async def eval(self, graph, dialogues, report_type=Union[dict, DataFrame]) -> Union[dict, DataFrame]:
+    #     # return results of evaluation (metrics:results)
+    #     pass
 
 
 def list_in(a, b):

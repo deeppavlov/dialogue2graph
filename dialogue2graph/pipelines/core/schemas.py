@@ -16,6 +16,7 @@ class DialogueMessage(BaseModel):
     text: str
     participant: str
 
+
 class Dialogue(BaseModel):
     """Represents a complete dialogue consisting of multiple messages.
 
