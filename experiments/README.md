@@ -20,7 +20,8 @@ Once you've decided to create an experiment to test a hypothesis you should stic
 
     ```bash
     cd ./exp2025_01_01_concatenating_subchains_prompt
-    poetry add scipy
+    poetry add ../../
+    poetry add <your_dependencies>
     poetry install
     ```
 
