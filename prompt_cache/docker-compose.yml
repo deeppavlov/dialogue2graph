@@ -5,25 +5,13 @@ services:
     env_file:
       - .env
     volumes:
-      - pgdata:/var/lib/postgresql/data/
+      - ./postgres-data:/var/lib/postgresql/data/
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - 5432:5432
     networks:
       - postgres-network
 
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   ports:
-  #     - 15433:80
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - postgres-network
-  #   volumes:
-  #     - ./pgadmin-data/:/var/lib/pgadmin/
 
 volumes:
   pgdata:
