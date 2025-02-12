@@ -35,4 +35,7 @@ find right node and create new edge.
 16) Also give all the nodes suitable labels.
 17) Add reason point to the graph with your explanation which edges you added and why. And why you modified existing edges if any.
 I will give a list of dialogues, your return is a fixed version of dialogue graph above according to the rules above.
+18) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
 List of dialogues: """
+
+prompt_name = "Feb_10"

@@ -9,7 +9,7 @@ import numpy as np
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 import networkx as nx
 from chatsky_llm_autoconfig.metrics.jaccard import jaccard_edges, jaccard_nodes, collapse_multiedges
-from chatsky_llm_autoconfig.metrics.embedder import get_2_rerankings
+from chatsky_llm_autoconfig.metrics.embedder import get_embedding
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.dialogue import Dialogue
 
@@ -193,6 +193,29 @@ def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> bool:
 def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
     raise NotImplementedError
 
+def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list):
+    
+    nodes_map = {}
+    graph1 = G1.graph_dict
+    graph2 = G2.graph_dict
+    nodes1 = [n['id'] for n in graph1['nodes']]
+    nodes2 = [n['id'] for n in graph2['nodes']]
+    for idx,n in enumerate(nodes1):
+        nodes_map[n] = nodes2[max[idx]]
+
+    for node1, node2 in zip(nodes1,[nodes_map[n] for n in nodes1]):
+        edges1 = G1.edge_by_source(node1)
+        edges2 = G2.edge_by_source(node2)
+        if len(edges1) != len(edges2):
+            return False
+        for edge1 in edges1:
+            for edge2 in edges2:
+                if nodes_map[edge1['target']] == edge2['target'] and len(edge1['utterances']) != len(edge2['utterances']):
+                    print(edge1, edge2)
+                    return False
+    return True
+
+
 
 def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
     g1 = G1.graph_dict
@@ -207,35 +230,51 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
 
     nodes1_list = nodes2list(g1)
     nodes2_list = nodes2list(g2)
+    if len(nodes1_list) != len(nodes2_list):
+        print("FIRST")
+        return False
 
     g1_list, n1, len1 = graph2list(g1)
     g2_list, n2, len2 = graph2list(g2)
+    print("LEN1: ", len1, "LEN2: ", len2)
+    # for idx,g in enumerate(zip(g1_list,g2_list)):
+    #     print(idx, ": ", g[0])
+    #     print("G2: ", g[1], "\n")
 
-    # print("G1: ", g1_list, "\n")
-    # print("G2: ", g2_list, "\n")
+    nodes_matrix = get_embedding(nodes1_list, nodes2_list, env_settings.EMBEDDER_MODEL, env_settings.EMBEDDER_DEVICE)
+    matrix = get_embedding(g1_list, g2_list, env_settings.EMBEDDER_MODEL, env_settings.EMBEDDER_DEVICE)
 
-    nodes_matrix, matrix = get_2_rerankings(nodes1_list, nodes2_list, g1_list, g2_list)
+    # nodes_matrix, matrix = get_2_rerankings(nodes1_list, nodes2_list, g1_list, g2_list)
     nodes_max = list(np.argmax(nodes_matrix, axis=1))
     if len(set(nodes_max)) < len(nodes1_list):
+        print("LLLLENS")
         return False
 
 
     # print("LENS: ", len1, len2)
     if n1 != n2:
+        print("N!")
         return False
     
 
     # matrix = get_reranking(g1_list, g2_list)
     max = list(np.argmax(matrix, axis=1))
-    # print("MAX: ", max)
+    print("N_MAX: ", nodes_max)
+    print("MAX: ", max)
     if len(set(max)) < len(g1_list) or nodes_max != max:
+        print("MIX", len(set(max)), len(g1_list), nodes_max)
         return False
-    if any([len1[i] != len2[max[i]] for i in range(len(max))]):
+
+
+    if not compare_edge_lens(G1, G2, max):
+        print("LENS")
         return False
     print("NODES: ", np.min(np.max(nodes_matrix, axis=1)))
     print("ALL: ", np.min(np.max(matrix, axis=1)))
 
-    if min(np.min(np.max(nodes_matrix, axis=1)),np.min(np.max(matrix, axis=1))) >= env_settings.SIM_THRESHOLD:
+    mmin = min(np.min(np.max(nodes_matrix, axis=1)),np.min(np.max(matrix, axis=1)))
+
+    if mmin >= env_settings.SIM_THRESHOLD:
         return True
     # diags = get_diagonals(matrix)
     # # print("DIAGS: ", diags, "\n")
@@ -259,3 +298,85 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
     return result['result']
 
 
+def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
+    """
+    Check if there is a connection from user message to assistant message.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        user, assistant: pair of neighboring utterances in a dialogue 
+
+    Returns:
+        list: True if there is connection, False otherwise 
+    """
+
+    nodes = G.nodes_by_utterance(assistant)
+
+    for node in nodes:
+        edges = G.edges_by_utterance(user)
+        for edge in edges:           
+            if edge['target'] == node['id']:
+                return True
+    return False
+
+def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
+    """
+    Check if there is a connection from assistant message to user message.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        assistant, user: pair of neighboring utterances in a dialogue 
+
+    Returns:
+        list: True if there is connection, False otherwise 
+    """
+
+    nodes = G.nodes_by_utterance(assistant)
+
+    for node in nodes:
+        edges = G.edges_by_utterance(user)
+        for edge in edges:           
+            if edge['source'] == node['id']:
+                return True
+    return False
+
+def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
+    """
+    Check if there is a connection from msg1 to msg2.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        msg1, msg2: pair of neighboring utterances in a dialogue 
+
+    Returns:
+        list: True if there is connection, False otherwise 
+    """
+    if msg1.participant == 'assistant' and msg2.participant == 'user':
+        return au_match(G, msg1.text, msg2.text)
+    if msg1.participant == 'user' and msg2.participant == 'assistant':
+        return ua_match(G, msg1.text, msg2.text)
+    return False
+
+
+def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> list:
+    """
+    Check if all dialogues are valid paths in the graph.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        dialogues: List of Dialogue objects to check against
+
+    Returns:
+        list: for every dialogue either [True] or [False, message1, message2], when there is no connection from message1 to message2
+    """
+
+
+    result = []
+
+    for dialogue in dialogues:
+        idx = 0
+        for idx in range(len(dialogue.messages)-1):
+            if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx+1]):
+                result.append([False, dialogue.messages[idx].text, dialogue.messages[idx+1].text])
+        result.append([True])
+    return result

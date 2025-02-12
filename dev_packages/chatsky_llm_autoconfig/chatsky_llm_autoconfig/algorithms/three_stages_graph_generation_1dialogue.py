@@ -38,7 +38,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         print("LISTS_N: ",[(i,n) for i,n in enumerate(nexts)])
         print("LISTS: ",[(i,n) for i,n in enumerate(nodes)])
 
-        groups = nodes2groups(nodes, [" ".join(p) for p in nexts], [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)], neigbhours)
+        groups = nodes2groups([dialogue], nodes, [" ".join(p) for p in nexts], [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)], neigbhours)
 
         print ("NODES: ", groups)
         # print ("MIX: ", mix)

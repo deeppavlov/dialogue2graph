@@ -12,6 +12,12 @@ from chatsky_llm_autoconfig.settings import EnvSettings
 env_settings = EnvSettings()
 embedding = {}
 
+greetings_re = re.compile(r'\b(let\'s|let us|let me|introduce|welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|no problem|great|awesome|excellent|perfect|glad|nice|fantastic|wonderful)\b', re.IGNORECASE)
+else_re = re.compile(r'\b(else|change|exchange|further|add|increase|increased|another|more|other|extra|additional|alternative|alternatively)\b', re.IGNORECASE)
+yn_re = re.compile(r'\b(preferred|prefer|where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
+if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
+
+
 
 nlp = spacy.load('en_core_web_sm')
 evaluator = HuggingFaceCrossEncoder(model_name=env_settings.RERANKER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
@@ -49,6 +55,7 @@ def emb_list(x):
 def get_embedding(generated: list[str], golden: list[str], emb_name: str, device: str):
 
     if emb_name not in embedding:
+        print("AGAIN!!!!!!!!!!!!!!!!!!!!")
         embedding[emb_name] = SentenceTransformer(emb_name,device=device)
  
     golden_vectors = embedding[emb_name].encode(golden, normalize_embeddings=True)
@@ -152,8 +159,7 @@ def ends_match(node1: str, node2: str) -> tuple[bool,list[str],list[str]]:
 def if_greetings(node1: str, node2:str):
     """ Return True if only one node contains greeting words
     """
-    greetings = re.compile(r'\b(let\'s|let us|let me|introduce|welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|no problem|great|awesome|excellent|perfect|glad|nice|fantastic|wonderful)\b', re.IGNORECASE)
-    if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
+    if (re.search(greetings_re, node1) is None) is not (re.search(greetings_re, node2) is None):
         greetings_cond = True
         print("GREETINGS")
     else:
@@ -163,7 +169,6 @@ def if_greetings(node1: str, node2:str):
 def if_else(node1: str, node2:str):
     """ Return True if only one node contains "else" words
     """
-    else_re = re.compile(r'\b(else|further|add|increase|increased|another|more|other|extra|additional|alternative|alternatively)\b', re.IGNORECASE)
     if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
         else_cond = True
         print("ELSE")
@@ -174,8 +179,7 @@ def if_else(node1: str, node2:str):
 def y_n(node1: str, node2:str):
     """ Return True if only one node contains wh questions
     """
-    yn = re.compile(r'\b(where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
-    if (re.search(yn, node1) is None) is not (re.search(yn, node2) is None):
+    if (re.search(yn_re, node1) is None) is not (re.search(yn_re, node2) is None):
         yes_no = True
         print("Y_N")
     else:
@@ -185,7 +189,6 @@ def y_n(node1: str, node2:str):
 def if_if(node1: str, node2:str):
     """ Return True if only one node contains "if" words
     """
-    if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
     if (re.search(if_re, node1) is None) is not (re.search(if_re, node2) is None):
         if_cond = True
         print("IF")
@@ -215,7 +218,8 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             max_m = max(mix_score[ind1][ind2],mix_score[ind2][ind1]) # Maximum in pair of cross encoding pairs (mix1,mix2) and (mix2,mix1) similarities
             min_e = min(next_score[ind1][ind2],next_score[ind2][ind1]) # Minimum in pair of pairs (next1,next2) and (next2,next1) similarities
             max_e = max(next_score[ind1][ind2],next_score[ind2][ind1]) # Maximum in pair of pairs (next1,next2) and (next2,next1) similarities
-
+            ABS = 0.99
+            absolute = max_n >= ABS and max_m >= ABS and min_e >= ABS
             print(f"MIX: max_n:{max_n},max_m:{max_m},min_e:{min_e},max_e:{max_e}",nodes_list[ind1],nodes_list[ind2])
             if max_n > 0.999: # When nodes are close enough, symmetric difference is ignored
                 one_word = False
@@ -231,7 +235,7 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
             else_cond = if_else(node1, node2)
             yes_no = y_n(node1, node2)
             # If condition is False, nodes are not paired
-            condition = not (greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
+            condition = absolute or not (greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
             print("CONDITION: ", condition)
             print("ADJACENT: ", node1 in neigbhours[node2])
             # print("GREEINGS: ", greetings_cond)

@@ -6,6 +6,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from chatsky_llm_autoconfig.settings import EnvSettings
 
 env_settings = EnvSettings()
+print(env_settings.EMBEDDER_TYPO)
 
 
 class DialogueStore:
@@ -37,9 +38,9 @@ class DialogueStore:
         self.assistant_size = len(assistant)
         self.user_size = len(user)
         self.assistant_store.add_documents(documents=assistant)
-        print("ASSISTANT_STORE: ", self.assistant_store.get())
+        # print("ASSISTANT_STORE: ", self.assistant_store.get())
         self.user_store.add_documents(documents=user)
-        print("USER_STORE: ", self.user_store.get())
+        # print("USER_STORE: ", self.user_store.get())
 
     def __init__(self, dialogue: list, embeddings: HuggingFaceEmbeddings):
         self._load_dialogue(dialogue, embeddings)

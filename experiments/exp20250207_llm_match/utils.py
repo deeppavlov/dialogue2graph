@@ -253,31 +253,31 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceE
     node_store = NodeStore(nodes, embeddings)
     for d in dialogues:
         texts = d.to_list()
-        print("TEXTS: ", texts)
+        # print("TEXTS: ", texts)
         store = DialogueStore(texts, embeddings)
         for n in nodes:
-            print("NODE: ", n)
+            # print("NODE: ", n)
             for u in n['utterances']:
-                print("UTT: ", u)
+                # print("UTT: ", u)
                 ids = store.search_assistant(u)
-                print("IDS: ", ids)
+                # print("IDS: ", ids)
                 if ids:
                     for id,s in zip(ids, store.get_user(ids=ids)):
-                        print("USER: ", s)
+                        # print("USER: ", s)
                         if len(texts) > 2*(int(id)+1):
                             target = node_store.find_node(texts[2*(int(id)+1)]['text'])
-                            print("find_node: ", "target: ", target, texts[2*(int(id)+1)]['text'], n['id'], id, s)
+                            # print("find_node: ", "target: ", target, texts[2*(int(id)+1)]['text'], n['id'], id, s)
                             existing = [e for e in edges if e['source']==n['id'] and e['target']==target]
                             if existing:
                                 if not any([compare_strings(e,s,embeddings) for e in existing[0]['utterances']]):
                                     edges = [e for e in edges if e['source']!=n['id'] or e['target']!=target]
                                     edges.append({'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
-                                    print("EXIST: ", {'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
-                                else:
-                                    print("NOOO")
+                                    # print("EXIST: ", {'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
+                                # else:
+                                #     print("NOOO")
                             else:
                                 edges.append({'source': n['id'], 'target':target, 'utterances': [s]})
-                                print("ADDED: ", {'source': n['id'], 'target':target, 'utterances': [s]})
+                                # print("ADDED: ", {'source': n['id'], 'target':target, 'utterances': [s]})
     return {"edges": edges, "nodes": nodes}
 
 
@@ -290,6 +290,7 @@ def dialogues2list(dialogues: list[Dialogue]):
     neigbhours - dictionary of adjacent assistants utterances
     last_user - sign of that dialogue finishes with user's utterance
     """
+    
     nodes = []
     nexts = []
     starts = []

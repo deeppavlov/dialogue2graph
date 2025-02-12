@@ -88,13 +88,22 @@ def remove_duplicates(dialogues: list[list[int]]) -> list[list[int]]:
             idx += 1
     return ds_copy
 
+# def get_utts(seq: list[list[dict]]) -> set[tuple[str]]:
+#     res = []
+#     for dialogue in seq:
+#          texts = [d['text'] for d in dialogue]
+#          res.extend(texts)
+#     return set(res)
+
 def get_utts(seq: list[list[dict]]) -> set[tuple[str]]:
     res = []
     for dialogue in seq:
-         texts = [d['text'] for d in dialogue]
-         res.extend(texts)
+         user_texts = [d['text'] for d in dialogue if d['participant']=='user']
+         assist_texts = [d['text'] for d in dialogue if d['participant']=='assistant']
+         if len(assist_texts) > len(user_texts):
+             user_texts += [""]
+         res.extend([(a,u) for u,a in zip(user_texts,assist_texts)])
     return set(res)
-
 
 def remove_duplicated_utts(seq: list[list[dict]]):
     single_seq = [seq[0]]
@@ -121,7 +130,7 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     #     finishes += ends
     # print("ENDS: ", ends)
     node_paths = [f for f in final if f[-1] in ends]
-    # print("NODES: ", node_paths)
+    print("NODES: ", node_paths)
     node_paths = remove_duplicates(node_paths)
     print("REM: ", node_paths)
     full_paths = []
@@ -146,12 +155,15 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
         # print("\n")
         dialogue = [el[1:] for el in visited_list if len(el)==len(f)+1]
         dialogues.extend(dialogue)
-    # for d in dialogues:
-    #     print("DGS: ", d)
+
+    for d in dialogues:
+        print("DGS: ", d)
     final = list(k for k,_ in itertools.groupby(dialogues))
+    print("BEFORE: ", len(final))
     final = remove_duplicated_utts(final)
-    # for f in final:
-    #     print("FINAL: ", f)
+    print("AFTER: ", len(final))
+    for f in final:
+        print("FINAL: ", f)
     result = [Dialogue().from_list(seq) for seq in final]
     return result
 
@@ -289,8 +301,10 @@ class RecursiveDialogueSampler(DialogueGenerator):
                 if any([f in v for v in visited_list]):
                     # print("VV: ", n['id'])
                     visited.add(n['id'])
-        print("VIS: ", visited)
-        if len(visited) < len(graph.graph_dict['nodes']) :
+        # print("VIS: ", visited)
+        if len(visited) < len(graph.graph_dict['nodes']):
+            finishes += [v['id'] for v in graph.graph_dict['nodes'] if v['id'] not in visited]
+        if not finishes:
             cycles = find_graph_ends(graph, model=ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1))['value']
             finishes = mix_ends(graph, finishes, cycles)
             print("ENDDS: ", finishes)

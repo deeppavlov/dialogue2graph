@@ -28,6 +28,14 @@ Metric results with o1-mini:
 
 - find_graph_ends: 1.0
 
+Feb-12-2025:
+generated_plus.json is 182 graphs with full sets of dialogues.
+Sampler issues were resolved:
+-- all_utterances_present fixed, but still it gives error when utterances are uplicated
+-- right ends search for dialogue paths was modified, now it finds nodes from where there is no path to simple ends without outgoing edges
+-- graphs with edges wrongly correlated with nodes were removed
+-- duplicated edges were removed
+
 ## Future plans
 
 All things to be considered by future researchers, plans on next experiments and so on

@@ -1,6 +1,7 @@
 print("start")
 import logging
 from pathlib import Path
+from chatsky_llm_autoconfig.missing_edges_prompt import prompt_name
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 #import chatsky_llm_autoconfig.algorithms.dialogue_generation
 #import chatsky_llm_autoconfig.algorithms.dialogue_augmentation
@@ -9,7 +10,7 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 #import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
 import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
-import chatsky_llm_autoconfig.algorithms.three_stages_0
+# import chatsky_llm_autoconfig.algorithms.three_stages_0
 # import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
 # import chatsky_llm_autoconfig.algorithms.topic_graph_generation
 
@@ -87,7 +88,7 @@ def run_all_algorithms():
     total_metrics = {}
     for class_ in algorithms:
 
-        # class_instance = algorithms[class_]["type"]()
+        class_instance = algorithms[class_]["type"]()
         metrics = {}
 
         if algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is Dialogue:
@@ -143,12 +144,12 @@ def run_all_algorithms():
             metrics["is_theme_valid_avg"] = sum(metrics["is_theme_valid"]) / len(metrics["is_theme_valid"])
 
         elif algorithms[class_]["input_type"] in [Dialogue,list[Dialogue]] and algorithms[class_]["output_type"] is BaseGraph:
-            tp = algorithms[class_]["type"]
+            # tp = algorithms[class_]["type"]
             # class_instance = tp(prompt_name="general_graph_generation_prompt")
             # class_instance = tp(prompt_name="specific_graph_generation_prompt")
             #class_instance = tp(prompt_name="fourth_graph_generation_prompt")
             #class_instance = tp(prompt_name="options_graph_generation_prompt")
-            class_instance = tp(prompt_name="list_graph_generation_prompt")
+            # class_instance = tp(prompt_name="list_graph_generation_prompt")
             metrics = {"triplet_match": [], "is_same_structure": [], "llm_match": []}
             saved_data = {}
             result_list = []
@@ -157,8 +158,8 @@ def run_all_algorithms():
                 if Path(algorithms[class_]["path_to_result"]).is_file():
                     saved_data = read_json(algorithms[class_]["path_to_result"])
 
-            if saved_data and env_settings.GENERATION_MODEL_NAME in saved_data and class_instance.prompt_name in saved_data.get(env_settings.GENERATION_MODEL_NAME):
-                result = saved_data.get(env_settings.GENERATION_MODEL_NAME).get(class_instance.prompt_name)
+            if saved_data and env_settings.GENERATION_MODEL_NAME in saved_data and prompt_name in saved_data.get(env_settings.GENERATION_MODEL_NAME):
+                result = saved_data.get(env_settings.GENERATION_MODEL_NAME).get(prompt_name)
                 if result:
                     test_list =  [{next(iter(case)): [Graph(graph_dict=r) for r in case[next(iter(case))]]} for case in result]
 
@@ -182,7 +183,7 @@ def run_all_algorithms():
 
                     result_list.append({case["topic"]: case_list})
                     test_list.append({case["topic"]: cur_list})
-                new_data = {env_settings.GENERATION_MODEL_NAME:{class_instance.prompt_name: result_list}}
+                new_data = {env_settings.GENERATION_MODEL_NAME:{prompt_name: result_list}}
                 saved_data.update(new_data)
                 save_json(data=saved_data, filename=env_settings.GENERATION_SAVE_PATH)
             for case, dialogues in zip(dialogue_to_graph, test_list):

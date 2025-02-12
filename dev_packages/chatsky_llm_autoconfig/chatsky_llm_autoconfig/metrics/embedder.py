@@ -1,16 +1,27 @@
 import copy
 import numpy as np
 import re
+import spacy
 from sentence_transformers import SentenceTransformer
-import spacy 
 
 from langchain_community.cross_encoders.huggingface import HuggingFaceCrossEncoder
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.evaluation import load_evaluator
 
+from chatsky_llm_autoconfig.schemas import DialogueMessage
+from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.settings import EnvSettings
+
+nlp = spacy.load("en_core_web_sm")
+
 env_settings = EnvSettings()
 embedding = {}
+
+greetings_re = re.compile(r'\b(feel free|let\'s|let us|let me|introduce|welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|no problem|great|awesome|excellent|perfect|glad|nice|fantastic|wonderful)\b', re.IGNORECASE)
+else_re = re.compile(r'\b(else|modify|change|exchange|further|add|increase|increased|another|more|other|extra|additional|alternative|alternatively)\b', re.IGNORECASE)
+yn_re = re.compile(r'\b(preferred|prefer|where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
+if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
+
 
 
 nlp = spacy.load('en_core_web_sm')
@@ -152,8 +163,7 @@ def ends_match(node1: str, node2: str) -> tuple[bool,list[str],list[str]]:
 def if_greetings(node1: str, node2:str):
     """ Return True if only one node contains greeting words
     """
-    greetings = re.compile(r'\b(let\'s|let us|let me|introduce|welcome|good morning|good evening|good afternoon|hi|hello|hey|thank|thanks|no problem|great|awesome|excellent|perfect|glad|nice|fantastic|wonderful)\b', re.IGNORECASE)
-    if (re.search(greetings, node1) is None) is not (re.search(greetings, node2) is None):
+    if (re.search(greetings_re, node1) is None) is not (re.search(greetings_re, node2) is None):
         greetings_cond = True
         print("GREETINGS")
     else:
@@ -163,7 +173,6 @@ def if_greetings(node1: str, node2:str):
 def if_else(node1: str, node2:str):
     """ Return True if only one node contains "else" words
     """
-    else_re = re.compile(r'\b(else|change|exchange|further|add|increase|increased|another|more|other|extra|additional|alternative|alternatively)\b', re.IGNORECASE)
     if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
         else_cond = True
         print("ELSE")
@@ -174,8 +183,7 @@ def if_else(node1: str, node2:str):
 def y_n(node1: str, node2:str):
     """ Return True if only one node contains wh questions
     """
-    yn = re.compile(r'\b(preferred|prefer}where|what|when|where|who|whom|which|whose|why|how)\b', re.IGNORECASE)
-    if (re.search(yn, node1) is None) is not (re.search(yn, node2) is None):
+    if (re.search(yn_re, node1) is None) is not (re.search(yn_re, node2) is None):
         yes_no = True
         print("Y_N")
     else:
@@ -185,7 +193,6 @@ def y_n(node1: str, node2:str):
 def if_if(node1: str, node2:str):
     """ Return True if only one node contains "if" words
     """
-    if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
     if (re.search(if_re, node1) is None) is not (re.search(if_re, node2) is None):
         if_cond = True
         print("IF")
@@ -193,7 +200,64 @@ def if_if(node1: str, node2:str):
         if_cond = False
     return if_cond
 
-def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str], neigbhours: dict):
+def ner_dif(node1: str, node2: str):
+
+    doc1 = nlp(node1)
+    doc2 = nlp(node2)
+    if any([token.pos_ == "PROPN" for token in doc1]) is any([token.pos_ == "PROPN" for token in doc2]):
+        return False
+    return True
+
+def indices(lst, element):
+    result = []
+    offset = -1
+    while True:
+        try:
+            offset = lst.index(element, offset+1)
+        except ValueError:
+            return result
+        result.append(offset)
+
+def get_tails(dialogue: Dialogue, assistant: list, node: str):
+        # end = assistant.index(node) if node in assistant else None
+        # start = assistant_back.index(node) if node in assistant else None
+        ids = indices(assistant, node)
+        tails = []
+        for id in ids:
+            tail = dialogue.messages[:id*2][-4:]
+            tail += dialogue.messages[id*2+1:][:4]
+            tails.append(tail)
+        return tails
+
+def compare_tails(dialogues: list[Dialogue], node1: str, node2: str):
+    tails1 = []
+    tails2 = []
+    for dialogue in dialogues:
+        # user = [d for d in dialogue.messages if d.participant=='user']
+        assistant = [d.text for d in dialogue.messages if d.participant=='assistant']
+        # assistant_back = list(reversed(assistant))
+        tails1.extend(get_tails(dialogue, assistant, node1))
+        tails2.extend(get_tails(dialogue, assistant, node2))
+
+        # if tail1:
+        #     tails1.append(tail1)
+        # if tail2:
+        #     tails2.append(tail2)
+
+
+    for t1 in tails1:
+        for t2 in tails2:
+            if t1 == t2:
+                print("\n")
+                print("STARTS: ", node1, t1)
+                print("STARTS: ", node2, t2)
+
+                return True
+    return False
+
+
+
+def nodes2groups(dialogues: list[Dialogue], nodes_list: list[str], next_list: list[str], mix_list: list[str], neigbhours: dict):
     """ Rule based algorithm to group graph nodes
     nodes_list: list of assistant's utterances
     next_list: list of user's utterances
@@ -202,70 +266,84 @@ def nodes2groups(nodes_list: list[str], next_list: list[str], mix_list: list[str
     Based on cross-encoder similarity and some more empirical rules
     """
 
-    nodes_score = get_reranking(nodes_list, nodes_list) # Scoring of assistant utterances similarity between each other
-    next_score = get_reranking(next_list, next_list) # Scoring of user utterances following each assistant utterance 
-    mix_score = get_reranking(mix_list, mix_list) # Scoring of concatenations of assistant and user together
+    # nodes_score = get_reranking(nodes_list, nodes_list) # Scoring of assistant utterances similarity between each other
+    # next_score = get_reranking(next_list, next_list) # Scoring of user utterances following each assistant utterance 
+    # mix_score = get_reranking(mix_list, mix_list) # Scoring of concatenations of assistant and user together
     pairs = []
 
     for ind1, node1 in enumerate(nodes_list):
         cur_nodes_list = nodes_list[ind1+1:]
         for ind2, node2 in zip(range(ind1+1,ind1+1+len(cur_nodes_list)),cur_nodes_list):
 
-            max_n = max(nodes_score[ind1][ind2],nodes_score[ind2][ind1]) # Maximum in pair of pairs (node1,node2) and (node2,node1) similarities
-            max_m = max(mix_score[ind1][ind2],mix_score[ind2][ind1]) # Maximum in pair of cross encoding pairs (mix1,mix2) and (mix2,mix1) similarities
-            min_e = min(next_score[ind1][ind2],next_score[ind2][ind1]) # Minimum in pair of pairs (next1,next2) and (next2,next1) similarities
-            max_e = max(next_score[ind1][ind2],next_score[ind2][ind1]) # Maximum in pair of pairs (next1,next2) and (next2,next1) similarities
-            ABS = 0.99
-            absolute = max_n >= ABS and max_m >= ABS and min_e >= ABS
-            print(f"MIX: max_n:{max_n},max_m:{max_m},min_e:{min_e},max_e:{max_e}",nodes_list[ind1],nodes_list[ind2])
-            if max_n > 0.999: # When nodes are close enough, symmetric difference is ignored
-                one_word = False
-            else:
-                one_word = sym_dif(node1, node2)
-            signs, sents1, sents2 = ends_match(node1, node2)
-            if not signs:
-                print("SIGNS")
-            len1 = len(sents1)
-            len2 = len(sents2)
-            greetings_cond = if_greetings(node1, node2)
-            if_cond = if_if(node1, node2)
-            else_cond = if_else(node1, node2)
-            yes_no = y_n(node1, node2)
+            # max_n = max(nodes_score[ind1][ind2],nodes_score[ind2][ind1]) # Maximum in pair of pairs (node1,node2) and (node2,node1) similarities
+            # max_m = max(mix_score[ind1][ind2],mix_score[ind2][ind1]) # Maximum in pair of cross encoding pairs (mix1,mix2) and (mix2,mix1) similarities
+            # min_e = min(next_score[ind1][ind2],next_score[ind2][ind1]) # Minimum in pair of pairs (next1,next2) and (next2,next1) similarities
+            # max_e = max(next_score[ind1][ind2],next_score[ind2][ind1]) # Maximum in pair of pairs (next1,next2) and (next2,next1) similarities
+            # ABS = 0.99
+            # absolute = max_m >= ABS and min_e >= ABS
+            # print(f"MIX: max_n:{max_n},max_m:{max_m},min_e:{min_e},max_e:{max_e}",nodes_list[ind1],nodes_list[ind2])
+            # if max_n > 0.999: # When nodes are close enough, symmetric difference is ignored
+            #     one_word = False
+            # else:
+            #     one_word = sym_dif(node1, node2)
+            # signs, sents1, sents2 = ends_match(node1, node2)
+            # if not signs:
+            #     print("SIGNS")
+            # len1 = len(sents1)
+            # len2 = len(sents2)
+            # greetings_cond = if_greetings(node1, node2)
+            # if_cond = if_if(node1, node2)
+            # else_cond = if_else(node1, node2)
+            # yes_no = y_n(node1, node2)
+            # ner_cond = ner_dif(node1, node2)
+            tail_cond = compare_tails(dialogues, node1, node2)
+            if tail_cond:
+                pairs.append((1,(ind1,ind2)))
+                print("TAIL_COND: ", tail_cond, node1, node2)
             # If condition is False, nodes are not paired
-            condition = absolute or not (greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
-            print("CONDITION: ", condition)
-            print("ADJACENT: ", node1 in neigbhours[node2])
-            # print("GREEINGS: ", greetings_cond)
-            # print("IF: ", if_cond)
-            # print("ELSE: ", else_cond)
-            print("ONE_WORD: ", one_word)
-            # If cond_1 is True, wh check is ignored
-            cond_1 = len1 == len2 and len1 == 1 and min_e >= 0.06 and max_e > 0.9 and max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > 0.05 or len1!=len2 and max_n > 0.996
-            if cond_1:
-                condition = not (greetings_cond or if_cond or else_cond or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
+            # condition = tail_cond or absolute or not (ner_cond or greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
 
-            if condition:
-                if cond_1: # This is enough to pair nodes
-                    # print("FIRST: ", node1, node2)
-                    pairs.append(((max_n+max_m)/2,(ind1,ind2)))
-                else:
+            # print("CONDITION: ", condition)
+            # print("ADJACENT: ", node1 in neigbhours[node2])
+            # # print("GREEINGS: ", greetings_cond)
+            # # print("IF: ", if_cond)
+            # # print("ELSE: ", else_cond)
+            # print("ONE_WORD: ", one_word)
+            # # If cond_1 is True, wh check is ignored
+            # cond_1 = len1 == len2 and len1 == 1 and min_e >= 0.06 and max_e > 0.9 and max_m >= env_settings.NEXT_RERANKER_THRESHOLD and max_n > env_settings.NEXT_RERANKER_THRESHOLD or len1!=len2 and max_n > 0.996
+            # if tail_cond:
+            #     cond_1 = True
+            #     max_n = 1
+            #     max_m = 1
+                
+            # if cond_1:
+            #     if tail_cond:
+            #         condition = True
+            #     else:
+            #         condition = not (greetings_cond or if_cond or else_cond or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
 
-                    sent_score = []
-                    if len1 > 1 and len1 == len2: # Checks whether nodes have same number of sentences > 1
+            # if condition:
+            #     if cond_1: # This is enough to pair nodes
+            #         # print("FIRST: ", node1, node2)
+            #         pairs.append(((max_n+max_m)/2,(ind1,ind2)))
+            #     else:
+
+            #         sent_score = []
+            #         if len1 > 1 and len1 == len2: # Checks whether nodes have same number of sentences > 1
 
 
-                        for s1,s2 in zip(sents1,sents2):
-                            sent_score.append((s1,s2))
-                            sent_score.append((s2,s1))
-                        sent_score = evaluator.score(sent_score) # Scoring every pair of sentences between two nodes
-                        # maxes = [max(el[0],el[1]) for el in zip(sent_score[::2],sent_score[1::2])]
-                        nodes_condition = max(sent_score) >= 0.9 and min(sent_score) >= 0.05 and max_n >= env_settings.RERANKER_THRESHOLD and min_e >= 0.06 and max_e > 0.9
-                    else:
-                        nodes_condition = len1==len2 and max_n >= env_settings.RERANKER_THRESHOLD 
-                    # print("NODCOND: ", nodes_condition)
-                    if max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition:
-                        # print("SECOND: ", node1, node2)
-                        pairs.append(((max_n+max_m)/2,(ind1,ind2)))
+            #             for s1,s2 in zip(sents1,sents2):
+            #                 sent_score.append((s1,s2))
+            #                 sent_score.append((s2,s1))
+            #             sent_score = evaluator.score(sent_score) # Scoring every pair of sentences between two nodes
+            #             # maxes = [max(el[0],el[1]) for el in zip(sent_score[::2],sent_score[1::2])]
+            #             nodes_condition = max(sent_score) >= 0.9 and min(sent_score) >= 0.05 and max_n >= env_settings.RERANKER_THRESHOLD and min_e >= 0.06 and max_e > 0.9
+            #         else:
+            #             nodes_condition = len1==len2 and max_n >= env_settings.RERANKER_THRESHOLD 
+            #         # print("NODCOND: ", nodes_condition)
+            #         if max_m >= env_settings.NEXT_RERANKER_THRESHOLD and nodes_condition:
+            #             # print("SECOND: ", node1, node2)
+            #             pairs.append(((max_n+max_m)/2,(ind1,ind2)))
     groups = unite_pairs(pairs)
     grouped = []
     for el in groups:

@@ -6,6 +6,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from chatsky_llm_autoconfig.settings import EnvSettings
 
 env_settings = EnvSettings()
+print(env_settings.EMBEDDER_MODEL)
 
 
 class DialogueStore:
@@ -49,6 +50,7 @@ class DialogueStore:
         # print("DOCS: ", docs)
         # print("UTT: ", utterance)
         res = [d[0].metadata['id'] for d in docs]
+        print("SEARCH: ", utterance, res)
         res.sort()
         res = [str(r) for r in res]
 

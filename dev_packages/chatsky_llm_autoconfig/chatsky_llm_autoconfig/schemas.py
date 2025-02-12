@@ -231,10 +231,14 @@ class Node(BaseModel):
     utterances: List[str] = Field(description="Possible assistant responses at this node")
 
 
+# class DialogueGraph(BaseModel):
+#     edges: List[Edge] = Field(description="List of transitions between nodes")
+#     nodes: List[Node] = Field(description="List of nodes representing assistant states")
+
 class DialogueGraph(BaseModel):
     edges: List[Edge] = Field(description="List of transitions between nodes")
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
-
+    reason: str = Field(description="explanation")
 
 class GraphGenerationResult(BaseModel):
     """Complete result with graph and dialogues"""
@@ -242,10 +246,7 @@ class GraphGenerationResult(BaseModel):
     topic: str
     dialogues: List[Dialogue]
 
-# class DialogueGraph(BaseModel):
-#     edges: List[Edge] = Field(description="List of transitions between nodes")
-#     nodes: List[Node] = Field(description="List of nodes representing assistant states")
-#     reason: str = Field(description="explanation")
+
 
 class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
