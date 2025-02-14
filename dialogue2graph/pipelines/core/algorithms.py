@@ -19,7 +19,7 @@ class BaseAlgorithm(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def ainvoke(self, *args, **kwargs):
+    async def ainvoke(self, *args, use_cache=True **kwargs):
         raise NotImplementedError
     
     @abc.abstractmethod
