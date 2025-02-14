@@ -139,7 +139,26 @@ def edges_match_nodes(graph: dict) -> bool:
     edge_ids = set([e['target'] for e in graph['edges']])
     return node_ids == edge_ids
 
+def dialogue_edges(seq: list[Dialogue]) -> set[tuple[str]]:
+    res = []
+    for dialogue in seq:
+         assist_texts = [d.text for d in dialogue.messages if d.participant=='assistant']
+         res.extend([(a1,a2) for a1,a2 in zip(assist_texts[:-1],assist_texts[1:])])
+    print("DIA: ", set(res))
+    return set(res)
 
+def graph_edges(G: BaseGraph):
+    graph = G.graph_dict
+    edges = graph['edges']
+    nodes = graph['nodes']
+    res = []
+    for node in nodes:
+        for edge in [e for e in edges if e['source'] == node['id']]:
+            for utt1 in node['utterances']:
+                for utt2 in [n for n in nodes if n['id']==edge['target']][0]['utterances']:
+                    res.append((utt1,utt2))
+    print("GRAPH: ", set(res))
+    return set(res)
 
 def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
     """
@@ -173,10 +192,16 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
 
     # Check if all graph utterances are present in dialogues
     if graph_utterances.issubset(dialogue_utterances):
-        return True
-    else:
+        set1 = dialogue_edges(dialogues)
+        set2 = graph_edges(G)
+        if set1 == set2:
+            return True
+        else:
+            print(set1-set2, set2-set1)
+
         # return False
-        return graph_utterances.difference(dialogue_utterances)
+    return False
+    # graph_utterances.difference(dialogue_utterances)
 
 
 def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:

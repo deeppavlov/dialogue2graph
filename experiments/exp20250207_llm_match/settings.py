@@ -11,6 +11,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     OPENAI_API_KEY: Optional[str]
     OPENAI_BASE_URL: Optional[str]
     GENERATION_MODEL_NAME: Optional[str]
+    METRICS_SAVE_PATH: Optional[str]
     COMPARE_MODEL_NAME: Optional[str]
     GENERATION_SAVE_PATH: Optional[str]
     FORMATTER_MODEL_NAME: Optional[str]

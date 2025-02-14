@@ -40,6 +40,7 @@ def compare_strings(first: str, second: str, embeddings: HuggingFaceEmbeddings):
 
     evaluator_2 = load_evaluator("pairwise_embedding_distance", embeddings=embeddings)
     score = evaluator_2.evaluate_string_pairs(prediction=first, prediction_b=second)['score']
+    # print("SCORE: ", score)
     return score <= env_settings.EMBEDDER_THRESHOLD
 
 
@@ -74,10 +75,10 @@ def get_reranking(generated: list[str], golden: list[str]):
     for gen in generated:
         for gol in golden:
             to_score.append((gen,gol))
-    print("SCORING...")
+    # print("SCORING...")
     # print(to_score)
     score = np.array(evaluator.score(to_score))
-    print("finished")
+    # print("finished")
 
     return score.reshape(sz,sz)
 
@@ -108,8 +109,8 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
         x = cur[0]
         list1 = [p for p in cur if x[0] in p and x!=p]
         list2 = [p for p in cur if x[1] in p and x!=p]
-        print("LIST1: ", list1)
-        print("LIST2: ", list2)
+        # print("LIST1: ", list1)
+        # print("LIST2: ", list2)
         to_add = []
         for y in list1:
             to_add = []
@@ -120,15 +121,15 @@ def unite_pairs(pairs: list[tuple[float,tuple[int,int]]]):
                     search= y[0]
                 if get_cross(search,list2):
                     to_add += [search]
-            print("TOADD: ", to_add)
+            # print("TOADD: ", to_add)
 
         # Дальше надо объединить их и удалить, потом удаление
         to_add = list(set(([x[0],x[1]]+to_add)))
         groups.append(to_add)
         pairs_in = [p for p in pairs_in if p[0] not in to_add and p[1] not in to_add]
 
-        print("TO_ADD: ", to_add)
-        print("LEFT: ", pairs_in)
+        # print("TO_ADD: ", to_add)
+        # print("LEFT: ", pairs_in)
     return groups
 
 def sym_dif(node1: str, node2: str) -> bool:
@@ -165,7 +166,7 @@ def if_greetings(node1: str, node2:str):
     """
     if (re.search(greetings_re, node1) is None) is not (re.search(greetings_re, node2) is None):
         greetings_cond = True
-        print("GREETINGS")
+        # print("GREETINGS")
     else:
         greetings_cond = False
     return greetings_cond
@@ -175,7 +176,7 @@ def if_else(node1: str, node2:str):
     """
     if (re.search(else_re, node1) is None) is not (re.search(else_re, node2) is None):
         else_cond = True
-        print("ELSE")
+        # print("ELSE")
     else:
        else_cond = False
     return else_cond
@@ -248,9 +249,9 @@ def compare_tails(dialogues: list[Dialogue], node1: str, node2: str):
     for t1 in tails1:
         for t2 in tails2:
             if t1 == t2:
-                print("\n")
-                print("STARTS: ", node1, t1)
-                print("STARTS: ", node2, t2)
+                # print("\n")
+                # print("STARTS: ", node1, t1)
+                # print("STARTS: ", node2, t2)
 
                 return True
     return False
@@ -299,7 +300,7 @@ def nodes2groups(dialogues: list[Dialogue], nodes_list: list[str], next_list: li
             tail_cond = compare_tails(dialogues, node1, node2)
             if tail_cond:
                 pairs.append((1,(ind1,ind2)))
-                print("TAIL_COND: ", tail_cond, node1, node2)
+                # print("TAIL_COND: ", tail_cond, node1, node2)
             # If condition is False, nodes are not paired
             # condition = tail_cond or absolute or not (ner_cond or greetings_cond or if_cond or else_cond or yes_no or one_word or (len1 == 1 and len2 == 1 and not signs) or node1 in neigbhours[node2])
 
@@ -375,9 +376,9 @@ def get_2_rerankings(generated1: list[str], golden1: list[str], generated2: list
     for gen in generated2:
         for gol in golden2:
             to_score.append((gen,gol))
-    print("SCORING...")
+    # print("SCORING...")
     # print(to_score)
     scores = np.array(evaluator.score(to_score))
-    print("finished")
+    # print("finished")
 
     return scores[:sz*sz].reshape(sz,sz), scores[sz*sz:].reshape(sz,sz)

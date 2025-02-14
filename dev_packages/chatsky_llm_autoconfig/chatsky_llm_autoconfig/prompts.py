@@ -373,6 +373,7 @@ Create a dialogue graph for a {topic} conversation that will be used for trainin
    - Each user message (edge) must be coherent, reasonable and conscious reaction to the previous assistant message
    - All paths must maintain clear context and natural flow as in real conversation without unnecessary repetitions
    - Avoid any ambiguous or overly generic responses
+   - Every dialogue shall begin with some introduction like greeting etc
 
 
 2. Graph Structure Requirements:
@@ -436,6 +437,7 @@ Requirements for IDs:
 - You must remove all edges where target is null
 
 Nodes must be assistant's utterances only and never repeat user's inputs.
+Utterances in nodes must be unique, meaning there shall not be repeating utterances in nodes.
 Edges must be user's utterances only and never repeat previous assistant's utterances.
 Target of any edge must be different from the edge's source.
 Just one of edges of the whole graph must have 2-3 different utterances meaning modified answers to the same user's utterance.

@@ -232,6 +232,13 @@ class GraphGenerationPipeline:
             )
 
             print("GRAPH: ", graph)
+            
+            if not graph.edges_match_nodes():
+                return GenerationError(
+                    error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
+                    message="Genrated graph is wrong: edges don't match nodes"
+                )
+            graph = graph.remove_duplicated_nodes()
 
             # 2. Validate cycles
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)

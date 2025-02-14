@@ -249,6 +249,7 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceE
     """  Connecting nodes with edges for searching dialogue utterances in list of nodes based on embedding similarity
     Input: nodes and list of dialogues
     """
+    print("IN")
     edges = []
     node_store = NodeStore(nodes, embeddings)
     for d in dialogues:

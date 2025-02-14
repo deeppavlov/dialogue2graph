@@ -9,10 +9,10 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 # import chatsky_llm_autoconfig.algorithms.single_graph_generation
 #import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
-import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
+# import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
 # import chatsky_llm_autoconfig.algorithms.three_stages_0
 # import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
-# import chatsky_llm_autoconfig.algorithms.topic_graph_generation
+import chatsky_llm_autoconfig.algorithms.topic_graph_generation
 
 # from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
 # from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
@@ -88,7 +88,7 @@ def run_all_algorithms():
     total_metrics = {}
     for class_ in algorithms:
 
-        class_instance = algorithms[class_]["type"]()
+        # class_instance = algorithms[class_]["type"]()
         metrics = {}
 
         if algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is Dialogue:
@@ -186,6 +186,7 @@ def run_all_algorithms():
                 new_data = {env_settings.GENERATION_MODEL_NAME:{prompt_name: result_list}}
                 saved_data.update(new_data)
                 save_json(data=saved_data, filename=env_settings.GENERATION_SAVE_PATH)
+            save_metrics = []
             for case, dialogues in zip(dialogue_to_graph, test_list):
                 # test_graph = Graph(graph_dict=graph2comparable(case["graph"]))
                 test_graph_orig = Graph(graph_dict=case["graph"])
@@ -197,21 +198,27 @@ def run_all_algorithms():
                         #comp = is_same_structure(test_graph, comp_graph)
                         comp = is_same_structure(test_graph_orig, result_graph)
                         metrics["is_same_structure"].append(comp)
+                        metrics
                         if comp:
-                            metrics["llm_match"].append(llm_match(Graph(graph_dict=result_graph.graph_dict), test_graph_orig))
+                            match = llm_match(Graph(graph_dict=result_graph.graph_dict), test_graph_orig)
+                            metrics["llm_match"].append(match)
                             print("MATCH: ", case["topic"], metrics["llm_match"][-1])
                         else:
                             print("STRUCTURE: ", case["topic"], "False")
-                            metrics["llm_match"].append(False)                            
+                            match = False
+                            metrics["llm_match"].append(match)
+                        save_metrics.append({case['topic']: {'graph': result_graph.graph_dict, 'is_same_structure': comp, 'llm_match': match}})                
                     except Exception as e:
                         print("Exception: ", e)
                         # metrics["triplet_match"].append(False)
                         metrics["is_same_structure"].append(False)
                         metrics["llm_match"].append(False)
+                        save_metrics.append({case['topic']: {'graph': result_graph.graph_dict, 'is_same_structure': False, 'llm_match': False}})
 
             # metrics["triplet_match"] = sum(metrics["triplet_match"]) / len(metrics["triplet_match"])
             metrics["llm_match"] = sum(metrics["llm_match"]) / len(metrics["llm_match"])
             metrics["is_same_structure"] = sum(metrics["is_same_structure"]) / len(metrics["is_same_structure"])
+            save_json(data=save_metrics, filename=env_settings.METRICS_SAVE_PATH)
 
         elif algorithms[class_]["input_type"] is str and algorithms[class_]["output_type"] is list:
             tp = algorithms[class_]["type"]

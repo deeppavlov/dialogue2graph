@@ -13,6 +13,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     GENERATION_MODEL_NAME: Optional[str]
     COMPARE_MODEL_NAME: Optional[str]
     GENERATION_SAVE_PATH: Optional[str]
+    METRICS_SAVE_PATH: Optional[str]
     FORMATTER_MODEL_NAME: Optional[str]
     TEST_DATA_PATH: Optional[str]
     RESULTS_PATH: Optional[str]

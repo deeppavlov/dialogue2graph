@@ -250,6 +250,7 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceE
     Input: nodes and list of dialogues
     """
     edges = []
+    # print("IN!!!!!!!!!!!!!\n")
     node_store = NodeStore(nodes, embeddings)
     for d in dialogues:
         texts = d.to_list()
@@ -269,6 +270,7 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceE
                             # print("find_node: ", "target: ", target, texts[2*(int(id)+1)]['text'], n['id'], id, s)
                             existing = [e for e in edges if e['source']==n['id'] and e['target']==target]
                             if existing:
+                                # print("EXISTING: ", existing[0]['utterances'])
                                 if not any([compare_strings(e,s,embeddings) for e in existing[0]['utterances']]):
                                     edges = [e for e in edges if e['source']!=n['id'] or e['target']!=target]
                                     edges.append({'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})

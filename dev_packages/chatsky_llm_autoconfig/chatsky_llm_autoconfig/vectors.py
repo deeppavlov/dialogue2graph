@@ -6,8 +6,6 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from chatsky_llm_autoconfig.settings import EnvSettings
 
 env_settings = EnvSettings()
-print(env_settings.EMBEDDER_TYPO)
-
 
 class DialogueStore:
 

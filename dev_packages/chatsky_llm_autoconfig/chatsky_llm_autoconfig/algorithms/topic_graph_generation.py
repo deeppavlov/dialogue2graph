@@ -12,7 +12,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 # from pydantic import Field
 # from typing import ClassVar
 
-# @AlgorithmRegistry.register(input_type=str, output_type=list)
+@AlgorithmRegistry.register(input_type=str, output_type=list)
 class LoopedGraphGenerator(TopicGraphGenerator):
 
     generation_model: BaseChatModel = None
@@ -56,7 +56,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         return successful_generations
 
 
-@AlgorithmRegistry.register(input_type=BaseGraph, output_type=BaseGraph)
+# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=BaseGraph)
 class ExtraEdgeGenerator:
 
     generation_model: BaseChatModel = None
