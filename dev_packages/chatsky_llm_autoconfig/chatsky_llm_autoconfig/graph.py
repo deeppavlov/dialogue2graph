@@ -173,6 +173,9 @@ class Graph(BaseGraph):
             utts = n['utterances']
             utts.sort()
             if utts not in seen:
+                seen_utts = list(set([s for xs in seen for s in xs]))
+                if any([utt in seen_utts for utt in utts]):
+                    return None
                 seen.append(utts)
             else:
                 doubled = nodes[seen.index(utts)]['id']

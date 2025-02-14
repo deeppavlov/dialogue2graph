@@ -9,10 +9,10 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 # import chatsky_llm_autoconfig.algorithms.single_graph_generation
 #import chatsky_llm_autoconfig.algorithms.multiple_graph_generation
 # import chatsky_llm_autoconfig.algorithms.two_stages_graph_generation
-# import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
+import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation
 # import chatsky_llm_autoconfig.algorithms.three_stages_0
 # import chatsky_llm_autoconfig.algorithms.three_stages_graph_generation_1dialogue
-import chatsky_llm_autoconfig.algorithms.topic_graph_generation
+# import chatsky_llm_autoconfig.algorithms.topic_graph_generation
 
 # from chatsky_llm_autoconfig.algorithms.dialogue_augmentation import DialogAugmentator
 # from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
@@ -88,7 +88,7 @@ def run_all_algorithms():
     total_metrics = {}
     for class_ in algorithms:
 
-        # class_instance = algorithms[class_]["type"]()
+        class_instance = algorithms[class_]["type"]()
         metrics = {}
 
         if algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is Dialogue:
