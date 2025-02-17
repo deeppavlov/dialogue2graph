@@ -19,9 +19,9 @@ class BaseAlgorithm(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def ainvoke(self, *args, use_cache=True **kwargs):
+    async def ainvoke(self, *args, use_cache=True, **kwargs):
         raise NotImplementedError
-    
+
     @abc.abstractmethod
     def evaluate(self, *args, report_type: Literal["dict", "dataframe"] = "dict", **kwargs) -> Union[dict, DataFrame]:
         raise NotImplementedError

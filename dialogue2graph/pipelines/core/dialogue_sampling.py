@@ -28,7 +28,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, graph, upper_limit, target_dialogues, report_type = "dict"):
+    async def evaluate(self, graph, upper_limit, target_dialogues, report_type="dict"):
         dialogues = self.invoke(graph, upper_limit)
         report = {
             "all_utterances_present": all_utterances_present(graph, dialogues),

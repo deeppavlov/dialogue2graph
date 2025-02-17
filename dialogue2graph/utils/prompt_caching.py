@@ -13,8 +13,10 @@ from sqlalchemy import Column, Integer, String, create_engine, select, DateTime
 from sqlalchemy.sql import func
 
 from sqlalchemy.orm import Session
+
 logger = logging.getLogger(__name__)
 load_dotenv()
+
 
 class PromptCacheSchema(Base):  # type: ignore
     """SQLite table for full LLM Cache (all generations)."""
@@ -25,6 +27,7 @@ class PromptCacheSchema(Base):  # type: ignore
     response = Column(String)
     llm = Column(String, primary_key=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 class PromptCache(SQLAlchemyCache):
     def lookup(self, prompt: str, llm_string: str):
@@ -54,10 +57,7 @@ class PromptCache(SQLAlchemyCache):
 
     def update(self, prompt: str, llm_string: str, return_val) -> None:
         """Update based on prompt and llm_string."""
-        items = [
-            self.cache_schema(prompt=prompt, llm=llm_string, response=dumps(gen), id=i)
-            for i, gen in enumerate(return_val)
-        ]
+        items = [self.cache_schema(prompt=prompt, llm=llm_string, response=dumps(gen), id=i) for i, gen in enumerate(return_val)]
         with Session(self.engine) as session, session.begin():
             for item in items:
                 session.merge(item)

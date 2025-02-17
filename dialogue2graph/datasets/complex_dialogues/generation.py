@@ -1,21 +1,22 @@
-from dataclasses import dataclass
-from typing import Optional, Dict, Any
-import networkx as nx
-from langchain_core.language_models.chat_models import BaseChatModel
-from langchain.prompts import PromptTemplate
-
-# from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
-# from chatsky_llm_autoconfig.algorithms.dialogue_generation import RecursiveDialogueSampler
-# from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
-# from chatsky_llm_autoconfig.metrics.llm_metrics import are_triples_valid, is_theme_valid
-# from chatsky_llm_autoconfig.graph import BaseGraph
-# from chatsky_llm_autoconfig.prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
-from openai import BaseModel
-
 from enum import Enum
-from typing import Union
+from typing import Optional, Dict, Any, Union
+from dataclasses import dataclass
 
-from dialogue2graph.pipelines.core.schemas import GraphGenerationResult
+from pydantic import BaseModel, Field
+import networkx as nx
+
+from langchain.prompts import PromptTemplate
+from langchain_core.output_parsers.pydantic import PydanticOutputParser
+from langchain_core.language_models.chat_models import BaseChatModel
+
+from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
+from dialogue2graph.metrics.automatic_metrics import all_utterances_present
+from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
+from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
+from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
+
+from .prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
 
 
 class ErrorType(str, Enum):
@@ -38,57 +39,73 @@ class GenerationError(BaseModel):
 PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 
+class CycleGraphGenerator(TopicGraphGenerator):
+    """Generator specifically for topic-based cyclic graphs"""
+
+    def __init__(self):
+        super().__init__()
+
+    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, **kwargs) -> BaseGraph:
+        """
+        Generate a cyclic dialogue graph based on the topic input.
+        """
+        parser = PydanticOutputParser(pydantic_object=DialogueGraph)
+        chain = prompt | model | parser
+        return Graph(chain.invoke(kwargs))
+
+    async def ainvoke(self, *args, **kwargs):
+        """Async version of invoke - to be implemented"""
+        pass
+
+    def evaluate(self, *args, report_type="dict", **kwargs):
+        pass
+
+
 @dataclass
-class GenerationPipeline:
+class GenerationPipeline(BaseModel):
     generation_model: BaseChatModel
     validation_model: BaseChatModel
-    graph_generator: CycleGraphGenerator
-    generation_prompt: PromptTemplate
-    repair_prompt: PromptTemplate
+    graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
+    generation_prompt: PromptTemplate = Field(default_factory=lambda: cycle_graph_generation_prompt_enhanced)
+    repair_prompt: PromptTemplate = Field(default_factory=lambda: cycle_graph_repair_prompt)
     min_cycles: int = 2
     max_fix_attempts: int = 3
+    dialogue_sampler: RecursiveDialogueSampler = Field(default_factory=RecursiveDialogueSampler)
 
     def __init__(
         self,
         generation_model: BaseChatModel,
         validation_model: BaseChatModel,
-        generation_prompt: Optional[PromptTemplate] = None,
-        repair_prompt: Optional[PromptTemplate] = None,
+        generation_prompt: Optional[PromptTemplate],
+        repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 0,
         max_fix_attempts: int = 2,
     ):
-        self.generation_model = generation_model
-        self.validation_model = validation_model
-        self.graph_generator = CycleGraphGenerator()
-        self.dialogue_sampler = RecursiveDialogueSampler()
-
-        self.generation_prompt = generation_prompt or cycle_graph_generation_prompt_enhanced
-        self.repair_prompt = repair_prompt or cycle_graph_repair_prompt
-
-        self.min_cycles = min_cycles
-        self.max_fix_attempts = max_fix_attempts
+        super().__init__(
+            generation_model=generation_model,
+            validation_model=validation_model,
+            generation_prompt=generation_prompt,
+            repair_prompt=repair_prompt,
+            min_cycles=min_cycles,
+            max_fix_attempts=max_fix_attempts,
+        )
 
     def validate_graph_cycle_requirement(self, graph: BaseGraph, min_cycles: int = 2) -> Dict[str, Any]:
-        """
-        Проверяет граф на соответствие требованиям по количеству циклов
-        """
+        """Checks the graph for cycle requirements"""
         print("\n🔍 Checking graph requirements...")
-
         try:
             cycles = list(nx.simple_cycles(graph.graph))
             cycles_count = len(cycles)
-
             print(f"🔄 Found {cycles_count} cycles in the graph:")
             for i, cycle in enumerate(cycles, 1):
                 print(f"Cycle {i}: {' -> '.join(map(str, cycle + [cycle[0]]))}")
 
             meets_requirements = cycles_count >= min_cycles
-
-            if not meets_requirements:
-                print(f"❌ Graph doesn't meet cycle requirements (minimum {min_cycles} cycles needed)")
-            else:
-                print("✅ Graph meets cycle requirements")
-
+            print(
+                "✅ Graph meets cycle requirements"
+                if meets_requirements
+                else f"❌ Graph doesn't meet cycle requirements (minimum {min_cycles} cycles needed)"
+            )
             return {"meets_requirements": meets_requirements, "cycles": cycles, "cycles_count": cycles_count}
 
         except Exception as e:
@@ -96,12 +113,9 @@ class GenerationPipeline:
             raise
 
     def check_and_fix_transitions(self, graph: BaseGraph, max_attempts: int = 3) -> Dict[str, Any]:
-        """
-        Проверяет переходы в графе и пытается исправить невалидные через LLM
-        """
+        """Checks transitions in the graph and attempts to fix invalid ones via LLM"""
         print("Validating initial graph")
-
-        initial_validation = are_triples_valid(graph, self.validation_model, return_type="detailed")
+        initial_validation = are_triplets_valid(graph, self.validation_model, return_type="detailed")
         if initial_validation["is_valid"]:
             return {"is_valid": True, "graph": graph, "validation_details": {"invalid_transitions": [], "attempts_made": 0, "fixed_count": 0}}
 
@@ -111,9 +125,7 @@ class GenerationPipeline:
 
         while current_attempt < max_attempts:
             print(f"\n🔄 Fix attempt {current_attempt + 1}/{max_attempts}")
-
             try:
-                # Используем generation_model для исправления графа
                 current_graph = self.graph_generator.invoke(
                     model=self.generation_model,
                     prompt=self.repair_prompt,
@@ -121,8 +133,7 @@ class GenerationPipeline:
                     graph_json=current_graph.graph_dict,
                 )
 
-                # Проверяем исправленный граф используя validation_model
-                validation = are_triples_valid(current_graph, self.validation_model, return_type="detailed")
+                validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
                 if validation["is_valid"]:
                     return {
                         "is_valid": True,
@@ -139,7 +150,6 @@ class GenerationPipeline:
             current_attempt += 1
 
         remaining_invalid = len(validation["invalid_transitions"])
-
         return {
             "is_valid": False,
             "graph": current_graph,
@@ -151,15 +161,11 @@ class GenerationPipeline:
         }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
-        """
-        Generates and validates a dialogue graph for given topic
-        """
+        """Generates and validates a dialogue graph for given topic"""
         try:
-            # 1. Generate initial graph
             print("Generating Graph ...")
             graph = self.graph_generator.invoke(model=self.generation_model, prompt=self.generation_prompt, topic=topic)
 
-            # 2. Validate cycles
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)
             if not cycle_validation["meets_requirements"]:
                 return GenerationError(
@@ -167,22 +173,18 @@ class GenerationPipeline:
                     message=f"Graph requires minimum {self.min_cycles} cycles, found {cycle_validation['cycles_count']}",
                 )
 
-            # 3. Generate and validate dialogues
             print("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             print(f"Sampled {len(sampled_dialogues)} dialogues")
-            print(sampled_dialogues)
             if not all_utterances_present(graph, sampled_dialogues):
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
                 )
 
-            # 4. Validate theme
             theme_validation = is_theme_valid(graph, self.validation_model, topic)
             if not theme_validation["value"]:
                 return GenerationError(error_type=ErrorType.INVALID_THEME, message=f"Theme validation failed: {theme_validation['description']}")
 
-            # 5. Validate and fix transitions
             print("Validating and fixing transitions...")
             transition_validation = self.check_and_fix_transitions(graph=graph, max_attempts=self.max_fix_attempts)
 
@@ -193,7 +195,6 @@ class GenerationPipeline:
                     message=f"Found {len(invalid_transitions)} invalid transitions after {transition_validation['validation_details']['attempts_made']} fix attempts",
                 )
 
-            # All validations passed - return successful result
             return GraphGenerationResult(graph=transition_validation["graph"].graph_dict, topic=topic, dialogues=sampled_dialogues)
 
         except Exception as e:
@@ -202,3 +203,47 @@ class GenerationPipeline:
     def __call__(self, topic: str) -> PipelineResult:
         """Shorthand for generate_and_validate"""
         return self.generate_and_validate(topic)
+
+
+class LoopedGraphGenerator(TopicGraphGenerator):
+    generation_model: BaseChatModel
+    validation_model: BaseChatModel
+    pipeline: GenerationPipeline
+
+    def __init__(self, generation_model: BaseChatModel, validation_model: BaseChatModel):
+        super().__init__(
+            generation_model=generation_model,
+            validation_model=validation_model,
+            pipeline=GenerationPipeline(
+                generation_model=generation_model,
+                validation_model=validation_model,
+                generation_prompt=cycle_graph_generation_prompt_enhanced,
+                repair_prompt=cycle_graph_repair_prompt,
+            ),
+        )
+
+    def invoke(self, topic) -> list[dict]:
+        print(f"\n{'='*50}")
+        print(f"Generating graph for topic: {topic}")
+        print(f"{'='*50}")
+        successful_generations = []
+        try:
+            result = self.pipeline(topic)
+
+            if isinstance(result, GraphGenerationResult):
+                print(f"✅ Successfully generated graph for {topic}")
+                successful_generations.append(
+                    {"graph": result.graph.model_dump(), "topic": result.topic, "dialogues": [d.model_dump() for d in result.dialogues]}
+                )
+            else:
+                print(f"❌ Failed to generate graph for {topic}")
+                print(f"Error type: {result.error_type}")
+                print(f"Error message: {result.message}")
+
+        except Exception as e:
+            print(f"❌ Unexpected error processing topic '{topic}': {str(e)}")
+
+        return successful_generations
+
+    def evaluate(self, *args, report_type="dict", **kwargs):
+        return super().evaluate(*args, report_type=report_type, **kwargs)
