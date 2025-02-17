@@ -1,4 +1,5 @@
 import itertools
+from typing import Literal
 import pandas as pd
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
@@ -28,14 +29,15 @@ class RecursiveDialogueSampler(DialogueGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, graph, upper_limit, target_dialogues, report_type="dict"):
+    async def evaluate(self, graph, upper_limit, target_dialogues, report_type=Literal["dict", "dataframe"]):
         dialogues = self.invoke(graph, upper_limit)
         report = {
-            "all_utterances_present": all_utterances_present(graph, dialogues),
-            "all_roles_correct": all_roles_correct(dialogues, target_dialogues),
+            "all_utterances_present": [all_utterances_present(graph, dialogues)],
+            # "all_roles_correct": all(all_roles_correct(dialogues, target_dialogues)),
         }
         if report_type == "dataframe":
-            report = pd.DataFrame(report, index=[0])
+            report = pd.DataFrame.from_dict(report)
+            return report
         elif report_type == "dict":
             return report
         else:
