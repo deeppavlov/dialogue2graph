@@ -442,7 +442,7 @@ Edges must be user's utterances only and never repeat previous assistant's utter
 Target of any edge must be different from the edge's source.
 Just one of edges of the whole graph must have 2-3 different utterances meaning modified answers to the same user's utterance.
 Just one of nodes of the whole graph must have 2-3 different utterances meaning fluctuations in formulation of thoughts.
-So you need to rephrase utterance in those node while maintaining its general meaning and add rephrased utterances to the node. 
+So you need to paraphrase utterance in those node while maintaining its general meaning and add paraphrased utterances to the node. 
 
 Return ONLY the valid JSON without any additional text, commentaries or explanations.
 """

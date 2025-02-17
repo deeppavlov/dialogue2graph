@@ -140,12 +140,15 @@ def edges_match_nodes(graph: dict) -> bool:
     return node_ids == edge_ids
 
 def dialogue_edges(seq: list[Dialogue]) -> set[tuple[str]]:
+
     res = []
     for dialogue in seq:
          assist_texts = [d.text for d in dialogue.messages if d.participant=='assistant']
-         res.extend([(a1,a2) for a1,a2 in zip(assist_texts[:-1],assist_texts[1:])])
-    print("DIA: ", set(res))
+         user_texts = [d.text for d in dialogue.messages if d.participant=='user'] 
+         res.extend([(a1,u,a2) for a1,u,a2 in zip(assist_texts[:-1],user_texts[:len(assist_texts)-1],assist_texts[1:])])
+    # print("DIA: ", set(res))
     return set(res)
+
 
 def graph_edges(G: BaseGraph):
     graph = G.graph_dict
@@ -154,10 +157,11 @@ def graph_edges(G: BaseGraph):
     res = []
     for node in nodes:
         for edge in [e for e in edges if e['source'] == node['id']]:
-            for utt1 in node['utterances']:
-                for utt2 in [n for n in nodes if n['id']==edge['target']][0]['utterances']:
-                    res.append((utt1,utt2))
-    print("GRAPH: ", set(res))
+            for utt in edge['utterances']:
+                for utt1 in node['utterances']:
+                    for utt2 in [n for n in nodes if n['id']==edge['target']][0]['utterances']:
+                        res.append((utt1,utt,utt2))
+    # print("GRAPH: ", set(res))
     return set(res)
 
 def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
@@ -200,6 +204,8 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
             print(set1-set2, set2-set1)
 
         # return False
+    else:
+        print(graph_utterances-dialogue_utterances)
     return False
     # graph_utterances.difference(dialogue_utterances)
 
@@ -236,13 +242,13 @@ def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list):
         for edge1 in edges1:
             for edge2 in edges2:
                 if nodes_map[edge1['target']] == edge2['target'] and len(edge1['utterances']) != len(edge2['utterances']):
-                    print(edge1, edge2)
+                    # print(edge1, edge2)
                     return False
     return True
 
 
 
-def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
+def compare_graphs(G1: BaseGraph, G2: BaseGraph) -> bool:
     g1 = G1.graph_dict
     g2 = G2.graph_dict
 
@@ -256,7 +262,7 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
     nodes1_list = nodes2list(g1)
     nodes2_list = nodes2list(g2)
     if len(nodes1_list) != len(nodes2_list):
-        print("FIRST")
+        print("FIRST: ", len(nodes1_list), len(nodes2_list))
         return False
 
     g1_list, n1, len1 = graph2list(g1)
@@ -271,9 +277,13 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
 
     # nodes_matrix, matrix = get_2_rerankings(nodes1_list, nodes2_list, g1_list, g2_list)
     nodes_max = list(np.argmax(nodes_matrix, axis=1))
+    max = list(np.argmax(matrix, axis=1))
+    print("MAX: ", max)
+    print("N_MAX: ", nodes_max)
     if len(set(nodes_max)) < len(nodes1_list):
         print("LLLLENS")
         return False
+
 
 
     # print("LENS: ", len1, len2)
@@ -283,9 +293,7 @@ def llm_match(G1: BaseGraph, G2: BaseGraph) -> bool:
     
 
     # matrix = get_reranking(g1_list, g2_list)
-    max = list(np.argmax(matrix, axis=1))
-    print("N_MAX: ", nodes_max)
-    print("MAX: ", max)
+
     if len(set(max)) < len(g1_list) or nodes_max != max:
         print("MIX", len(set(max)), len(g1_list), nodes_max)
         return False

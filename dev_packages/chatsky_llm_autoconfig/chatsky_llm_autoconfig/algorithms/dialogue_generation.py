@@ -14,9 +14,6 @@ from langchain_openai  import ChatOpenAI
 
 env_settings = EnvSettings()
 
-def list_in(a, b):
-    return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
-
 def len_in(a,b):
     return sum([b[x:x + len(a)] == a for x in range(len(b) - len(a) + 1)])
 
@@ -31,17 +28,17 @@ def mix_ends(graph: BaseGraph, ends: list[int], cycles: list[int]):
                 visited.append(c)
     return [e for e in cycles if e not in visited] + ends
 
-def all_paths(graph: BaseGraph, start: int, visited: list, repeats: int):
-    global visited_list
+# def all_paths(graph: BaseGraph, start: int, visited: list, repeats: int):
+#     global visited_list
 
-    # if len(visited) < 1 or len_in([visited[-1],start],visited) < repeats:
-    if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
-        # print("LEN: ", len(visited))
-        visited.append(start)
-        for edge in graph.edge_by_source(start):
-            # print("TARGET: ", edge['target'])
-            all_paths(graph, edge['target'], visited.copy(), repeats)
-    visited_list.append(visited)
+#     # if len(visited) < 1 or len_in([visited[-1],start],visited) < repeats:
+#     if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
+#         # print("LEN: ", len(visited))
+#         visited.append(start)
+#         for edge in graph.edge_by_source(start):
+#             # print("TARGET: ", edge['target'])
+#             all_paths(graph, edge['target'], visited.copy(), repeats)
+#     visited_list.append(visited)
 
 def all_combinations(path: list, start: dict, next: int, visited: list):
     global visited_list
@@ -90,10 +87,12 @@ def get_utts(seq: list[list[dict]]) -> set[tuple[str]]:
     return set(res)
 
 def dialogue_edges(seq: list[list[dict]]) -> set[tuple[str]]:
+
     res = []
     for dialogue in seq:
          assist_texts = [d['text'] for d in dialogue if d['participant']=='assistant']
-         res.extend([(a1,a2) for a1,a2 in zip(assist_texts[:-1],assist_texts[1:])])
+         user_texts = [d['text'] for d in dialogue if d['participant']=='user']         
+         res.extend([(a1,u,a2) for a1,u,a2 in zip(assist_texts[:-1],user_texts[:len(assist_texts)-1],assist_texts[1:])])
     # print("DIA: ", set(res))
     return set(res)
 
@@ -110,7 +109,7 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     starts = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
     for s in starts:
         visited_list = [[]]
-        all_paths(graph, s['id'], [], repeats)
+        graph.all_paths(s['id'], [], repeats)
         paths.extend(visited_list)
 
     paths.sort()
@@ -148,16 +147,16 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
         dialogue = [el[1:] for el in visited_list if len(el)==len(f)+1]
         dialogues.extend(dialogue)
 
-    # for d in dialogues:
-    #    print("DGS: ", d)
-    # print("\n")
+    for d in dialogues:
+       print("DGS: ", d)
+    print("\n")
     final = list(k for k,_ in itertools.groupby(dialogues))
     # print("BEFORE: ", len(final))
     final = remove_duplicated_utts(final)
     # print("AFTER: ", len(final))
-    # for f in final:
-    #     print("FINAL: ", f)
-    # print("\n")
+    for f in final:
+        print("FINAL: ", f)
+    print("\n")
     result = [Dialogue().from_list(seq) for seq in final]
     return result
 
@@ -274,9 +273,6 @@ class DialoguePathSampler(DialogueGenerator):
 
 # @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class RecursiveDialogueSampler(DialogueGenerator):
-    def _list_in(self, a: list, b: list) -> bool:
-        """Check if sequence a exists within sequence b."""
-        return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def invoke(self, graph: BaseGraph, upper_limit: int) -> list[Dialogue]:
         global visited_list

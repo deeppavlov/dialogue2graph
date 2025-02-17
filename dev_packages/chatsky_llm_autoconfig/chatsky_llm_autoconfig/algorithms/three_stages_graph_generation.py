@@ -1,19 +1,22 @@
+import pandas as pd
 from langchain.prompts import PromptTemplate
 from langchain_openai  import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from chatsky_llm_autoconfig.algorithms.base import GraphGenerator
-from chatsky_llm_autoconfig.graph import BaseGraph, Graph
+from chatsky_llm_autoconfig.metrics.automatic_metrics import (
+    is_same_structure,
+    compare_graphs
+)
 from chatsky_llm_autoconfig.metrics.embedder import nodes2groups
 from chatsky_llm_autoconfig.schemas import DialogueGraph
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph, dialogues2list
 from chatsky_llm_autoconfig.settings import EnvSettings
-
 from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
-
+from chatsky_llm_autoconfig.graph import BaseGraph, Graph
 env_settings = EnvSettings()
 
 embeddings = HuggingFaceEmbeddings(model_name=env_settings.EMBEDDER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
@@ -89,3 +92,16 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
+    
+    async def evaluate(self, dialogues, target_graph, report_type = "dict"):
+        graph = self.invoke(dialogues)
+        report = {
+            "is_same_structure": is_same_structure(graph, target_graph),
+            "graph_match": compare_graphs(graph, target_graph),
+        }
+        if report_type == "dataframe":
+            report = pd.DataFrame(report, index=[0])
+        elif report_type == "dict":
+            return report
+        else:
+            raise ValueError(f"Invalid report_type: {report_type}")

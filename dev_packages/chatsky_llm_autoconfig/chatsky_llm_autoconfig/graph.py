@@ -1,9 +1,9 @@
 import networkx as nx
 from pydantic import BaseModel
 from typing import Optional, Any
-import matplotlib.pyplot as plt
 import abc
 import logging
+import matplotlib.pyplot as plt
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +52,9 @@ class BaseGraph(BaseModel, abc.ABC):
     def find_path(self):
         raise NotImplementedError
 
-
+    @abc.abstractmethod
+    def all_paths(self):
+        raise NotImplementedError
 
 class Graph(BaseGraph):
 
@@ -61,6 +63,10 @@ class Graph(BaseGraph):
         super().__init__(graph_dict=graph_dict, **kwargs)
         if graph_dict:
             self.load_graph()
+    def _list_in(self, a: list, b: list) -> bool:
+        """Check if sequence a exists within sequence b."""
+        return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
+
 
     def load_graph(self):
         self.graph = nx.DiGraph()
@@ -155,10 +161,12 @@ class Graph(BaseGraph):
         new_edges = []
         for d in duplicates:
             found = [c for c in edges if c['source'] == d[0] and c['target'] == d[1]]
-            new_edge = found[0]
+            new_edge = found[0].copy()
             new_edge['utterances'] = []
+            print("FOUND: ", found)
             for e in found:
                 new_edge['utterances'].extend(e['utterances'])
+            new_edge['utterances'] = list(set(new_edge['utterances']))
             new_edges.append(new_edge)
         self.graph_dict = {"edges": [e for e in edges if (e['source'],e['target']) not in duplicates]+new_edges, "nodes": graph['nodes'] }
         return Graph(self.graph_dict)
@@ -167,6 +175,8 @@ class Graph(BaseGraph):
         graph = self.graph_dict
         nodes = graph['nodes'].copy()
         edges = graph['edges'].copy()
+        nodes_utterances = [n['utterances'] for n in nodes]
+        map(lambda x: x.sort(), nodes_utterances)
         seen = []
         to_remove = []
         for n in nodes:
@@ -178,7 +188,7 @@ class Graph(BaseGraph):
                     return None
                 seen.append(utts)
             else:
-                doubled = nodes[seen.index(utts)]['id']
+                doubled = nodes[nodes_utterances.index(utts)]['id']
                 to_remove.append(n['id'])
                 for idx, e in enumerate(edges):
                     if e['source'] == n['id']:
@@ -189,6 +199,19 @@ class Graph(BaseGraph):
         self.graph_dict = {"edges": edges, "nodes": [n for n in nodes if n['id'] not in to_remove]}
         return self.remove_duplicated_edges()
 
+    def all_paths(self, start: int, visited: list, repeats: int):
+        global visited_list
+        graph = self.graph_dict 
+    
+        # if len(visited) < 1 or len_in([visited[-1],start],visited) < repeats:
+        if len(visited) < repeats or not self._list_in(visited[-repeats:]+[start],visited):
+            # print("LEN: ", len(visited))
+            visited.append(start)
+            for edge in graph.edge_by_source(start):
+                # print("TARGET: ", edge['target'])
+                self.all_paths(edge['target'], visited.copy(), repeats)
+        visited_list.append(visited)
+    
     def find_path(self, start: int, end: int, visited: list):
 
         global visited_list

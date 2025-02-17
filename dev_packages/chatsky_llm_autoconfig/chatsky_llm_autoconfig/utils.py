@@ -328,5 +328,3 @@ def dialogues2list(dialogues: list[Dialogue]):
         if t['participant'] == 'user':
             last_user = True
     return nexts, nodes, list(set(starts)), neighbours, last_user
-
-

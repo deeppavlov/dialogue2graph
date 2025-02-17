@@ -28,7 +28,7 @@ from chatsky_llm_autoconfig.metrics.automatic_metrics import (
     is_same_structure,
     is_correct_lenght,
     triplet_match,
-    llm_match
+    compare_graphs
 )
 from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 from chatsky_llm_autoconfig.utils import (
@@ -150,7 +150,7 @@ def run_all_algorithms():
             #class_instance = tp(prompt_name="fourth_graph_generation_prompt")
             #class_instance = tp(prompt_name="options_graph_generation_prompt")
             # class_instance = tp(prompt_name="list_graph_generation_prompt")
-            metrics = {"triplet_match": [], "is_same_structure": [], "llm_match": []}
+            metrics = {"triplet_match": [], "is_same_structure": [], "graph_match": []}
             saved_data = {}
             result_list = []
             test_list = []
@@ -198,25 +198,19 @@ def run_all_algorithms():
                         #comp = is_same_structure(test_graph, comp_graph)
                         comp = is_same_structure(test_graph_orig, result_graph)
                         metrics["is_same_structure"].append(comp)
-                        metrics
-                        if comp:
-                            match = llm_match(Graph(graph_dict=result_graph.graph_dict), test_graph_orig)
-                            metrics["llm_match"].append(match)
-                            print("MATCH: ", case["topic"], metrics["llm_match"][-1])
-                        else:
-                            print("STRUCTURE: ", case["topic"], "False")
-                            match = False
-                            metrics["llm_match"].append(match)
-                        save_metrics.append({case['topic']: {'graph': result_graph.graph_dict, 'is_same_structure': comp, 'llm_match': match}})                
+                        match = compare_graphs(Graph(graph_dict=result_graph.graph_dict), test_graph_orig)
+                        metrics["graph_match"].append(match)
+                        print("MATCH: ", case["topic"], metrics["graph_match"][-1])
+                        save_metrics.append({case['topic']: {'graph': result_graph.graph_dict, 'is_same_structure': comp, 'graph_match': match}})                
                     except Exception as e:
                         print("Exception: ", e)
                         # metrics["triplet_match"].append(False)
                         metrics["is_same_structure"].append(False)
-                        metrics["llm_match"].append(False)
-                        save_metrics.append({case['topic']: {'graph': result_graph.graph_dict, 'is_same_structure': False, 'llm_match': False}})
+                        metrics["graph_match"].append(False)
+                        save_metrics.append({case['topic']: {'graph': result_graph.graph_dict, 'is_same_structure': False, 'graph_match': False}})
 
             # metrics["triplet_match"] = sum(metrics["triplet_match"]) / len(metrics["triplet_match"])
-            metrics["llm_match"] = sum(metrics["llm_match"]) / len(metrics["llm_match"])
+            metrics["graph_match"] = sum(metrics["graph_match"]) / len(metrics["graph_match"])
             metrics["is_same_structure"] = sum(metrics["is_same_structure"]) / len(metrics["is_same_structure"])
             save_json(data=save_metrics, filename=env_settings.METRICS_SAVE_PATH)
 

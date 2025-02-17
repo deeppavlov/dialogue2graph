@@ -236,10 +236,14 @@ class GraphGenerationPipeline:
             if not graph.edges_match_nodes():
                 return GenerationError(
                     error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
-                    message="Genrated graph is wrong: edges don't match nodes"
+                    message="Generated graph is wrong: edges don't match nodes"
                 )
             graph = graph.remove_duplicated_nodes()
-
+            if graph is None:
+                return GenerationError(
+                    error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
+                    message="Generated graph is wrong: utterances in nodes doubled"
+                )                
             # 2. Validate cycles
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)
             if not cycle_validation["meets_requirements"]:
@@ -281,10 +285,22 @@ class GraphGenerationPipeline:
                     error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
                     message=f"Found {len(invalid_transitions)} invalid transitions after {transition_validation['validation_details']['attempts_made']} fix attempts"
                 )
+            
+            graph = transition_validation["graph"]
+            print("Sampling dialogues...")
+            sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
+            print(f"Sampled {len(sampled_dialogues)} dialogues")
+            for s in sampled_dialogues:
+                print(s)
+            if all_utterances_present(graph, sampled_dialogues) != True:
+                return GenerationError(
+                    error_type=ErrorType.SAMPLING_FAILED,
+                    message="Failed to sample valid dialogues - not all utterances are present"
+                )
 
             # All validations passed - return successful result
             return GraphGenerationResult(
-                graph=transition_validation["graph"].graph_dict,
+                graph=graph.graph_dict,
                 topic=topic,
                 dialogues=sampled_dialogues
             )

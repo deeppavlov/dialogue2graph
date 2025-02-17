@@ -248,98 +248,6 @@ class GraphValidationResult(TypedDict):
     # 1. Does the user's response looks as a natural answer human can give?
     # 2. Does the assistant's response looks natural in a dialogue context?
 
-# def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResult:
-#     """
-#     Проверяет валидность графа диалога
-#     Возвращает:
-#     {
-#         "is_valid": bool,  # валиден ли граф в целом
-#         "invalid_transitions": [  # список невалидных переходов
-#             {
-#                 "from": ["source utterance"],
-#                 "user": ["user utterance"],
-#                 "to": ["target utterance"],
-#                 "reason": "причина невалидности"
-#             },
-#             ...
-#         ]
-#     }
-#     """
-#     # Define validation result model
-#     class TransitionValidationResult(BaseModel):
-#         isValid: bool = Field(description="Whether the transition is valid or not")
-#         description: str = Field(description="Explanation of why it's valid or invalid")
-
-#     # Create prompt template
-#     triplet_validate_prompt = PromptTemplate(
-#         input_variables=["json_graph", "source_utterances", "edge_utterances", "target_utterances"],
-#         template="""
-#     You are evaluating if dialog transitions make sense.
-    
-#     Given this conversation graph in JSON:
-#     {json_graph}
-    
-#     For the current transition:
-#     Source (Assistant): {source_utterances}
-#     User Response: {edge_utterances}
-#     Target (Assistant): {target_utterances}
-
-#     EVALUATE: Do these three messages look like a real conversation?
-
-#     Reply in JSON format:
-#     {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
-#     """
-#     )
-
-#     parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
-
-#     # Convert graph to JSON string
-#     graph_json = json.dumps(G.graph_dict)
-
-#     # Create node mapping
-#     node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
-#     invalid_transitions = []
-#     is_valid = True
-
-#     for edge in G.graph_dict["edges"]:
-#         source_id = edge["source"]
-#         target_id = edge["target"]
-
-#         # Проверяем существование узлов
-#         if source_id not in node_map or target_id not in node_map:
-#             is_valid = False
-#             continue
-
-#         # Get utterances
-#         source_node = node_map[source_id]
-#         target_node = node_map[target_id]
-
-#         # Prepare input for validation
-#         input_data = {
-#             "json_graph": graph_json,
-#             "source_utterances": source_node["utterances"],
-#             "edge_utterances": edge["utterances"],
-#             "target_utterances": target_node["utterances"]
-#         }
-
-#         # Run validation
-#         triplet_check_chain = triplet_validate_prompt | model | parser
-#         result = triplet_check_chain.invoke(input_data)
-
-#         if not result.isValid:
-#             is_valid = False
-#             invalid_transitions.append({
-#                 "from": source_node["utterances"],
-#                 "user": edge["utterances"],
-#                 "to": target_node["utterances"],
-#                 "reason": result.description
-#             })
-#     print("is_valid: ", is_valid)
-#     return {
-#         "is_valid": is_valid,
-#         "invalid_transitions": invalid_transitions
-#     }
-
 def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResult:
     """
     Проверяет валидность графа диалога
@@ -364,10 +272,13 @@ def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResul
 
     # Create prompt template
     triplet_validate_prompt = PromptTemplate(
-        input_variables=["source_utterances", "edge_utterances", "target_utterances"],
+        input_variables=["json_graph", "source_utterances", "edge_utterances", "target_utterances"],
         template="""
     You are evaluating if dialog transitions make sense.
-
+    
+    Given this conversation graph in JSON:
+    {json_graph}
+    
     For the current transition:
     Source (Assistant): {source_utterances}
     User Response: {edge_utterances}
@@ -381,6 +292,9 @@ def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResul
     )
 
     parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
+
+    # Convert graph to JSON string
+    graph_json = json.dumps(G.graph_dict)
 
     # Create node mapping
     node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
@@ -402,6 +316,7 @@ def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResul
 
         # Prepare input for validation
         input_data = {
+            "json_graph": graph_json,
             "source_utterances": source_node["utterances"],
             "edge_utterances": edge["utterances"],
             "target_utterances": target_node["utterances"]
@@ -424,3 +339,205 @@ def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResul
         "is_valid": is_valid,
         "invalid_transitions": invalid_transitions
     }
+
+# def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResult:
+#     """
+#     Проверяет валидность графа диалога
+#     Возвращает:
+#     {
+#         "is_valid": bool,  # валиден ли граф в целом
+#         "invalid_transitions": [  # список невалидных переходов
+#             {
+#                 "from": ["source utterance"],
+#                 "user": ["user utterance"],
+#                 "to": ["target utterance"],
+#                 "reason": "причина невалидности"
+#             },
+#             ...
+#         ]
+#     }
+#     """
+#     # Define validation result model
+#     class TransitionValidationResult(BaseModel):
+#         isValid: bool = Field(description="Whether the transition is valid or not")
+#         description: str = Field(description="Explanation of why it's valid or invalid")
+
+#     # Create prompt template
+#     triplet_validate_prompt = PromptTemplate(
+#         input_variables=["source_utterances", "edge_utterances", "target_utterances"],
+#         template="""
+#     You are evaluating if dialog transitions make sense.
+
+#     For the current transition:
+#     Source (Assistant): {source_utterances}
+#     User Response: {edge_utterances}
+#     Target (Assistant): {target_utterances}
+
+#     EVALUATE: Do these three messages look like a real conversation?
+
+#     Reply in JSON format:
+#     {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
+#     """
+#     )
+
+#     parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
+
+#     # Create node mapping
+#     node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
+#     invalid_transitions = []
+#     is_valid = True
+
+#     for edge in G.graph_dict["edges"]:
+#         source_id = edge["source"]
+#         target_id = edge["target"]
+
+#         # Проверяем существование узлов
+#         if source_id not in node_map or target_id not in node_map:
+#             is_valid = False
+#             continue
+
+#         # Get utterances
+#         source_node = node_map[source_id]
+#         target_node = node_map[target_id]
+
+#         # Prepare input for validation
+#         input_data = {
+#             "source_utterances": source_node["utterances"],
+#             "edge_utterances": edge["utterances"],
+#             "target_utterances": target_node["utterances"]
+#         }
+
+#         # Run validation
+#         triplet_check_chain = triplet_validate_prompt | model | parser
+#         result = triplet_check_chain.invoke(input_data)
+
+#         if not result.isValid:
+#             is_valid = False
+#             invalid_transitions.append({
+#                 "from": source_node["utterances"],
+#                 "user": edge["utterances"],
+#                 "to": target_node["utterances"],
+#                 "reason": result.description
+#             })
+#     print("is_valid: ", is_valid)
+#     return {
+#         "is_valid": is_valid,
+#         "invalid_transitions": invalid_transitions
+#     }
+
+
+# def graph_validation(G: BaseGraph, model: BaseChatModel) -> GraphValidationResult:
+#     """
+#     Проверяет валидность графа диалога
+#     Возвращает:
+#     {
+#         "is_valid": bool,  # валиден ли граф в целом
+#         "invalid_transitions": [  # список невалидных переходов
+#             {
+#                 "from": ["source utterance"],
+#                 "user": ["user utterance"],
+#                 "to": ["target utterance"],
+#                 "reason": "причина невалидности"
+#             },
+#             ...
+#         ]
+#     }
+#     """
+#     # Define validation result model
+#     class TransitionValidationResult(BaseModel):
+#         isValid: bool = Field(description="Whether the transition is valid or not")
+#         description: str = Field(description="Explanation of why it's valid or invalid")
+
+#     # Create prompt template
+#     triplet_validate_prompt = PromptTemplate(
+#         input_variables=["source_utterances", "edge1_utterances", "target1_utterances", "edge2_utterances", "target2_utterances"],
+#         template="""
+#     You are evaluating if dialog transitions make sense.
+
+#     For the current transition:
+#     Source (Assistant): {source_utterances}
+#     User Response1: {edge1_utterances}
+#     Target1 (Assistant): {target1_utterances}
+#     User Response2: {edge2_utterances}
+#     Target2 (Assistant): {target2_utterances}
+
+#     EVALUATE: Do these five sets of messages look like a real conversation?
+
+#     Reply in JSON format:
+#     {{"isValid": true/false, "description": "Brief explanation of why it's valid or invalid"}}
+#     """
+#     )
+
+#     parser = PydanticOutputParser(pydantic_object=TransitionValidationResult)
+
+#     # Create node mapping
+#     node_map = {node["id"]: node for node in G.graph_dict["nodes"]}
+#     invalid_transitions = []
+#     is_valid = True
+
+#     for edge1 in G.graph_dict["edges"]:
+#         source_id1 = edge1["source"]
+#         target_id1 = edge1["target"]
+
+#         # Проверяем существование узлов
+#         if source_id1 not in node_map or target_id1 not in node_map:
+#             is_valid = False
+#             invalid_transitions.append({
+#                 "from": source_id1,
+#                 "user": edge1["utterances"],
+#                 "to": target_id1,
+#                 "reason": "Bad node map"
+#             })
+#             break
+
+#         # Get utterances
+#         source_node1 = node_map[source_id1]
+#         target_node1 = node_map[target_id1]
+#         for edge2 in G.edge_by_source(target_id1):
+#             target_id2 = edge2["target"]
+    
+#             # Проверяем существование узлов
+#             if target_id2 not in node_map:
+#                 is_valid = False
+#                 invalid_transitions.append({
+#                     "from": source_node1["utterances"],
+#                     "user1": edge1["utterances"],
+#                     "to1": target_node1["utterances"],
+#                     "user2": edge2["utterances"],
+#                     "to2": target_id2,
+#                     "reason": "Bad node map"
+#                 })
+#                 break
+
+#             # Get utterances
+#             target_node2 = node_map[target_id2]
+
+#             # Prepare input for validation
+#             input_data = {
+#                 "source_utterances": source_node1["utterances"],
+#                 "edge1_utterances": edge1["utterances"],
+#                 "target1_utterances": target_node1["utterances"],
+#                 "edge2_utterances": edge2["utterances"],
+#                 "target2_utterances": target_node2["utterances"]
+#             }
+    
+#             # Run validation
+#             triplet_check_chain = triplet_validate_prompt | model | parser
+#             result = triplet_check_chain.invoke(input_data)
+    
+#             if not result.isValid:
+#                 is_valid = False
+#                 invalid_transitions.append({
+#                     "from": source_node1["utterances"],
+#                     "user1": edge1["utterances"],
+#                     "to1": target_node1["utterances"],
+#                     "user2": edge2["utterances"],
+#                     "to2": target_node2["utterances"],
+#                     "reason": result.description
+#                 })
+                
+#     print("is_valid: ", is_valid)
+#     return {
+#         "is_valid": is_valid,
+#         "invalid_transitions": invalid_transitions
+#     }

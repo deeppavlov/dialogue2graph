@@ -58,6 +58,16 @@ def emb_list(x):
     #print("EMB_LIST: ", x)
     return [EmbeddableString(el) for el in x]
 
+# def get_embedding(generated: list[str], golden: list[str], emb_name: str, device: str):
+
+#     if emb_name not in embedding:
+#         embedding[emb_name] = SentenceTransformer(emb_name,device=device)
+ 
+#     golden_vectors = embedding[emb_name].encode(golden, normalize_embeddings=True)
+#     generated_vectors = embedding[emb_name].encode(generated, normalize_embeddings=True)
+#     similarities = generated_vectors @ golden_vectors.T
+#     return similarities
+
 def get_embedding(generated: list[str], golden: list[str], emb_name: str, device: str):
 
     if emb_name not in embedding:
