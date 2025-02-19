@@ -84,7 +84,7 @@ class GenerationPipeline(BaseModel):
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 0,
         max_fix_attempts: int = 2,
-        use_cache: bool = True
+        use_cache: bool = True,
     ):
         super().__init__(
             generation_model=generation_model,
@@ -93,7 +93,7 @@ class GenerationPipeline(BaseModel):
             repair_prompt=repair_prompt,
             min_cycles=min_cycles,
             max_fix_attempts=max_fix_attempts,
-            use_cache= True
+            use_cache=True,
         )
 
     def validate_graph_cycle_requirement(self, graph: BaseGraph, min_cycles: int = 2) -> Dict[str, Any]:
@@ -137,7 +137,7 @@ class GenerationPipeline(BaseModel):
                     prompt=self.repair_prompt,
                     invalid_transitions=initial_validation["invalid_transitions"],
                     graph_json=current_graph.graph_dict,
-                    use_cache=self.use_cache
+                    use_cache=self.use_cache,
                 )
 
                 validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
@@ -199,7 +199,8 @@ class GenerationPipeline(BaseModel):
                 invalid_transitions = transition_validation["validation_details"]["invalid_transitions"]
                 return GenerationError(
                     error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
-                    message=f"Found {len(invalid_transitions)} invalid transitions after {transition_validation['validation_details']['attempts_made']} fix attempts",
+                    message=f"Found {len(invalid_transitions)} invalid transitions"
+                    f"after {transition_validation['validation_details']['attempts_made']} fix attempts",
                 )
 
             return GraphGenerationResult(graph=transition_validation["graph"].graph_dict, topic=topic, dialogues=sampled_dialogues)

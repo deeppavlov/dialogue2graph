@@ -1,3 +1,4 @@
+# flake8: noqa
 from langchain.prompts import PromptTemplate
 
 cycle_graph_generation_prompt = PromptTemplate.from_template(

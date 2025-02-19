@@ -3,11 +3,10 @@ import logging
 from dotenv import load_dotenv
 from typing import Optional
 from langchain_core.globals import set_llm_cache
-from langchain_openai import ChatOpenAI
 from langchain_community.cache import SQLAlchemyCache, Base
 from langchain_core.load.load import loads
 from langchain_core.load.dump import dumps
-from langchain_core.outputs import ChatGeneration, Generation
+from langchain_core.outputs import Generation
 
 from sqlalchemy import Column, Integer, String, create_engine, select, DateTime
 from sqlalchemy.sql import func

@@ -20,6 +20,7 @@ def _run_flake():
         # black formats binary operators after line breaks
         "--ignore=W503",
         "--ignore=E501",
+        "--ignore=W293",
         "--per-file-ignores="
         # allow imports in init files without use
         "**/__init__.py:F401 ",

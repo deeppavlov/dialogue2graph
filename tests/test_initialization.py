@@ -4,83 +4,65 @@ from dialogue2graph.datasets.complex_dialogues.generation import (
     GenerationPipeline,
     LoopedGraphGenerator,
     ErrorType,
-    GenerationError
+    GenerationError,
 )
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.graph import Graph, BaseGraph
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.metrics.automatic_metrics import (
-    jaccard_edges,
-    jaccard_nodes,
-    triplet_match,
-    all_utterances_present
-)
+from dialogue2graph.metrics.automatic_metrics import jaccard_edges, jaccard_nodes, triplet_match, all_utterances_present
 from langchain_core.language_models.chat_models import BaseChatModel
+
 
 class MockChatModel(BaseChatModel):
     """Mock chat model for testing"""
-    
+
     def _generate(self, *args, **kwargs):
         return {"generations": [{"text": "test response"}]}
-    
+
     def _llm_type(self):
         return "mock"
+
 
 def test_cycle_graph_generator_init():
     """Test CycleGraphGenerator initialization"""
     generator = CycleGraphGenerator()
     assert isinstance(generator, CycleGraphGenerator)
 
+
 def test_generation_pipeline_init():
     """Test GenerationPipeline initialization"""
     model = MockChatModel()
-    pipeline = GenerationPipeline(
-        generation_model=model,
-        validation_model=model,
-        generation_prompt=None,
-        repair_prompt=None
-    )
+    pipeline = GenerationPipeline(generation_model=model, validation_model=model, generation_prompt=None, repair_prompt=None)
     assert isinstance(pipeline, GenerationPipeline)
+
 
 def test_looped_graph_generator_init():
     """Test LoopedGraphGenerator initialization"""
     model = MockChatModel()
-    generator = LoopedGraphGenerator(
-        generation_model=model,
-        validation_model=model
-    )
+    generator = LoopedGraphGenerator(generation_model=model, validation_model=model)
     assert isinstance(generator, LoopedGraphGenerator)
+
 
 def test_dialogue_init():
     """Test Dialogue initialization"""
-    messages = [
-        {"participant": "assistant", "text": "Hello"},
-        {"participant": "user", "text": "Hi"}
-    ]
+    messages = [{"participant": "assistant", "text": "Hello"}, {"participant": "user", "text": "Hi"}]
     dialogue = Dialogue.from_list(messages)
     assert isinstance(dialogue, Dialogue)
     assert len(dialogue.messages) == 2
 
+
 def test_graph_init():
     """Test Graph initialization"""
-    graph_dict = {
-        "nodes": [
-            {
-                "id": 1,
-                "label": "start",
-                "is_start": True,
-                "utterances": ["Hello"]
-            }
-        ],
-        "edges": []
-    }
+    graph_dict = {"nodes": [{"id": 1, "label": "start", "is_start": True, "utterances": ["Hello"]}], "edges": []}
     graph = Graph(graph_dict=graph_dict)
     assert isinstance(graph, BaseGraph)
+
 
 def test_recursive_dialogue_sampler_init():
     """Test RecursiveDialogueSampler initialization"""
     sampler = RecursiveDialogueSampler()
     assert isinstance(sampler, RecursiveDialogueSampler)
+
 
 def test_error_type_enum():
     """Test ErrorType enum initialization"""
@@ -90,12 +72,10 @@ def test_error_type_enum():
     assert ErrorType.INVALID_THEME == "invalid_theme"
     assert ErrorType.GENERATION_FAILED == "generation_failed"
 
+
 def test_generation_error_init():
     """Test GenerationError initialization"""
-    error = GenerationError(
-        error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
-        message="Test error"
-    )
+    error = GenerationError(error_type=ErrorType.INVALID_GRAPH_STRUCTURE, message="Test error")
     assert isinstance(error, GenerationError)
     assert error.error_type == ErrorType.INVALID_GRAPH_STRUCTURE
-    assert error.message == "Test error" 
+    assert error.message == "Test error"
