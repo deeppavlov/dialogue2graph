@@ -1,1 +1,2 @@
-def load_prompt(name, version): ...
+def load_prompt(name, version):
+    raise NotImplementedError

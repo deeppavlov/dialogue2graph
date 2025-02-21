@@ -1,4 +1,3 @@
-import pytest
 from dialogue2graph.datasets.complex_dialogues.generation import (
     CycleGraphGenerator,
     GenerationPipeline,
@@ -9,14 +8,15 @@ from dialogue2graph.datasets.complex_dialogues.generation import (
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.graph import Graph, BaseGraph
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.metrics.automatic_metrics import jaccard_edges, jaccard_nodes, triplet_match, all_utterances_present
+
+# from dialogue2graph.metrics.automatic_metrics import all_utterances_present
 from langchain_core.language_models.chat_models import BaseChatModel
 
 
 class MockChatModel(BaseChatModel):
     """Mock chat model for testing"""
 
-    def _generate(self, *args, **kwargs):
+    def invoke(self, *args, **kwargs):
         return {"generations": [{"text": "test response"}]}
 
     def _llm_type(self):

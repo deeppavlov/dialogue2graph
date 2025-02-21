@@ -1,7 +1,6 @@
 import os
 import logging
 from dotenv import load_dotenv
-from typing import Optional
 from langchain_core.globals import set_llm_cache
 from langchain_community.cache import SQLAlchemyCache, Base
 from langchain_core.load.load import loads
