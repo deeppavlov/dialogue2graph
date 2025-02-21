@@ -25,10 +25,9 @@ poetry run python <your_file_name>.py
 ## Contents
 
 ```
-./data - Examples, tests and other dialogue data in JSON format
 ./experiments - Test field for experimental features, test data and results
 ./scripts - Here we put scripts needed for `poethepoet` automation (you probably do not need to look inside)
-./dev_packages/chatsky_llm_autoconfig - Directory containing all the code for the `chatsky_llm_autoconfig` module
+./dialogue2graph - Directory containing all the code for the `dialogue2graph` module
 ```
 
 ## Current progress
@@ -43,14 +42,15 @@ Supported types of graphs:
 Currently unsupported types:
 
 - [ ]  single node cycle
-- [ ]  incomplete graph
 
 ## How to use
+
 We provide several of using our library for various tasks.
+
 ### Data generation
 
 ```python
-from chatsky_llm_autoconfig.algorithms.cycle_graph_generation_pipeline import GraphGenerationPipeline
+from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
 from langchain_openai import ChatOpenAI
 
 
@@ -67,10 +67,10 @@ validation_model = ChatOpenAI(
     base_url=os.getenv("OPENAI_BASE_URL"),
     temperature=0
 
-pipeline = GraphGenerationPipeline(
-        generation_model=generation_model,
-        validation_model=validation_model
-    )
+pipeline = LoopedGraphGenerator(
+    generation_model=gen_model,
+    validation_model=val_model,
+)
     
 topics = [
     "technical support conversation",
@@ -83,9 +83,8 @@ topics = [
 successful_generations = []
 
 for topic in topics:
-
     try:
-        result = pipeline(topic)
+        result = pipeline(topic, use_cache=False)
         
         # Check the result type
         if isinstance(result, GraphGenerationResult):
@@ -109,7 +108,7 @@ for topic in topics:
 ### Dialogue sampling
 
 ```python
-from chatsky_llm_autoconfig.algorithms.dialogue_generation import RecursiveDialogueSampler
+from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from chatsky_llm_autoconfig.graph import Graph
 
 G = Graph(graph_dict={...})
@@ -120,6 +119,7 @@ sampler.invoke(graph=G) #-> list of Dialogue objects
 ```
 
 ### Graph generation
+
 ### Evaluation
 
 - Generate graph from scratch by topic (input: topic, output: graph) (for dataset generation)
