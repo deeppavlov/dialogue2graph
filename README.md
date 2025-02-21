@@ -118,27 +118,6 @@ sampler.invoke(graph=G) #-> list of Dialogue objects
 
 ```
 
-### Graph generation
-
-### Evaluation
-
-- Generate graph from scratch by topic (input: topic, output: graph) (for dataset generation)
-  - algorithms.topic_graph_generation.CycleGraphGenerator
-
-- change graph without changing graph structure (input: old graph + topic, output: new graph) (for dataset generation)
-
-- sampling from dialogue graph (input: graph, output: dialogue) (for dataset generation)
-  - algorithms.dialogue_generation.DialogueSampler
-
-- augmentation of dialogue (input: dialogue, output: dialogue) (for dataset generation)
-  - algorithms.dialogue_generation.DialogAugmentation
-
-- generate graph from scratch by dialogue (input: dialogue, output: graph) (decisive algorithm)
-  - GeneralGraphGenerator (experiments/2024.11.14_dialogue2graph)
-
-- generate graph based on existing graph (input: old graph + dialog, output: new graph) (extended decision algorithm)
-  - AppendChain (experiments/2024.11.17_concatenating_subchains_prompt)
-
 ## How to contribute?
 
 You can find contribution guideline in [CONTRIBUTING.md](https://github.com/deeppavlov/chatsky-llm-autoconfig/blob/main/CONTRIBUTING.md)
