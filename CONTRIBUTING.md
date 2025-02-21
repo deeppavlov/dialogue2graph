@@ -1,6 +1,6 @@
 # Contributing to chatsky-llm-integration
 
-Thank you for your interest in contributing to the dff-llm-integration project! We welcome contributions from the community to help improve and expand this Chatsky LLM-Autoconfig tool.
+Thank you for your interest in contributing to the chatsky-llm-integration project! We welcome contributions from the community to help improve and expand this Chatsky LLM-Autoconfig tool.
 
 ## Getting Started
 
@@ -34,28 +34,6 @@ In order to update versions specified in poetry.lock, run
 ```bash
 poetry update
 ```
-
-## How to test your code
-
-To test your algorithm or pipeline you need to follow these steps:
-
-1. Decorate your class with AlgorithRegistry.register() like so:
-
-    ```python
-    from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
-
-    @AlgorithmRegistry.register(input_type=BaseGraph, output_type=list[Dialogue])
-    class DialogueSampler(DialogueGenerator)
-    ```
-
-2. Make sure that `input_type` and `output_type` are matching with the signature of `.invoke()` method
-3. Run
-
-    ```bash
-    poetry run python dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/autometrics/run_autometrics.py
-    ```
-
-4. If metrics didn't drop then everything is fine. Add, commit and push as usual.
 
 ## How to Contribute
 
@@ -117,10 +95,9 @@ Supported types of graphs:
 
 - [x] chain
 - [x] single cycle
+- [x] multi-cycle graph
+- [x] complex graph with cycles
 
 Currently unsupported types:
 
 - [ ] single node cycle
-- [ ] multi-cycle graph
-- [ ] incomplete graph
-- [ ] complex graph with cycles
