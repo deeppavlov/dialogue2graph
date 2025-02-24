@@ -1,6 +1,7 @@
 import random
 import itertools
 import networkx as nx
+import chatsky_llm_autoconfig.graph as ch_graph
 from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.algorithms.base import DialogueGenerator
 # from chatsky_llm_autoconfig.dialogue import Dialogue
@@ -18,13 +19,13 @@ def len_in(a,b):
     return sum([b[x:x + len(a)] == a for x in range(len(b) - len(a) + 1)])
 
 def mix_ends(graph: BaseGraph, ends: list[int], cycles: list[int]):
-    global visited_list
+    # global visited_list
     visited = []
     for c in cycles:
         for e in ends:
-            visited_list = [[]]
+            ch_graph.visited_list = [[]]
             graph.find_path(c, e, [])
-            if any([e in v for v in visited_list]):
+            if any([e in v for v in ch_graph.visited_list]):
                 visited.append(c)
     return [e for e in cycles if e not in visited] + ends
 
@@ -108,10 +109,9 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     paths = []
     starts = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
     for s in starts:
-        visited_list = [[]]
+        ch_graph.visited_list = [[]]
         graph.all_paths(s['id'], [], repeats)
-        paths.extend(visited_list)
-
+        paths.extend(ch_graph.visited_list)
     paths.sort()
     final = list(k for k,_ in itertools.groupby(paths))[1:]
     final.sort(key=len,reverse=True)
@@ -147,16 +147,16 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
         dialogue = [el[1:] for el in visited_list if len(el)==len(f)+1]
         dialogues.extend(dialogue)
 
-    for d in dialogues:
-       print("DGS: ", d)
-    print("\n")
+    # for d in dialogues:
+    #    print("DGS: ", d)
+    # print("\n")
     final = list(k for k,_ in itertools.groupby(dialogues))
     # print("BEFORE: ", len(final))
     final = remove_duplicated_utts(final)
     # print("AFTER: ", len(final))
-    for f in final:
-        print("FINAL: ", f)
-    print("\n")
+    # for f in final:
+    #     print("FINAL: ", f)
+    # print("\n")
     result = [Dialogue().from_list(seq) for seq in final]
     return result
 
@@ -275,7 +275,7 @@ class DialoguePathSampler(DialogueGenerator):
 class RecursiveDialogueSampler(DialogueGenerator):
 
     def invoke(self, graph: BaseGraph, upper_limit: int) -> list[Dialogue]:
-        global visited_list
+        # global visited_list
         repeats = 1
 
         finishes = graph.get_ends()

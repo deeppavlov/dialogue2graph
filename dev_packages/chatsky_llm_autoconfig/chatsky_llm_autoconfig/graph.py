@@ -4,6 +4,8 @@ from typing import Optional, Any
 import abc
 import logging
 import matplotlib.pyplot as plt
+import numpy as np
+from chatsky_llm_autoconfig.metrics.embedder import get_embedding, get_reranking
 
 logger = logging.getLogger(__name__)
 
@@ -109,6 +111,26 @@ class Graph(BaseGraph):
         plt.axis("off")
         plt.show()
 
+    def visualise_short(self, name, *args, **kwargs):
+        plt.figure(figsize=(7, 5))  # Make the plot bigger
+        pos = nx.nx_agraph.pygraphviz_layout(self.graph)
+        # pos = nx.kamada_kawai_layout(self.graph)
+        nx.draw(self.graph, pos, with_labels=False, node_color="lightblue", node_size=500, font_size=8, arrows=True)
+        edge_attrs = {(e['source'], e['target']): len(e['utterances']) for e in self.graph_dict['edges']}
+        node_attrs = {n['id']: n['id'] for n in self.graph_dict['nodes']}
+        # attrs = {(0, 1): {"attr1": 20, "attr2": "nothing"}, (1, 2): {"attr2": 3}}
+        nx.set_edge_attributes(self.graph, edge_attrs, "attrs")
+        nx.set_node_attributes(self.graph, node_attrs, "attrs")
+        edge_labels = nx.get_edge_attributes(self.graph, "attrs")
+        node_labels = nx.get_node_attributes(self.graph, "attrs")
+        nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels, font_size=12)
+        nx.draw_networkx_labels(self.graph, pos, labels=node_labels, font_size=10)
+
+        plt.title(name)
+        plt.axis("off")
+        plt.show()
+
+
     def nodes_by_utterance(self, utterance: str) -> list[dict]:
         return [node for node in self.graph_dict['nodes'] if utterance in node['utterances']]
             
@@ -153,6 +175,43 @@ class Graph(BaseGraph):
         edge_sources = set([e['source'] for e in graph['edges']])
         return node_ids == edge_targets.union(edge_sources) and node_non_starts.issubset(edge_targets)
     
+    def combine_nodes(self, id1, id2):
+        graph = self.graph_dict
+        nodes = graph['nodes'].copy()
+        edges = graph['edges'].copy()
+        for idx, e in enumerate(edges):
+            if e['source'] == id2:
+                edges[idx]['source'] = id1
+            if e['target'] == id2:
+                edges[idx]['target'] = id1
+        self.graph_dict = {"edges": edges, "nodes": [n for n in nodes if n['id'] != id2]}
+        self.graph =  Graph(self.graph_dict)
+        return self.graph
+
+
+    def remove_overlaps(self):
+        graph = self.graph_dict  
+        edges = graph['edges']
+        to_combine = {}
+        for e1 in edges:
+            for e2 in [e for e in edges if e != e1 and set(e1['utterances']) == set(e['utterances'])]:
+                print(e1, e2)
+                source1 = e1['source']
+                source2 = e2['source']
+                utt1 = self.node_by_id(source1)['utterances']
+                utt2 = self.node_by_id(source2)['utterances']
+                if source1 == source2 or np.min(get_embedding(utt1,utt2)) >= 0.6:
+                    print("YES")
+                    if e1['target'] != e2['target']:
+                        to_combine.append([e1['target'],e2['target']])
+        for idx in range(len(to_combine)):
+            to_combine[idx].sort()
+        for pair in set(to_combine):
+            self.combine_nodes(pair[0],pair[1])
+
+
+
+
     def remove_duplicated_edges(self):
         graph = self.graph_dict
         edges = graph['edges']
@@ -201,15 +260,16 @@ class Graph(BaseGraph):
 
     def all_paths(self, start: int, visited: list, repeats: int):
         global visited_list
-        graph = self.graph_dict 
+        # graph = self.graph_dict 
     
         # if len(visited) < 1 or len_in([visited[-1],start],visited) < repeats:
         if len(visited) < repeats or not self._list_in(visited[-repeats:]+[start],visited):
             # print("LEN: ", len(visited))
             visited.append(start)
-            for edge in graph.edge_by_source(start):
+            for edge in self.edge_by_source(start):
                 # print("TARGET: ", edge['target'])
                 self.all_paths(edge['target'], visited.copy(), repeats)
+        # print("VIS: ", visited_list)
         visited_list.append(visited)
     
     def find_path(self, start: int, end: int, visited: list):

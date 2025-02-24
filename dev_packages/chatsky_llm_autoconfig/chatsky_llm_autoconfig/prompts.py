@@ -490,44 +490,171 @@ Next is an example of the graph (set of rules) how chatbot system looks like - i
 a set of nodes with assistant's utterances and a set of edges that are
 triggered by user requests: """
 
+# part_2 = """This is the end of the example.
+# **Rules:**
+# 1) is_start field in the node is an entry point to the whole graph.
+# 2) Nodes must be assistant's utterances only.
+# 3) All the nodes for the graph are created from the resulting groups in point 4) according to the rules 6,7,8,9
+# with exclusively assistant's utterances only in their original unmodified form.
+# 4) The grouping process looks like follows:
+# a. Go over all the dialogues, take every assistant's utterance one by one.
+# b. Search for all assistant's utterances having common basic idea with current utterance,
+# and not adjacent with it. It is forbidden to select groups based on intents.
+# c. Form one group from current utterance and all utterances found in 4b.
+# d. Of the three types of assistant's utterances:
+# with a question mark at the end,
+# with an exclamation mark at the end,
+# affirmative without exclamation mark,
+# each group can contain only one.
+# So if two different types encounter in one group, you shall separate them into different groups.
+# e. Don't miss any assistant's utterance in all the dialogues.
+# f. Go to next utterance in step 4a, skip those present in existing groups. Don't miss any utterance.
+# 5) Below are examples when two utterances have common basic idea:
+# if they ask about posession or obtaining of some entities, and these entities are close by in-context meaning to each other:
+# for example, one entity can be a particular case of the other in the dialogue conext;
+# when they both are requests without ending question mark and have common words or synonyms;
+# if they ask whether something is done or about status of something, and have common or synonymous words;
+# if they ask about accessability of something similar by in-context meaning to each other;
+# if they have common objects and the remainders of each utterance are close by meaning to each other.
+# 6) If two utterances don't have common words or in-context synonyms,
+# then they must be separated into different groups.
+# If one entity is a particular case of the other in the dialogue conext, they are considered synonyms.
+# 7) Don't use user's utterances for grouping process in point 4).
+# 8) Duplicates inside any of the nodes must be removed.
+# 9) If one utterance mentions a problem and the other does not imply any problem, then they shall be separated into different groups.
+# 9) Empty groups shall be removed.
+# 10) Don't use new or modified utterances in the nodes.
+# 11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 12) Add reason point to the graph with your explanation why you placed utterances with common basic idea in different groups.
+# I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+# List of dialogues: """
+
+# 7) Try not to duplicate edges.
+# 7) If two nodes with their immediately following neighbours in the resulting graph overlap, they should be combined into one group.
+# 8) Two assistant's utterances with different intents shall be in different groups.
+# 10) Nodes shall be grouped so that source and target of any edge are different.
+# 10) You must use all the assistant's utterances in resulting set of nodes, not a single utterance to be missed.
+# 10) Any edge in the resultng graph connects only different nodes.
+# If speaker refers to something absent in the previous context, such dialogues 
+# 7) New dialogues which appear as a result of grouping process in step 5) shall be logical and following the context.
+# If you see that groups cause such situations:
+# new resulting dialogues look illogical,
+# or speaker refers to a non-existent context,
+# then such groups shall be ungrouped.
+
+
 part_2 = """This is the end of the example.
 **Rules:**
-1) is_start field in the node is an entry point to the whole graph.
-2) Nodes must be assistant's utterances only.
-3) All the nodes for the graph are created from the resulting groups in point 4) according to the rules 6,7,8,9
+1) is_start field is mandatory for all the nodes.
+2) is_start=True field in the node is an entry point to the whole graph.
+3) Nodes must be assistant's utterances only.
+4) All the nodes for the graph are created from the resulting groups in point 5) according to the rules 6,7,8,9
 with exclusively assistant's utterances only in their original unmodified form.
-4) The grouping process looks like follows:
+5) The grouping process looks like follows:
 a. Go over all the dialogues, take every assistant's utterance one by one.
-b. Search for all assistant's utterances having common basic idea with current utterance,
-and not adjacent with it. It is forbidden to select groups based on intents.
-c. Form one group from current utterance and all utterances found in 4b.
-d. Of the three types of assistant's utterances:
-with a question mark at the end,
-with an exclamation mark at the end,
-affirmative without exclamation mark,
-each group can contain only one.
-So if two different types encounter in one group, you shall separate them into different groups.
-e. Don't miss any assistant's utterance in all the dialogues.
-f. Go to next utterance in step 4a, skip those present in existing groups. Don't miss any utterance.
-5) Below are examples when two utterances have common basic idea:
-if they ask about posession or obtaining of some entities, and these entities are close by in-context meaning to each other:
-for example, one entity can be a particular case of the other in the dialogue conext;
-when they both are requests without ending question mark and have common words or synonyms;
-if they ask whether something is done or about status of something, and have common or synonymous words;
-if they ask about accessability of something similar by in-context meaning to each other;
-if they have common objects and the remainders of each utterance are close by meaning to each other.
-6) If two utterances don't have common words or in-context synonyms,
-then they must be separated into different groups.
-If one entity is a particular case of the other in the dialogue conext, they are considered synonyms.
-7) Don't use user's utterances for grouping process in point 4).
-8) Duplicates inside any of the nodes must be removed.
-9) If one utterance mentions a problem and the other does not imply any problem, then they shall be separated into different groups.
-9) Empty groups shall be removed.
-10) Don't use new or modified utterances in the nodes.
-11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
-12) Add reason point to the graph with your explanation why you placed utterances with common basic idea in different groups.
+b. Search for all assistant's utterances surrounded by utterances with same contextual meaning: one pair of assistant's and user's utterances previous to
+current assistants' utterance and one pair of user's and assistant's utterances next to current assistants' utterance.
+Search only for those assistant's utterances where both previous and next pairs are contextually similar to their counterparts.
+c. Below is an example when two assistant's utterances have surrounding pairs with same contextual meaning:
+'Please, enter the payment method you would like to use: cash or credit card.', and
+'How would you prefer to pay?'
+Surrounding pairs for both of them are similar so these two assistant's utterances have surrounding pairs with same contextual meaning.
+d. Contexts with opposite intents go to different groups.
+e. Assitant's utterances with different intents or distant meanings go to different groups.
+f. When one assistant's utterance contains a reference to a previous context, which is not clear in the other assistant's utterance, those utterances go to different groups.
+For example, one utterance refers to some objects called by such the words like there, that, etc, and the other utterance doesn't have such references.
+g. Place utterances satisfying point 5b (taking into account exceptions in points 5d, 5e and 5f) into one group.
+h. Go to next utterance in step 5a. Don't miss any utterance.
+6) Don't use user's utterances for grouping process.
+7) Every assistant's utterance not included in any group shall be present in its own group of single utterance.
+8) You must doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+9) Always place adjacent assistant's utterances separated by only one user's utterance into different groups.
+10) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+11) Add reason point to your answer with an explanation why some of the assistant's utterances were not included in the resulting groups.
 I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
 List of dialogues: """
+
+# 7) Combining nodes into groups must not allow dialogue flow to be distorted.
+# 8) New dialogues which appear as a result of grouping process shall be logical and following the context.
+# 7) Every assistant's utterance not included in any group shall be present in its own group of single utterance.
+# 8) You must doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+# 9) Don't use user's utterances for grouping process.
+# 10) Always place adjacent assistant's utterances separated by only one user's utterance into different groups.
+# 6) One possible way how to find groups is to compare contexts one assistant's utterance before and one assistant's utterance after.
+# When these contexts are similar, it is a good reason to combine nodes in one group.
+# 6) Dialogue flow resulting the grouping process shall remain natural and conscious.
+
+# 7) Every assistant's utterance not included in any group shall be present in its own group of single utterance.
+# 8) Use every assistant's utterance for one group only.
+# 9) Don't use user's utterances for grouping process.
+# 10) All the nodes for the graph are created from the resulting groups decribed above.
+# 9) Make sure that none of the edges and nodes contain contradictory utterances.
+# 10) Make sure that nodes in dialogue flow following combined node are coherent.
+
+# 9) Make sure that combining assistant's utterances into nodes does not distort dialogue flow logics and context.
+# 10) Make sure that dialogue flows don't have contradictory chains (according to point 4).
+# 9) Make sure that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+# 9) Make sure you keep balance between combining nodes to provide graph efficiency and saving graph consistency (when any path of the graph
+# is consistent and doesn't contain contradictions).
+# 10) Make sure that any pair of utterances in any single node or edge doesn't contain mutually exclusive essential concepts between each other.
+# 9) Make sure not a single dialogue path has mutually exclusive essential concepts like cheap-expensive, or center-south, etc.
+# 9) Make sure not a single dialogue path has mutually exclusive essential concepts between any node and edges connected to it.
+
+part_2_v2 = """This is the end of the example.
+**Rules:**
+1) is_start field is mandatory for all the nodes.
+2) is_start=True field in the node is an entry point to the whole graph.
+3) Nodes must be assistant's utterances only.
+4) Every node can have more than one utterance, in this case nodes with several utterances connected by edges with several
+utterances mean that there are dialogue flows connecting all the combinations of them (every utterance from each node with
+every utterance from the other nodes and edges lying in one graph path). 
+5) Some assistant's utterances can belong to same node. To solve the nodes generation task you shall understand
+which utterances can be combined into one node, and which can not.
+6) Main goal of combining different utterances into one node is to avoid duplication of edges with similar utterances,
+connecting duplicated similar nodes, to make the graph structure more efficient and decrease number of nodes.
+7) To understand when two assistant's utterances can be combined in one node, for every assistant's utterance
+you shall consider all its pairs with assistant's utterances of same intent in all the dialogues. If you can swap this pair members (along
+with immediate contexts) between each other while sticking to the general meaning of the dialogue,
+this pair shall be in one node if and only if all the points 8-12 are satisfied.
+8) Always place adjacent assistant's utterances into different nodes.
+9) Consider all the dialogue paths (according to point 4) which appear as a result of combining utterances and make sure they are coherent and following current context.
+10) Make sure you keep balance between combining nodes to provide graph efficiency and saving graph consistency (when any path of the graph
+is consistent).
+11) Make sure that any two utterances having contradictory concepts are in different nodes and different edges.
+12) Make sure you use every assistant's utterance for one node only.
+13) Doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+14) Make sure not a single user's utterance is used in nodes.
+15) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+16) Add reason point to your answer with an explanation why you didn't use all the assistant's utterances.
+I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+List of dialogues: """
+
+# part_2 = """This is the end of the example.
+# **Rules:**
+# 1) is_start field is mandatory for all the nodes.
+# 2) is_start=True field in the node is an entry point to the whole graph.
+# 3) Nodes must be assistant's utterances only.
+# 4) All the nodes for the graph are created from the resulting groups in point 5) according to the rules 6,7,8,9
+# with exclusively assistant's utterances only in their original unmodified form.
+# 5) The grouping process looks like follows:
+# a. Go over all the dialogues, take every assistant's utterance one by one.
+# b. Search for all assistant's utterances surrounded by utterances with similar intents: one pair of assistant's and user's utterances previous to
+# and one pair of user's and assistant's utterances next to current assistants' utterance.
+# c. Place utterances with similar surrounings from 5)b. into one group.
+# d. Go to next utterance in step 5a. Don't miss any utterance.
+# 6) Below is an example when two utterances have adjacent pairs with similar intents:
+# They are:
+# 'Please, enter the payment method you would like to use: cash or credit card.', and
+# 'How would you prefer to pay?'
+# Surrounding pairs for both of them are similar so they need to be united into one group of nodes.
+# 7) Don't use user's utterances for grouping process in point 5).
+# 8) You must use all the assistant's utterances in resulting set of nodes.
+# 9) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+# 10) Add reason point to the graph with your explanation why you didn't group assistant's utterances and why you didn't use all the assistant's utterances in dialogues.
+# I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
+# List of dialogues: """
+
+
 
 graph_example_1 = {
     "edges": [
@@ -540,7 +667,7 @@ graph_example_1 = {
       [
           {'id': 1, 'label': 'start', 'is_start': True, 'utterances': [ 'How can I help?', 'Hello']},
           {'id': 2, 'label': 'ask_books', 'is_start': False, 'utterances': [ 'What books do you like?']},
-          {'id': 3, 'label': 'ask_payment_method', 'is_start': False, 'utterances': [ 'Please, enter the payment method you would like to use: cash or credit card.']},
+          {'id': 3, 'label': 'ask_payment_method', 'is_start': False, 'utterances': [ 'Please, enter the payment method you would like to use: cash or credit card.', 'How would you prefer to pay?']},
           {"id": 4, "label": "ask_to_redo", "is_start": False, "utterances": [ "Something is wrong, can you please use other payment method or start order again"]}
       ],
       'reason': ""

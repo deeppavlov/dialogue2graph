@@ -14,7 +14,7 @@ from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph, dialogues2li
 from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
 from chatsky_llm_autoconfig.prompts import (
- graph_example_1, part_1, part_2
+ graph_example_1, part_1, part_2_v2
 )
 from chatsky_llm_autoconfig.metrics.automatic_metrics import (
     is_same_structure,
@@ -42,7 +42,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, topic: str = "") -> BaseGraph:
 
         partial_variables = {}
-        prompt_extra = part_2
+        prompt_extra = part_2_v2
         for idx, dial in enumerate(dialogue):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
