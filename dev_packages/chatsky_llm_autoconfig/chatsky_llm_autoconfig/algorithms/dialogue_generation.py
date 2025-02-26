@@ -297,7 +297,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
                 # print("REPEATS: ", repeats)
         if repeats > upper_limit:
             print("Not all utterances present")
-            return []
+            # return []
         return dialogues
 
     async def ainvoke(self, *args, **kwargs):

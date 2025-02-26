@@ -490,6 +490,11 @@ Next is an example of the graph (set of rules) how chatbot system looks like - i
 a set of nodes with assistant's utterances and a set of edges that are
 triggered by user requests: """
 
+part_1i = """Your input is a dialogue graph from customer chatbot system.
+Your task is to extend set of nodes for the dialogue graph with input dialogue.
+Dialogue graph is a set of nodes with assistant's utterances and a set of edges that are
+triggered by user requests. Here goes the input graph: """
+
 # part_2 = """This is the end of the example.
 # **Rules:**
 # 1) is_start field in the node is an entry point to the whole graph.
@@ -542,6 +547,43 @@ triggered by user requests: """
 # or speaker refers to a non-existent context,
 # then such groups shall be ungrouped.
 
+part_2i = """This is the end of the graph.
+**Rules:**
+1) is_start field is mandatory for all the nodes.
+2) is_start=True field in the node is an entry point to the whole graph.
+3) Nodes must be assistant's utterances from the dialogues in their original form.
+4) Several assistant's utterances can belong to same node. To solve the nodes generation task you shall understand
+which utterances can be combined into one node, and which can not.
+5) Main goal of combining different assistant's utterances into one node is to make the graph structure more efficient and decrease number of nodes.
+6) Below is an example when two assistant's utterances go to one node:
+'Please, enter the payment method you would like to use: cash or credit card.', and
+'How would you prefer to pay?'
+7) Next is an example when two assistant's utterances are not necessarily combined in one node:
+'I know good chinese restaurant in town.', and
+'Do you like Italian food?'
+They both talk about restaurant, but different types. And to combine or not depends on surrouding contexts.
+If they mention Chinese (or Italian) restaurant names or other details, specific to discussion of exactly this type of restaurant,
+these utterences go to different nodes.
+But if the remaining context doesn't mention such specific details, for example user could ask for something else instead,
+like restaurant with a nice view, these two assistant's utterances would go to one node.
+8) Another example shows pair of assistant's utterances which go to different nodes anyway.
+'What is your price preference?', and
+'Do you like Italian food? I know good restaurant in your price range.'
+First utterance asks about price, while second one refers to price mentioned before, that means dialogue flows are different and hence nodes are different.
+9) Consider all the dialogue paths which appear as a result of combining utterances and make sure they follow current context.
+If they don't, modify your nodes.
+10) Example when dialogue doesn't follow current context:
+User: I am looking for a cheap restaurant.
+Assistant: I found 5 expensive restaurants for you.
+11) You shall use every assistant's utterance from the dialogue and the input graph for one node only.
+12) You mustn't remove assitant's utterances even if they are similar or synonymous. Make sure you keep all the assistant's utterances in the resulting set of nodes.
+12) Doublecheck that all the assistant's utterances from the dialogue and the input graph are present in resulting set of nodes,
+not a single assistant's utterance to be missed.
+13) Don't modify utterances even slightly (even a single letter) before placing them into the nodes.
+14) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+15) Add reason point to your answer with an explanation why you didn't use all the assistant's utterances from the dialogue and the input graph.
+I will give you the dialogue, your task is to extend a set of nodes of the graph above from this dialogue according to the rules and examples above.
+The dialogue: """
 
 part_2 = """This is the end of the example.
 **Rules:**
@@ -599,6 +641,9 @@ List of dialogues: """
 # 10) Make sure that any pair of utterances in any single node or edge doesn't contain mutually exclusive essential concepts between each other.
 # 9) Make sure not a single dialogue path has mutually exclusive essential concepts like cheap-expensive, or center-south, etc.
 # 9) Make sure not a single dialogue path has mutually exclusive essential concepts between any node and edges connected to it.
+# 13) Make sure that any two utterances having contradictory concepts are in different nodes and different edges.
+# 12) Make sure you keep balance between combining nodes to provide graph efficiency and saving graph consistency (when any path of the graph
+# is consistent).
 
 part_2_v2 = """This is the end of the example.
 **Rules:**
@@ -615,19 +660,77 @@ connecting duplicated similar nodes, to make the graph structure more efficient 
 7) To understand when two assistant's utterances can be combined in one node, for every assistant's utterance
 you shall consider all its pairs with assistant's utterances of same intent in all the dialogues. If you can swap this pair members (along
 with immediate contexts) between each other while sticking to the general meaning of the dialogue,
-this pair shall be in one node if and only if all the points 8-12 are satisfied.
-8) Always place adjacent assistant's utterances into different nodes.
-9) Consider all the dialogue paths (according to point 4) which appear as a result of combining utterances and make sure they are coherent and following current context.
-10) Make sure you keep balance between combining nodes to provide graph efficiency and saving graph consistency (when any path of the graph
-is consistent).
-11) Make sure that any two utterances having contradictory concepts are in different nodes and different edges.
-12) Make sure you use every assistant's utterance for one node only.
-13) Doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
-14) Make sure not a single user's utterance is used in nodes.
-15) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
-16) Add reason point to your answer with an explanation why you didn't use all the assistant's utterances.
+this pair shall be in one node if and only if all the points 11-15 are satisfied.
+8) Below is an example when two assistant's utterances go to one node:
+'Please, enter the payment method you would like to use: cash or credit card.', and
+'How would you prefer to pay?'
+9) Next is an example when two utterances are not necessarily combined in one node:
+a. I know good chinese restaurant in town.
+b. Do you like Italian food?
+They both talk about restaurant, but different types. And to combine or not depends on surrouding contexts.
+If they mention Chinese (or Italian) restaurant names or other details, specific to discussion of exactly this type of restaurant,
+these utterences go to different nodes.
+But if the remaining context doesn't mention such specific details, for example user could ask for something else instead,
+like restaurant with a nice view, these two utterances would go to one node.
+10) Another example shows pair of utterances which go to different nodes anyway.
+a. I know good chinese restaurant in town. What price range do you mean?
+b. Do you like Italian food? I know good restaurant in your price range.
+Utterance 10a. asks about price, while utterance 10b. refers to price mentioned before, that means dialogue flows are different and can't be part of one node.
+11) Always place adjacent assistant's utterances into different nodes.
+12) Consider all the dialogue paths (according to point 4) which appear as a result of combining utterances and make sure they are coherent and following current context.
+13) Any two utterances having contradictory concepts shall be in different nodes and different edges.
+14) Make sure you use every assistant's utterance for one node only.
+15) Don't use new or modified utterances in the nodes.
+16) Doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+17) Make sure not a single user's utterance is used in nodes.
+18) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+19) Add reason point to your answer with an explanation why you didn't use all the assistant's utterances.
 I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
 List of dialogues: """
+
+# 10) Make sure you use every assistant's utterance for one node only.
+# 11) Don't use new or modified utterances in the nodes.
+# 12) Doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+# 13) Make sure not a single user's utterance is used in nodes.
+# 13) Make sure not a single user's utterance is used in nodes (except those duplicating assistant's utterances).
+
+part_2_v3 = """This is the end of the example.
+**Rules:**
+1) is_start field is mandatory for all the nodes.
+2) is_start=True field in the node is an entry point to the whole graph.
+3) Nodes must be assistant's utterances from the dialogues in their original form.
+4) Several assistant's utterances can belong to same node. To solve the nodes generation task you shall understand
+which utterances can be combined into one node, and which can not.
+5) Main goal of combining different assistant's utterances into one node is to make the graph structure more efficient and decrease number of nodes.
+6) Below is an example when two assistant's utterances go to one node:
+'Please, enter the payment method you would like to use: cash or credit card.', and
+'How would you prefer to pay?'
+7) Next is an example when two assistant's utterances are not necessarily combined in one node:
+'I know good chinese restaurant in town.', and
+'Do you like Italian food?'
+They both talk about restaurant, but different types. And to combine or not depends on surrouding contexts.
+If they mention Chinese (or Italian) restaurant names or other details, specific to discussion of exactly this type of restaurant,
+these utterences go to different nodes.
+But if the remaining context doesn't mention such specific details, for example user could ask for something else instead,
+like restaurant with a nice view, these two assistant's utterances would go to one node.
+8) Another example shows pair of assistant's utterances which go to different nodes anyway.
+'What is your price preference?', and
+'Do you like Italian food? I know good restaurant in your price range.'
+First utterance asks about price, while second one refers to price mentioned before, that means dialogue flows are different and hence nodes are different.
+9) Consider all the dialogue paths which appear as a result of combining utterances and make sure they follow current context.
+If they don't, modify your nodes.
+10) Example when dialogue doesn't follow current context:
+User: I am looking for a cheap restaurant.
+Assistant: I found 5 expensive restaurants for you.
+11) You shall use every assistant's utterance from the list of the dialogues for one node only.
+12) Doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+13) You mustn't remove assitant's utterances even if they are similar or synonymous. Make sure you keep all the assistant's utterances in the set of nodes.
+14) Don't modify dialogue utterances even slightly (even a single letter) before placing them into the nodes.
+15) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+16) Add reason point to your answer with an explanation why you didn't use all the assistant's utterances from all the dialogues.
+I will give a list of dialogues, your task is to build a set of nodes containing all the utterances from this list according to the rules and examples above.
+List of dialogues: """
+
 
 # part_2 = """This is the end of the example.
 # **Rules:**

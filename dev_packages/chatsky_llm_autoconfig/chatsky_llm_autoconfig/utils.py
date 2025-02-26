@@ -276,7 +276,7 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceE
                                     edges.append({'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
                                     # print("EXIST: ", {'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
                                 # else:
-                                #     print("NOOO")
+                                    # print("NOOO")
                             else:
                                 edges.append({'source': n['id'], 'target':target, 'utterances': [s]})
                                 # print("ADDED: ", {'source': n['id'], 'target':target, 'utterances': [s]})
