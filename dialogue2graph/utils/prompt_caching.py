@@ -1,9 +1,10 @@
 import os
 import logging
+import uuid
 from dotenv import load_dotenv
 
 from langchain_core.globals import set_llm_cache
-from langchain_community.cache import SQLAlchemyCache, Base
+from langchain_community.cache import SQLAlchemyCache, Base, InMemoryCache
 from langchain_core.load.load import loads
 from langchain_core.load.dump import dumps
 from langchain_core.outputs import Generation
@@ -83,12 +84,43 @@ class PromptCache(SQLAlchemyCache):
                 session.merge(item)
 
 
-def setup_cache():
-    """Set up the LLM cache."""
+def add_uuid_to_prompt(prompt: str, seed: int = None) -> str:
+    """Add a UUID to the beginning of a prompt."""
+    if seed is not None:
+        # Create a UUID using the seed
+        random_uuid = uuid.UUID(int=seed)
+    else:
+        random_uuid = uuid.uuid4()
+    return f"UUID: {random_uuid}\n\n{prompt}"
+
+
+def setup_cache(use_in_memory: bool = False):
+    """Set up the LLM cache.
+    
+    Args:
+        use_in_memory: If True, use InMemoryCache instead of SQLAlchemyCache
+        
+    Returns:
+        The configured cache object or None if setup fails
+    """
     try:
-        engine = create_engine(os.getenv("DATABASE_URL"))
-        cache = PromptCache(engine, PromptCacheSchema)
+        if use_in_memory:
+            cache = InMemoryCache()
+            set_llm_cache(cache)
+            logger.info("Using in-memory cache")
+            return cache
+
+        database_url = os.getenv("DATABASE_URL")
+        if not database_url:
+            logger.warning("DATABASE_URL not found in environment, falling back to in-memory cache")
+            return setup_cache(use_in_memory=True)
+
+        engine = create_engine(database_url)
+        cache = SQLAlchemyCache(engine, PromptCacheSchema)
         set_llm_cache(cache)
+        logger.info("Successfully set up SQLAlchemy cache")
+        return cache
+
     except Exception as e:
-        logger.error(f"Error setting up cache: {e}")
-        return None
+        logger.warning(f"Error setting up cache: {e}. Falling back to in-memory cache")
+        return setup_cache(use_in_memory=True)

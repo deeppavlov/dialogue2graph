@@ -16,7 +16,7 @@ from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_vali
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
-from dialogue2graph.utils.prompt_caching import setup_cache
+from dialogue2graph.utils.prompt_caching import setup_cache, add_uuid_to_prompt
 
 from .prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
 
@@ -44,20 +44,32 @@ class GenerationError(BaseModel):
 PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 
-class CycleGraphGenerator(TopicGraphGenerator):
-    """Generator specifically for topic-based cyclic graphs"""
+class CycleGraphGenerator(BaseModel):
+    cache: Optional[Any] = Field(default=None, exclude=True)
+    
+    class Config:
+        arbitrary_types_allowed = True
+        extra = "allow"
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.cache = setup_cache()
 
-    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, use_cache=True, **kwargs) -> BaseGraph:
+    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=42, **kwargs) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
-        if use_cache:
-            setup_cache()
+        self.cache = setup_cache()
+            
+        # Add UUID to the prompt template
+        original_template = prompt.template
+        prompt.template = add_uuid_to_prompt(original_template, seed)
+        
         parser = PydanticOutputParser(pydantic_object=DialogueGraph)
         chain = prompt | model | parser
+        
+        # Reset template to original
+        prompt.template = original_template
         return Graph(chain.invoke(kwargs))
 
     async def ainvoke(self, *args, **kwargs):
@@ -70,6 +82,7 @@ class CycleGraphGenerator(TopicGraphGenerator):
 
 @dataclass
 class GenerationPipeline(BaseModel):
+    cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
     validation_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
@@ -78,7 +91,11 @@ class GenerationPipeline(BaseModel):
     min_cycles: int = 2
     max_fix_attempts: int = 3
     dialogue_sampler: RecursiveDialogueSampler = Field(default_factory=RecursiveDialogueSampler)
-    use_cache: bool = True
+    seed: int = 42
+
+    class Config:
+        arbitrary_types_allowed = True
+        extra = "allow"
 
     def __init__(
         self,
@@ -88,7 +105,7 @@ class GenerationPipeline(BaseModel):
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 0,
         max_fix_attempts: int = 2,
-        use_cache: bool = True,
+        seed: int = 42,
     ):
         super().__init__(
             generation_model=generation_model,
@@ -97,8 +114,10 @@ class GenerationPipeline(BaseModel):
             repair_prompt=repair_prompt,
             min_cycles=min_cycles,
             max_fix_attempts=max_fix_attempts,
-            use_cache=True,
+            seed=seed,
         )
+        self.cache = setup_cache()
+        self.seed = seed
 
     def validate_graph_cycle_requirement(self, graph: BaseGraph, min_cycles: int = 2) -> Dict[str, Any]:
         """Checks the graph for cycle requirements"""
@@ -135,13 +154,22 @@ class GenerationPipeline(BaseModel):
         while current_attempt < max_attempts:
             logger.info(f"🔄 Fix attempt {current_attempt + 1}/{max_attempts}")
             try:
+                # Add UUID to repair prompt
+                if self.repair_prompt:
+                    original_template = self.repair_prompt.template
+                    self.repair_prompt.template = add_uuid_to_prompt(original_template, seed=self.seed)
+                
                 current_graph = self.graph_generator.invoke(
                     model=self.generation_model,
                     prompt=self.repair_prompt,
                     invalid_transitions=initial_validation["invalid_transitions"],
                     graph_json=current_graph.graph_dict,
-                    use_cache=self.use_cache,
+                    seed=self.seed
                 )
+                
+                # Reset template
+                if self.repair_prompt:
+                    self.repair_prompt.template = original_template
 
                 validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
                 if validation["is_valid"]:
@@ -174,7 +202,7 @@ class GenerationPipeline(BaseModel):
         """Generates and validates a dialogue graph for given topic"""
         try:
             logger.info("Generating Graph ...")
-            graph = self.graph_generator.invoke(model=self.generation_model, prompt=self.generation_prompt, topic=topic, use_cache=self.use_cache)
+            graph = self.graph_generator.invoke(model=self.generation_model, prompt=self.generation_prompt, topic=topic, seed=self.seed)
 
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)
             if not cycle_validation["meets_requirements"]:
@@ -234,13 +262,14 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             ),
         )
 
-    def invoke(self, topic, use_cache=True) -> list[dict]:
+    def invoke(self, topic, seed=42) -> list[dict]:
         logger.info(f"\n{'='*50}")
         logger.info(f"Generating graph for topic: {topic}")
         logger.info(f"{'='*50}")
         successful_generations = []
         try:
-            result = self.pipeline(topic, use_cache=use_cache)
+            self.pipeline.seed = seed
+            result = self.pipeline(topic)
 
             if isinstance(result, GraphGenerationResult):
                 logger.info(f"✅ Successfully generated graph for {topic}")
