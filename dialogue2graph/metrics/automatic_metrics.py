@@ -218,10 +218,14 @@ def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
     return node_mapping, edge_mapping
 
 
-def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
+def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> dict[str]:
     g1 = G1.graph
     g2 = G2.graph
-    return nx.is_isomorphic(g1, g2)
+    isomorphic = nx.is_isomorphic(g1, g2)
+    return {
+        "value": isomorphic,
+        "description": g1.edges() - g2.edges()
+    }
 
 
 def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
