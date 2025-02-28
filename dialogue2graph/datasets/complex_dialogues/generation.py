@@ -15,7 +15,8 @@ from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_vali
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
-from dialogue2graph.utils.prompt_caching import setup_cache
+# commented the line 'cause no utils module is found
+# from dialogue2graph.utils.prompt_caching import setup_cache
 
 from .prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
 
@@ -50,11 +51,14 @@ class CycleGraphGenerator(TopicGraphGenerator):
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
-        if use_cache:
-            setup_cache()
+        # if use_cache:
+        #     setup_cache()
         parser = PydanticOutputParser(pydantic_object=DialogueGraph)
         chain = prompt | model | parser
-        return Graph(chain.invoke(kwargs))
+        res = chain.invoke(kwargs).model_dump()
+
+        return Graph(res)
+        # return Graph(chain.invoke(kwargs))
 
     async def ainvoke(self, *args, **kwargs):
         """Async version of invoke - to be implemented"""
@@ -172,6 +176,7 @@ class GenerationPipeline(BaseModel):
         try:
             print("Generating Graph ...")
             graph = self.graph_generator.invoke(model=self.generation_model, prompt=self.generation_prompt, topic=topic, use_cache=self.use_cache)
+            print(f"The graph: {graph}")
 
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)
             if not cycle_validation["meets_requirements"]:
@@ -236,7 +241,8 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         print(f"{'='*50}")
         successful_generations = []
         try:
-            result = self.pipeline(topic, use_cache=use_cache)
+            self.pipeline.use_cache = use_cache
+            result = self.pipeline(topic)
 
             if isinstance(result, GraphGenerationResult):
                 print(f"✅ Successfully generated graph for {topic}")
