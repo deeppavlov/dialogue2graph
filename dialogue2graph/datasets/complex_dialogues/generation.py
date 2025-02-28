@@ -15,7 +15,6 @@ from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_vali
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
-from dialogue2graph.utils.prompt_caching import setup_cache
 
 from .prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
 
@@ -46,15 +45,13 @@ class CycleGraphGenerator(TopicGraphGenerator):
     def __init__(self):
         super().__init__()
 
-    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, use_cache=True, **kwargs) -> BaseGraph:
+    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, **kwargs) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
-        if use_cache:
-            setup_cache()
         parser = PydanticOutputParser(pydantic_object=DialogueGraph)
         chain = prompt | model | parser
-        return Graph(chain.invoke(kwargs))
+        return Graph(chain.invoke(kwargs).model_dump())
 
     async def ainvoke(self, *args, **kwargs):
         """Async version of invoke - to be implemented"""
@@ -74,7 +71,6 @@ class GenerationPipeline(BaseModel):
     min_cycles: int = 2
     max_fix_attempts: int = 3
     dialogue_sampler: RecursiveDialogueSampler = Field(default_factory=RecursiveDialogueSampler)
-    use_cache: bool = True
 
     def __init__(
         self,
@@ -84,7 +80,6 @@ class GenerationPipeline(BaseModel):
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 0,
         max_fix_attempts: int = 2,
-        use_cache: bool = True,
     ):
         super().__init__(
             generation_model=generation_model,
@@ -93,7 +88,6 @@ class GenerationPipeline(BaseModel):
             repair_prompt=repair_prompt,
             min_cycles=min_cycles,
             max_fix_attempts=max_fix_attempts,
-            use_cache=True,
         )
 
     def validate_graph_cycle_requirement(self, graph: BaseGraph, min_cycles: int = 2) -> Dict[str, Any]:
@@ -136,8 +130,7 @@ class GenerationPipeline(BaseModel):
                     model=self.generation_model,
                     prompt=self.repair_prompt,
                     invalid_transitions=initial_validation["invalid_transitions"],
-                    graph_json=current_graph.graph_dict,
-                    use_cache=self.use_cache,
+                    graph_json=current_graph.graph_dict
                 )
 
                 validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
@@ -171,7 +164,7 @@ class GenerationPipeline(BaseModel):
         """Generates and validates a dialogue graph for given topic"""
         try:
             print("Generating Graph ...")
-            graph = self.graph_generator.invoke(model=self.generation_model, prompt=self.generation_prompt, topic=topic, use_cache=self.use_cache)
+            graph = self.graph_generator.invoke(model=self.generation_model, prompt=self.generation_prompt, topic=topic)
 
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)
             if not cycle_validation["meets_requirements"]:
@@ -230,13 +223,13 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             ),
         )
 
-    def invoke(self, topic, use_cache=True) -> list[dict]:
+    def invoke(self, topic) -> list[dict]:
         print(f"\n{'='*50}")
         print(f"Generating graph for topic: {topic}")
         print(f"{'='*50}")
         successful_generations = []
         try:
-            result = self.pipeline(topic, use_cache=use_cache)
+            result = self.pipeline(topic)
 
             if isinstance(result, GraphGenerationResult):
                 print(f"✅ Successfully generated graph for {topic}")
