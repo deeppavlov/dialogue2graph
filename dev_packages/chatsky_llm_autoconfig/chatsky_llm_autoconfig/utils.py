@@ -155,6 +155,8 @@ def call_llm_api(query: str, llm, client=None, temp: float = 0.05, langchain_mod
         try:
             if langchain_model:
                 messages = [HumanMessage(content=query)]
+                # response = llm.invoke(messages, temperature=temp)
+                print("LLM")
                 response = llm.invoke(messages)
                 return response
             else:
@@ -162,7 +164,7 @@ def call_llm_api(query: str, llm, client=None, temp: float = 0.05, langchain_mod
                 response_big = client.chat.completions.create(
                     model=llm,  # id модели из списка моделей - можно использовать OpenAI, Anthropic и пр. меняя только этот параметр
                     messages=messages,
-                    temperature=0.7,
+                    temperature=temp,
                     n=1,
                     max_tokens=3000,  # максимальное число ВЫХОДНЫХ токенов. Для большинства моделей не должно превышать 4096
                     extra_headers={"X-Title": "My App"},  # опционально - передача информация об источнике API-вызова

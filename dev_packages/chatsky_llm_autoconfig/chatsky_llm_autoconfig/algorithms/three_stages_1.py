@@ -34,10 +34,12 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
     prompt_name: str = ""
+    model_name: str = ""
 
-    def __init__(self, prompt_name: str=""):
+    def __init__(self, model_name, prompt_name: str=""):
         super().__init__()
         self.prompt_name = prompt_name
+        self.model_name = model_name
 
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, topic: str = "") -> BaseGraph:
 
@@ -48,7 +50,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
         prompt = PromptTemplate(template=part_1+"{graph_example_1}. "+prompt_extra, input_variables=["graph_example_1"], partial_variables=partial_variables)
 
-        base_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1)
+        base_model = ChatOpenAI(model=self.model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
         model = base_model | PydanticOutputParser(pydantic_object=DialogueNodes)
         nodes = call_llm_api(prompt.format(graph_example_1=graph_example_1), model, temp=0).model_dump()
 

@@ -143,8 +143,8 @@ def dialogue_edges(seq: list[Dialogue]) -> set[tuple[str]]:
 
     res = []
     for dialogue in seq:
-         assist_texts = [d.text for d in dialogue.messages if d.participant=='assistant']
-         user_texts = [d.text for d in dialogue.messages if d.participant=='user'] 
+         assist_texts = [d.text.lower() for d in dialogue.messages if d.participant=='assistant']
+         user_texts = [d.text.lower() for d in dialogue.messages if d.participant=='user'] 
          res.extend([(a1,u,a2) for a1,u,a2 in zip(assist_texts[:-1],user_texts[:len(assist_texts)-1],assist_texts[1:])])
     # print("DIA: ", set(res))
     return set(res)
@@ -160,7 +160,7 @@ def graph_edges(G: BaseGraph):
             for utt in edge['utterances']:
                 for utt1 in node['utterances']:
                     for utt2 in [n for n in nodes if n['id']==edge['target']][0]['utterances']:
-                        res.append((utt1,utt,utt2))
+                        res.append((utt1.lower(),utt.lower(),utt2.lower()))
     # print("GRAPH: ", set(res))
     return set(res)
 
@@ -180,19 +180,19 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
 
     # Add node utterances
     for node_id, node_data in G.graph.nodes(data=True):
-        graph_utterances.update(node_data["utterances"])
+        graph_utterances.update([u.lower() for u in node_data["utterances"]])
 
     # Add edge utterances
     for _, _, edge_data in G.graph.edges(data=True):
         if isinstance(edge_data["utterances"], list):
-            graph_utterances.update(edge_data["utterances"])
+            graph_utterances.update([u.lower() for u in edge_data["utterances"]])
         else:
-            graph_utterances.add(edge_data["utterances"])
+            graph_utterances.add(edge_data["utterances"].lower())
 
     # Collect all utterances from dialogues
     dialogue_utterances = set()
     for dialogue in dialogues:
-        dialogue_utterances.update(utt.text for utt in dialogue.messages)
+        dialogue_utterances.update(utt.text.lower() for utt in dialogue.messages)
 
     # Check if all graph utterances are present in dialogues
     if graph_utterances.issubset(dialogue_utterances):

@@ -495,6 +495,11 @@ Your task is to extend set of nodes for the dialogue graph with input dialogue.
 Dialogue graph is a set of nodes with assistant's utterances and a set of edges that are
 triggered by user requests. Here goes the input graph: """
 
+part_1i0 = """Your input is a dialogue graph from customer chatbot system.
+Your task is to extend the dialogue graph with input dialogue.
+Dialogue graph is a set of nodes with assistant's utterances and a set of edges that are
+triggered by user requests. Here goes the input graph: """
+
 # part_2 = """This is the end of the example.
 # **Rules:**
 # 1) is_start field in the node is an entry point to the whole graph.
@@ -547,42 +552,95 @@ triggered by user requests. Here goes the input graph: """
 # or speaker refers to a non-existent context,
 # then such groups shall be ungrouped.
 
+# 10) Example when dialogue doesn't follow previous context:
+# User: I am looking for a cheap restaurant.
+# Assistant: I found 5 expensive restaurants for you.
+
+# 6) Below is an example when two assistant's utterances go to one node:
+# 'Please, enter the payment method you would like to use: cash or credit card.', and
+# 'How would you prefer to pay?'
+# 7) Next is an example when two assistant's utterances are not necessarily combined in one node:
+# 'I know good chinese restaurant in town.', and
+# 'Do you like Italian food?'
+# They both talk about restaurant, but different types. And to combine or not depends on surrouding contexts.
+# If they mention Chinese (or Italian) restaurant names or other details, specific to discussion of exactly this type of restaurant,
+# these utterences go to different nodes.
+# But if the remaining context doesn't mention such specific details, for example user could ask for something else instead,
+# like restaurant with a nice view, these two assistant's utterances would go to one node.
+# 8) Another example shows pair of assistant's utterances which always go to different nodes.
+# 'So you prefer Chinese cuisine? What is your price preference?', and
+# 'Do you like Italian food? I know good restaurant in your price range.'
+# First utterance asks about price, while second one refers to price mentioned before, that means dialogue flows are different and hence nodes are different.
+# 7) To follow the context means to keep all the details from previous utterances of the dialogue path in mind and follow them.
+# For example if it was mentioned Moscow city before, it can't be changed to St Petersburg later all of a sudden.
+# 7) So to complete the task of extending graph nodes you shall:
+# integrate assistant's utterances from the dialogue into existing graph nodes when you see it reasonable
+# or add new nodes when it's not reasonable to intergate in existing nodes.
+# Every assistant's utterance from the dialogue either goes to existing node or creates new node.
+# Make sure that all the utterances in the existing nodes of the graph remain.
+# 10) You mustn't remove assistant's utterances even if they are similar or synonymous. Make sure you keep all the assistant's utterances in the resulting set of nodes.
+# 11) Doublecheck that all the assistant's utterances from the dialogue are present in resulting set of nodes,
+# not a single assistant's utterance to be missed.
+# 12) Don't modify utterances even slightly (even a single letter) before placing them into the nodes.
+# 8) For example if client was renting a car in London earlier in a dialogue path, it can't be changed to renting a car in Long Beach later for no reason.
+# So when you found illogical dialogue path where London became Long Beach for unknown reason,
+# place utterances with different locations into different nodes.
+# client was renting a car in London earlier in a dialogue path, it can't be changed to renting a car in Long Beach later for no reason.
+# 9) You shall use every assistant's utterance from the dialogue for one node only.
+
+part_2i0 = """This is the end of the graph.
+**Rules:**
+1) is_start field is mandatory for all the nodes.
+2) is_start=True field in the node is an entry point to the whole graph.
+3) Nodes are assistant's utterances.
+3) Edges are user's utterances.
+4) Several assistant's utterances can belong to same node. To solve the graph extension task you shall understand
+which utterances can be combined into one node, and which can not.
+5) When a node contains more than one utterance, it means that any of these utterances can be part of dialogue paths going thru this node,
+so number of dialogue paths is multiplied and all the utterances combinations of all the nodes in the path form the dialogue paths.
+6) Main goal of combining different assistant's utterances into one node is to make the graph structure more efficient and decrease number of nodes.
+6) As a result of combining nodes there can appear new dialogue paths. And not all of them can be logical.
+And the reason of this is a combined node generates combined contexts, meaning every utterance in a combined node will have
+additional context from the other utterance in the node.  
+7) You shall track such cases of illogical paths and separate combined nodes if needed.
+8) Consider all the dialogue paths which appear as a result of combining utterances and make sure they are coherent and logical.
+If they aren't, separate your nodes when needed.
+9) You mustn't remove assistant's utterances even if they are similar or synonymous. Make sure you keep all the assistant's utterances in the resulting set of nodes.
+10) Edges connect two nodes by user's utterances between two assistant's utterances.
+11) After nodes are created, you shall connect them with edges. Add new edges to existing ones when needed, extend existing with new utterances when needed.
+12) If user's utterance is the last in the dialogue, try to find most suitable continuation node of a dialogue flow
+and add to the graph new edge with this user's utterance connecting to the continuation node. Another option is to add this utterance
+to one of existing edges if it is suitable.
+If there is no such continuation node, just leave this utterance out of the graph.
+13) Doublecheck that all the utterances from the dialogue are present in resulting graph,
+not a single utterance to be missed.
+14) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+15) Add reason point to your answer with an explanation why you removed some of utterances.
+I will give you the dialogue, your task is to extend the graph above with the dialogue according to the rules and examples above.
+The dialogue: """
+
 part_2i = """This is the end of the graph.
 **Rules:**
 1) is_start field is mandatory for all the nodes.
 2) is_start=True field in the node is an entry point to the whole graph.
-3) Nodes must be assistant's utterances from the dialogues in their original form.
-4) Several assistant's utterances can belong to same node. To solve the nodes generation task you shall understand
+3) Nodes are assistant's utterances.
+4) Several assistant's utterances can belong to same node. To solve the nodes extension task you shall understand
 which utterances can be combined into one node, and which can not.
-5) Main goal of combining different assistant's utterances into one node is to make the graph structure more efficient and decrease number of nodes.
-6) Below is an example when two assistant's utterances go to one node:
-'Please, enter the payment method you would like to use: cash or credit card.', and
-'How would you prefer to pay?'
-7) Next is an example when two assistant's utterances are not necessarily combined in one node:
-'I know good chinese restaurant in town.', and
-'Do you like Italian food?'
-They both talk about restaurant, but different types. And to combine or not depends on surrouding contexts.
-If they mention Chinese (or Italian) restaurant names or other details, specific to discussion of exactly this type of restaurant,
-these utterences go to different nodes.
-But if the remaining context doesn't mention such specific details, for example user could ask for something else instead,
-like restaurant with a nice view, these two assistant's utterances would go to one node.
-8) Another example shows pair of assistant's utterances which go to different nodes anyway.
-'What is your price preference?', and
-'Do you like Italian food? I know good restaurant in your price range.'
-First utterance asks about price, while second one refers to price mentioned before, that means dialogue flows are different and hence nodes are different.
-9) Consider all the dialogue paths which appear as a result of combining utterances and make sure they follow current context.
-If they don't, modify your nodes.
-10) Example when dialogue doesn't follow current context:
-User: I am looking for a cheap restaurant.
-Assistant: I found 5 expensive restaurants for you.
-11) You shall use every assistant's utterance from the dialogue and the input graph for one node only.
-12) You mustn't remove assitant's utterances even if they are similar or synonymous. Make sure you keep all the assistant's utterances in the resulting set of nodes.
-12) Doublecheck that all the assistant's utterances from the dialogue and the input graph are present in resulting set of nodes,
+5) When a node contains more than one utterance, it means that any of these utterances can be part of dialogue paths going thru this node,
+so number of dialogue paths is multiplied and all the utterances combinations of all the nodes in the path form the dialogue paths.
+6) Main goal of combining different assistant's utterances into one node is to make the graph structure more efficient and decrease number of nodes.
+6) As a result of combining nodes there can appear new dialogue paths. And not all of them can be logical.
+And the reason of this is a combined node generates combined contexts, meaning every utterance in a combined node will have
+additional context from the other utterance in the node.  
+7) You shall track such cases of illogical paths and separate combined nodes if needed.
+8) Consider all the dialogue paths which appear as a result of combining utterances and make sure they are coherent and logical.
+If they aren't, separate your nodes when needed.
+9) You mustn't remove assistant's utterances even if they are similar or synonymous. Make sure you keep all the assistant's utterances in the resulting set of nodes.
+10) Doublecheck that all the assistant's utterances from the dialogue are present in resulting set of nodes,
 not a single assistant's utterance to be missed.
-13) Don't modify utterances even slightly (even a single letter) before placing them into the nodes.
-14) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
-15) Add reason point to your answer with an explanation why you didn't use all the assistant's utterances from the dialogue and the input graph.
-I will give you the dialogue, your task is to extend a set of nodes of the graph above from this dialogue according to the rules and examples above.
+11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
+12) Add reason point to your answer with an explanation why you removed some of utterances.
+I will give you the dialogue, your task is to extend a set of nodes of the graph above with assistant's utterances from the dialogue according to the rules and examples above.
 The dialogue: """
 
 part_2 = """This is the end of the example.

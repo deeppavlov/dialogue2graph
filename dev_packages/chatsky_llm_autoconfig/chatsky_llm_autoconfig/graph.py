@@ -297,6 +297,8 @@ class Graph(BaseGraph):
         graph = self.graph_dict        
         sources = list(set([g['source'] for g in graph['edges']]))
         finishes = [g['id'] for g in graph['nodes'] if g['id'] not in sources]
+        if not finishes:
+            finishes = [[g['id'] for g in graph['nodes'] if not g['is_start']][-1]]
         print("F: ", finishes)
         visited = set(finishes.copy())
         for f in finishes:
@@ -312,4 +314,5 @@ class Graph(BaseGraph):
         # print("VIS: ", visited)
         if len(visited) < len(graph['nodes']):
             finishes += [v['id'] for v in graph['nodes'] if v['id'] not in visited]
+        print("FI: ", finishes)
         return finishes

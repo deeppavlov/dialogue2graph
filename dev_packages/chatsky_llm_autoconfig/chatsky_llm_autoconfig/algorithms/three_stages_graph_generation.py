@@ -81,6 +81,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         model = base_model | PydanticOutputParser(pydantic_object=DialogueGraph)
 
         result = call_llm_api(prompt.format(graph_dict=graph_dict), model, temp=0)
+        print("OUT: ", result)
         if result is None:
             return Graph(graph_dict={})
         result.reason = "Fixes: " + result.reason

@@ -1,6 +1,7 @@
 import pandas as pd
 from langchain.prompts import PromptTemplate
 from langchain_openai  import ChatOpenAI
+# from langchain.chat_models import init_chat_model
 from langchain.output_parsers import PydanticOutputParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from chatsky_llm_autoconfig.algorithms.dialogue_generation import RecursiveDialogueSampler
@@ -46,14 +47,15 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         partial_variables["var_0"] = dialogue[0].to_list()
         prompt_extra = part_2i + f" Dialogue_0: {{var_0}}"
         prompt = PromptTemplate(template=part_1i+"{graph}. "+prompt_extra, input_variables=["graph"], partial_variables=partial_variables)
+        print("model:  ",env_settings.GENERATION_MODEL_NAME)
 
-
-        base_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1)
+        base_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0.2)
         model = base_model | PydanticOutputParser(pydantic_object=DialogueNodes)
         nodes = call_llm_api(prompt.format(graph=graph.graph_dict), model, temp=0).model_dump()
 
 
-        nexts, _, starts, neigbhours, last_user = dialogues2list(dialogue)
+        # nexts, _, starts, neigbhours, last_user = dialogues2list(dialogue)
+        last_user = False
         
         # print("LAST: ", last_user)
 
@@ -77,11 +79,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         print("NODES: ", nodes)
         embeddings = HuggingFaceEmbeddings(model_name=env_settings.EMBEDDER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
         try:
-            sampled_dialogues = dialogue_sampler.invoke(graph, 15)
+            sampled_dialogues = dialogue_sampler.invoke(graph, 1)
             graph_dict = nodes2graph(nodes['nodes'], dialogue+sampled_dialogues, embeddings)
         except Exception as e:
             print(e)
-            return Graph({})
+            return Graph({}), []
         print("RESULT: ", graph_dict, "\n")
         graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
 
@@ -108,16 +110,16 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
             result = call_llm_api(prompt.format(graph_dict=graph_dict), model, temp=0)
             if result is None:
-                return Graph(graph_dict={})
+                return Graph(graph_dict={}), []
             result.reason = "Fixes: " + result.reason
             graph_dict=result.model_dump()
             if not all([e['target'] for e in graph_dict['edges']]):
-                return Graph(graph_dict={})
+                return Graph(graph_dict={}), []
             result_graph = Graph(graph_dict=graph_dict)
             return result_graph, sampled_dialogues
         except Exception as e:
             print(e)
-            return Graph({})
+            return Graph({}), []
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
