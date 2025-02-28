@@ -130,7 +130,7 @@ class GenerationPipeline(BaseModel):
                     model=self.generation_model,
                     prompt=self.repair_prompt,
                     invalid_transitions=initial_validation["invalid_transitions"],
-                    graph_json=current_graph.graph_dict
+                    graph_json=current_graph.graph_dict,
                 )
 
                 validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
