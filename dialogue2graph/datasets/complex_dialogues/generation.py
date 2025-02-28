@@ -15,7 +15,7 @@ from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_vali
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
-from dialogue2graph.utils.prompt_caching import setup_cache
+# from dialogue2graph.utils.prompt_caching import setup_cache
 
 from .prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
 
@@ -226,7 +226,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
                 generation_model=generation_model,
                 validation_model=validation_model,
                 generation_prompt=cycle_graph_generation_prompt_enhanced,
-                repair_prompt=cycle_graph_repair_prompt,
+                repair_prompt=cycle_graph_repair_prompt
             ),
         )
 
@@ -235,8 +235,10 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         print(f"Generating graph for topic: {topic}")
         print(f"{'='*50}")
         successful_generations = []
+        
         try:
-            result = self.pipeline(topic, use_cache=use_cache)
+            self.pipeline.use_cache = use_cache
+            result = self.pipeline(topic)
 
             if isinstance(result, GraphGenerationResult):
                 print(f"✅ Successfully generated graph for {topic}")
