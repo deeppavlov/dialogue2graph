@@ -17,71 +17,71 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 
-class PromptCacheSchema(Base):  # type: ignore
-    """SQLite table for full LLM Cache (all generations)."""
+# class PromptCacheSchema(Base):  # type: ignore
+#     """SQLite table for full LLM Cache (all generations)."""
 
-    __tablename__ = "prompt_cache"
+#     __tablename__ = "prompt_cache"
 
-    id = Column(Integer, primary_key=True)
+#     idx = Column(Integer, primary_key=True)
 
-    prompt = Column(String, primary_key=True)
+#     prompt = Column(String, primary_key=True)
 
-    response = Column(String)
+#     response = Column(String)
 
-    llm = Column(String, primary_key=True)
+#     llm = Column(String, primary_key=True)
 
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+#     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
-class PromptCache(SQLAlchemyCache):
+# class PromptCache(SQLAlchemyCache):
 
-    def lookup(self, prompt: str, llm_string: str):
-        """Look up based on prompt and llm_string."""
+#     def lookup(self, prompt: str, llm_string: str):
+#         """Look up based on prompt and llm_string."""
 
-        stmt = (
-            select(self.cache_schema.response)
-            .where(self.cache_schema.prompt == prompt)  # type: ignore
-            .where(self.cache_schema.llm == llm_string)
-            .order_by(self.cache_schema.id)
-        )
+#         stmt = (
+#             select(self.cache_schema.response)
+#             .where(self.cache_schema.prompt == prompt)  # type: ignore
+#             .where(self.cache_schema.llm == llm_string)
+#             .order_by(self.cache_schema.idx)
+#         )
 
-        with Session(self.engine) as session:
+#         with Session(self.engine) as session:
 
-            rows = session.execute(stmt).fetchall()
+#             rows = session.execute(stmt).fetchall()
 
-            if rows:
+#             if rows:
 
-                try:
+#                 try:
 
-                    return [loads(row[0]) for row in rows]
+#                     return [loads(row[0]) for row in rows]
 
-                except Exception:
+#                 except Exception:
 
-                    logger.warning(
-                        "Retrieving a cache value that could not be deserialized "
-                        "properly. This is likely due to the cache being in an "
-                        "older format. Please recreate your cache to avoid this "
-                        "error."
-                    )
+#                     logger.warning(
+#                         "Retrieving a cache value that could not be deserialized "
+#                         "properly. This is likely due to the cache being in an "
+#                         "older format. Please recreate your cache to avoid this "
+#                         "error."
+#                     )
 
-                    # In a previous life we stored the raw text directly
+#                     # In a previous life we stored the raw text directly
 
-                    # in the table, so assume it's in that format.
+#                     # in the table, so assume it's in that format.
 
-                    return [Generation(text=row[0]) for row in rows]
+#                     return [Generation(text=row[0]) for row in rows]
 
-        return None
+#         return None
 
-    def update(self, prompt: str, llm_string: str, return_val) -> None:
-        """Update based on prompt and llm_string."""
+#     def update(self, prompt: str, llm_string: str, return_val) -> None:
+#         """Update based on prompt and llm_string."""
 
-        items = [self.cache_schema(prompt=prompt, llm=llm_string, response=dumps(gen), id=i) for i, gen in enumerate(return_val)]
+#         items = [self.cache_schema(prompt=prompt, llm=llm_string, response=dumps(gen), idx=i) for i, gen in enumerate(return_val)]
 
-        with Session(self.engine) as session, session.begin():
+#         with Session(self.engine) as session, session.begin():
 
-            for item in items:
+#             for item in items:
 
-                session.merge(item)
+#                 session.merge(item)
 
 
 def add_uuid_to_prompt(prompt: str, seed: int = None) -> str:
@@ -116,7 +116,7 @@ def setup_cache(use_in_memory: bool = False):
             return setup_cache(use_in_memory=True)
 
         engine = create_engine(database_url)
-        cache = SQLAlchemyCache(engine, PromptCacheSchema)
+        cache = SQLAlchemyCache(engine)
         set_llm_cache(cache)
         logger.info("Successfully set up SQLAlchemy cache")
         return cache

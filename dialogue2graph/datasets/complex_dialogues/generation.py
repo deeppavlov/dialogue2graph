@@ -53,13 +53,11 @@ class CycleGraphGenerator(BaseModel):
 
     def __init__(self, **data):
         super().__init__(**data)
-        self.cache = setup_cache()
 
     def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=42, **kwargs) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
-        self.cache = setup_cache()
             
         # Add UUID to the prompt template
         original_template = prompt.template
