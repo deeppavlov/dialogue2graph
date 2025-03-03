@@ -13,7 +13,7 @@ from chatsky_llm_autoconfig.graph import BaseGraph, Graph
 from chatsky_llm_autoconfig.schemas import DialogueGraph
 # from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.output_parsers import PydanticOutputParser
-from chatsky_llm_autoconfig.prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
+from chatsky_llm_autoconfig.prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt, graph_example_2
 from openai import BaseModel
 
 from enum import Enum
@@ -62,8 +62,8 @@ class CycleGraphGenerator(TopicGraphGenerator):
         # Создаем цепочку: промпт -> модель -> парсер
         parser = PydanticOutputParser(pydantic_object=DialogueGraph)
         # parser = JsonOutputParser(pydantic_object=DialogueGrah)
-        chain = prompt | model | parser
 
+        chain = prompt | model | parser
         res = chain.invoke(kwargs).model_dump()
         for edge in res['edges']:
             print("EDGES: ", edge)
@@ -228,6 +228,7 @@ class GraphGenerationPipeline:
             graph = self.graph_generator.invoke(
                 model=self.generation_model,
                 prompt=self.generation_prompt,
+                graph_example = graph_example_2,
                 topic=topic
             )
 
@@ -287,6 +288,18 @@ class GraphGenerationPipeline:
                 )
             
             graph = transition_validation["graph"]
+            if not graph.edges_match_nodes():
+                return GenerationError(
+                    error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
+                    message="Generated graph is wrong: edges don't match nodes"
+                )
+            graph = graph.remove_duplicated_nodes()
+            if graph is None:
+                return GenerationError(
+                    error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
+                    message="Generated graph is wrong: utterances in nodes doubled"
+                )                
+
             print("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             print(f"Sampled {len(sampled_dialogues)} dialogues")

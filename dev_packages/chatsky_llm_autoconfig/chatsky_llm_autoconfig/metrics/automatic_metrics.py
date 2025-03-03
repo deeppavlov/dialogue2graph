@@ -200,6 +200,8 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
         set2 = graph_edges(G)
         if len(set1-set2) <= 0:
             print("Graph has all the dialogues")
+            for eq in set2-set1:
+                print("absent: ",eq)
         else:
             for eq in set1-set2:
                 print("absent: ",eq)
@@ -209,6 +211,7 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
         # return False
     else:
         print(dialogue_utterances - graph_utterances)
+        print(graph_utterances - dialogue_utterances)
         if dialogue_utterances.issubset(graph_utterances):
             print("Graph has all the dialogues")
         # print(graph_utterances-dialogue_utterances)

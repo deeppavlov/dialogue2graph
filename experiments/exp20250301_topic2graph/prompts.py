@@ -368,25 +368,9 @@ cycle_graph_generation_prompt = PromptTemplate.from_template(
 # Just one of nodes of the whole graph must have 2-3 different utterances meaning fluctuations in formulation of thoughts.
 # So you need to paraphrase utterance in those node while maintaining its general meaning and add paraphrased utterances to the node.
 
-# Example of a modification path:
-# Assistant: "What size coffee would you like?"
-# User: "Medium please"
-# Assistant: "Would you like that hot or iced?"
-# User: "Actually, can I change my size?"
-# Assistant: "Of course! What size would you like instead?"
-
-# In previous example of modification path pay attention that modificating question "Actually, can I change my size?"
-# takes place after first choice "Medium please" and next assistant phrase "Would you like that hot or iced?" have been already spoken.
-# The modificating question modifies previous user's choice so never immediately follows direct assistant's question
-# answer to which it modifies, but follows next assistant's question "Would you like that hot or iced?" instead.
-# After assistant's phrase first goes direct user's answer in any dialogue, "medium please" in the example above.
-# Further after modification question goes additional assistant's reaction "Of course! What size would you like instead?" where
-# assistant modifies their question two steps before: "What size coffee would you like?". 
-# Further follows user's alternative answer then dialogue flow returns to its standard way.
-
 cycle_graph_generation_prompt_enhanced = PromptTemplate.from_template(
     """
-Create a dialogue graph for real conversations between two people about {topic}. The graph must follow these requirements:
+Create a dialogue graph for a {topic} conversation that will be used for training data generation. The graph must follow these requirements:
 
 1. Dialogue Flow Requirements:
    - Each assistant message (node) must be coherent, reasonable and natural reaction to the immediately previous user message if such exists
@@ -412,16 +396,42 @@ Create a dialogue graph for real conversations between two people about {topic}.
    - Alternative success paths (achieving goal differently)
 
 
-Example of the graph:
-{graph_example}
+Example of a modification path:
+Assistant: "What size coffee would you like?"
+User: "Medium please"
+Assistant: "Would you like that hot or iced?"
+User: "Actually, can I change my size?"
+Assistant: "Of course! What size would you like instead?"
 
-Please use informal language like in the example above. Conversation shall look like a real one,
-with all the details inherent in a real conversation on this topic: {topic}.
-Some of edges and nodes shall have several different utterances meaning different details of same intent like in the graph example above.
-So you need to add several different details per node and edge.
-For examples see provide_contact_info and provide_recommendations nodes of the above graph.
+In previous example of modification path pay attention that modificating question "Actually, can I change my size?"
+takes place after first choice "Medium please" and next assistant phrase "Would you like that hot or iced?" have been already spoken.
+The modificating question modifies previous user's choice so never immediately follows direct assistant's question
+answer to which it modifies, but follows next assistant's question "Would you like that hot or iced?" instead.
+After assistant's phrase first goes direct user's answer in any dialogue, "medium please" in the example above.
+Further after modification question goes additional assistant's reaction "Of course! What size would you like instead?" where
+assistant modifies their question two steps before: "What size coffee would you like?". 
+Further follows user's alternative answer then dialogue flow returns to its standard way.
 
-is_start field is mandatory for all the nodes.
+Format:
+{{
+    "edges": [
+        {{
+            "source": "node_id",
+            "target": "node_id",
+            "utterances": ["User response text"]
+        }}
+    ],
+    "nodes": [
+        {{
+            "id": "node_id",
+            "label": "semantic_label",
+            "is_start": boolean,
+            "utterances": ["Assistant message text"]
+        }}
+    ]
+}}
+
+is_start field is mandatory for all the nodes
 
 Requirements for IDs:
 - Must be unique integers
@@ -429,9 +439,6 @@ Requirements for IDs:
 - IDs should increment sequentially
 - All edges shall have IDs of existing nodes for source and target
 - You must remove all edges where target is null
-
-
-
 
 Nodes must be assistant's utterances only and never repeat user's inputs.
 Utterances in nodes must be unique, meaning there shall not be repeating utterances in nodes.
@@ -830,101 +837,152 @@ graph_example_1 = {
 
 graph_example_2 = {
     "edges":
-        [{"source": 1,
-  "target": 2,
-  "utterances": ["I'm looking for an Indian restaurant, preferably in the centre of town."]},
- {"source": 2,
-  "target": 5,
-  "utterances": ["I would prefer cheap restaurants."]},
- {"source": 5,
-  "target": 7,
-  "utterances": ["Sure please book a table there fore 7 people at 12:15 on saturday"]},
- {"source": 1,
-  "target": 5,
-  "utterances": ["I am looking for a restaurant. The restaurant should be in the moderate price range and should be in the east"]},
- {"source": 5,
-  "target": 10,
-  "utterances": ["The restaurant should serve italian food."]},
- {"source": 6,
-  "target": 7,
-  "utterances": ["I will have 5 people and we would like 12:15 if possible. Thanks."]},
- {"source": 7,
-  "target": 9,
-  "utterances": ["No that's all I needed. Thank you!",
-   "Thanks for you help. I only need the restaurant reservation. Goodbye."]},
- {"source": 10,
-  "target": 11,
-  "utterances": ["What other restaurants in that area serve Italian food?"]},
- {"source": 11,
-  "target": 6,
-  "utterances": ["No, that will do. Can I book a table for monday?"]},
- {"source": 1,
-  "target": 3,
-  "utterances": ["I'm looking for a place to dine on the south side of town. Please find a place that's in the expensive price range."]},
- {"source": 3,
-  "target": 8,
-  "utterances": ["Do you have a favorite you could recommend? I will need the phone and postcode and food type also please."]},
- {"source": 1,
-  "target": 4,
-  "utterances": ["I am looking for a cheap restaurant in the centre."]},
- {"source": 4,
-  "target": 8,
-  "utterances": ["Yes, may I have the address, postcode, and phone number for Golden House? I'll book it myself."]},
- {"source": 8,
-  "target": 9,
-  "utterances": ["No, that will be it. Thank you for your help.",
-   "Thanks, that's all I need. Have a nice day."]}],
+    [{'source': 1, 'target': 2, 'utterances': ['hello, i want to book a flight.']},
+ {'source': 2, 'target': 5, 'utterances': ["yes that's where i want to go."]},
+ {'source': 5, 'target': 5, 'utterances': ['i want to leave from dallas.']},
+ {'source': 5, 'target': 8, 'utterances': ['i want to leave by next friday.']},
+ {'source': 8,
+  'target': 11,
+  'utterances': ["wait please don't do that, i was only curious. i don't actually want to book a flight"]},
+ {'source': 2,
+  'target': 3,
+  'utterances': ["i'm not really ready to book. i was just curious how i would get a flight there"]},
+ {'source': 13, 'target': 15, 'utterances': ['nope, thanks for your help!']},
+ {'source': 2,
+  'target': 13,
+  'utterances': ["well that's good to hear, but i don't want to book a flight today. i just want to know what i need to do."]},
+ {'source': 12,
+  'target': 14,
+  'utterances': ['that is a great price. thanks for the information.']},
+ {'source': 13,
+  'target': 12,
+  'utterances': ['just for my own information, can you tell me how much a flight to greece costs right now?']},
+ {'source': 15,
+  'target': 2,
+  'utterances': ['how do i get a flight to greece?',
+   'i need to know how i would go about getting a flight to greece when i need to go.']},
+ {'source': 4,
+  'target': 6,
+  'utterances': ['i need to get to anywhere in western europe as soon as i can but no later than next tuesday.']},
+ {'source': 6, 'target': 7, 'utterances': ['whichever is cheapest']},
+ {'source': 7, 'target': 8, 'utterances': ['no, one way']},
+ {'source': 8,
+  'target': 10,
+  'utterances': ['that will work, please book it for me.']},
+ {'source': 10, 'target': 16, 'utterances': ["that's all, thanks"]},
+ {'source': 1,
+  'target': 15,
+  'utterances': ['i need some help with some information please',
+   'i need some travel information please.',
+   'can you help my about my booked flight?']},
+ {'source': 3, 'target': 3, 'utterances': ['only that?']},
+ {'source': 3,
+  'target': 13,
+  'utterances': ['okay, that seems pretty easy', 'amazing details']},
+ {'source': 13, 'target': 14, 'utterances': ['nothing']},
+ {'source': 15,
+  'target': 3,
+  'utterances': ['i just want to know how to get flight to greece?']},
+ {'source': 1,
+  'target': 4,
+  'utterances': ['i need to book a flight real quick',
+   'can you help me book a flight?']},
+ {'source': 2,
+  'target': 8,
+  'utterances': ['i am just curious about info, i do not want to book are you there?']},
+ {'source': 4, 'target': 2, 'utterances': ['i want a flight to greece']},
+ {'source': 8,
+  'target': 9,
+  'utterances': ['is that in first class or coach?']},
+ {'source': 9, 'target': 14, 'utterances': ['that is helpful, thank you']},
+ {'source': 14,
+  'target': 14,
+  'utterances': ['i will probably book it later',
+   'good to know! goodbye',
+   'farewell bye']}],
    "nodes":
-    [
-        [{"id": 1,
-  "label": "start",
-  "is_start": True,
-  "utterances": ["Hello! How can I help you?"]},
- {"id": 2,
-  "label": "ask_price_range",
-  "is_start": False,
-  "utterances": ["There are a number of options for Indian restaurants in the centre of town. What price range would you like?"]},
- {"id": 3,
-  "label": "ask_cuisine_preference",
-  "is_start": False,
-  "utterances": ["I found five expensive restaurants on the south side of town. Would you prefer Chinese, Indian, Italian or Mexican?"]},
- {"id": 4,
-  "label": "ask_interest_in_options",
-  "is_start": False,
-  "utterances": ["I have found many possibilities. Golden house is chinese and the river bar steakhouse and grill serves modern european. Are either of those of interest for you?"]},
- {"id": 5,
-  "label": "provide_recommendations",
-  "is_start": False,
-  "utterances": ["Try curry prince or pizza hut fen ditton",
-   "I was able to find three options in your price range, may I recommend The Gandhi?"]},
- {"id": 6,
-  "label": "ask_reservation_details",
-  "is_start": False,
-  "utterances": ["Absolutely, how many people will you have and what time are you wanting the reservation?"]},
- {"id": 7,
-  "label": "confirm_booking",
-  "is_start": False,
-  "utterances": ["I was able to book that for you. They will reserve your table for 15 minutes. Your reference number is 6EQ61SD9 . Is there anything more I can help with?",
-   "You are booked, the reference number is AF2GJ7G6, may I assist with anything else?"]},
- {"id": 8,
-  "label": "provide_contact_info",
-  "is_start": False,
-  "utterances": ["They are located at 12 Lensfield Road City Centre, postcode cb21eg, and phone number 01842753771.",
-   "If you ask me, the Chiquito Restaurant Bar serves the best Mexican food around. Their postcode is cb17dy. You can reach them at 01223400170. Can I help with anything else?"]},
- {"id": 9,
-  "label": "closing",
-  "is_start": False,
-  "utterances": ["Thank you for calling, enjoy!",
-   "You're welcome. Thank you for contacting Cambridge TownInfo centre, and have a great day.",
-   "Thank you. Have a nice day.",
-   "Thank you for using our service. Have a great day."]},
- {"id": 10,
-  "label": "offer_reservation",
-  "is_start": False,
-  "utterances": ["Pizza hut fen ditton serves italian food in the east, would you like a reservation?"]},
- {"id": 11,
-  "label": "confirm_no_other_areas",
-  "is_start": False,
-  "utterances": ["Pizza hut fen ditton is the only Italian restaurant, in the east, in the moderate price range. Do you want me to try other areas?"]}]
-    ]
+   [{'id': 1,
+  'label': 'start',
+  'is_start': True,
+  'utterances': ['Hello how may I help you?']},
+ {'id': 2,
+  'label': 'offer_booking',
+  'is_start': False,
+  'utterances': ['Can I help you book a flight to greece?',
+   'I can book a flight for you',
+   'i can book you a flight there to save you some time',
+   'Great. Can I book a flight to Greece for you today?']},
+ {'id': 3,
+  'label': 'offer_flight_information',
+  'is_start': False,
+  'utterances': ['You can check airports has a schedule flight to Greece and there you can book a flight if you want to',
+   "You will need to first make some research for the airport you are going to take. Then, you'll want to find out prices and seating arrangements. Finally, pick your destination and pay for the ticket, then wait at the terminal.",
+   'You will also be boarding the plane, then fly across the world to reach your destination. You will then get off the plane and will have to find a travel service that can accommodate you to reach your destination.']},
+ {'id': 4,
+  'label': 'ask_destination',
+  'is_start': False,
+  'utterances': ['Certainly, where would you like to go?',
+   'Where would you like to go?']},
+ {'id': 5,
+  'label': 'ask_leave_time',
+  'is_start': False,
+  'utterances': ['Perfect, and when would you like to leave?',
+   'Alright, i have your flight leaving from dallas and landing in athens. When would you like to fly there?']},
+ {'id': 6,
+  'label': 'ask_airline_preference',
+  'is_start': False,
+  'utterances': ['Do you prefer a specific airline?']},
+ {'id': 7,
+  'label': 'ask_trip_type',
+  'is_start': False,
+  'utterances': ['Is this for a round trip?']},
+ {'id': 8,
+  'label': 'offer_flight_options',
+  'is_start': False,
+  'utterances': ['I have one for $350 on monday at 8pm, will that work?',
+   'Alright booking your flight between now and next friday. You will be alerted when your flight is book and vased on the lowest available price.',
+   'Okay, I see two options for you. Two flights would be 1,230 round trip Two people sorry']},
+ {'id': 9,
+  'label': 'provide_class_options',
+  'is_start': False,
+  'utterances': ['That is coach. First class would be 8000 Let me know if you would to book in the future']},
+ {'id': 10,
+  'label': 'booking_confirmation',
+  'is_start': False,
+  'utterances': ['I have booked that airline for you, anything else/']},
+ {'id': 11,
+  'label': 'cancel_booking',
+  'is_start': False,
+  'utterances': ['Flight booking has been cancelled. We hope to see you again soon.']},
+ {'id': 12,
+  'label': 'provide_price',
+  'is_start': False,
+  'utterances': ['$40']},
+ {'id': 13,
+  'label': 'ask_anything_else',
+  'is_start': False,
+  'utterances': ['Anything else?',
+   'Is there anything else that I can help you with today?',
+   'ohh okay anything else you need to know?',
+   'Anything else/']},
+ {'id': 14,
+  'label': 'provide_farewell',
+  'is_start': False,
+  'utterances': ['have a good day',
+   'I wish you luck on your flight to Greece~!',
+   'No problem!',
+   'I will be here when you do!',
+   'goodbye',
+   'farewell bye']},
+ {'id': 15,
+  'label': 'express_positive',
+  'is_start': False,
+  'utterances': ['Great',
+   'Sure',
+   'Sure thing. And what can I help you with today?',
+   'sure what do you wanna know?']},
+ {'id': 16,
+  'label': 'express_end_thanks',
+  'is_start': False,
+  'utterances': ["that's all, thanks", "That's all, thanks"]}]
 }

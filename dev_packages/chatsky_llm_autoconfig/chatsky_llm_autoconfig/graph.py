@@ -43,6 +43,10 @@ class BaseGraph(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
+    def check_edges(self):
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def remove_duplicated_edges(self):
         raise NotImplementedError
 
@@ -68,6 +72,30 @@ class Graph(BaseGraph):
     def _list_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
         return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
+
+    def check_edges(self, seq: list[list[int]]):
+        graph_dict = self.graph_dict
+        edge_seq = {(e['source'],e['target']) for e in graph_dict['edges']}
+        left = edge_seq.copy()
+        for pair in edge_seq:
+            for s in seq:
+                if self._list_in(list(pair),s):
+                    # print("YES: ", s)
+                    # print("PAIR: ", pair)
+                    left -= set([pair])
+                    if len(left) == 0:
+                        print("FINIEHD")
+                        return True
+                    # print("LEFT: ", left)
+                    # print("\n")
+                # else:
+                    # print("NO: ", s)
+                    # print("PAIR: ", pair)
+                    # print("\n")
+        if len(left):
+            print (left)
+            return False
+        return True
 
 
     def load_graph(self):
@@ -201,16 +229,13 @@ class Graph(BaseGraph):
                 utt1 = self.node_by_id(source1)['utterances']
                 utt2 = self.node_by_id(source2)['utterances']
                 if source1 == source2 or np.min(get_embedding(utt1,utt2)) >= 0.6:
-                    print("YES")
+                    # print("YES")
                     if e1['target'] != e2['target']:
                         to_combine.append([e1['target'],e2['target']])
         for idx in range(len(to_combine)):
             to_combine[idx].sort()
         for pair in set(to_combine):
             self.combine_nodes(pair[0],pair[1])
-
-
-
 
     def remove_duplicated_edges(self):
         graph = self.graph_dict
@@ -222,7 +247,7 @@ class Graph(BaseGraph):
             found = [c for c in edges if c['source'] == d[0] and c['target'] == d[1]]
             new_edge = found[0].copy()
             new_edge['utterances'] = []
-            print("FOUND: ", found)
+            # print("FOUND: ", found)
             for e in found:
                 new_edge['utterances'].extend(e['utterances'])
             new_edge['utterances'] = list(set(new_edge['utterances']))
@@ -254,7 +279,7 @@ class Graph(BaseGraph):
                         edges[idx]['source'] = doubled
                     if e['target'] == n['id']:
                         edges[idx]['target'] = doubled
-        print("TO_REM: ", to_remove)
+        # print("TO_REM: ", to_remove)
         self.graph_dict = {"edges": edges, "nodes": [n for n in nodes if n['id'] not in to_remove]}
         return self.remove_duplicated_edges()
 
@@ -263,6 +288,7 @@ class Graph(BaseGraph):
         # graph = self.graph_dict 
     
         # if len(visited) < 1 or len_in([visited[-1],start],visited) < repeats:
+        # if len(visited) < repeats or (not self._list_in(visited[-repeats:]+[start],visited)) and len(visited) < len(self.graph_dict['nodes'])*2:
         if len(visited) < repeats or not self._list_in(visited[-repeats:]+[start],visited):
             # print("LEN: ", len(visited))
             visited.append(start)

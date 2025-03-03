@@ -41,13 +41,30 @@ def mix_ends(graph: BaseGraph, ends: list[int], cycles: list[int]):
 #             all_paths(graph, edge['target'], visited.copy(), repeats)
 #     visited_list.append(visited)
 
+# def all_combinations(path: list, start: dict, next: int, visited: list):
+#     global visited_list
+#     visited.append(start)
+#     print("APPEND: ", next, start, len(path))
+#     max_v = 0
+#     for utt in path[next]['text']:
+#         max_v = max(max_v, len([v['text'] for v in visited if v==utt]))
+#     if next < len(path) and max_v < 5:
+#         for utt in path[next]['text']:
+#             all_combinations(path, {"participant": path[next]['participant'], "text": utt}, next+1, visited.copy())
+#     visited_list.append(visited)
+
 def all_combinations(path: list, start: dict, next: int, visited: list):
     global visited_list
-    visited.append(start)
-    # print("APPEND: ", start)
+    # print("APPEND: ", next, start, len(path))
+    max_v = 0
     if next < len(path):
         for utt in path[next]['text']:
-            all_combinations(path, {"participant": path[next]['participant'], "text": utt}, next+1, visited.copy())
+            max_v = max(max_v, len([v for v in visited[1:] if v['text']==utt]))
+        # print("MAX: ", max_v)
+        if max_v < 1:
+            visited.append(start)
+            for utt in path[next]['text']:
+                all_combinations(path, {"participant": path[next]['participant'], "text": utt}, next+1, visited.copy())
     visited_list.append(visited)
 
 def get_edges(dialogues: list[list[int]]) -> set[tuple]:
@@ -115,15 +132,19 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     paths.sort()
     final = list(k for k,_ in itertools.groupby(paths))[1:]
     final.sort(key=len,reverse=True)
+    # print("FINAL: ", final)
     # cycles = list(nx.simple_cycles(graph.graph))
     # cycles = [x for xs in cycles for x in xs]
     # if all([f not in cycles for f in finishes]):
     #     finishes += ends
-    # print("ENDS: ", ends)
+    print("ENDS: ", ends)
     node_paths = [f for f in final if f[-1] in ends]
-    # print("NODES: ", node_paths)
+
+    if not graph.check_edges(node_paths):
+        return False
+    print("NODES: ", node_paths)
     node_paths = remove_duplicates(node_paths)
-    # print("REM: ", node_paths)
+    print("REM: ", node_paths)
     full_paths = []
     for p in node_paths:
         path = []
@@ -135,28 +156,30 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
             path.append(({"text": edge['utterances'], "participant": "user"}))
         path.append({"text": graph.node_by_id(p[-1])['utterances'], "participant": "assistant"})
         full_paths.append(path)
+    for f in full_paths:
+        print("FULL: ", f)
     dialogues = []
     for f in full_paths:
         visited_list = [[]]
-        # print("BEFORE comb")
+        print("BEFORE comb")
         all_combinations(f, {}, 0, [])
-        # print("AFTER comb")
+        print("AFTER comb: ", visited_list)
         # for v in visited_list:
         #     print("LIST: ", v)
-        # print("\n")
+        print("\n")
         dialogue = [el[1:] for el in visited_list if len(el)==len(f)+1]
         dialogues.extend(dialogue)
 
-    # for d in dialogues:
-    #    print("DGS: ", d)
-    # print("\n")
+    for d in dialogues:
+       print("DGS: ", d)
+    print("\n")
     final = list(k for k,_ in itertools.groupby(dialogues))
-    # print("BEFORE: ", len(final))
+    print("BEFORE: ", len(final))
     final = remove_duplicated_utts(final)
-    # print("AFTER: ", len(final))
-    # for f in final:
-    #     print("FINAL: ", f)
-    # print("\n")
+    print("AFTER: ", len(final))
+    for f in final:
+        print("FINAL: ", f)
+    print("\n")
     result = [Dialogue().from_list(seq) for seq in final]
     return result
 
@@ -285,16 +308,15 @@ class RecursiveDialogueSampler(DialogueGenerator):
             print("ENDDS: ", finishes)
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph,repeats,finishes)
-            # dialogues = get_dialogues(graph,repeats,[4,5,6,7])
-            pres = all_utterances_present(graph, dialogues)
-            if pres == True:
-                # print(f"{repeats} repeats works!")
-                break
-            # else:
-            #     print("DIF: ", pres)
-            else:
-                repeats += 1
-                # print("REPEATS: ", repeats)
+            if dialogues:
+                pres = all_utterances_present(graph, dialogues)
+                if pres == True:
+                    # print(f"{repeats} repeats works!")
+                    break
+                # else:
+                #     print("DIF: ", pres)
+            repeats += 1
+            # print("REPEATS: ", repeats)
         if repeats > upper_limit:
             print("Not all utterances present")
             # return []
