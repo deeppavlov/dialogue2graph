@@ -70,7 +70,7 @@ class CycleGraphGenerator(BaseModel):
         
         # Reset template to original
         prompt.template = original_template
-        return Graph(chain.invoke(kwargs))
+        return Graph(chain.invoke(kwargs).model_dump())
 
     async def ainvoke(self, *args, **kwargs):
         """Async version of invoke - to be implemented"""
@@ -263,9 +263,9 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         )
 
     def invoke(self, topic, seed=42) -> list[dict]:
-        logger.info(f"\n{'='*50}")
-        logger.info(f"Generating graph for topic: {topic}")
-        logger.info(f"{'='*50}")
+        print(f"\n{'='*50}")
+        print(f"Generating graph for topic: {topic}")
+        print(f"{'='*50}")
         successful_generations = []
         try:
             self.pipeline.seed = seed
