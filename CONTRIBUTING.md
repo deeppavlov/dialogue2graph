@@ -4,14 +4,14 @@ Thank you for your interest in contributing to the chatsky-llm-integration proje
 
 ## Getting Started
 
-1. Create a branch for your work. Branch names should start with the goal they are created (`feat`, `fix` etc.)
+1. Create a branch for your work. Branch names should start with the goal they are created (`feat`, `fix`, `exp` etc.)
 2. Checkout to your branch
 
 ```bash
 git checkout <your_branch_name>
 ```
 
-3. Set up the development environment:
+1. Set up the development environment:
 
 ```bash
 poetry install --with docs,lint,tests
@@ -27,7 +27,7 @@ poetry env remove --all
 
 ## Updating Dependencies
 
-We use poetry.lock to ensure that all builds with the same lock file have the same 3rd-party library versions. This lets us know whether workflow fails due to our part or because a dependency update breaks something.
+We use poetry.lock to ensure that all builds with the same lock file have the same 3rd-party library versions. It lets us know whether workflow fails due to our part or because a dependency update breaks something.
 
 In order to update versions specified in poetry.lock, run
 
@@ -47,11 +47,6 @@ poetry update
     ```
 
 3. Create a pull request with clear description of fixes and features
-
-## Pull Request format
-
-Please, include short description about your PR in it, give it a simple and inderstandable name.
-You can always create a draft PR and request review before you request to merge it into main repository.
 
 ## Conducting experiments
 
@@ -77,27 +72,32 @@ poetry init
 - Include docstrings for functions and classes
 - Write unit tests for new features or bug fixes
 
+## Pull Request format
+
+Please, include short description about your PR, give it a simple and meaningful name.
+When having any doubts, you can simply create a draft PR and request review before merge request.
+
 ## Reporting Issues
 
-If you encounter any bugs or have feature requests, please open an issue on the GitHub repository. Provide as much detail as possible, including:
+If you encounter any bugs or have feature requests, please open an issue on the GitHub. Provide as much detail as possible, including:
 
 - A clear and descriptive title
 - Steps to reproduce the issue
 - Expected behavior
 - Actual behavior
-- Graph visulisation if possible
+- Graph visualisation if possible
 
 ## Current Focus Areas
 
-We are currently working on supporting various types of graphs. Here's the current status:
+We are currently working on supporting various types of graphs.
 
-Supported types of graphs:
+Supported graph types:
 
 - [x] chain
 - [x] single cycle
 - [x] multi-cycle graph
 - [x] complex graph with cycles
 
-Currently unsupported types:
+Currently unsupported graph types:
 
 - [ ] single node cycle

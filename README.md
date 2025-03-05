@@ -1,77 +1,71 @@
 # chatsky-llm-integration
 
-Chatsky LLM-Autoconfig allows you to effortlessly create chatsky flows and scripts from dialogues using Large Language Models.
-
-## Requirements
-
-Python >=3.9, <3.12
-Poetry
-
-## How to start?
-
-Clone this repo and run `poetry install` to install all dependencies
-
-```bash
-git clone https://github.com/deeppavlov/chatsky-llm-autoconfig.git
-cd chatsky-llm-autoconfig
-poetry install
-```
-Create `.env` file for credentials. 
-
-**Note:** !!! Put your tokens and other sensitive credentials only in `.env` files and never hardcode them !!!
-
-Try to run some scripts or previous experiments to see if everything is working as expected. To run python file using poetry run the following:
-
-```bash
-poetry run python <your_file_name>.py
-```
+Chatsky LLM-Autoconfig allows you to effortlessly create **chatsky flows** and scripts from dialogues using Large Language Models.
 
 ## Contents
 
 ```
-./experiments - Test field for experimental features, test data and results
-./scripts - Here we put scripts needed for `poethepoet` automation (you probably do not need to look inside)
-./dialogue2graph - Directory containing all the code for the `dialogue2graph` module
+./dialogue2graph - source code
+./experiments - test field for discovering project features, contributing experimental features, analysing test data and results
+./scripts - scripts for `poethepoet` automation 
 ```
 
 ## Current progress
 
-Supported types of graphs:
+Supported graph types:
 
 - [x]  chain
 - [x]  single cycle
 - [x]  multi-cycle graph
 - [x]  complex graph with cycles
 
-Currently unsupported types:
+Currently unsupported graph types:
 
 - [ ]  single node cycle
 
-## How to use?
+## How to start
 
-We provide several of using our library for various tasks.
+Install [poetry](https://python-poetry.org/docs/)
 
-### Data generation
+Сlone this repo and install project dependencies:
 
-Get dialogue on certain topics using LLMs.
+```bash
+git clone https://github.com/deeppavlov/chatsky-llm-autoconfig.git
+cd chatsky-llm-autoconfig
+poetry install
+```
+
+Ensure that dependencies were installed correctly by running any python script:
+
+```bash
+poetry run python <your_file_name>.py
+```
+
+Create `.env` file to store credentials
+
+**Note:** never hardcode your personal tokens and other sensitive credentials. Use the `.env` file to store them.
+
+## How to use
+
+### Generate synthetic graph on certain topic
+
+Choose LLMs for generating and validating dialogue graph and invoke graph generation
 
 ```python
 from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
 from langchain_openai import ChatOpenAI
 
 
-generation_model = ChatOpenAI(
-        model='o1-mini',
-        api_key=os.getenv("OPENAI_API_KEY"),
-        base_url=os.getenv("OPENAI_BASE_URL"),
-        temperature=0.2
-)
-    
-validation_model = ChatOpenAI(
-    model='gpt-4o-mini',
+gen_model = ChatOpenAI(
+    model='gpt-4o',
     api_key=os.getenv("OPENAI_API_KEY"),
     base_url=os.getenv("OPENAI_BASE_URL"),
-    temperature=0
+)
+val_model = ChatOpenAI(
+    model='gpt-3.5-turbo',
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+    temperature=0,
 )
 
 pipeline = LoopedGraphGenerator(
@@ -87,12 +81,12 @@ topics = [
     "travel booking"
 ]
 
-result = pipeline.invoke(topic='account information change', use_cache=False)
+generated_graph = pipeline.invoke(topic=topics[0])
 ```
 
-### Dialogue sampling
+### Sample dialogues from existing dialogue graph
 
-Sample existing dialogs from graph
+Create graph instance and invoke sampler to get dialogue list
 
 ```python
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
@@ -102,9 +96,8 @@ G = Graph(graph_dict={...})
 
 sampler = RecursiveDialogueSampler()
 sampler.invoke(graph=G) #-> list of Dialogue objects
-
 ```
 
 ## How to contribute?
 
-You can find contribution guideline in [CONTRIBUTING.md](https://github.com/deeppavlov/chatsky-llm-autoconfig/blob/main/CONTRIBUTING.md)
+See contribution guideline [CONTRIBUTING.md](https://github.com/deeppavlov/chatsky-llm-autoconfig/blob/main/CONTRIBUTING.md)
