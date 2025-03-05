@@ -494,6 +494,7 @@ Your task is to extend the dialogue graph with input dialogue.
 Dialogue graph is a set of nodes with assistant's utterances and a set of edges that are
 triggered by user requests. Here goes the input graph: """
 
+
 # part_2 = """This is the end of the example.
 # **Rules:**
 # 1) is_start field in the node is an entry point to the whole graph.
@@ -809,6 +810,26 @@ List of dialogues: """
 # I will give a list of dialogues, your task is to build a set of nodes for this list according to the rules and examples above.
 # List of dialogues: """
 
+
+prompt_dialogs_and_graph = """
+You will be given a dialogue and a graph that describes this dialogue: edges' utterances are corresponding to users requests and nodes' utterances are corresponding to assistants' responses. You will also be given with another branch of this dialogue. You tasks are so:
+1. Determine which parts of the dialogues are the same and which are different.
+2. Append the brach defined by second dialogue to the graph -- add corresponding edges and nodes to the graph.
+3. Return graph that describes both dialogues.
+            
+**Rules:**
+1) Responses must acknowledge what the user has already specified
+2) Each node must have clear purpose
+3) Return ONLY the JSON without commentary and codeblocks
+4) All edges must connect to existing nodes
+5) The graph paths should make logical sense
+6) Nodes and edges that bears same meaning must not be duplicated, reuse them when possible
+7) If nodes has same uterances the should be merged into one
+            
+Original dialogue: {orig_dial}
+Original graph: {orig_graph}
+            
+Additional branch: {new_dial}"""
 
 
 graph_example_1 = {
