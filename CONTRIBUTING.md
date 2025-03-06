@@ -4,20 +4,18 @@ Thank you for your interest in contributing to the chatsky-llm-integration proje
 
 ## Getting Started
 
-1. Create a branch for your work. Preferable branch names: `feat`, `fix`, `exp` etc.
+1. Create a branch for your work. Preferable branch prefixes are `feat`, `fix`, `exp` etc.
 2. Switch to your branch
 
 ```bash
 git checkout <your_branch_name>
 ```
 
-3. Set up the development environment:
+3. Set up the development environment (it will be activated automatically)
 
 ```bash
 poetry install --with docs,lint,tests
 ```
-
-The environment will be activated automatically.
 
 To delete all the virtual environments, run
 
@@ -27,7 +25,7 @@ poetry env remove --all
 
 ## Updating Dependencies
 
-We use poetry as a dependency management tool. `poetry.lock` contains all dependencies for the current project. In order to update versions specified in poetry.lock, run
+We use poetry as a dependency management tool. `poetry.lock` contains all dependencies for the current project. In order to update versions specified in the `poetry.lock`, run
 
 ```bash
 poetry update
@@ -35,22 +33,26 @@ poetry update
 
 ## How to Contribute
 
-1. Experiment with the graphs (see the following section for a detail) or add new features
+1. Experiment with the graphs (see the following section for a detail) or add new features to Chatsky LLM-Autoconfig tool
 
-2. Check linting and try to reformat it running
+2. Check linting and try to reformat your code running
 
     ```bash
     poetry run poe lint
     poetry run poe format
     ```
 
-3. Create a pull request, do not forget naming it properly and adding a clear description of fixes and features
+3. Create a pull request
 
-## Conducting experiments
+**Tips:**
+- choose a proper name for your pull request,
+- add clear descripting of fixes and features
+
+## Setting an experiment
 
 All conducted experiments should be stored in the `./experiments` folder, each experiment saved in the separate folder and named standardly, `exp<YYYY>_<MM>_<DD>_<hypothesis>`.
 
-To create new experiment run (it creates the <experiment_name> folder automatically)
+To make new experiment with automatic folder creation run
 
 ```bash
 poetry new --src <experiment_name>
@@ -73,7 +75,9 @@ poetry init
 
 ## Pull Request format
 
-Include short description about your PR, give it a simple and meaningful name.
+- Name of your PR (keep it simple yet meaningful)
+- Short description (provide list of changes)
+
 When having any doubts, you can simply create a draft PR and request a review before merging your request.
 
 ## Reporting Issues
