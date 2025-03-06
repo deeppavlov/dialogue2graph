@@ -6,7 +6,9 @@ Chatsky LLM-Autoconfig allows you to effortlessly create **chatsky flows** and s
 
 ```
 ./dialogue2graph - source code
-./experiments - test field for discovering project features, contributing experimental features, analysing test data and results
+./examples - usage scenarios
+./experiments - test field for conducting experiments
+./prompt_cache - utils for LLM output caching
 ./scripts - scripts for `poethepoet` automation 
 ```
 
