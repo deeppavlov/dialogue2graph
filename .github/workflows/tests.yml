@@ -1,11 +1,8 @@
-name: codestyle
+name: tests
 
 on:
   push:
-    branches:
-    - dev
-    - master
-    - test/**
+    branches: '**'
   pull_request:
     branches:
     - dev
@@ -16,7 +13,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/master' }}
 
 jobs:
-  lint:
+  test_ubuntu_latest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +28,6 @@ jobs:
           python -m pip install --upgrade pip poetry
           python -m poetry install --with tests --no-ansi --no-interaction
 
-      - name: run codestyle
+      - name: run tests
         run: |
           python -m poetry run poe test

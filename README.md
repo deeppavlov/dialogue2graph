@@ -25,10 +25,9 @@ poetry run python <your_file_name>.py
 ## Contents
 
 ```
-./data - Examples, tests and other dialogue data in JSON format
 ./experiments - Test field for experimental features, test data and results
 ./scripts - Here we put scripts needed for `poethepoet` automation (you probably do not need to look inside)
-./dev_packages/chatsky_llm_autoconfig - Directory containing all the code for the `chatsky_llm_autoconfig` module
+./dialogue2graph - Directory containing all the code for the `dialogue2graph` module
 ```
 
 ## Current progress
@@ -37,32 +36,87 @@ Supported types of graphs:
 
 - [x]  chain
 - [x]  single cycle
+- [x]  multi-cycle graph
+- [x]  complex graph with cycles
 
 Currently unsupported types:
 
 - [ ]  single node cycle
-- [ ]  multi-cycle graph
-- [ ]  incomplete graph
-- [ ]  complex graph with cycles
 
-## Current algorithms progress
+## How to use
 
-- Generate graph from scratch by topic (input: topic, output: graph) (for dataset generation)
-  - algorithms.topic_graph_generation.CycleGraphGenerator
+We provide several of using our library for various tasks.
 
-- change graph without changing graph structure (input: old graph + topic, output: new graph) (for dataset generation)
+### Data generation
 
-- sampling from dialogue graph (input: graph, output: dialogue) (for dataset generation)
-  - algorithms.dialogue_generation.DialogueSampler
+```python
+from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
+from langchain_openai import ChatOpenAI
 
-- augmentation of dialogue (input: dialogue, output: dialogue) (for dataset generation)
-  - algorithms.dialogue_generation.DialogAugmentation
 
-- generate graph from scratch by dialogue (input: dialogue, output: graph) (decisive algorithm)
-  - GeneralGraphGenerator (experiments/2024.11.14_dialogue2graph)
+generation_model = ChatOpenAI(
+        model='deepseek/deepseek-reasoner',
+        api_key=os.getenv("OPENAI_API_KEY"),
+        base_url=os.getenv("OPENAI_BASE_URL"),
+        temperature=0.2
+    )
+    
+validation_model = ChatOpenAI(
+    model='gpt-4o-mini',
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+    temperature=0
 
-- generate graph based on existing graph (input: old graph + dialog, output: new graph) (extended decision algorithm)
-  - AppendChain (experiments/2024.11.17_concatenating_subchains_prompt)
+pipeline = LoopedGraphGenerator(
+    generation_model=gen_model,
+    validation_model=val_model,
+)
+    
+topics = [
+    "technical support conversation",
+    "job interview",
+    "restaurant reservation",
+    "online shopping checkout",
+    "travel booking"
+]
+
+successful_generations = []
+
+for topic in topics:
+    try:
+        result = pipeline(topic, use_cache=False)
+        
+        # Check the result type
+        if isinstance(result, GraphGenerationResult):
+            print(f"✅ Successfully generated graph for {topic}")
+            # Save the full result with the graph and dialog
+            successful_generations.append({
+                "graph": result.graph.model_dump(),
+                "topic": result.topic,
+                "dialogues": [d.model_dump() for d in result.dialogues]
+            })
+        else:  # isinstance(result, GenerationError)
+            print(f"❌ Failed to generate graph for {topic}")
+            print(f"Error type: {result.error_type}")
+            print(f"Error message: {result.message}")
+                
+    except Exception as e:
+        print(f"❌ Unexpected error processing topic '{topic}': {str(e)}")
+        continue
+```
+
+### Dialogue sampling
+
+```python
+from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
+from chatsky_llm_autoconfig.graph import Graph
+
+G = Graph(graph_dict={...})
+
+sampler = RecursiveDialogueSampler()
+sampler.invoke(graph=G) #-> list of Dialogue objects
+
+```
 
 ## How to contribute?
 

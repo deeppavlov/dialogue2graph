@@ -5,7 +5,7 @@ import black
 from flake8.main.cli import main as flake_main
 
 
-_STANDARD_PATHS = ["dev_packages/chatsky_llm_autoconfig", "scripts", "tests", ".github"]
+_STANDARD_PATHS = ["dialogue2graph", "scripts", "tests", ".github"]
 _STANDARD_PATHS_LEN = 150
 
 
@@ -18,8 +18,7 @@ def _run_flake():
     flake8_configs = [
         "--select=E,W,F",
         # black formats binary operators after line breaks
-        "--ignore=W503",
-        "--ignore=E501",
+        "--ignore=E501,E203,W503,W293",
         "--per-file-ignores="
         # allow imports in init files without use
         "**/__init__.py:F401 ",
