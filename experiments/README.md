@@ -49,4 +49,4 @@ Once you've decided to create an experiment to test a hypothesis you should stic
     ```
 
 7. Don't forget to track your progress and results in the README.md file in your experiment folder.
-8. Once you've finished your work create a pull request into `dev` branch. Don't forget to describe what have you done in the experiment in the PR description.
+8. Once you've finished your work create a pull request into `dev` branch. Don't forget to describe what you have done in the experiment in the PR description.
