@@ -7,7 +7,6 @@ from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
 from dialogue2graph.metrics.automatic_metrics import all_utterances_present
 
 
-# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class RecursiveDialogueSampler(DialogueGenerator):
     def _list_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
