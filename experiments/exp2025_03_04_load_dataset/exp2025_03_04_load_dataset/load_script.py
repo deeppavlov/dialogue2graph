@@ -23,7 +23,7 @@ import urllib.request
 import zipfile
 import ast
 
-from chatsky_llm_autoconfig.settings import EnvSettings
+from settings import EnvSettings
 env_settings = EnvSettings()
 datasets.disable_caching()
 
