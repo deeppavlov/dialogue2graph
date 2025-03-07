@@ -49,7 +49,6 @@ class LoopedGraphGenerator(TopicGraphGenerator):
                 print(f"❌ Failed to generate graph for {topic}")
                 print(f"Error type: {result.error_type}")
                 print(f"Error message: {result.message}")
-                    
         except Exception as e:
             print(f"❌ Unexpected error processing topic '{topic}': {str(e)}")
 

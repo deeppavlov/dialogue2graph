@@ -155,10 +155,8 @@ class Dialogue(BaseModel):
     @classmethod
     def from_list(cls, messages: List[Dict[str, str]], validate: bool = True) -> "Dialogue":
         """Create a Dialogue from a list of dictionaries."""
-        # dialogue_messages = [DialogueMessage(**m) for m in messages]
-        ret = cls(messages=messages, validate=validate)
-        # print("RET: ", ret)
-        return ret
+        dialogue_messages = [DialogueMessage(**m) for m in messages]
+        return cls(messages=dialogue_messages, validate=validate)
 
     @classmethod
     def from_nodes_ids(cls, graph, node_list, validate: bool = True) -> "Dialogue":
@@ -256,13 +254,9 @@ class CompareResponse(BaseModel):
     result: bool = Field(description="compare result")
     reason: str = Field(description="explanation")
 
-class DialogueMessage(BaseModel):
-    """Represents a single message in a dialogue.
+class GraphGenerationResult(BaseModel):
+    """Complete result with graph and dialogues"""
 
-    Attributes:
-        text: The content of the message
-        participant: The sender of the message (e.g. "user" or "assistant")
-    """
-
-    text: str
-    participant: str
+    graph: DialogueGraph
+    topic: str
+    dialogues: List[Dialogue]

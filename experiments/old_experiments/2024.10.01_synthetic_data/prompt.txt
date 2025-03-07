@@ -1,0 +1,132 @@
+Your task is to create pairs dialogue - graph describing this dialogue. The dialogues must be written in english, consist of exactly two people talking, show user-assistant interaction and be cycled (the last phrase should connect last node with first node). You have an example of dialogue from customer chatbot system. You also have an example of set of rules how chatbot system works should be looking - it is a set of nodes when chatbot system respons and a set of transitions that are triggered by user requests. 
+    Here is the example of set of rules: 
+```
+    'edges': [{ 'source': 1, 'target': 2, 'utterances': 'I need to make an order' }, 
+    { 'source': 1, 'target': 2, 'utterances': 'I want to order from you' }, 
+    { 'source': 2, 'target': 3, 'utterances': 'I would like to purchase 'Pale Fire' and 'Anna Karenina', please' }, 
+    'nodes': [ {'id': 1, 'label': 'start', 'is_start': true, 'utterances': [ 'How can I help?', 'Hello' ]}, 
+    { 'id': 2, 'label': 'ask_books', 'is_start': false, 'utterances': [ 'What books do you like?'} ] 
+```
+You will have to create a dialogue and a graph. We allow several edges with equal 
+    source and target and also multiple responses on one node so try not to add new nodes if it is logical just to extend an 
+    exsiting one. utterances in one node or on multiedge should close between each other and correspond to different answers 
+    to one question or different ways to say something. For example, for question about preferences or a Yes/No question 
+    both answers can be fit in one multiedge, there’s no need to make a new node. If two nodes has the same responses they 
+    should be united in one node. Do not make up utterances that aren’t present in the dialogue. Please do not combine 
+    utterances for multiedges in one list, write them separately like in example above. Every utterance from the dialogue, 
+    whether it is from user or assistanst, should contain in one of the nodes. Edges must be utterances from the user. Do not forget ending nodes with goodbyes. 
+EXAMPLE:
+```json
+"dialog": [
+            {
+                "text": "How can I help?",
+                "participant": "assistant"
+            },
+            {
+                "text": "I need to make an order",
+                "participant": "user"
+            },
+            {
+                "text": "Which books would you like to order?",
+                "participant": "assistant"
+            },
+            {
+                "text": "One War and Piece in hard cover and one Pride and Prejudice",
+                "participant": "user"
+            },
+            {
+                "text": "Please, enter the payment method you would like to use: cash or credit card.",
+                "participant": "assistant"
+            },
+            {
+                "text": "With credit card, please",
+                "participant": "user"
+            },
+            {
+                "text": "Something is wrong, can you please use other payment method or start order again",
+                "participant": "assistant"
+            },
+            {
+                "text": "I will enter new payment method",
+                "participant": "user"
+            }
+        ],
+"graph": {
+            "edges": [
+                {
+                    "utterances": [
+                        "I need to make an order",
+                        "I want to order from you"
+                    ],
+                    "source": 1,
+                    "target": 2
+                },
+                {
+                    "utterances": [
+                        "I would like to purchase 'Pale Fire' and 'Anna Karenina', please",
+                        "One War and Piece in hard cover and one Pride and Prejudice"
+                    ],
+                    "source": 2,
+                    "target": 3
+                },
+                {
+                    "utterances": [
+                        "Cash",
+                        "With credit card, please"
+                    ],
+                    "source": 3,
+                    "target": 4
+                },
+                {
+                    "utterances": [
+                        "I will enter new payment method"
+                    ],
+                    "source": 4,
+                    "target": 3
+                },
+                {
+                    "utterances": [
+                        "Start new order"
+                    ],
+                    "source": 4,
+                    "target": 1
+                }
+            ],
+            "nodes": [
+                {
+                    "id": 1,
+                    "label": "start",
+                    "is_start": true,
+                    "utterances": [
+                        "How can I help?",
+                        "Hello"
+                    ]
+                },
+                {
+                    "id": 2,
+                    "label": "ask_item",
+                    "is_start": false,
+                    "utterances": [
+                        "Which books would you like to order?"
+                    ]
+                },
+                {
+                    "id": 3,
+                    "label": "ask_payment_method",
+                    "is_start": false,
+                    "utterances": [
+                        "Please, enter the payment method you would like to use: cash or credit card."
+                    ]
+                },
+                {
+                    "id": 4,
+                    "label": "ask_to_redo",
+                    "is_start": false,
+                    "utterances": [
+                        "Something is wrong, can you please use other payment method or start order again"
+                    ]
+                }
+            ]
+        }
+```
+This is the end of the example. We encourage you to use cycles and complex interwining structure of the graph with 'Yes'/'No' edges for the branching. Themes of dialogues must be original and not exactly about literature or buying stuff as long as they are sensible and follow rules. Dialogue and graph must be valid JSON strings. Return ONLY JSON string in plain text (no code blocks) without any additional commentaries.
