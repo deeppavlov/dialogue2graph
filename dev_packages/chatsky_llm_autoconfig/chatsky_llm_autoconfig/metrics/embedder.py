@@ -27,6 +27,7 @@ if_re = re.compile(r'\b(if|whether)\b', re.IGNORECASE)
 nlp = spacy.load('en_core_web_sm')
 evaluator = HuggingFaceCrossEncoder(model_name=env_settings.RERANKER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
 
+# THIS FUNCTION WAS COMMENTED
 # def compare_strings(first: str, second: str):
 
 #     # score = evaluator.evaluate_string_pairs(prediction=first, prediction_b=second)['score']
@@ -36,6 +37,7 @@ evaluator = HuggingFaceCrossEncoder(model_name=env_settings.RERANKER_MODEL, mode
 #     # return score <= env_settings.EMBEDDER_THRESHOLD
 #     return score >= env_settings.RERANKER_THRESHOLD
 
+# THIS FUNCTION WAS ACTIVE
 def compare_strings(first: str, second: str, embeddings: HuggingFaceEmbeddings):
 
     evaluator_2 = load_evaluator("pairwise_embedding_distance", embeddings=embeddings)
@@ -47,8 +49,8 @@ def compare_strings(first: str, second: str, embeddings: HuggingFaceEmbeddings):
 class EmbeddableString:
     def __init__(self, element: str):
         self.element = element
-    def __eq__(self, other):
-        return compare_strings(self.element,other.element)
+    # def __eq__(self, other):
+    #     return compare_strings(self.element,other.element)
     def __hash__(self):
         return hash("")
     def __str__(self):
