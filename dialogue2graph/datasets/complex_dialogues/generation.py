@@ -24,6 +24,7 @@ from .prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class ErrorType(str, Enum):
     """Types of errors that can occur during generation"""
 
@@ -46,7 +47,7 @@ PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 class CycleGraphGenerator(BaseModel):
     cache: Optional[Any] = Field(default=None, exclude=True)
-    
+
     class Config:
         arbitrary_types_allowed = True
         extra = "allow"
@@ -58,14 +59,14 @@ class CycleGraphGenerator(BaseModel):
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
-            
+
         # Add UUID to the prompt template
         original_template = prompt.template
         prompt.template = add_uuid_to_prompt(original_template, seed)
-        
+
         parser = PydanticOutputParser(pydantic_object=DialogueGraph)
         chain = prompt | model | parser
-        
+
         # Reset template to original
         prompt.template = original_template
         return Graph(chain.invoke(kwargs).model_dump())
@@ -156,15 +157,15 @@ class GenerationPipeline(BaseModel):
                 if self.repair_prompt:
                     original_template = self.repair_prompt.template
                     self.repair_prompt.template = add_uuid_to_prompt(original_template, seed=self.seed)
-                
+
                 current_graph = self.graph_generator.invoke(
                     model=self.generation_model,
                     prompt=self.repair_prompt,
                     invalid_transitions=initial_validation["invalid_transitions"],
                     graph_json=current_graph.graph_dict,
-                    seed=self.seed
+                    seed=self.seed,
                 )
-                
+
                 # Reset template
                 if self.repair_prompt:
                     self.repair_prompt.template = original_template
