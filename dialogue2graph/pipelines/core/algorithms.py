@@ -15,11 +15,11 @@ class BaseAlgorithm(BaseModel, abc.ABC):
     """
 
     @abc.abstractmethod
-    def invoke(self, *args, **kwargs):
+    def invoke(self, *args, use_cache=False, seed=42, **kwargs):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def ainvoke(self, *args, use_cache=True, **kwargs):
+    async def ainvoke(self, *args, use_cache=False, seed=42, **kwargs):
         raise NotImplementedError
 
     @abc.abstractmethod
