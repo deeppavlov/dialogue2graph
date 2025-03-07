@@ -5,11 +5,13 @@ from dotenv import load_dotenv
 
 from langchain_core.globals import set_llm_cache
 from langchain_community.cache import SQLAlchemyCache, InMemoryCache
+
 # from langchain_core.load.load import loads
 # from langchain_core.load.dump import dumps
 # from langchain_core.outputs import Generation
 
 from sqlalchemy import create_engine
+
 # from sqlalchemy.sql import func
 # from sqlalchemy.orm import Session
 
@@ -96,10 +98,10 @@ def add_uuid_to_prompt(prompt: str, seed: int = None) -> str:
 
 def setup_cache(use_in_memory: bool = False):
     """Set up the LLM cache.
-    
+
     Args:
         use_in_memory: If True, use InMemoryCache instead of SQLAlchemyCache
-        
+
     Returns:
         The configured cache object or None if setup fails
     """
