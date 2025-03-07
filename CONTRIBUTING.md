@@ -1,6 +1,6 @@
 # Contributing to chatsky-llm-integration
 
-Thank you for your interest in contributing to the dff-llm-integration project! We welcome contributions from the community to help improve and expand this Chatsky LLM-Autoconfig tool.
+Thank you for your interest in contributing to the chatsky-llm-integration project! We welcome contributions from the community to help improve and expand this Chatsky LLM-Autoconfig tool.
 
 ## Getting Started
 
@@ -35,40 +35,18 @@ In order to update versions specified in poetry.lock, run
 poetry update
 ```
 
-## How to test your code
-
-To test your algorithm or pipeline you need to follow these steps:
-
-1. Decorate your class with AlgorithRegistry.register() like so:
-
-```python
-from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
-
-@AlgorithmRegistry.register(input_type=BaseGraph, output_type=list[Dialogue])
-class DialogueSampler(DialogueGenerator)
-```
-
-2. Make sure that `input_type` and `output_type` are matching with the signature of `.invoke()` method
-3. Run
-
-```bash
-poetry run python dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/autometrics/run_autometrics.py
-```
-
-4. If metrics didn't drop then everything is fine. Add, commit and push as usual.
-
 ## How to Contribute
 
 1. Make your changes and test hypothesis in the `./experiments` folder as it is described in **Conducting experiments** section
 
-3. Ensure linting using commands as
+2. Ensure linting using commands as
 
-```
-poetry run poe lint
-poetry run poe format
-```
+    ```bash
+    poetry run poe lint
+    poetry run poe format
+    ```
 
-4. Create a pull request with clear description of fixed and features
+3. Create a pull request with clear description of fixes and features
 
 ## Pull Request format
 
@@ -78,8 +56,17 @@ You can always create a draft PR and request review before you request to merge 
 ## Conducting experiments
 
 Until any of the code make it way to the main repo it should be tested in `./experiments` folder.
-Each of the experiments must lay in the separate folder with name like `<YYYY.MM.DD>_<experiment_name>`.
-Inside of this directory must be a `report.md` file with results, metrics, future plans and other relevant information.
+Each of the experiments must lay in the separate folder with name like `exp<YYYY>_<MM>_<DD>_<hypothesis>`. Each experiment must be a poetry project that can be done via running either:
+
+```bash
+poetry new --src <experiment_name>
+```
+
+or, alternatively, if you've already created the folder
+
+```bash
+poetry init
+```
 
 **!!! Do not put images into the folder you are commiting, use GoogleDrive instead !!!**
 
@@ -108,10 +95,9 @@ Supported types of graphs:
 
 - [x] chain
 - [x] single cycle
+- [x] multi-cycle graph
+- [x] complex graph with cycles
 
 Currently unsupported types:
 
 - [ ] single node cycle
-- [ ] multi-cycle graph
-- [ ] incomplete graph
-- [ ] complex graph with cycles
