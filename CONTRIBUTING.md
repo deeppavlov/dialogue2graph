@@ -4,7 +4,7 @@ Thank you for your interest in contributing to the chatsky-llm-integration proje
 
 ## Getting Started
 
-1. Create a branch for your work. Preferable branch prefixes are `feat`, `fix`, `exp` etc.
+1. Create a branch for your work. Preferable branch prefixes are `feat`, `fix`, `exp`.
 2. Switch to your branch
 
 ```bash
@@ -46,7 +46,7 @@ poetry update
 
 **Tips:**
 - choose a proper name for your pull request,
-- add clear descripting of fixes and features
+- add clear description of new features and fixes
 
 ## Setting Experiments
 
