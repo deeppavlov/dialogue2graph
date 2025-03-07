@@ -8,7 +8,7 @@ from langchain_community.cross_encoders.huggingface import HuggingFaceCrossEncod
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.evaluation import load_evaluator
 
-from chatsky_llm_autoconfig.schemas import DialogueMessage
+# from chatsky_llm_autoconfig.schemas import DialogueMessage
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.settings import EnvSettings
 

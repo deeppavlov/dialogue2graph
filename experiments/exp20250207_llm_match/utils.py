@@ -12,7 +12,7 @@ from chatsky_llm_autoconfig.metrics.embedder import compare_strings
 from langchain.schema import HumanMessage
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-from langchain_community.cross_encoders.huggingface import HuggingFaceCrossEncoder
+# from langchain_community.cross_encoders.huggingface import HuggingFaceCrossEncoder
 
 env_settings = EnvSettings()
 # evaluator = HuggingFaceCrossEncoder(model_name=env_settings.RERANKER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})

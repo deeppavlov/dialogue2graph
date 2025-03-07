@@ -12,7 +12,7 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph
 from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.prompts import (
-    prompts, graph_example_1, part_1, part_2, dialogue_example_2, graph_example_2, edges_1, edges_2, edges_3, auto_nodes
+ graph_example_1, part_1, part_2 #, dialogue_example_2, graph_example_2, edges_1, edges_2, edges_3, auto_nodes
 )
 
 env_settings = EnvSettings()

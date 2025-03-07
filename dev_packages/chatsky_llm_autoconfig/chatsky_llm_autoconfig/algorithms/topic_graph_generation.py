@@ -1,10 +1,10 @@
-from typing import Optional
+# from typing import Optional
 from chatsky_llm_autoconfig.algorithms.base import TopicGraphGenerator
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 # from langchain.prompts import PromptTemplate
 from chatsky_llm_autoconfig.schemas import GraphGenerationResult
 from chatsky_llm_autoconfig.algorithms.cycle_graph_generation_pipeline import GraphGenerationPipeline, CycleGraphGenerator
-from chatsky_llm_autoconfig.graph import BaseGraph, Graph
+from chatsky_llm_autoconfig.graph import BaseGraph #, Graph
 from chatsky_llm_autoconfig.prompts import extra_edge_prompt
 
 from langchain_core.language_models.chat_models import BaseChatModel

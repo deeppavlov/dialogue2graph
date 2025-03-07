@@ -1,4 +1,3 @@
-print("start")
 import logging
 from pathlib import Path
 from chatsky_llm_autoconfig.missing_edges_prompt import prompt_name
@@ -18,16 +17,16 @@ from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 from chatsky_llm_autoconfig.algorithms.topic_graph_generation import CycleGraphGenerator
 # from chatsky_llm_autoconfig.algorithms.dialogue_generation import DialogueSampler
 import json
-from datasets import load_dataset
+# from datasets import load_dataset
 from chatsky_llm_autoconfig.graph import Graph, BaseGraph
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.metrics.automatic_metrics import (
-    all_paths_sampled,
+    # all_paths_sampled,
     all_utterances_present,
     all_roles_correct,
     is_same_structure,
     is_correct_lenght,
-    triplet_match,
+    # triplet_match,
     compare_graphs
 )
 from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, is_theme_valid
@@ -38,7 +37,6 @@ from chatsky_llm_autoconfig.utils import (
 )
 from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.metrics.automatic_metrics import *
-from chatsky_llm_autoconfig.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 import datetime
 from colorama import Fore
 from langchain_openai  import ChatOpenAI
@@ -91,35 +89,7 @@ def run_all_algorithms():
         # class_instance = algorithms[class_]["type"]()
         metrics = {}
 
-        if algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is Dialogue:
-            metrics = {"all_paths_sampled": [], "all_utterances_present": []}
-            for case in graph_to_dialogue:
-                test_dialogue = Dialogue(dialogue=case["dialogue"])
-                test_graph = Graph(graph_dict=case["graph"])
-                result = class_instance.invoke(test_graph)
-
-                # metrics["all_paths_sampled"].append(all_paths_sampled(test_graph, result[0]))
-                metrics["all_utterances_present"].append(all_utterances_present(test_graph, result))
-
-            # metrics["all_paths_sampled_avg"] = sum(metrics["all_paths_sampled"]) / len(metrics["all_paths_sampled"])
-            metrics["all_utterances_present_avg"] = sum(metrics["all_utterances_present"]) / len(metrics["all_utterances_present"])
-
-        elif algorithms[class_]["input_type"] is Dialogue and algorithms[class_]["output_type"] is Dialogue:
-            metrics = {
-                "all_roles_correct": [],
-                "is_correct_lenght": [],
-            }
-            for case in dialogue_to_dialogue:
-                test_dialogue = Dialogue(dialogue=case["dialogue"])
-                result = class_instance.invoke(dialogue=test_dialogue)
-
-                metrics["all_roles_correct"].append(all_roles_correct(test_dialogue, result))
-                metrics["is_correct_lenght"].append(is_correct_lenght(test_dialogue, result))
-
-            metrics["all_roles_correct_avg"] = sum(metrics["all_roles_correct"]) / len(metrics["all_roles_correct"])
-            metrics["is_correct_lenght_avg"] = sum(metrics["is_correct_lenght"]) / len(metrics["is_correct_lenght"])
-
-        elif algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
+        if algorithms[class_]["input_type"] is BaseGraph and algorithms[class_]["output_type"] is BaseGraph:
             tp = algorithms[class_]["type"]
             class_instance = tp(generation_model)
             result = []

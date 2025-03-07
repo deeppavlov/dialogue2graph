@@ -3,26 +3,24 @@ from langchain.prompts import PromptTemplate
 from langchain_openai  import ChatOpenAI
 # from langchain.chat_models import init_chat_model
 from langchain.output_parsers import PydanticOutputParser
-from langchain_community.embeddings import HuggingFaceEmbeddings
+# from langchain_community.embeddings import HuggingFaceEmbeddings
 from chatsky_llm_autoconfig.algorithms.dialogue_generation import RecursiveDialogueSampler
 from chatsky_llm_autoconfig.algorithms.base import GraphGenerator
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
-from chatsky_llm_autoconfig.metrics.embedder import nodes2groups
-from chatsky_llm_autoconfig.schemas import DialogueGraph, DialogueNodes
+# from chatsky_llm_autoconfig.metrics.embedder import nodes2groups
+from chatsky_llm_autoconfig.schemas import DialogueGraph #, DialogueNodes
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
-from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph, dialogues2list
+from chatsky_llm_autoconfig.utils import call_llm_api #, nodes2graph, dialogues2list
 from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
 from chatsky_llm_autoconfig.prompts import (
- graph_example_1, part_1i0, part_2i0
+ part_1i0, part_2i0 #, graph_example_1
 )
 from chatsky_llm_autoconfig.metrics.automatic_metrics import (
     is_same_structure,
     compare_graphs
 )
-
-from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
 
 env_settings = EnvSettings()
 dialogue_sampler = RecursiveDialogueSampler()
@@ -45,7 +43,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
         partial_variables = {}
         partial_variables["var_0"] = dialogue[0].to_list()
-        prompt_extra = part_2i0 + f" Dialogue_0: {{var_0}}"
+        prompt_extra = part_2i0 + " Dialogue_0: {{var_0}}"
         prompt = PromptTemplate(template=part_1i0+"{graph}. "+prompt_extra, input_variables=["graph"], partial_variables=partial_variables)
         print("model:  ",env_settings.GENERATION_MODEL_NAME)
 
