@@ -21,6 +21,9 @@ class MockChatModel(BaseChatModel):
 
     def _llm_type(self):
         return "mock"
+    
+    def _generate(self, *args, **kwargs):
+        return {"generations": [{"text": "test response"}]}
 
 
 def test_cycle_graph_generator_init():
