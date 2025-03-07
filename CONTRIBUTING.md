@@ -55,7 +55,7 @@ All conducted experiments should be stored in the `./experiments` folder, each e
 To make new experiment with automatic folder creation run
 
 ```bash
-poetry new --src <experiment_name>
+poetry new <experiment_name>
 ```
 
 or, alternatively, if you've already created the folder, run

@@ -27,7 +27,11 @@ Currently unsupported graph types:
 
 ## How to Start
 
-Install [poetry](https://python-poetry.org/docs/)
+Install poetry v. 1.8.4 ([detailed installation guide](https://python-poetry.org/docs/))
+
+```bash
+pipx install poetry==1.8.4
+```
 
 Clone this repo and install project dependencies
 
