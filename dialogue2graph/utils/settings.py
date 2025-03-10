@@ -6,7 +6,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
 
     # model_config: SettingsConfigDict
     # model_config = SettingsConfigDict(env_file='dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/.env', env_file_encoding='utf-8')
-    model_config = SettingsConfigDict(env_file='.env', env_file_encoding='utf-8')
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     OPENAI_API_KEY: Optional[str]
     OPENAI_BASE_URL: Optional[str]
