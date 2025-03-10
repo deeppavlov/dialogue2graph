@@ -20,9 +20,8 @@ from chatsky_llm_autoconfig.compare_prompt import (
     compare_graphs_prompt, graph_example_1, result_form
 )
 
-env_settings = EnvSettings()
 from langchain.chat_models import ChatOpenAI
-
+env_settings = EnvSettings()
 
 def edge_match_for_multigraph(x, y):
     if isinstance(x, dict) and isinstance(y, dict):

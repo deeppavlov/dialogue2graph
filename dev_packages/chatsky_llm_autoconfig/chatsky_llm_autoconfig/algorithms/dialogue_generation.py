@@ -6,7 +6,7 @@ from chatsky_llm_autoconfig.graph import BaseGraph
 from chatsky_llm_autoconfig.algorithms.base import DialogueGenerator
 # from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.schemas import Dialogue
-from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
+# from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
 from chatsky_llm_autoconfig.metrics.llm_metrics import find_graph_ends
 from chatsky_llm_autoconfig.settings import EnvSettings
@@ -29,42 +29,19 @@ def mix_ends(graph: BaseGraph, ends: list[int], cycles: list[int]):
                 visited.append(c)
     return [e for e in cycles if e not in visited] + ends
 
-# def all_paths(graph: BaseGraph, start: int, visited: list, repeats: int):
-#     global visited_list
-
-#     # if len(visited) < 1 or len_in([visited[-1],start],visited) < repeats:
-#     if len(visited) < repeats or not list_in(visited[-repeats:]+[start],visited):
-#         # print("LEN: ", len(visited))
-#         visited.append(start)
-#         for edge in graph.edge_by_source(start):
-#             # print("TARGET: ", edge['target'])
-#             all_paths(graph, edge['target'], visited.copy(), repeats)
-#     visited_list.append(visited)
-
-# def all_combinations(path: list, start: dict, next: int, visited: list):
-#     global visited_list
-#     visited.append(start)
-#     print("APPEND: ", next, start, len(path))
-#     max_v = 0
-#     for utt in path[next]['text']:
-#         max_v = max(max_v, len([v['text'] for v in visited if v==utt]))
-#     if next < len(path) and max_v < 5:
-#         for utt in path[next]['text']:
-#             all_combinations(path, {"participant": path[next]['participant'], "text": utt}, next+1, visited.copy())
-#     visited_list.append(visited)
-
 def all_combinations(path: list, start: dict, next: int, visited: list):
-    global visited_list
+    global visited_list, counter
     # print("APPEND: ", next, start, len(path))
-    max_v = 0
+    visited.append(start)
+
     if next < len(path):
-        for utt in path[next]['text']:
-            max_v = max(max_v, len([v for v in visited[1:] if v['text']==utt]))
         # print("MAX: ", max_v)
-        if max_v < 1:
-            visited.append(start)
             for utt in path[next]['text']:
                 all_combinations(path, {"participant": path[next]['participant'], "text": utt}, next+1, visited.copy())
+    else:
+        counter += 1
+        if counter%10000000 == 0:
+            print("CUR: ", counter)
     visited_list.append(visited)
 
 def get_edges(dialogues: list[list[int]]) -> set[tuple]:
@@ -122,7 +99,7 @@ def remove_duplicated_utts(seq: list[list[dict]]):
     return single_seq
 
 def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialogue]:
-    global visited_list
+    global visited_list, counter
     paths = []
     starts = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
     for s in starts:
@@ -156,30 +133,31 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
             path.append(({"text": edge['utterances'], "participant": "user"}))
         path.append({"text": graph.node_by_id(p[-1])['utterances'], "participant": "assistant"})
         full_paths.append(path)
-    for f in full_paths:
-        print("FULL: ", f)
+    # for f in full_paths:
+    #     print("FULL: ", f)
     dialogues = []
     for f in full_paths:
         visited_list = [[]]
-        print("BEFORE comb")
+        counter = 0
+        # print("BEFORE comb")
         all_combinations(f, {}, 0, [])
-        print("AFTER comb: ", visited_list)
+        # print("AFTER comb: ", visited_list)
         # for v in visited_list:
         #     print("LIST: ", v)
-        print("\n")
+        # print("\n")
         dialogue = [el[1:] for el in visited_list if len(el)==len(f)+1]
         dialogues.extend(dialogue)
 
-    for d in dialogues:
-       print("DGS: ", d)
-    print("\n")
+    # for d in dialogues:
+    # #    print("DGS: ", d)
+    # print("\n")
     final = list(k for k,_ in itertools.groupby(dialogues))
-    print("BEFORE: ", len(final))
+    # print("BEFORE: ", len(final))
     final = remove_duplicated_utts(final)
-    print("AFTER: ", len(final))
-    for f in final:
-        print("FINAL: ", f)
-    print("\n")
+    # print("AFTER: ", len(final))
+    # for f in final:
+    #     print("FINAL: ", f)
+    # print("\n")
     result = [Dialogue().from_list(seq) for seq in final]
     return result
 
@@ -309,12 +287,9 @@ class RecursiveDialogueSampler(DialogueGenerator):
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph,repeats,finishes)
             if dialogues:
-                pres = all_utterances_present(graph, dialogues)
-                if pres == True:
+                if all_utterances_present(graph, dialogues):
                     # print(f"{repeats} repeats works!")
                     break
-                # else:
-                #     print("DIF: ", pres)
             repeats += 1
             # print("REPEATS: ", repeats)
         if repeats > upper_limit:

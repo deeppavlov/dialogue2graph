@@ -1,6 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from typing import Optional, Any
-import os
+from typing import Optional
 
 class EnvSettings(BaseSettings, case_sensitive=True):
 

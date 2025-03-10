@@ -418,8 +418,10 @@ Example of the graph:
 Please use informal language like in the example above. Conversation shall look like a real one,
 with all the details inherent in a real conversation on this topic: {topic}.
 Some of edges and nodes shall have several different utterances meaning different details of same intent like in the graph example above.
-So you need to add several different details per node and edge.
+So you need to add several different details per node.
 For examples see provide_contact_info and provide_recommendations nodes of the above graph.
+Also choose a single edge of the whole graph to add several different details there.
+Make sure it the only edge of the whole graph which has more than one utterance.
 
 is_start field is mandatory for all the nodes.
 

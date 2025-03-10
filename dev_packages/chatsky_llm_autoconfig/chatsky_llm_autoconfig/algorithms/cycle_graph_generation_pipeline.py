@@ -259,7 +259,7 @@ class GraphGenerationPipeline:
             print(f"Sampled {len(sampled_dialogues)} dialogues")
             for s in sampled_dialogues:
                 print(s)
-            if all_utterances_present(graph, sampled_dialogues) != True:
+            if not all_utterances_present(graph, sampled_dialogues):
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED,
                     message="Failed to sample valid dialogues - not all utterances are present"
@@ -305,7 +305,7 @@ class GraphGenerationPipeline:
             print(f"Sampled {len(sampled_dialogues)} dialogues")
             for s in sampled_dialogues:
                 print(s)
-            if all_utterances_present(graph, sampled_dialogues) != True:
+            if not all_utterances_present(graph, sampled_dialogues):
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED,
                     message="Failed to sample valid dialogues - not all utterances are present"

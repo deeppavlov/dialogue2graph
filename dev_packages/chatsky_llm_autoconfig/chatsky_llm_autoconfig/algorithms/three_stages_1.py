@@ -6,11 +6,11 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from chatsky_llm_autoconfig.algorithms.base import GraphGenerator
 from chatsky_llm_autoconfig.graph import BaseGraph, Graph
-from chatsky_llm_autoconfig.metrics.embedder import nodes2groups
+# from chatsky_llm_autoconfig.metrics.embedder import nodes2groups
 from chatsky_llm_autoconfig.schemas import DialogueGraph, DialogueNodes
 from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
-from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph, dialogues2list
+from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph#, dialogues2list
 from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
 from chatsky_llm_autoconfig.prompts import (
@@ -21,7 +21,6 @@ from chatsky_llm_autoconfig.metrics.automatic_metrics import (
     compare_graphs
 )
 
-from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
 
 env_settings = EnvSettings()
 

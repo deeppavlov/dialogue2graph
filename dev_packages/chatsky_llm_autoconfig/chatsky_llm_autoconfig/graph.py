@@ -5,7 +5,7 @@ import abc
 import logging
 import matplotlib.pyplot as plt
 import numpy as np
-from chatsky_llm_autoconfig.metrics.embedder import get_embedding, get_reranking
+from chatsky_llm_autoconfig.metrics.embedder import get_embedding #, get_reranking
 
 logger = logging.getLogger(__name__)
 
