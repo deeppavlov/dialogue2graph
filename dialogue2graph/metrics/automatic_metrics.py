@@ -6,12 +6,20 @@ This module contains functions that automatically (without using LLMs) checks Gr
 for various metrics.
 """
 
+import numpy as np
+from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import HumanMessage
 import networkx as nx
+from dialogue2graph.pipelines.core.schemas import CompareResponse
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.utils.settings import EnvSettings
+from dialogue2graph.metrics.embedder import get_embedding
+from dialogue2graph.metrics.prompts import compare_graphs_prompt, graph_example_1, result_form
 
 
-import numpy as np
+env_settings = EnvSettings()
 
 
 def collapse_multiedges(edges):
@@ -228,42 +236,248 @@ def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
     return True
 
 
+def dialogue_edges(seq: list[Dialogue]) -> set[tuple[str]]:
+    """Find all dialogue edges in a form of triplets with (source, edge, target) utterances"""
+    res = []
+    for dialogue in seq:
+        assist_texts = [d.text.lower() for d in dialogue.messages if d.participant == "assistant"]
+        user_texts = [d.text.lower() for d in dialogue.messages if d.participant == "user"]
+        res.extend([(a1, u, a2) for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])])
+    # print("DIA: ", set(res))
+    return set(res)
+
+
+def graph_edges(G: BaseGraph):
+    """Find all graph edges in a form of triplets with (source, edge, target) utterances"""
+    graph = G.graph_dict
+    edges = graph["edges"]
+    nodes = graph["nodes"]
+    res = []
+    for node in nodes:
+        for edge in [e for e in edges if e["source"] == node["id"]]:
+            for utt in edge["utterances"]:
+                for utt1 in node["utterances"]:
+                    for utt2 in [n for n in nodes if n["id"] == edge["target"]][0]["utterances"]:
+                        res.append((utt1.lower(), utt.lower(), utt2.lower()))
+    # print("GRAPH: ", set(res))
+    return set(res)
+
+
 def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
     """
-    Check if all graph elements (nodes and edges) appear in at least one dialogue.
+    Check if all graph utterances match with utterances in set of dialogues.
 
     Args:
         G: BaseGraph object containing the dialogue graph
         dialogues: List of Dialogue objects to check against
 
-    Returns:
-        bool: True if all graph elements are present in at least one dialogue
     """
     # Get all unique utterances from nodes and edges in the graph
     graph_utterances = set()
 
     # Add node utterances
     for node_id, node_data in G.graph.nodes(data=True):
-        graph_utterances.update(node_data["utterances"])
+        graph_utterances.update([u.lower() for u in node_data["utterances"]])
 
     # Add edge utterances
     for _, _, edge_data in G.graph.edges(data=True):
         if isinstance(edge_data["utterances"], list):
-            graph_utterances.update(edge_data["utterances"])
+            graph_utterances.update([u.lower() for u in edge_data["utterances"]])
         else:
-            graph_utterances.add(edge_data["utterances"])
+            graph_utterances.add(edge_data["utterances"].lower())
 
     # Collect all utterances from dialogues
     dialogue_utterances = set()
     for dialogue in dialogues:
-        dialogue_utterances.update(utt.text for utt in dialogue.messages)
+        dialogue_utterances.update(utt.text.lower() for utt in dialogue.messages)
 
-    # Check if all graph utterances are present in dialogues
+    # Check if graph utterances match the dialogues
     if graph_utterances.issubset(dialogue_utterances):
-        return True
+        set1 = dialogue_edges(dialogues)
+        set2 = graph_edges(G)
+        if len(set1 - set2) <= 0:
+            print("Graph has all the dialogues")
+            for eq in set2 - set1:
+                print("absent in dialogues: ", eq)
+        else:
+            for eq in set1 - set2:
+                print("absent in graph: ", eq)
+        if set1 == set2:
+            return True
     else:
-        # return False
-        return graph_utterances.difference(dialogue_utterances)
+        print("absent in graph: ", dialogue_utterances - graph_utterances)
+        print("absent in dialogues: ", graph_utterances - dialogue_utterances)
+        if dialogue_utterances.issubset(graph_utterances):
+            print("Graph has all the dialogues")
+    return False
+    # graph_utterances.difference(dialogue_utterances)
+
+
+def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
+    """Compares number of utterances in each pair of edges of two nodes.
+    Mapping of edges is defined by max parameter, which is argmax of embeddings of nodes utterances.
+    See compare_graphs
+    """
+    nodes_map = {}
+    graph1 = G1.graph_dict
+    graph2 = G2.graph_dict
+    nodes1 = [n["id"] for n in graph1["nodes"]]
+    nodes2 = [n["id"] for n in graph2["nodes"]]
+    for idx, n in enumerate(nodes1):
+        nodes_map[n] = nodes2[max[idx]]
+
+    for node1, node2 in zip(nodes1, [nodes_map[n] for n in nodes1]):
+        edges1 = G1.edge_by_source(node1)
+        edges2 = G2.edge_by_source(node2)
+        if len(edges1) != len(edges2):
+            return False
+        for edge1 in edges1:
+            for edge2 in edges2:
+                if nodes_map[edge1["target"]] == edge2["target"] and len(edge1["utterances"]) != len(edge2["utterances"]):
+                    return False
+    return True
+
+
+def compare_graphs(G1: BaseGraph, G2: BaseGraph) -> bool:
+    """Compares two graphs, returns True or False"""
+    g1 = G1.graph_dict
+    g2 = G2.graph_dict
+
+    nodes1_list = G1.nodes2list()
+    nodes2_list = G2.nodes2list()
+    if len(nodes1_list) != len(nodes2_list):
+        print("FIRST: ", len(nodes1_list), len(nodes2_list))
+        return False
+
+    g1_list, n1, len1 = G1.graph2list()
+    g2_list, n2, len2 = G2.graph2list()
+    print("LEN1: ", len1, "LEN2: ", len2)
+
+    nodes_matrix = get_embedding(nodes1_list, nodes2_list, env_settings.EMBEDDER_MODEL, env_settings.EMBEDDER_DEVICE)
+    matrix = get_embedding(g1_list, g2_list, env_settings.EMBEDDER_MODEL, env_settings.EMBEDDER_DEVICE)
+
+    nodes_max = list(np.argmax(nodes_matrix, axis=1))
+    max = list(np.argmax(matrix, axis=1))
+    print("MAX: ", max)
+    print("N_MAX: ", nodes_max)
+    if len(set(nodes_max)) < len(nodes1_list):
+        print("LLLLENS")
+        return False
+
+    # print("LENS: ", len1, len2)
+    if n1 != n2:
+        print("N!")
+        return False
+
+    if len(set(max)) < len(g1_list) or nodes_max != max:
+        print("MIX", len(set(max)), len(g1_list), nodes_max)
+        return False
+
+    if not compare_edge_lens(G1, G2, max):
+        print("LENS")
+        return False
+    print("NODES: ", np.min(np.max(nodes_matrix, axis=1)))
+    print("ALL: ", np.min(np.max(matrix, axis=1)))
+
+    mmin = min(np.min(np.max(nodes_matrix, axis=1)), np.min(np.max(matrix, axis=1)))
+
+    if mmin >= env_settings.SIM_THRESHOLD:
+        return True
+
+    parser = PydanticOutputParser(pydantic_object=CompareResponse)
+    format_model = ChatOpenAI(model=env_settings.FORMATTER_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
+    model = ChatOpenAI(model=env_settings.COMPARE_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
+    new_parser = OutputFixingParser.from_llm(parser=parser, llm=format_model)
+    llm = model | new_parser
+    query = compare_graphs_prompt.format(result_form=result_form, graph_example_1=graph_example_1, graph_1=g1, graph_2=g2)
+    messages = [HumanMessage(content=query)]
+    result = llm.invoke(messages)
+    return result["result"]
+
+
+def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
+    """
+    Check if there is a connection from user message to assistant message.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        user, assistant: pair of neighboring utterances in a dialogue
+
+    Returns:
+        list: True if there is connection, False otherwise
+    """
+
+    nodes = G.nodes_by_utterance(assistant)
+
+    for node in nodes:
+        edges = G.edges_by_utterance(user)
+        for edge in edges:
+            if edge["target"] == node["id"]:
+                return True
+    return False
+
+
+def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
+    """
+    Check if there is a connection from assistant message to user message.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        assistant, user: pair of neighboring utterances in a dialogue
+
+    Returns:
+        list: True if there is connection, False otherwise
+    """
+
+    nodes = G.nodes_by_utterance(assistant)
+
+    for node in nodes:
+        edges = G.edges_by_utterance(user)
+        for edge in edges:
+            if edge["source"] == node["id"]:
+                return True
+    return False
+
+
+def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
+    """
+    Check if there is a connection from msg1 to msg2.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        msg1, msg2: pair of neighboring utterances in a dialogue
+
+    Returns:
+        list: True if there is connection, False otherwise
+    """
+    if msg1.participant == "assistant" and msg2.participant == "user":
+        return au_match(G, msg1.text, msg2.text)
+    if msg1.participant == "user" and msg2.participant == "assistant":
+        return ua_match(G, msg1.text, msg2.text)
+    return False
+
+
+def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> list:
+    """
+    Check if all dialogues are valid paths in the graph.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        dialogues: List of Dialogue objects to check against
+
+    Returns:
+        list: for every dialogue either [True] or [False, message1, message2], when there is no connection from message1 to message2
+    """
+
+    result = []
+
+    for dialogue in dialogues:
+        idx = 0
+        for idx in range(len(dialogue.messages) - 1):
+            if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
+                result.append([False, dialogue.messages[idx].text, dialogue.messages[idx + 1].text])
+        result.append([True])
+    return result
 
 
 def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:

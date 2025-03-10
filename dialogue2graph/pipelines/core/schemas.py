@@ -141,3 +141,8 @@ class GraphGenerationResult(BaseModel):
     graph: DialogueGraph
     topic: str
     dialogues: List[Dialogue]
+
+
+class CompareResponse(BaseModel):
+    result: bool = Field(description="compare result")
+    reason: str = Field(description="explanation")
