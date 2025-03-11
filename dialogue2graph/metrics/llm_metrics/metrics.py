@@ -19,10 +19,11 @@ from dialogue2graph.metrics.prompts import compare_graphs_prompt, graph_example_
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
-# from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
+from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
-from langchain_core.output_parsers import PydanticOutputParser, OutputFixingParser
+
+# from langchain_core.output_parsers import PydanticOutputParser, OutputFixingParser
 
 
 class EnvSettings(BaseSettings, case_sensitive=True):
@@ -240,51 +241,47 @@ def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
     return True
 
 
-def compare_graphs(G1: BaseGraph, G2: BaseGraph, embedder: str="BAAI/bge-m3", comparer: str="gpt-4o", formatter: str="gpt-3.5-turbo") -> bool:
-    """Compares two graphs, returns True or False"""
+def compare_graphs(
+    G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93, comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo"
+) -> dict:
+    """Compares two graphs, returns True or False with description"""
     g1 = G1.graph_dict
     g2 = G2.graph_dict
 
     nodes1_list = G1.nodes2list()
     nodes2_list = G2.nodes2list()
     if len(nodes1_list) != len(nodes2_list):
-        print("FIRST: ", len(nodes1_list), len(nodes2_list))
-        return False
+        return {"value": False, "description": f"Numbers of nodes do not match: {len(nodes1_list)} != {len(nodes2_list)}"}
 
     g1_list, n1, len1 = G1.graph2list()
     g2_list, n2, len2 = G2.graph2list()
-    print("LEN1: ", len1, "LEN2: ", len2)
+    # print("LEN1: ", len1, "LEN2: ", len2)
 
-    nodes_matrix = get_embedding(nodes1_list, nodes2_list, embedder, env_settings.EMBEDDER_DEVICE)
-    matrix = get_embedding(g1_list, g2_list, embedder, env_settings.EMBEDDER_DEVICE)
+    nodes_matrix = get_embedding(nodes1_list, nodes2_list, embedder)
+    matrix = get_embedding(g1_list, g2_list, embedder)
 
     nodes_max = list(np.argmax(nodes_matrix, axis=1))
     max = list(np.argmax(matrix, axis=1))
-    print("MAX: ", max)
-    print("N_MAX: ", nodes_max)
+    if nodes_max != max:
+        return {"value": False, "description": f"Mapping for nodes {max} doesn't match mapping for nodes+edges {nodes_max}"}
     if len(set(nodes_max)) < len(nodes1_list):
-        print("LLLLENS")
-        return False
+        return {"value": False, "description": "At least one of nodes corresponds to more than one in another graph"}
 
-    # print("LENS: ", len1, len2)
     if n1 != n2:
-        print("N!")
-        return False
-
-    if len(set(max)) < len(g1_list) or nodes_max != max:
-        print("MIX", len(set(max)), len(g1_list), nodes_max)
-        return False
+        return {"value": False, "description": "Graphs have different number of user's utterances"}
+    if len(set(max)) < len(g1_list):
+        return {"value": False, "description": "At least one of nodes concatenated with edges corresponds to more than one in another graph"}
 
     if not compare_edge_lens(G1, G2, max):
-        print("LENS")
-        return False
-    print("NODES: ", np.min(np.max(nodes_matrix, axis=1)))
-    print("ALL: ", np.min(np.max(matrix, axis=1)))
+        return {"value": False, "description": "At least one pair of edges has different number of utterances"}
 
-    mmin = min(np.min(np.max(nodes_matrix, axis=1)), np.min(np.max(matrix, axis=1)))
+    nodes_min = np.min(np.max(nodes_matrix, axis=1))
+    mix_min = np.min(np.max(matrix, axis=1))
 
-    if mmin >= env_settings.SIM_THRESHOLD:
-        return True
+    mmin = min(nodes_min, mix_min)
+
+    if mmin >= sim_th:
+        return {"value": True, "description": f"Nodes similarity: {nodes_min}, Nodes+edges similarity: {mix_min}"}
 
     parser = PydanticOutputParser(pydantic_object=CompareResponse)
     format_model = ChatOpenAI(model=formatter, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
@@ -294,5 +291,4 @@ def compare_graphs(G1: BaseGraph, G2: BaseGraph, embedder: str="BAAI/bge-m3", co
     query = compare_graphs_prompt.format(result_form=result_form, graph_example_1=graph_example_1, graph_1=g1, graph_2=g2)
     messages = [HumanMessage(content=query)]
     result = llm.invoke(messages)
-    return result["result"]
-
+    return {"value": result["result"], "description": "LLM similarity"}

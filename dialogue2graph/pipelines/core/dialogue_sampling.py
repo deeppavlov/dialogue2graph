@@ -4,7 +4,7 @@ import pandas as pd
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
-from dialogue2graph.metrics.automatic_metrics import all_utterances_present
+from dialogue2graph.metrics.no_llm_metrics import all_utterances_present
 
 
 # @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
