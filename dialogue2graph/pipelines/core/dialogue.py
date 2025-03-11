@@ -12,6 +12,7 @@ class Dialogue(BaseModel):
     """
 
     messages: List[DialogueMessage] = Field(default_factory=list)
+    id: str = ""
     topic: str = ""
     validate: bool = Field(default=True, description="Whether to validate messages upon initialization")
 
