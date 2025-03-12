@@ -93,6 +93,7 @@ def add_uuid_to_prompt(prompt: str, seed: int = None) -> str:
         random_uuid = uuid.UUID(int=seed)
     else:
         random_uuid = uuid.uuid4()
+    logger.info(f"Generated UUID: {random_uuid}")
     return f"UUID: {random_uuid}\n\n{prompt}"
 
 
