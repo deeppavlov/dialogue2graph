@@ -10,6 +10,9 @@ from langchain.evaluation import load_evaluator
 class EnvSettings(BaseSettings, case_sensitive=True):
 
     model_config = SettingsConfigDict(env_file="./.env", env_file_encoding="utf-8")
+    OPENAI_API_KEY: Optional[str]
+    OPENAI_BASE_URL: Optional[str]
+    HUGGINGFACE_TOKEN: Optional[str]
     EMBEDDER_DEVICE: Optional[str]
 
 
