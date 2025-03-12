@@ -42,7 +42,7 @@ class Dialogue(BaseModel):
         return cls(messages=messages)
 
     @classmethod
-    def from_list(cls, messages: List[Dict[str, str]], id: str="", validate: bool = True) -> "Dialogue":
+    def from_list(cls, messages: List[Dict[str, str]], id: str = "", validate: bool = True) -> "Dialogue":
         """Create a Dialogue from a list of dictionaries."""
         dialogue_messages = [DialogueMessage(**m) for m in messages]
         return cls(messages=dialogue_messages, id=id, validate=validate)
