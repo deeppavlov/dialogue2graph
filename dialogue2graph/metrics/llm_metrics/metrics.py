@@ -15,7 +15,7 @@ import numpy as np
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.metrics.embedder import get_embedding
 from dialogue2graph.pipelines.core.schemas import CompareResponse
-from dialogue2graph.metrics.prompts import compare_graphs_prompt, graph_example_1, result_form
+from dialogue2graph.metrics.llm_metrics import compare_graphs_prompt, graph_example
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
@@ -244,7 +244,7 @@ def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
 
 def compare_graphs(
     G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93, comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo"
-) -> dict:
+) -> CompareResponse:
     """Compares two graphs, returns True or False with description"""
     g1 = G1.graph_dict
     g2 = G2.graph_dict
@@ -289,7 +289,7 @@ def compare_graphs(
     model = ChatOpenAI(model=comparer, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
     new_parser = OutputFixingParser.from_llm(parser=parser, llm=format_model)
     llm = model | new_parser
-    query = compare_graphs_prompt.format(result_form=result_form, graph_example_1=graph_example_1, graph_1=g1, graph_2=g2)
+    query = compare_graphs_prompt.format(result_form=CompareResponse().model_dump(), graph_example=graph_example, graph_1=g1, graph_2=g2)
     messages = [HumanMessage(content=query)]
-    result = llm.invoke(messages)
-    return {"value": result["result"], "description": "LLM similarity"}
+    return llm.invoke(messages)
+

@@ -64,10 +64,6 @@ class BaseGraph(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def graph2list(self):
-        raise NotImplementedError
-
-    @abc.abstractmethod
     def nodes2list(self):
         raise NotImplementedError
 
@@ -79,6 +75,10 @@ class Graph(BaseGraph):
         super().__init__(graph_dict=graph_dict, **kwargs)
         if graph_dict:
             self.load_graph()
+
+    def _list_in(self, a: list, b: list) -> bool:
+        """Check if sequence a exists within sequence b."""
+        return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def check_edges(self, seq: list[list[int]]) -> bool:
         """Checks whether seq (sequence of pairs (source, target)) has all the edges of the graph"""
@@ -320,30 +320,6 @@ class Graph(BaseGraph):
         if len(visited) < len(graph["nodes"]):
             finishes += [v["id"] for v in graph["nodes"] if v["id"] not in visited]
         return finishes
-
-    def graph2list(self) -> tuple[list, int]:
-        """Returns:
-        res - concatenation of utterances of every node and its outgoing edges
-        n_edges - number of all edges utterances
-        lens - lengths of edge utterances
-        """
-        graph = self.graph_dict
-        res = []
-        n_edges = 0
-        lens = []
-
-        for node in graph["nodes"]:
-            edges = [e for e in graph["edges"] if e["source"] == node["id"]]
-            utt = ""
-            for n_utt in node["utterances"]:
-                utt += n_utt + " "
-            for edge in edges:
-                lens.append(len(edge["utterances"]))
-                for e_utt in edge["utterances"]:
-                    utt += e_utt + " "
-                    n_edges += 1
-            res.append(utt)
-        return res, n_edges, lens
 
     def nodes2list(self) -> list:
         """Returns list of concatenations of all nodes utterances"""

@@ -25,6 +25,7 @@ class Dialogue(BaseModel):
     """
 
     messages: List[DialogueMessage] = Field(default_factory=list)
+    id: str = ""
     topic: str = ""
     validate: bool = Field(default=True, description="Whether to validate messages upon initialization")
 
@@ -54,10 +55,11 @@ class Dialogue(BaseModel):
         return cls(messages=messages)
 
     @classmethod
-    def from_list(cls, messages: List[Dict[str, str]], validate: bool = True) -> "Dialogue":
+    def from_list(cls, messages: List[Dict[str, str]], id: str = "", validate: bool = True) -> "Dialogue":
         """Create a Dialogue from a list of dictionaries."""
         dialogue_messages = [DialogueMessage(**m) for m in messages]
-        return cls(messages=dialogue_messages, validate=validate)
+        return cls(messages=dialogue_messages, id=id, validate=validate)
+
 
     @classmethod
     def from_nodes_ids(cls, graph, node_list, validate: bool = True) -> "Dialogue":
@@ -144,5 +146,5 @@ class GraphGenerationResult(BaseModel):
 
 
 class CompareResponse(BaseModel):
-    result: bool = Field(description="compare result")
-    reason: str = Field(description="explanation")
+    value: bool = Field(default=True, description="compare result")
+    description: str = Field(default=True, description="explanation")

@@ -1,7 +1,7 @@
 from langchain.prompts import PromptTemplate
 
 compare_graphs_prompt = PromptTemplate.from_template(
-    "You will get two dialogue graphs in following format: {graph_example_1}. "
+    "You will get two dialogue graphs in following format: {graph_example}. "
     "Graphs are equivalent when they have the same number of nodes connected in the same way, meaning there is one-to-one correspondence "
     "between their nodes which preserves adjacency. "
     "Equal nodes or edges may have different utterances when utterances have same intents, logics and similar meaning. "
@@ -15,7 +15,7 @@ compare_graphs_prompt = PromptTemplate.from_template(
     "Next are graph1: {graph_1} and graph2: {graph_2}"
 )
 
-graph_example_1 = {
+graph_example = {
     "edges": [
         {"source": 1, "target": 2, "utterances": ["I need to make an order", "I want to order from you"]},
         {
@@ -47,5 +47,3 @@ graph_example_1 = {
     ],
     "reason": "",
 }
-
-result_form = {"result": True, "reason": ""}

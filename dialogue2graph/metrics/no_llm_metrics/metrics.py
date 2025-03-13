@@ -6,6 +6,7 @@ This module contains functions that automatically (without using LLMs) checks Gr
 for various metrics.
 """
 
+from typing import List, TypedDict, Optional
 import numpy as np
 import networkx as nx
 
@@ -366,7 +367,18 @@ def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
     return False
 
 
-def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> list[dict]:
+class InvalidTransition(TypedDict):
+    from_message: str
+    to_message: str
+    dialogue_id: str
+
+
+class GraphValidationResult(TypedDict):
+    value: bool
+    invalid_transitions: Optional[List[InvalidTransition]]
+
+
+def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> GraphValidationResult:
     """
     Check if all dialogues are valid paths in the graph.
 
@@ -377,22 +389,15 @@ def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> list[d
     Returns:
         list: for every dialogue {"value": bool, "description": "description with dialogue_id and list of pairs when there is no connection from one message to another"}
     """
-
-    result = []
-
+    
+    invalid_transitions = []
     for dialogue in dialogues:
-        idx = 0
-        dialogue_result = []
         for idx in range(len(dialogue.messages) - 1):
             if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
-                dialogue_result.append((dialogue.messages[idx].text, dialogue.messages[idx + 1].text))
-        if dialogue_result:
-            result.append(
-                {"value": False, "description": f"graph has no connection between next pairs {dialogue_result} from Dialogue {dialogue.id}"}
-            )
-        else:
-            result.append({"value": True, "description": f"graph has all paths from Dialogue {dialogue.id}"})
-    return result
+                invalid_transitions.append({"from_message": dialogue.messages[idx].text, "to_message": dialogue.messages[idx + 1].text, "dialogue_id": dialogue.id})
+    if invalid_transitions:
+        return ({"value": False, "invalid_transitions": invalid_transitions})
+    return {"value": True}
 
 
 def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
