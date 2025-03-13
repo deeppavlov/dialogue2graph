@@ -21,6 +21,7 @@ langchain-community = "^0.3.1"
 pydantic = "*"
 psycopg2-binary = "^2.9.10"
 scipy = "^1.15.2"
+click = "^8.1.8"
 
 [tool.poetry.group.docs]
 optional = true
@@ -47,6 +48,7 @@ ipykernel = "^6.29.5"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+
 [tool.poetry.group.lint]
 optional = true
 
@@ -55,6 +57,7 @@ flake8 = "*"
 isort = "*"
 black = "*"
 mypy = "*"
+
 
 [tool.poetry.group.tests]
 optional = true
@@ -72,3 +75,6 @@ format = "scripts.codestyle:_run_black(modify=True)"
 test = "scripts.test:_test"
 metrics = "scripts.metrics:_run_check"
 lint.sequence = ["flake", "black"]
+
+[tool.poetry.scripts]
+dialogue2graph = "dialogue2graph.cli.main:cli"
