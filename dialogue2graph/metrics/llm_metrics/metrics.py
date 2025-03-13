@@ -15,7 +15,7 @@ import numpy as np
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.metrics.embedder import get_embedding
 from dialogue2graph.pipelines.core.schemas import CompareResponse
-from dialogue2graph.metrics.llm_metrics import compare_graphs_prompt, graph_example
+from dialogue2graph.metrics.llm_metrics.prompts import compare_graphs_prompt, graph_example
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate

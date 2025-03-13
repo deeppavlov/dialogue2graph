@@ -315,7 +315,9 @@ class LoopedGraphGenerator(TopicGraphGenerator):
 
             if isinstance(result, GraphGenerationResult):
                 logger.info(f"✅ Successfully generated graph for {topic}")
+                logger.info(f"ID: {result.dialogues[0].id}")
                 successful_generations.append(
+
                     {"graph": result.graph.model_dump(), "topic": result.topic, "dialogues": [d.model_dump() for d in result.dialogues]}
                 )
             else:

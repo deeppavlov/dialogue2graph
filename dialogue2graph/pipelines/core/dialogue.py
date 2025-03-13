@@ -1,7 +1,17 @@
 import networkx as nx
 from typing import List, Union, Dict
 from pydantic import BaseModel, Field, ConfigDict
-from dialogue2graph.pipelines.core.schemas import DialogueMessage
+
+class DialogueMessage(BaseModel):
+    """Represents a single message in a dialogue.
+
+    Attributes:
+        text: The content of the message
+        participant: The sender of the message (e.g. "user" or "assistant")
+    """
+
+    text: str
+    participant: str
 
 
 class DialogueBase(BaseModel):
@@ -15,6 +25,13 @@ class Dialogue(DialogueBase):
     The class provides methods for creating dialogues from different formats
     and converting dialogues to various representations.
     """
+
+    @property
+    def id(self):
+        return self._id
+    @id.setter
+    def id(self, value):
+        self._id = value
 
     messages: List[DialogueMessage] = Field(default_factory=list)
     # id: str = ""
