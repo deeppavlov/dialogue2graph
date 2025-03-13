@@ -1,22 +1,25 @@
 import click
-import os
 from dotenv import load_dotenv
 from .commands.generate_data import generate_data
+
 # from .commands.generate_graph import generate_graph
+
 
 @click.group()
 def cli():
     """Dialogue2Graph CLI tool for generating dialogue graphs and data"""
     pass
 
+
 @cli.command()
-@click.option('--env', '-e', help='Path to .env file', default='.env')
-@click.option('--topic', '-t', help='Topic for dialogue generation', required=True)
-@click.option('--output', '-o', help='Output file path', default='generated_data.json')
+@click.option("--env", "-e", help="Path to .env file", default=".env")
+@click.option("--topic", "-t", help="Topic for dialogue generation", required=True)
+@click.option("--output", "-o", help="Output file path", default="generated_data.json")
 def gen_data(env: str, topic: str, output: str):
     """Generate dialogue data for a given topic"""
     load_dotenv(env)
     generate_data(topic, output)
+
 
 # @cli.command()
 # @click.option('--env', '-e', help='Path to .env file', default='.env')
@@ -27,5 +30,5 @@ def gen_data(env: str, topic: str, output: str):
 #     load_dotenv(env)
 #     generate_graph(dialogues, output)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cli()
