@@ -1,7 +1,6 @@
 import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
-from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 import networkx as nx
@@ -79,7 +78,6 @@ class CycleGraphGenerator(BaseModel):
         pass
 
 
-@dataclass
 class GenerationPipeline(BaseModel):
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
@@ -213,6 +211,10 @@ class GenerationPipeline(BaseModel):
             logger.info("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
+            
+            # Convert dialogues to their dictionary representation
+            dialogue_dicts = [dialogue.model_dump() for dialogue in sampled_dialogues]
+            
             if not all_utterances_present(graph, sampled_dialogues):
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
@@ -272,11 +274,13 @@ class LoopedGraphGenerator(TopicGraphGenerator):
 
             if isinstance(result, GraphGenerationResult):
                 logger.info(f"✅ Successfully generated graph for {topic}")
-                successful_generations.append(
-                    {"graph": result.graph.model_dump(), "topic": result.topic, "dialogues": [d.model_dump() for d in result.dialogues]}
-                )
+                successful_generations.append({
+                    "graph": result.graph.model_dump(),
+                    "topic": result.topic,
+                    "dialogues": result.dialogues  # The dialogues are already dictionaries
+                })
             else:
-                logger.error(f"❌ Failed to generate graph for {topic}")
+                logger.info(f"❌ Failed to generate graph for {topic}")
                 logger.error(f"Error type: {result.error_type}")
                 logger.error(f"Error message: {result.message}")
 
