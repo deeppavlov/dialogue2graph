@@ -2,6 +2,7 @@ import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
 from dataclasses import dataclass
+
 from pydantic import BaseModel, Field
 import networkx as nx
 
@@ -54,7 +55,7 @@ class CycleGraphGenerator(BaseModel):
     def __init__(self, **data):
         super().__init__(**data)
 
-    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=42, **kwargs) -> BaseGraph:
+    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=None, **kwargs) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
@@ -80,17 +81,16 @@ class CycleGraphGenerator(BaseModel):
 
 @dataclass
 class GenerationPipeline(BaseModel):
-# class GenerationPipeline():
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
     validation_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
-    generation_prompt: Optional[PromptTemplate] = Field(default_factory=lambda: cycle_graph_generation_prompt_informal)
+    generation_prompt: Optional[PromptTemplate] = Field(default_factory=lambda: cycle_graph_generation_prompt_enhanced)
     repair_prompt: Optional[PromptTemplate] = Field(default_factory=lambda: cycle_graph_repair_prompt)
     min_cycles: int = 2
     max_fix_attempts: int = 3
     dialogue_sampler: RecursiveDialogueSampler = Field(default_factory=RecursiveDialogueSampler)
-    seed: int = 42
+    seed: Optional[int] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -104,7 +104,7 @@ class GenerationPipeline(BaseModel):
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 2,
         max_fix_attempts: int = 2,
-        seed: int = 42,
+        seed: Optional[int] = None,
     ):
         super().__init__(
             generation_model=generation_model,
@@ -116,18 +116,9 @@ class GenerationPipeline(BaseModel):
             seed=seed,
         )
 
-        # self.generation_model = generation_model
-        # self.validation_model = validation_model
-
-        # self.generation_prompt = generation_prompt or cycle_graph_generation_prompt_informal
-        # self.repair_prompt = repair_prompt or cycle_graph_repair_prompt
-
-        # self.min_cycles = min_cycles
-        # self.max_fix_attempts = max_fix_attempts
-
-
-        self.cache = setup_cache()
         self.seed = seed
+        if self.seed:
+            self.cache = setup_cache()
 
     def validate_graph_cycle_requirement(self, graph: BaseGraph, min_cycles: int = 2) -> Dict[str, Any]:
         """Checks the graph for cycle requirements"""

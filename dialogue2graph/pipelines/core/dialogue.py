@@ -4,7 +4,12 @@ from pydantic import BaseModel, Field, ConfigDict
 from dialogue2graph.pipelines.core.schemas import DialogueMessage
 
 
-class Dialogue(BaseModel):
+class DialogueBase(BaseModel):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = ""
+
+class Dialogue(DialogueBase):
     """Represents a complete dialogue consisting of multiple messages.
 
     The class provides methods for creating dialogues from different formats
@@ -12,7 +17,7 @@ class Dialogue(BaseModel):
     """
 
     messages: List[DialogueMessage] = Field(default_factory=list)
-    id: str = ""
+    # id: str = ""
     topic: str = ""
     validate: bool = Field(default=True, description="Whether to validate messages upon initialization")
 
