@@ -3,8 +3,6 @@ from typing import List, Union, Dict
 from pydantic import BaseModel, Field, ConfigDict
 
 
-
-
 class DialogueMessage(BaseModel):
     """Represents a single message in a dialogue.
 

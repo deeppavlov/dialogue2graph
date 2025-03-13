@@ -1,6 +1,5 @@
-import networkx as nx
-from typing import List, Union, Dict
-from pydantic import BaseModel, Field, ConfigDict
+from typing import List
+from pydantic import BaseModel, Field
 
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 
