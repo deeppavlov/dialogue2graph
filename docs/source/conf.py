@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Chatsky LLM-Autoconfiguration'
+project = 'Chatsky LLM-Autoconfig'
 copyright = '2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
 author = 'Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
 
@@ -23,5 +23,5 @@ exclude_patterns = []
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'pydata_sphinx_theme'
 html_static_path = ['_static']
