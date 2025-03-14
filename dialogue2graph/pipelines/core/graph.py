@@ -1,11 +1,9 @@
-import numpy as np
 import networkx as nx
 from pydantic import BaseModel
 from typing import Optional, Any
 import matplotlib.pyplot as plt
 import abc
 import logging
-from dialogue2graph.metrics.embedder import get_embedding
 
 
 logger = logging.getLogger(__name__)
@@ -67,6 +65,10 @@ class BaseGraph(BaseModel, abc.ABC):
     def nodes2list(self):
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def graph2list(self):
+        raise NotImplementedError
+
 
 class Graph(BaseGraph):
 
@@ -78,7 +80,7 @@ class Graph(BaseGraph):
 
     def _list_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
-        return any(map(lambda x: b[x:x + len(a)] == a, range(len(b) - len(a) + 1)))
+        return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def check_edges(self, seq: list[list[int]]) -> bool:
         """Checks whether seq (sequence of pairs (source, target)) has all the edges of the graph"""
@@ -171,13 +173,6 @@ class Graph(BaseGraph):
     def edge_by_target(self, id: int):
         return [edge for edge in self.graph_dict["edges"] if edge["target"] == id]
 
-    def pair_number(self, id1: int, id2: int):
-        # return 1
-        edges = [e for e in self.edge_by_source(id1) if e in self.edge_by_target(id2)]
-        if edges:
-            return len(edges[0]["utterances"])
-        return 0
-
     def edges_match_nodes(self) -> bool:
         """Checks whether source and target of all the edges correspond to nodes"""
         graph = self.graph_dict
@@ -198,38 +193,6 @@ class Graph(BaseGraph):
         edge_targets = set([e["target"] for e in graph["edges"]])
         edge_sources = set([e["source"] for e in graph["edges"]])
         return node_ids == edge_targets.union(edge_sources) and node_non_starts.issubset(edge_targets)
-
-    def combine_nodes(self, id1, id2):
-        """Combine duplicated nodes"""
-        graph = self.graph_dict
-        nodes = graph["nodes"].copy()
-        edges = graph["edges"].copy()
-        for idx, e in enumerate(edges):
-            if e["source"] == id2:
-                edges[idx]["source"] = id1
-            if e["target"] == id2:
-                edges[idx]["target"] = id1
-        self.graph_dict = {"edges": edges, "nodes": [n for n in nodes if n["id"] != id2]}
-        self.graph = Graph(self.graph_dict)
-        return self.graph
-
-    def remove_overlaps(self):
-        graph = self.graph_dict
-        edges = graph["edges"]
-        to_combine = {}
-        for e1 in edges:
-            for e2 in [e for e in edges if e != e1 and set(e1["utterances"]) == set(e["utterances"])]:
-                source1 = e1["source"]
-                source2 = e2["source"]
-                utt1 = self.node_by_id(source1)["utterances"]
-                utt2 = self.node_by_id(source2)["utterances"]
-                if source1 == source2 or np.min(get_embedding(utt1, utt2)) >= 0.6:
-                    if e1["target"] != e2["target"]:
-                        to_combine.append([e1["target"], e2["target"]])
-        for idx in range(len(to_combine)):
-            to_combine[idx].sort()
-        for pair in set(to_combine):
-            self.combine_nodes(pair[0], pair[1])
 
     def remove_duplicated_edges(self):
         graph = self.graph_dict
@@ -333,3 +296,24 @@ class Graph(BaseGraph):
             res.append(utt)
 
         return res
+
+    def graph2list(self) -> tuple[list[str], int]:
+        """Returns:
+        res_list - concatenation of utterances of every node and its outgoing edges
+        n_edges - total number of utterances in all edges
+        """
+        graph = self.graph_dict
+        res_list = []
+        n_edges = 0
+
+        for node in graph["nodes"]:
+            edges = [e for e in graph["edges"] if e["source"] == node["id"]]
+            utt = ""
+            for n_utt in node["utterances"]:
+                utt += n_utt + " "
+            for edge in edges:
+                for e_utt in edge["utterances"]:
+                    utt += e_utt + " "
+                    n_edges += 1
+            res_list.append(utt)
+        return res_list, n_edges

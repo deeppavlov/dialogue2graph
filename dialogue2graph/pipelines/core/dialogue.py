@@ -2,6 +2,7 @@ import networkx as nx
 from typing import List, Union, Dict
 from pydantic import BaseModel, Field, ConfigDict
 
+
 class DialogueMessage(BaseModel):
     """Represents a single message in a dialogue.
 
@@ -19,6 +20,7 @@ class DialogueBase(BaseModel):
         super().__init__(**kwargs)
         self.id = ""
 
+
 class Dialogue(DialogueBase):
     """Represents a complete dialogue consisting of multiple messages.
 
@@ -29,6 +31,7 @@ class Dialogue(DialogueBase):
     @property
     def id(self):
         return self._id
+
     @id.setter
     def id(self, value):
         self._id = value

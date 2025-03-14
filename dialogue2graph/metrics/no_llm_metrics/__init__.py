@@ -1,7 +1,9 @@
-from dialogue2graph.metrics.no_llm_metrics.metrics import (
+from .metrics import (
     dialogues_are_valid_paths,
-    all_utterances_present,
+    DialogueValidationResult,
     triplet_match,
+    dg_triplets_match,
+    DGTripletsMatchResult,
     all_roles_correct,
     is_correct_length,
     is_same_structure,

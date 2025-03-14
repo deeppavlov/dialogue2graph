@@ -228,93 +228,94 @@ def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
     return True
 
 
-def dialogue_edges(seq: list[Dialogue]) -> set[tuple[str]]:
-    """Find all dialogue edges in a form of triplets with (source, edge, target) utterances"""
-    res = []
+def dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
+    """Find all dialogue triplets with (source, edge, target) utterances"""
+    result = []
     for dialogue in seq:
         assist_texts = [d.text.lower() for d in dialogue.messages if d.participant == "assistant"]
         user_texts = [d.text.lower() for d in dialogue.messages if d.participant == "user"]
-        res.extend([(a1, u, a2) for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])])
-    # print("DIA: ", set(res))
-    return set(res)
+        result.extend([(a1, u, a2) for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])])
+    return set(result)
 
 
-def graph_edges(G: BaseGraph):
-    """Find all graph edges in a form of triplets with (source, edge, target) utterances"""
+def graph_triplets(G: BaseGraph):
+    """Find all graph triplets with (source, edge, target) utterances"""
     graph = G.graph_dict
     edges = graph["edges"]
     nodes = graph["nodes"]
-    res = []
+    result = []
     for node in nodes:
         for edge in [e for e in edges if e["source"] == node["id"]]:
             for utt in edge["utterances"]:
                 for utt1 in node["utterances"]:
                     for utt2 in [n for n in nodes if n["id"] == edge["target"]][0]["utterances"]:
-                        res.append((utt1.lower(), utt.lower(), utt2.lower()))
-    # print("GRAPH: ", set(res))
-    return set(res)
+                        result.append((utt1.lower(), utt.lower(), utt2.lower()))
+    return set(result)
 
 
-def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
+class AbsentTriplet(TypedDict):
+    """To return absent triplets in DGTripletsMatchResult"""
+
+    source: str
+    edge: str
+    target: str
+
+    @classmethod
+    def from_tuple(cls, triplet: tuple[str]) -> "AbsentTriplet":
+        """Create AbsentTriplet from a tuple"""
+        return cls(source=triplet[0], edge=triplet[1], target=triplet[2])
+
+
+class DGTripletsMatchResult(TypedDict):
+    """To return result of matching triplets between graph and dialogues"""
+
+    value: bool
+    description: Optional[str]
+    absent_triplets: Optional[List[AbsentTriplet]]
+
+
+def dg_triplets_match(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatchResult:
     """
-    Check if all graph utterances match with utterances in set of dialogues.
+    Check if all graph triplets match triplets in set of dialogues.
 
     Args:
         G: BaseGraph object containing the dialogue graph
         dialogues: List of Dialogue objects to check against
 
     """
-    # Get all unique utterances from nodes and edges in the graph
-    graph_utterances = set()
 
-    # Add node utterances
-    for node_id, node_data in G.graph.nodes(data=True):
-        graph_utterances.update([u.lower() for u in node_data["utterances"]])
-
-    # Add edge utterances
-    for _, _, edge_data in G.graph.edges(data=True):
-        if isinstance(edge_data["utterances"], list):
-            graph_utterances.update([u.lower() for u in edge_data["utterances"]])
-        else:
-            graph_utterances.add(edge_data["utterances"].lower())
-
-    # Collect all utterances from dialogues
-    dialogue_utterances = set()
-    for dialogue in dialogues:
-        dialogue_utterances.update(utt.text.lower() for utt in dialogue.messages)
-
-    # Check if graph utterances match the dialogues
-    if graph_utterances.issubset(dialogue_utterances):
-        set1 = dialogue_edges(dialogues)
-        set2 = graph_edges(G)
-        if len(set1 - set2) <= 0:
-            print("Graph has all the dialogues")
-            for eq in set2 - set1:
-                print("absent in dialogues: ", eq)
-        else:
-            for eq in set1 - set2:
-                print("absent in graph: ", eq)
-        if set1 == set2:
-            return True
+    dialogue_set = dialogue_triplets(dialogues)
+    graph_set = graph_triplets(G)
+    graph_absent = dialogue_set - graph_set
+    dialogue_absent = graph_set - dialogue_set
+    if dialogue_set.issubset(graph_set):
+        print("Graph has all the dialogues")
+    if not len(graph_absent) and not len(dialogue_absent):
+        return {"value": True}
+    if len(dialogue_absent):
+        return {
+            "value": False,
+            "description": "Triplets missing in dialogues",
+            "absent_triplets": [AbsentTriplet.from_tuple(triplet) for triplet in dialogue_absent],
+        }
     else:
-        print("absent in graph: ", dialogue_utterances - graph_utterances)
-        print("absent in dialogues: ", graph_utterances - dialogue_utterances)
-        if dialogue_utterances.issubset(graph_utterances):
-            print("Graph has all the dialogues")
-    return False
-    # graph_utterances.difference(dialogue_utterances)
+        return {
+            "value": False,
+            "description": "Triplets missing in graph",
+            "absent_triplets": [AbsentTriplet.from_tuple(triplet) for triplet in graph_absent],
+        }
 
 
 def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
     """
-    Check if there is a connection from user message to assistant message.
+    Check if the graph G has a connection from user message to assistant message.
 
     Args:
         G: BaseGraph object containing the dialogue graph
         user, assistant: pair of neighboring utterances in a dialogue
 
     Returns:
-        list: True if there is connection, False otherwise
+        True if there is connection, False otherwise
     """
 
     nodes = G.nodes_by_utterance(assistant)
@@ -329,14 +330,14 @@ def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
 
 def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
     """
-    Check if there is a connection from assistant message to user message.
+    Check if the graph G has a connection from assistant message to user message.
 
     Args:
         G: BaseGraph object containing the dialogue graph
         assistant, user: pair of neighboring utterances in a dialogue
 
     Returns:
-        list: True if there is connection, False otherwise
+        True if there is connection, False otherwise
     """
 
     nodes = G.nodes_by_utterance(assistant)
@@ -351,14 +352,14 @@ def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
 
 def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
     """
-    Check if there is a connection from msg1 to msg2.
+    Check if the graph G has a connection from msg1 to msg2.
 
     Args:
         G: BaseGraph object containing the dialogue graph
         msg1, msg2: pair of neighboring utterances in a dialogue
 
     Returns:
-        list: True if there is connection, False otherwise
+        True if there is connection, False otherwise
     """
     if msg1.participant == "assistant" and msg2.participant == "user":
         return au_match(G, msg1.text, msg2.text)
@@ -367,18 +368,22 @@ def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
     return False
 
 
-class InvalidTransition(TypedDict):
+class InvalidDialogueTransition(TypedDict):
+    """To return invalid dialogue transition in DialogueValidationResult"""
+
     from_message: str
     to_message: str
     dialogue_id: str
 
 
-class GraphValidationResult(TypedDict):
+class DialogueValidationResult(TypedDict):
+    """To return result of dialogues_are_valid_paths"""
+
     value: bool
-    invalid_transitions: Optional[List[InvalidTransition]]
+    invalid_transitions: Optional[List[InvalidDialogueTransition]]
 
 
-def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> GraphValidationResult:
+def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> DialogueValidationResult:
     """
     Check if all dialogues are valid paths in the graph.
 
@@ -389,14 +394,16 @@ def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> GraphV
     Returns:
         list: for every dialogue {"value": bool, "description": "description with dialogue_id and list of pairs when there is no connection from one message to another"}
     """
-    
+
     invalid_transitions = []
     for dialogue in dialogues:
         for idx in range(len(dialogue.messages) - 1):
             if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
-                invalid_transitions.append({"from_message": dialogue.messages[idx].text, "to_message": dialogue.messages[idx + 1].text, "dialogue_id": dialogue.id})
+                invalid_transitions.append(
+                    {"from_message": dialogue.messages[idx].text, "to_message": dialogue.messages[idx + 1].text, "dialogue_id": dialogue.id}
+                )
     if invalid_transitions:
-        return ({"value": False, "invalid_transitions": invalid_transitions})
+        return {"value": False, "invalid_transitions": invalid_transitions}
     return {"value": True}
 
 

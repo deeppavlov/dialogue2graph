@@ -5,6 +5,7 @@ LLM Metrics.
 This module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
 """
 
+import os
 import logging
 import json
 from typing import List, TypedDict, Union, Optional
@@ -13,9 +14,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 import numpy as np
 
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
-from dialogue2graph.metrics.embedder import get_embedding
+from dialogue2graph.metrics.embedder import get_similarity
 from dialogue2graph.pipelines.core.schemas import CompareResponse
-from dialogue2graph.metrics.llm_metrics.prompts import compare_graphs_prompt, graph_example
+from .prompts import compare_graphs_prompt, graph_example
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.prompts import PromptTemplate
@@ -23,17 +24,15 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 
-# from langchain_core.output_parsers import PydanticOutputParser, OutputFixingParser
-
 
 class EnvSettings(BaseSettings, case_sensitive=True):
 
-    model_config = SettingsConfigDict(env_file="./.env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=os.environ["PATH_TO_ENV"], env_file_encoding="utf-8")
 
     OPENAI_API_KEY: Optional[str]
     OPENAI_BASE_URL: Optional[str]
     HUGGINGFACE_TOKEN: Optional[str]
-    EMBEDDER_DEVICE: Optional[str]
+    DEVICE: Optional[str]
 
 
 env_settings = EnvSettings()
@@ -220,7 +219,8 @@ def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
 def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
     """Compares number of utterances in each pair of edges of two nodes.
     Mapping of edges is defined by max parameter, which is argmax of embeddings of nodes utterances.
-    See compare_graphs
+    See compare_graphs.
+    Returns True if numbers match, else False.
     """
     nodes_map = {}
     graph1 = G1.graph_dict
@@ -243,53 +243,55 @@ def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
 
 
 def compare_graphs(
-    G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93, comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo"
+    G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93, llm_comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo"
 ) -> CompareResponse:
     """Compares two graphs, returns True or False with description"""
+
     g1 = G1.graph_dict
     g2 = G2.graph_dict
 
+    # list of concatenations of all nodes utterances:
     nodes1_list = G1.nodes2list()
     nodes2_list = G2.nodes2list()
+
     if len(nodes1_list) != len(nodes2_list):
         return {"value": False, "description": f"Numbers of nodes do not match: {len(nodes1_list)} != {len(nodes2_list)}"}
 
-    g1_list, n1, len1 = G1.graph2list()
-    g2_list, n2, len2 = G2.graph2list()
-    # print("LEN1: ", len1, "LEN2: ", len2)
+    # g1_list, g2_list - concatenations of utterances of every node and its outgoing edges
+    g1_list, n_edge_utts1 = G1.graph2list()
+    g2_list, n_edge_utts2 = G2.graph2list()
 
-    nodes_matrix = get_embedding(nodes1_list, nodes2_list, embedder)
-    matrix = get_embedding(g1_list, g2_list, embedder)
+    nodes_matrix = get_similarity(nodes1_list, nodes2_list, embedder)  # embeddings for utterances in nodes
+    mix_matrix = get_similarity(g1_list, g2_list, embedder)  # embeddings for utterances in nodes+edges
 
     nodes_max = list(np.argmax(nodes_matrix, axis=1))
-    max = list(np.argmax(matrix, axis=1))
-    if nodes_max != max:
-        return {"value": False, "description": f"Mapping for nodes {max} doesn't match mapping for nodes+edges {nodes_max}"}
+    mix_max = list(np.argmax(mix_matrix, axis=1))
+    if nodes_max != mix_max:
+        return {"value": False, "description": f"Mapping for nodes {nodes_max} doesn't match mapping for nodes+edges {mix_max}"}
     if len(set(nodes_max)) < len(nodes1_list):
         return {"value": False, "description": "At least one of nodes corresponds to more than one in another graph"}
 
-    if n1 != n2:
+    if n_edge_utts1 != n_edge_utts2:
         return {"value": False, "description": "Graphs have different number of user's utterances"}
-    if len(set(max)) < len(g1_list):
+    if len(set(mix_max)) < len(g1_list):
         return {"value": False, "description": "At least one of nodes concatenated with edges corresponds to more than one in another graph"}
 
-    if not compare_edge_lens(G1, G2, max):
+    if not compare_edge_lens(G1, G2, mix_max):
         return {"value": False, "description": "At least one pair of edges has different number of utterances"}
 
     nodes_min = np.min(np.max(nodes_matrix, axis=1))
-    mix_min = np.min(np.max(matrix, axis=1))
+    mix_min = np.min(np.max(mix_matrix, axis=1))
 
-    mmin = min(nodes_min, mix_min)
+    full_min = min(nodes_min, mix_min)
 
-    if mmin >= sim_th:
+    if full_min >= sim_th:
         return {"value": True, "description": f"Nodes similarity: {nodes_min}, Nodes+edges similarity: {mix_min}"}
 
     parser = PydanticOutputParser(pydantic_object=CompareResponse)
     format_model = ChatOpenAI(model=formatter, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
-    model = ChatOpenAI(model=comparer, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
-    new_parser = OutputFixingParser.from_llm(parser=parser, llm=format_model)
-    llm = model | new_parser
+    model = ChatOpenAI(model=llm_comparer, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
+    fixed_output_parser = OutputFixingParser.from_llm(parser=parser, llm=format_model)
+    chain = model | fixed_output_parser
     query = compare_graphs_prompt.format(result_form=CompareResponse().model_dump(), graph_example=graph_example, graph_1=g1, graph_2=g2)
     messages = [HumanMessage(content=query)]
-    return llm.invoke(messages)
-
+    return chain.invoke(messages)

@@ -5,13 +5,14 @@ from langchain.prompts import PromptTemplate
 from langchain_core.language_models.chat_models import BaseChatModel
 from dialogue2graph.pipelines.core.graph import Graph
 
+
 def find_graph_ends(G: Graph, model: BaseChatModel) -> dict[str]:
     """
-    Validates dialogue graph structure and logical transitions between nodes.
+    To find nodes in dialogue graph G by condition in graph_ends_prompt_template with help of model.
 
     Parameters:
-        G (BaseGraph): The dialogue graph to validate
-        model (BaseChatModel): The LLM model to use for validation
+        G (BaseGraph): The dialogue graph
+        model (BaseChatModel): The LLM model to be used
 
     Returns:
         dict: {'value': bool, 'description': str}
@@ -37,23 +38,18 @@ def find_graph_ends(G: Graph, model: BaseChatModel) -> dict[str]:
     {{"ends": [id1, id2, ...], "description": "Brief explanation of your decision"}}
     """
 
-    graph_ends_prompt = PromptTemplate(
-        input_variables=["json_graph"], template=graph_ends_prompt_template
-    )
+    graph_ends_prompt = PromptTemplate(input_variables=["json_graph"], template=graph_ends_prompt_template)
 
     parser = PydanticOutputParser(pydantic_object=GraphEndsResult)
 
     # Convert graph to JSON string
     graph_json = json.dumps(G.graph_dict)
-    
-        # Prepare input for validation
+
+    # Prepare input for validation
     input_data = {
         "json_graph": graph_json,
     }
 
-        # print(triplet_validate_prompt.format(**input_data))
-
-        # Run validation
     find_ends_chain = graph_ends_prompt | model | parser
     response = find_ends_chain.invoke(input_data)
     result = {"value": response.ends, "description": response.description}
