@@ -83,6 +83,7 @@ class CycleGraphGenerator(BaseModel):
 class GenerationPipeline(BaseModel):
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
+    theme_validation_model: BaseChatModel
     validation_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
     generation_prompt: Optional[PromptTemplate] = Field(default_factory=lambda: cycle_graph_generation_prompt_informal)
@@ -99,6 +100,7 @@ class GenerationPipeline(BaseModel):
     def __init__(
         self,
         generation_model: BaseChatModel,
+        theme_validation_model: BaseChatModel,
         validation_model: BaseChatModel,
         generation_prompt: Optional[PromptTemplate],
         repair_prompt: Optional[PromptTemplate],
@@ -108,6 +110,7 @@ class GenerationPipeline(BaseModel):
     ):
         super().__init__(
             generation_model=generation_model,
+            theme_validation_model=theme_validation_model,
             validation_model=validation_model,
             generation_prompt=generation_prompt,
             repair_prompt=repair_prompt,
@@ -229,7 +232,7 @@ class GenerationPipeline(BaseModel):
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
                 )
 
-            theme_validation = is_theme_valid(graph, self.validation_model, topic)
+            theme_validation = is_theme_valid(graph, self.theme_validation_model, topic)
             if not theme_validation["value"]:
                 return GenerationError(error_type=ErrorType.INVALID_THEME, message=f"Theme validation failed: {theme_validation['description']}")
 
@@ -281,13 +284,15 @@ class LoopedGraphGenerator(TopicGraphGenerator):
     validation_model: BaseChatModel
     pipeline: GenerationPipeline
 
-    def __init__(self, generation_model: BaseChatModel, validation_model: BaseChatModel):
+    def __init__(self, generation_model: BaseChatModel, validation_model: BaseChatModel, theme_validation_model: BaseChatModel):
         super().__init__(
             generation_model=generation_model,
             validation_model=validation_model,
+            theme_validation_model=theme_validation_model,
             pipeline=GenerationPipeline(
                 generation_model=generation_model,
                 validation_model=validation_model,
+                theme_validation_model=theme_validation_model,
                 generation_prompt=cycle_graph_generation_prompt_informal,
                 repair_prompt=cycle_graph_repair_prompt,
             ),

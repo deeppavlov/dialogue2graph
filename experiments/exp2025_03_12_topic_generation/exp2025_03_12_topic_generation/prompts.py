@@ -490,7 +490,7 @@ Create a dialogue graph for real conversations between two people about {topic}.
    - Nodes are assistant's utterances, edges are utterances from the user
    - Dialogue flow goes from source to target for all edges
    - Graph must contain at least 8 nodes
-   - Graph must contain at least 2 distinct cycles (return paths)
+   - Make sure graph contains 3 distinct cycles (return paths) as minimum
    - Include clear exit points from each major decision path
    
 3. Core Path Types:
