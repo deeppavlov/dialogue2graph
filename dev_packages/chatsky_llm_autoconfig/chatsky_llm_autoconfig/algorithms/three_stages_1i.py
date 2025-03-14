@@ -43,7 +43,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
         partial_variables = {}
         partial_variables["var_0"] = dialogue[0].to_list()
-        prompt_extra = part_2i + " Dialogue_0: {{var_0}}"
+        prompt_extra = part_2i + f" Dialogue_0: {{var_0}}"
         prompt = PromptTemplate(template=part_1i+"{graph}. "+prompt_extra, input_variables=["graph"], partial_variables=partial_variables)
         print("model:  ",env_settings.GENERATION_MODEL_NAME)
 
