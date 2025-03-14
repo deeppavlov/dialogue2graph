@@ -65,6 +65,10 @@ class BaseGraph(BaseModel, abc.ABC):
     def nodes2list(self):
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def graph2list(self):
+        raise NotImplementedError
+
 
 class Graph(BaseGraph):
 
@@ -292,3 +296,24 @@ class Graph(BaseGraph):
             res.append(utt)
 
         return res
+
+    def graph2list(self) -> tuple[list[str], int]:
+        """Returns:
+        res_list - concatenation of utterances of every node and its outgoing edges
+        n_edges - total number of utterances in all edges
+        """
+        graph = self.graph_dict
+        res_list = []
+        n_edges = 0
+
+        for node in graph["nodes"]:
+            edges = [e for e in graph["edges"] if e["source"] == node["id"]]
+            utt = ""
+            for n_utt in node["utterances"]:
+                utt += n_utt + " "
+            for edge in edges:
+                for e_utt in edge["utterances"]:
+                    utt += e_utt + " "
+                    n_edges += 1
+            res_list.append(utt)
+        return res_list, n_edges
