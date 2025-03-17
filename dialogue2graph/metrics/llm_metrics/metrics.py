@@ -245,7 +245,10 @@ def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
 def compare_graphs(
     G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93, llm_comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo"
 ) -> CompareResponse:
-    """Compares two graphs, returns True or False with description"""
+    """
+    Compares two graphs via utterance embeddings similarity. If similarity is lower then `sim_th` value LLM is used for additional comparison.
+    Returns dict with True or False value and a description.
+    """
 
     g1 = G1.graph_dict
     g2 = G2.graph_dict
