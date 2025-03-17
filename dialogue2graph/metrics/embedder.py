@@ -13,6 +13,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     OPENAI_API_KEY: Optional[str]
     OPENAI_BASE_URL: Optional[str]
     HUGGINGFACE_TOKEN: Optional[str]
+    SAMPLING_MAX: Optional[int]
     DEVICE: Optional[str]
 
 

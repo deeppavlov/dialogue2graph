@@ -758,10 +758,10 @@ e. Assitant's utterances with different intents or distant meanings go to differ
 f. When one assistant's utterance contains a reference to a previous context, which is not clear in the other assistant's utterance, those utterances go to different groups.
 For example, one utterance refers to some objects called by such the words like there, that, etc, and the other utterance doesn't have such references.
 g. Place utterances satisfying point 5b (taking into account exceptions in points 5d, 5e and 5f) into one group.
-h. Go to next utterance in step 5a. Don't miss any utterance.
+h. Go to next utterance in step 5a. Make sure you don't miss any utterance.
 6) Don't use user's utterances for grouping process.
 7) Every assistant's utterance not included in any group shall be present in its own group of single utterance.
-8) You must doublecheck that all the assistant's utterances are present in resulting set of nodes, not a single utterance to be missed.
+8) You must doublecheck that all the assistant's utterances are present in resulting set of nodes, make sure not a single utterance is missed.
 9) Always place adjacent assistant's utterances separated by only one user's utterance into different groups.
 10) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
 11) Add reason point to your answer with an explanation why some of the assistant's utterances were not included in the resulting groups.

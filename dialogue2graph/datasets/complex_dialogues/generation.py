@@ -155,7 +155,7 @@ class GenerationPipeline(BaseModel):
         initial_invalid_count = len(initial_validation["invalid_transitions"])
         current_graph = graph
         current_attempt = 0
-
+        logger.warning(f"⚠️ Found these {initial_validation['invalid_transitions']} invalid transitions")
         while current_attempt < max_attempts:
             logger.info(f"🔄 Fix attempt {current_attempt + 1}/{max_attempts}")
             try:
@@ -244,7 +244,7 @@ class GenerationPipeline(BaseModel):
                 invalid_transitions = transition_validation["validation_details"]["invalid_transitions"]
                 return GenerationError(
                     error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
-                    message=f"Found {len(invalid_transitions)} invalid transitions"
+                    message=f"Found {len(invalid_transitions)} invalid transitions "
                     f"after {transition_validation['validation_details']['attempts_made']} fix attempts",
                 )
 

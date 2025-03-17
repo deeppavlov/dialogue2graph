@@ -94,7 +94,7 @@ class Graph(BaseGraph):
                     if len(left) == 0:
                         return True
         if len(left):
-            print(left)
+
             return False
         return True
 
@@ -239,8 +239,10 @@ class Graph(BaseGraph):
         self.graph_dict = {"edges": edges, "nodes": [n for n in nodes if n["id"] not in to_remove]}
         return self.remove_duplicated_edges()
 
-    def all_paths(self, start: int, visited: list, repeats: int):
-        """Recursion to find all the graph paths"""
+    def all_paths(self, start: int, visited: list[int], repeats: int):
+        """Recursion to find all the graph paths with ids of graph nodes
+        where node with id=start added to last repeats elements in the visited path do not have any occurance
+        visited_list is global variable to store the result"""
         global visited_list
         if len(visited) < repeats or not self._list_in(visited[-repeats:] + [start], visited):
             visited.append(start)
@@ -249,7 +251,10 @@ class Graph(BaseGraph):
         visited_list.append(visited)
 
     def find_path(self, start: int, end: int, visited: list):
-        """Recursion to find path from start node id to end node id"""
+        """Recursion to find path from start node id to end node id
+        visited is path traveled
+        visited_list is global variable to store the result
+        """
 
         global visited_list
 
@@ -264,7 +269,7 @@ class Graph(BaseGraph):
         visited_list.append(visited)
 
     def get_ends(self):
-        """Find finishing nodes"""
+        """Find finishing nodes which have no outgoing edges"""
 
         global visited_list
 

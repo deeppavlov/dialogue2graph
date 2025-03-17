@@ -32,6 +32,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     OPENAI_API_KEY: Optional[str]
     OPENAI_BASE_URL: Optional[str]
     HUGGINGFACE_TOKEN: Optional[str]
+    SAMPLING_MAX: Optional[int]
     DEVICE: Optional[str]
 
 
@@ -90,10 +91,10 @@ def are_triplets_valid(G: Graph, model: BaseChatModel, return_type: str = "dict"
     User Response: {edge_utterances}
     Target (Assistant): {target_utterances}
 
-    EVALUATE: Do these three messages form a logical sequence in the conversation?
+    EVALUATE: Do these three set of messages form a logical sequence in the conversation?
     Consider:
-    1. Does the assistant's first response naturally lead to the user's response?
-    2. Does the user's response logically connect to the assistant's next message?
+    1. Does any of the assistant's first responses naturally lead to one of the user's responses?
+    2. Does one of the user's responses logically connect to one of the assistant's next messages?
     3. Is the overall flow natural and coherent?
 
     Reply in JSON format:

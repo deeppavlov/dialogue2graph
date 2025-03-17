@@ -332,8 +332,8 @@ Requirements for the fix:
 1. Keep all node IDs and structure the same
 2. Fix ONLY the invalid transitions
 3. Make sure the fixed transitions are logical and natural
-4. Each user response must logically follow from the assistant's previous message
-5. Each assistant response must properly address the user's input
+4. One of utterances for every user response must logically follow from one of the assistant's previous messages
+5. One of utterances for every assistant response must properly address one of utterances in the user's input
 
 Return ONLY the complete fixed graph JSON with the same structure.
 """
