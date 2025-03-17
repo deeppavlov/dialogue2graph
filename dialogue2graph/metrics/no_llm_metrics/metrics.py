@@ -228,7 +228,7 @@ def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
     return True
 
 
-def dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
+def _dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     """Find all dialogue triplets with (source, edge, target) utterances"""
     result = []
     for dialogue in seq:
@@ -238,7 +238,7 @@ def dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     return set(result)
 
 
-def graph_triplets(G: BaseGraph):
+def _graph_triplets(G: BaseGraph):
     """Find all graph triplets with (source, edge, target) utterances"""
     graph = G.graph_dict
     edges = graph["edges"]
@@ -284,8 +284,8 @@ def dg_triplets_match(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
 
     """
 
-    dialogue_set = dialogue_triplets(dialogues)
-    graph_set = graph_triplets(G)
+    dialogue_set = _dialogue_triplets(dialogues)
+    graph_set = _graph_triplets(G)
     graph_absent = dialogue_set - graph_set
     dialogue_absent = graph_set - dialogue_set
     if dialogue_set.issubset(graph_set):
@@ -306,7 +306,7 @@ def dg_triplets_match(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
         }
 
 
-def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
+def _ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
     """
     Check if the graph G has a connection from user message to assistant message.
 
@@ -328,7 +328,7 @@ def ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
     return False
 
 
-def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
+def _au_match(G: BaseGraph, assistant: str, user: str) -> bool:
     """
     Check if the graph G has a connection from assistant message to user message.
 
@@ -350,7 +350,7 @@ def au_match(G: BaseGraph, assistant: str, user: str) -> bool:
     return False
 
 
-def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
+def _pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
     """
     Check if the graph G has a connection from msg1 to msg2.
 
@@ -362,9 +362,9 @@ def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
         True if there is connection, False otherwise
     """
     if msg1.participant == "assistant" and msg2.participant == "user":
-        return au_match(G, msg1.text, msg2.text)
+        return _au_match(G, msg1.text, msg2.text)
     if msg1.participant == "user" and msg2.participant == "assistant":
-        return ua_match(G, msg1.text, msg2.text)
+        return _ua_match(G, msg1.text, msg2.text)
     return False
 
 
@@ -398,7 +398,7 @@ def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> Dialog
     invalid_transitions = []
     for dialogue in dialogues:
         for idx in range(len(dialogue.messages) - 1):
-            if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
+            if not _pair_match(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
                 invalid_transitions.append(
                     {"from_message": dialogue.messages[idx].text, "to_message": dialogue.messages[idx + 1].text, "dialogue_id": dialogue.id}
                 )

@@ -1,3 +1,4 @@
+import uuid
 import networkx as nx
 from typing import List, Union, Dict
 from pydantic import BaseModel, Field, ConfigDict
@@ -15,29 +16,15 @@ class DialogueMessage(BaseModel):
     participant: str
 
 
-class DialogueBase(BaseModel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = ""
-
-
-class Dialogue(DialogueBase):
+class Dialogue(BaseModel):
     """Represents a complete dialogue consisting of multiple messages.
 
     The class provides methods for creating dialogues from different formats
     and converting dialogues to various representations.
     """
 
-    @property
-    def id(self):
-        return self._id
-
-    @id.setter
-    def id(self, value):
-        self._id = value
-
     messages: List[DialogueMessage] = Field(default_factory=list)
-    # id: str = ""
+    id: str = Field(default=str(uuid.uuid1()), description="Unique identifier for the dialogue")
     topic: str = ""
     validate: bool = Field(default=True, description="Whether to validate messages upon initialization")
 

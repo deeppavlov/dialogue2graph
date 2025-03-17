@@ -216,8 +216,8 @@ def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
     return {"value": response.isValid, "description": response.description}
 
 
-def compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
-    """Compares number of utterances in each pair of edges of two nodes.
+def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
+    """Helper that compares number of utterances in each pair of edges of two nodes.
     Mapping of edges is defined by max parameter, which is argmax of embeddings of nodes utterances.
     See compare_graphs.
     Returns True if numbers match, else False.
@@ -246,7 +246,8 @@ def compare_graphs(
     G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93, llm_comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo"
 ) -> CompareResponse:
     """
-    Compares two graphs via utterance embeddings similarity. If similarity is lower then `sim_th` value LLM is used for additional comparison.
+    Compares two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
+    LLM formatter is used to keep LLM answer in a required format.
     Returns dict with True or False value and a description.
     """
 
@@ -279,7 +280,7 @@ def compare_graphs(
     if len(set(mix_max)) < len(g1_list):
         return {"value": False, "description": "At least one of nodes concatenated with edges corresponds to more than one in another graph"}
 
-    if not compare_edge_lens(G1, G2, mix_max):
+    if not _compare_edge_lens(G1, G2, mix_max):
         return {"value": False, "description": "At least one pair of edges has different number of utterances"}
 
     nodes_min = np.min(np.max(nodes_matrix, axis=1))

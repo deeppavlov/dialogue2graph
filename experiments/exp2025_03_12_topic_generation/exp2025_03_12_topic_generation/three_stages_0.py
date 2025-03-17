@@ -39,7 +39,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     # def __init__(self):
     #     super().__init__()
 
-    def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, topic: str = "", model_name="chatgpt-4o-latest") -> BaseGraph:
+    def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, model_name="chatgpt-4o-latest", temp=0) -> BaseGraph:
 
         partial_variables = {}
         prompt_extra = part_2
@@ -48,7 +48,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
         prompt = PromptTemplate(template=part_1+"{graph_example_1}. "+prompt_extra, input_variables=["graph_example_1"], partial_variables=partial_variables)
 
-        base_model = ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0)
+        base_model = ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=temp)
         model = base_model | PydanticOutputParser(pydantic_object=DialogueNodes)
         nodes = call_llm_api(prompt.format(graph_example_1=graph_example_1), model, temp=0).model_dump()
 
@@ -103,7 +103,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
             model = base_model | PydanticOutputParser(pydantic_object=DialogueGraph)
 
-            result = call_llm_api(prompt.format(graph_dict=graph_dict), model, temp=0)
+            result = call_llm_api(prompt.format(graph_dict=graph_dict), model, temp=temp)
             if result is None:
                 return Graph(graph_dict={})
             result.reason = "Fixes: " + result.reason

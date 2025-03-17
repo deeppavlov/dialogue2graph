@@ -141,7 +141,8 @@ class Graph(BaseGraph):
 
     def visualise_short(self, name, *args, **kwargs):
         plt.figure(figsize=(7, 5))
-        pos = nx.kamada_kawai_layout(self.graph)
+        # pos = nx.kamada_kawai_layout(self.graph)
+        pos = nx.nx_agraph.pygraphviz_layout(self.graph)
         nx.draw(self.graph, pos, with_labels=False, node_color="lightblue", node_size=500, font_size=8, arrows=True)
         edge_attrs = {(e["source"], e["target"]): len(e["utterances"]) for e in self.graph_dict["edges"]}
         node_attrs = {n["id"]: f"{n['id']}:{len(n['utterances'])}" for n in self.graph_dict["nodes"]}
