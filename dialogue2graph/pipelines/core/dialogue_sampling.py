@@ -13,7 +13,6 @@ class RecursiveDialogueSampler(DialogueGenerator):
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def invoke(self, graph: BaseGraph, upper_limit: int) -> list[Dialogue]:
-        # TODO: how to add caching?
         repeats = 1
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph, repeats)

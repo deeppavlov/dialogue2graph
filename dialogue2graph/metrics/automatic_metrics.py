@@ -56,8 +56,18 @@ def jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return
     max_jaccard_values = np.max(jaccard_values, axis=1)
     max_jaccard_indices = np.argmax(jaccard_values, axis=1)
     if return_matrix:
-        return max_jaccard_values, max_jaccard_indices, jaccard_values
-    return list(max_jaccard_values), list(max_jaccard_indices)
+        return {
+            "value": float(np.mean(max_jaccard_values)),
+            "description": {
+                "max_jaccard_values": list(max_jaccard_values),
+                "max_jaccard_indices": list(max_jaccard_indices),
+                "jaccard_matrix": jaccard_values.tolist(),
+            },
+        }
+    return {
+        "value": float(np.mean(max_jaccard_values)),
+        "description": {"max_jaccard_values": list(max_jaccard_values), "max_jaccard_indices": list(max_jaccard_indices)},
+    }
 
 
 def get_list_of_node_utterances(node1_utterances):
@@ -114,8 +124,18 @@ def jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return
     np.place(max_jaccard_indices, max_jaccard_indices < 0, 0)
     max_jaccard_indices = max_jaccard_indices.astype(int)
     if return_matrix:
-        return max_jaccard_values, max_jaccard_indices, jaccard_values[1:, 1:]
-    return list(max_jaccard_values), list(max_jaccard_indices)
+        return {
+            "value": float(np.mean(max_jaccard_values)),
+            "description": {
+                "max_jaccard_values": list(max_jaccard_values),
+                "max_jaccard_indices": list(max_jaccard_indices),
+                "jaccard_matrix": jaccard_values[1:, 1:].tolist(),
+            },
+        }
+    return {
+        "value": float(np.mean(max_jaccard_values)),
+        "description": {"max_jaccard_values": list(max_jaccard_values), "max_jaccard_indices": list(max_jaccard_indices)},
+    }
 
 
 def edge_match_for_multigraph(x, y):
@@ -131,6 +151,24 @@ def edge_match_for_multigraph(x, y):
 def parse_edge(edge):
     src, trg = map(int, edge.split("->"))
     return src - 1, trg - 1
+
+
+def pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
+    """
+    Check if there is a connection from msg1 to msg2.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        msg1, msg2: pair of neighboring utterances in a dialogue
+
+    Returns:
+        list: True if there is connection, False otherwise
+    """
+    if msg1.participant == "assistant" and msg2.participant == "user":
+        return au_match(G, msg1.text, msg2.text)
+    if msg1.participant == "user" and msg2.participant == "assistant":
+        return ua_match(G, msg1.text, msg2.text)
+    return False
 
 
 def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
@@ -213,22 +251,25 @@ def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
                 f"""{
                 inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"""
             ] = edge2
-        return new_node_mapping, new_edge_mapping
+        return {"value": bool(len(new_node_mapping) > 0), "description": {"node_mapping": new_node_mapping, "edge_mapping": new_edge_mapping}}
 
-    return node_mapping, edge_mapping
+    return {"value": bool(len(node_mapping) > 0), "description": {"node_mapping": node_mapping, "edge_mapping": edge_mapping}}
 
 
-def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
+def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> dict[str]:
     g1 = G1.graph
     g2 = G2.graph
-    return nx.is_isomorphic(g1, g2)
+    isomorphic = nx.is_isomorphic(g1, g2)
+    return {"value": isomorphic, "description": g1.edges() - g2.edges()}
 
 
-def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
-    return True
+def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> dict[str]:
+    raise NotImplementedError
+    # TODO: Implement actual path checking logic
+    return {"value": True, "description": "All paths are currently assumed to be sampled"}
 
 
-def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
+def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> dict[str]:
     """
     Check if all graph elements (nodes and edges) appear in at least one dialogue.
 
@@ -237,7 +278,7 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
         dialogues: List of Dialogue objects to check against
 
     Returns:
-        bool: True if all graph elements are present in at least one dialogue
+        dict[str]: A dictionary containing the result and description
     """
     # Get all unique utterances from nodes and edges in the graph
     graph_utterances = set()
@@ -260,22 +301,50 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
 
     # Check if all graph utterances are present in dialogues
     if graph_utterances.issubset(dialogue_utterances):
-        return True
+        return {"value": True, "description": "All utterances are present"}
     else:
-        # return False
-        return graph_utterances.difference(dialogue_utterances)
+        missing_utterances = graph_utterances.difference(dialogue_utterances)
+        return {"value": False, "description": f"Missing utterances: {list(missing_utterances)}"}
 
 
-def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
-    for phrase_1, phrase_2 in zip(D1.messages, D2.messages):
+def all_roles_correct(D1: Dialogue, D2: Dialogue) -> dict[str]:
+    mismatched_roles = []
+    for i, (phrase_1, phrase_2) in enumerate(zip(D1.messages, D2.messages)):
         if phrase_1.participant != phrase_2.participant:
-            return False
-    return True
+            mismatched_roles.append(f"Message {i}: {phrase_1.participant} != {phrase_2.participant}")
+
+    return {"value": len(mismatched_roles) == 0, "description": f"Mismatched roles: {mismatched_roles}" if mismatched_roles else "All roles match"}
 
 
-def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> bool:
-    return len(D1.messages) == len(D2.messages)
+def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> dict[str]:
+    return {"value": len(D1.messages) == len(D2.messages), "description": f"D1 length: {len(D1.messages)}, D2 length: {len(D2.messages)}"}
 
 
 def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
     raise NotImplementedError
+
+
+def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> dict[str]:
+    """
+    Check if all dialogues are valid paths in the graph.
+
+    Args:
+        G: BaseGraph object containing the dialogue graph
+        dialogues: List of Dialogue objects to check against
+
+    Returns:
+        dict[str]: A dictionary containing the result and description
+    """
+
+    result = []
+    invalid_paths = []
+
+    for dialogue in dialogues:
+        is_valid = True
+        for idx in range(len(dialogue.messages) - 1):
+            if not pair_match(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
+                is_valid = False
+                invalid_paths.append((dialogue.messages[idx].text, dialogue.messages[idx + 1].text))
+        result.append(is_valid)
+
+    return {"value": all(result), "description": "All dialogues are valid paths" if all(result) else f"Invalid paths: {invalid_paths}"}

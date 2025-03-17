@@ -127,7 +127,7 @@ def are_triplets_valid(G: Graph, model: BaseChatModel, return_type: str = "dict"
     if return_type == "dict":
         return {"value": is_valid, "description": " ".join(descriptions) if descriptions else "All transitions are valid."}
     else:  # return_type == "detailed"
-        return {"is_valid": is_valid, "invalid_transitions": invalid_transitions}
+        return {"value": is_valid, "description": invalid_transitions}
 
 
 def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
