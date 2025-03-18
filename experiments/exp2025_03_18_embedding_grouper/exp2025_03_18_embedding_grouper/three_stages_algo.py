@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 from langchain.prompts import PromptTemplate
 from langchain_openai  import ChatOpenAI
@@ -11,13 +12,14 @@ from dialogue2graph.pipelines.core.schemas import DialogueGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 
-from embedder import nodes2groups
+from embedder_algo import nodes2groups
 from utils import call_llm_api, nodes2graph, dialogues2list
 from settings import EnvSettings
 from missing_edges_prompt import three_1, three_2
 
 
 env_settings = EnvSettings()
+logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
 embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-m3", model_kwargs={"device": env_settings.DEVICE})
 
