@@ -14,7 +14,7 @@ from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 
 
-def collapse_multiedges(edges):
+def _collapse_multiedges(edges):
     collapsed_edges = {}
     for u, v, data in edges:
         key = f"{u}->{v}"
@@ -27,7 +27,7 @@ def collapse_multiedges(edges):
     return collapsed_edges
 
 
-def jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return_matrix=False):
+def _get_jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return_matrix=False):
     """
     true_graph_edges:Graph.edges - ребра истинного графа
     generated_graph_edges: nx.Graph.edges - ребра сгенерированного графу
@@ -35,8 +35,8 @@ def jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return
     (1, 2, {"utterances": ...})
     verbose: bool - печать отладочной информации
     """
-    true_graph_edges = collapse_multiedges(list(true_graph_edges))
-    generated_graph_edges = collapse_multiedges(list(generated_graph_edges))
+    true_graph_edges = _collapse_multiedges(list(true_graph_edges))
+    generated_graph_edges = _collapse_multiedges(list(generated_graph_edges))
 
     jaccard_values = np.zeros((len(true_graph_edges), len(generated_graph_edges)))
     print(jaccard_values.shape)
@@ -60,13 +60,13 @@ def jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return
     return list(max_jaccard_values), list(max_jaccard_indices)
 
 
-def get_list_of_node_utterances(node1_utterances):
+def _get_list_of_node_utterances(node1_utterances):
     if type(node1_utterances) is str:
         return [node1_utterances]
     return node1_utterances
 
 
-def collapse_multinodes(nodes):
+def _collapse_multinodes(nodes):
     collapsed_nodes = {}
     for key, data in nodes:
         if key not in collapsed_nodes:
@@ -78,7 +78,7 @@ def collapse_multinodes(nodes):
     return collapsed_nodes
 
 
-def jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return_matrix=False):
+def _get_jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return_matrix=False):
     """
     true_graph_nodes: Graph.nodes - вершины истинного графа
     generated_graph_nodes: nx.Graph.nodes - вершины сгенерированного графу
@@ -86,15 +86,15 @@ def jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return
     (1, {"utterances": ...})
     verbose: bool - печать отладочной информации
     """
-    true_graph_nodes = collapse_multinodes(list(true_graph_nodes))
-    generated_graph_nodes = collapse_multinodes(list(generated_graph_nodes))
+    true_graph_nodes = _collapse_multinodes(list(true_graph_nodes))
+    generated_graph_nodes = _collapse_multinodes(list(generated_graph_nodes))
 
     jaccard_values = np.zeros((len(true_graph_nodes) + 1, len(generated_graph_nodes) + 1))
     print(true_graph_nodes)
     for node1_id, node1_utterances in true_graph_nodes.items():
         for node2_id, node2_utterances in generated_graph_nodes.items():
-            node1_utterances = set(get_list_of_node_utterances(node1_utterances))
-            node2_utterances = set(get_list_of_node_utterances(node2_utterances))
+            node1_utterances = set(_get_list_of_node_utterances(node1_utterances))
+            node2_utterances = set(_get_list_of_node_utterances(node2_utterances))
 
             jaccard_nominator = node1_utterances.intersection(node2_utterances)
             jaccard_denominator = node1_utterances.union(node2_utterances)
@@ -118,7 +118,7 @@ def jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return
     return list(max_jaccard_values), list(max_jaccard_indices)
 
 
-def edge_match_for_multigraph(x, y):
+def _match_edge_for_multigraph(x, y):
     if isinstance(x, dict) and isinstance(y, dict):
         set1 = set([elem["utterances"] for elem in list(x.values())])
         set2 = set([elem["utterances"] for elem in list(y.values())])
@@ -128,12 +128,12 @@ def edge_match_for_multigraph(x, y):
     return set1.intersection(set2) is not None
 
 
-def parse_edge(edge):
+def _parse_edge(edge):
     src, trg = map(int, edge.split("->"))
     return src - 1, trg - 1
 
 
-def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
+def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
     g1 = G1.graph
     g2 = G2.graph
     node_mapping = {node: None for node in g1.nodes}
@@ -142,7 +142,7 @@ def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
         GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: set(x["utterances"]).intersection(set(y["utterances"])) is not None)
         are_isomorphic = GM.is_isomorphic()
     else:
-        GM = nx.isomorphism.MultiDiGraphMatcher(g1, g2, edge_match=edge_match_for_multigraph)
+        GM = nx.isomorphism.MultiDiGraphMatcher(g1, g2, edge_match=_match_edge_for_multigraph)
         are_isomorphic = GM.is_isomorphic()
     if are_isomorphic:
         print("Graphs are isomorphic")
@@ -151,20 +151,20 @@ def triplet_match(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
     edge_mapping = {}
     mapping_jaccard_values = {}
 
-    edges1 = list(collapse_multiedges(g1.edges(data=True)).keys())
-    edges2 = list(collapse_multiedges(g2.edges(data=True)).keys())
+    edges1 = list(_collapse_multiedges(g1.edges(data=True)).keys())
+    edges2 = list(_collapse_multiedges(g2.edges(data=True)).keys())
 
-    _, _, matrix_edges = jaccard_edges(g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True)
+    _, _, matrix_edges = _get_jaccard_edges(g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True)
 
-    _, _, matrix_nodes = jaccard_nodes(g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True)
+    _, _, matrix_nodes = _get_jaccard_nodes(g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True)
 
     for i, edge1 in enumerate(edges1):
         edge_mapping[edge1] = None
         mapping_jaccard_values[edge1] = 0
         for j, edge2 in enumerate(edges2):
             if matrix_edges[i][j] > 0:
-                node1_src, node1_trg = parse_edge(edge1)
-                node2_src, node2_trg = parse_edge(edge2)
+                node1_src, node1_trg = _parse_edge(edge1)
+                node2_src, node2_trg = _parse_edge(edge2)
                 if matrix_nodes[node1_src][node2_src] == 0.0 and matrix_nodes[node1_trg][node2_trg] == 0.0:
                     continue
                 elif matrix_nodes[node1_src][node2_src] > 0 and matrix_nodes[node1_trg][node2_trg] > 0:
@@ -228,7 +228,7 @@ def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
     return True
 
 
-def _dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
+def _get_dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     """Find all dialogue triplets with (source, edge, target) utterances"""
     result = []
     for dialogue in seq:
@@ -238,7 +238,7 @@ def _dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     return set(result)
 
 
-def _graph_triplets(G: BaseGraph):
+def _get_graph_triplets(G: BaseGraph):
     """Find all graph triplets with (source, edge, target) utterances"""
     graph = G.graph_dict
     edges = graph["edges"]
@@ -274,7 +274,7 @@ class DGTripletsMatchResult(TypedDict):
     absent_triplets: Optional[List[AbsentTriplet]]
 
 
-def dg_triplets_match(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatchResult:
+def match_triplets_dg(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatchResult:
     """
     Check if all graph triplets match triplets in set of dialogues.
 
@@ -284,8 +284,8 @@ def dg_triplets_match(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
 
     """
 
-    dialogue_set = _dialogue_triplets(dialogues)
-    graph_set = _graph_triplets(G)
+    dialogue_set = _get_dialogue_triplets(dialogues)
+    graph_set = _get_graph_triplets(G)
     graph_absent = dialogue_set - graph_set
     dialogue_absent = graph_set - dialogue_set
     if dialogue_set.issubset(graph_set):
@@ -306,7 +306,7 @@ def dg_triplets_match(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
         }
 
 
-def _ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
+def _match_ua(G: BaseGraph, user: str, assistant: str) -> bool:
     """
     Check if the graph G has a connection from user message to assistant message.
 
@@ -328,7 +328,7 @@ def _ua_match(G: BaseGraph, user: str, assistant: str) -> bool:
     return False
 
 
-def _au_match(G: BaseGraph, assistant: str, user: str) -> bool:
+def _match_au(G: BaseGraph, assistant: str, user: str) -> bool:
     """
     Check if the graph G has a connection from assistant message to user message.
 
@@ -350,7 +350,7 @@ def _au_match(G: BaseGraph, assistant: str, user: str) -> bool:
     return False
 
 
-def _pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
+def _match_pair(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
     """
     Check if the graph G has a connection from msg1 to msg2.
 
@@ -362,9 +362,9 @@ def _pair_match(G: BaseGraph, msg1: dict, msg2: dict) -> bool:
         True if there is connection, False otherwise
     """
     if msg1.participant == "assistant" and msg2.participant == "user":
-        return _au_match(G, msg1.text, msg2.text)
+        return _match_au(G, msg1.text, msg2.text)
     if msg1.participant == "user" and msg2.participant == "assistant":
-        return _ua_match(G, msg1.text, msg2.text)
+        return _match_ua(G, msg1.text, msg2.text)
     return False
 
 
@@ -383,7 +383,7 @@ class DialogueValidationResult(TypedDict):
     invalid_transitions: Optional[List[InvalidDialogueTransition]]
 
 
-def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> DialogueValidationResult:
+def are_paths_valid(G: BaseGraph, dialogues: list[Dialogue]) -> DialogueValidationResult:
     """
     Check if all dialogues are valid paths in the graph.
 
@@ -398,7 +398,7 @@ def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> Dialog
     invalid_transitions = []
     for dialogue in dialogues:
         for idx in range(len(dialogue.messages) - 1):
-            if not _pair_match(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
+            if not _match_pair(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
                 invalid_transitions.append(
                     {"from_message": dialogue.messages[idx].text, "to_message": dialogue.messages[idx + 1].text, "dialogue_id": dialogue.id}
                 )
@@ -407,7 +407,7 @@ def dialogues_are_valid_paths(G: BaseGraph, dialogues: list[Dialogue]) -> Dialog
     return {"value": True}
 
 
-def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
+def match_roles(D1: Dialogue, D2: Dialogue) -> bool:
     for phrase_1, phrase_2 in zip(D1.messages, D2.messages):
         if phrase_1.participant != phrase_2.participant:
             return False

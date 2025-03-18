@@ -1,10 +1,10 @@
 from .metrics import (
-    dialogues_are_valid_paths,
+    are_paths_valid,
     DialogueValidationResult,
-    triplet_match,
-    dg_triplets_match,
+    match_graph_triplets,
+    match_triplets_dg,
     DGTripletsMatchResult,
-    all_roles_correct,
+    match_roles,
     is_correct_length,
     is_same_structure,
 )
