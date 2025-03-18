@@ -7,7 +7,7 @@ import dialogue2graph.pipelines.core.graph as ch_graph
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
-from dialogue2graph.metrics.no_llm_metrics import dg_triplets_match
+from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
 from dialogue2graph.datasets.complex_dialogues.find_graph_ends import find_graph_ends
 from langchain_openai import ChatOpenAI
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -49,7 +49,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph, repeats, finished_nodes)
             if dialogues:
-                if dg_triplets_match(graph, dialogues)["value"]:
+                if match_triplets_dg(graph, dialogues)["value"]:
                     # print(f"{repeats} repeats works!")
                     break
             repeats += 1
@@ -65,7 +65,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
     async def evaluate(self, graph, upper_limit, target_dialogues, report_type=Literal["dict", "dataframe"]):
         dialogues = self.invoke(graph, upper_limit)
         report = {
-            "all_utterances_present": [dg_triplets_match(graph, dialogues)].value,
+            "all_utterances_present": [match_triplets_dg(graph, dialogues)].value,
             # "all_roles_correct": all(all_roles_correct(dialogues, target_dialogues)),
         }
         if report_type == "dataframe":

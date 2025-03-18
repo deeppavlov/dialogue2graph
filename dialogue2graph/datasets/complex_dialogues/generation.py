@@ -11,7 +11,7 @@ from langchain_core.output_parsers.pydantic import PydanticOutputParser
 from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.metrics.no_llm_metrics import dg_triplets_match
+from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
 from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
@@ -227,7 +227,7 @@ class GenerationPipeline(BaseModel):
             logger.info("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
-            if not dg_triplets_match(graph, sampled_dialogues)["value"]:
+            if not match_triplets_dg(graph, sampled_dialogues)["value"]:
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
                 )
@@ -260,7 +260,7 @@ class GenerationPipeline(BaseModel):
                 print("Sampling dialogues...")
                 sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
                 print(f"Sampled {len(sampled_dialogues)} dialogues")
-                if not dg_triplets_match(graph, sampled_dialogues)["value"]:
+                if not match_triplets_dg(graph, sampled_dialogues)["value"]:
                     return GenerationError(
                         error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
                     )
