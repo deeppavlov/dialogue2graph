@@ -621,4 +621,3 @@ def all_paths_sampled(G, dialogue):
             return False
 
     return True
-
