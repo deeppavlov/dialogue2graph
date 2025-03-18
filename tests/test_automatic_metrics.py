@@ -26,6 +26,7 @@ from dialogue2graph.metrics.automatic_metrics import (
     all_paths_sampled
 )
 
+
 def run_tests():
     # 1. Load sample data
     with open("test_automatic_metrics_test_cases.json", encoding="utf-8") as f:
@@ -41,7 +42,6 @@ def run_tests():
     graph2 = Graph(graph_dict=data[1]["graph"])
 
     # 3. Construct some Dialogue objects
-    #    We'll pick the first dialogue from data[0], if it exists
     dialogues_data_0 = data[0].get("dialogues", [])
     dialogues_0 = []
     for diag in dialogues_data_0:
@@ -52,16 +52,12 @@ def run_tests():
         dialogues_0.append(d)
 
     # 4. Prepare to run each metric on these objects.
-    # Let's define a simple results collector.
     test_results = []
 
     # --- 4A. Test all_utterances_present ---
     try:
-        # We'll test if all utterances in graph1 are present in dialogues_0
-        # If there's at least one dialogue, pick dialogues_0. Otherwise, we pass an empty list.
         result_utterances = all_utterances_present(graph1, dialogues_0)
-        # This metric can return bool or a set of missing utterances,
-        # so we check if it's True or an empty set
+        # This metric can return bool or a set of missing utterances
         if result_utterances is True or (isinstance(result_utterances, set) and len(result_utterances) == 0):
             test_results.append(("all_utterances_present", True))
         else:
@@ -73,7 +69,7 @@ def run_tests():
     # --- 4B. Test is_same_structure ---
     try:
         same_struc = is_same_structure(graph1, graph2)
-        # Suppose we expect them to be isomorphic from the example
+        # Suppose we expect them to be isomorphic
         expected_same_struc = True
         test_results.append(("is_same_structure", same_struc == expected_same_struc))
     except Exception as e:
@@ -84,9 +80,6 @@ def run_tests():
     try:
         if len(dialogues_0) >= 2:
             roles_ok = all_roles_correct(dialogues_0[0], dialogues_0[1])
-            # We can't say for sure if they're correct in the example,
-            # so let's just require it's either True or False without raising error
-            # For demonstration let's check we get a boolean:
             test_results.append(("all_roles_correct", isinstance(roles_ok, bool)))
         else:
             # If we don't have 2 dialogues to compare, skip
@@ -109,12 +102,10 @@ def run_tests():
     # --- 4E. Test triplet_match and triplet_match_accuracy ---
     try:
         node_map, edge_map = triplet_match(graph1, graph2)
-        # As a quick check, ensure node_map and edge_map are dicts
         maps_ok = isinstance(node_map, dict) and isinstance(edge_map, dict)
         test_results.append(("triplet_match", maps_ok))
 
         acc_dict = triplet_match_accuracy(graph1, graph2)
-        # We expect a dict with 'node_accuracy' and 'edge_accuracy' keys
         expected_keys = {"node_accuracy", "edge_accuracy"}
         acc_keys_ok = set(acc_dict.keys()).issuperset(expected_keys)
         test_results.append(("triplet_match_accuracy", acc_keys_ok))
@@ -126,7 +117,6 @@ def run_tests():
     # --- 4F. Test compute_graph_metrics ---
     try:
         metric_results = compute_graph_metrics([graph1, graph2])
-        # Expected keys from the function
         expected_mkeys = {
             "with_cycles",
             "percentage_with_cycles",
@@ -144,10 +134,8 @@ def run_tests():
 
     # --- 4G. Test all_paths_sampled ---
     try:
-        # If we have at least one dialogue, test with the first one
         if len(dialogues_0) > 0:
             all_paths_ok = all_paths_sampled(graph1, dialogues_0[0])
-            # This is True or False. We'll just confirm it's a boolean
             is_bool = isinstance(all_paths_ok, bool)
             test_results.append(("all_paths_sampled", is_bool))
         else:
@@ -167,3 +155,4 @@ def run_tests():
 
 if __name__ == "__main__":
     run_tests()
+

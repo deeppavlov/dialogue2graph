@@ -7,11 +7,10 @@ for various metrics.
 """
 
 import networkx as nx
+import numpy as np
+
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
-
-
-import numpy as np
 
 
 def collapse_multiedges(edges):
@@ -29,8 +28,8 @@ def collapse_multiedges(edges):
 
 def jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return_matrix=False):
     """
-    true_graph_edges:Graph.edges - ребра истинного графа
-    generated_graph_edges: nx.Graph.edges - ребра сгенерированного графу
+    true_graph_edges: Graph.edges - ребра истинного графа
+    generated_graph_edges: nx.Graph.edges - ребра сгенерированного графа
     формат ребер:
     (1, 2, {"utterances": ...})
     verbose: bool - печать отладочной информации
@@ -61,7 +60,7 @@ def jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return
 
 
 def get_list_of_node_utterances(node1_utterances):
-    if type(node1_utterances) is str:
+    if isinstance(node1_utterances, str):
         return [node1_utterances]
     return node1_utterances
 
@@ -81,7 +80,7 @@ def collapse_multinodes(nodes):
 def jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return_matrix=False):
     """
     true_graph_nodes: Graph.nodes - вершины истинного графа
-    generated_graph_nodes: nx.Graph.nodes - вершины сгенерированного графу
+    generated_graph_nodes: nx.Graph.nodes - вершины сгенерированного графа
     формат вершин:
     (1, {"utterances": ...})
     verbose: bool - печать отладочной информации
@@ -120,8 +119,8 @@ def jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return
 
 def edge_match_for_multigraph(x, y):
     if isinstance(x, dict) and isinstance(y, dict):
-        set1 = set([elem["utterances"] for elem in list(x.values())])
-        set2 = set([elem["utterances"] for elem in list(y.values())])
+        set1 = {elem["utterances"] for elem in x.values()}
+        set2 = {elem["utterances"] for elem in y.values()}
     else:
         set1 = set(x)
         set2 = set(y)
@@ -170,7 +169,7 @@ def triplet_match(G1, G2, change_to_original_ids=False):
         )
         are_isomorphic = GM.is_isomorphic()
     else:
-        # Если один граф MultiDiGraph, а другой DiGraph, 
+        # Если один граф MultiDiGraph, а другой DiGraph,
         # или вообще неизвестный тип, можно либо бросать ошибку, либо делать fallback:
         GM = nx.isomorphism.DiGraphMatcher(
             g1,
@@ -280,14 +279,14 @@ def triplet_match(G1, G2, change_to_original_ids=False):
 def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
     """
     Checks if two graphs have the same structure (i.e., are isomorphic).
-    
+
     Parameters:
         G1 (BaseGraph): The first graph object (contains a NetworkX graph).
         G2 (BaseGraph): The second graph object (contains a NetworkX graph).
-    
+
     Returns:
         bool: True if the two underlying NetworkX graphs are isomorphic, otherwise False.
-    
+
     Calculation:
         - Uses networkx.is_isomorphic to verify structural equivalence.
         - Graphs are considered isomorphic if there's a one-to-one mapping between their nodes/edges.
@@ -296,28 +295,29 @@ def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
     g2 = G2.graph
     return nx.is_isomorphic(g1, g2)
 
+
 def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
     """
-    Checks whether every utterance in the graph (both from nodes and edges) appears at least once in the given dialogues.
-    
+    Checks whether every utterance in the graph (both from nodes and edges) appears
+    at least once in the given dialogues.
+
     Parameters:
         G (BaseGraph): A graph containing node and edge data (utterances).
         dialogues (list of Dialogue): A list of Dialogue objects in which to look for those utterances.
-    
+
     Returns:
         bool: True if all graph utterances are found within the dialogues, otherwise returns the missing utterances.
-    
+
     Calculation:
         1. Collect all node utterances and edge utterances from the graph into a set.
         2. Collect all utterances from every message in all provided dialogues into another set.
         3. If the graph's utterances are a subset of the dialogues' utterances, return True.
            Otherwise, return the difference as an indicator of missing items.
     """
-    # Get all unique utterances from nodes and edges in the graph
     graph_utterances = set()
 
     # Add node utterances
-    for node_id, node_data in G.graph.nodes(data=True):
+    for _, node_data in G.graph.nodes(data=True):
         graph_utterances.update(node_data["utterances"])
 
     # Add edge utterances
@@ -332,25 +332,23 @@ def all_utterances_present(G: BaseGraph, dialogues: list[Dialogue]) -> bool:
     for dialogue in dialogues:
         dialogue_utterances.update(utt.text for utt in dialogue.messages)
 
-    # Check if all graph utterances are present in dialogues
     if graph_utterances.issubset(dialogue_utterances):
         return True
     else:
-        # return False
         return graph_utterances.difference(dialogue_utterances)
 
 
 def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
     """
     Checks if two dialogues have identical participant roles in each corresponding turn.
-    
+
     Parameters:
         D1 (Dialogue): The first dialogue object.
         D2 (Dialogue): The second dialogue object.
-    
+
     Returns:
         bool: True if both dialogues have the same participant in each turn, False otherwise.
-    
+
     Calculation:
         - Iterate simultaneously over messages in D1 and D2.
         - Compare the 'participant' attribute for each pair of messages.
@@ -365,14 +363,14 @@ def all_roles_correct(D1: Dialogue, D2: Dialogue) -> bool:
 def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> bool:
     """
     Checks if two dialogues have the same number of messages.
-    
+
     Parameters:
         D1 (Dialogue): The first dialogue object.
         D2 (Dialogue): The second dialogue object.
-    
+
     Returns:
         bool: True if the length of both dialogues (number of messages) is equal, False otherwise.
-    
+
     Calculation:
         - Compare len(D1.messages) with len(D2.messages).
         - Return True if they are equal, False if not.
@@ -383,23 +381,24 @@ def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> bool:
 def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
     raise NotImplementedError
 
+
 def triplet_match_accuracy(G1, G2, change_to_original_ids=False):
     """
     Calculates a simple accuracy metric for node and edge matching based on 'triplet_match'.
-    
+
     Args:
         G1 (BaseGraph): The first graph object containing a NetworkX graph (G1.graph).
         G2 (BaseGraph): The second graph object containing a NetworkX graph (G2.graph).
         change_to_original_ids (bool): If True, the node/edge mappings returned
                                        from 'triplet_match' are converted back
                                        to the original IDs of G1 (when applicable).
-    
+
     Returns:
         dict:
             A dictionary containing:
                 - "node_accuracy": float, fraction of G1's nodes that found a match in G2
                 - "edge_accuracy": float, fraction of G1's edges that found a match in G2
-                
+
     How it calculates:
         1. Calls 'triplet_match(G1, G2, change_to_original_ids)' to retrieve:
             - node_mapping (dict): which node in G1 corresponds to which node in G2
@@ -411,7 +410,7 @@ def triplet_match_accuracy(G1, G2, change_to_original_ids=False):
             - Counts how many edges in G1 have a non-None mapping in G2
             - Divides by the total number of edges in G1
         4. Returns both metrics as a dictionary.
-    
+
     Note:
         - This metric does not check whether the mapped node or edge also belongs
           to an identical label or utterances. It solely checks if 'triplet_match' deemed
@@ -419,20 +418,13 @@ def triplet_match_accuracy(G1, G2, change_to_original_ids=False):
           'triplet_match'.
         - If G1 has 0 nodes or edges, the respective accuracy is set to 0 by default.
     """
-
-    # 1. Get node and edge mappings using triplet_match
     node_mapping, edge_mapping = triplet_match(G1, G2, change_to_original_ids=change_to_original_ids)
 
-    # 2. Node accuracy
-    # Only count nodes that originally belong to G1 (to avoid keys from G2 in the mapping dict).
     g1_nodes = set(G1.graph.nodes())
     matched_nodes = sum(1 for n in g1_nodes if node_mapping.get(n) is not None)
     total_nodes = len(g1_nodes)
     node_accuracy = matched_nodes / total_nodes if total_nodes > 0 else 0.0
 
-    # 3. Edge accuracy
-    # 'edge_mapping' keys are strings like "u->v" from G1.
-    # We consider an edge "matched" if its value is not None.
     g1_edges = list(G1.graph.edges())
     matched_edges = sum(1 for edge_str in edge_mapping if edge_mapping[edge_str] is not None)
     total_edges = len(g1_edges)
@@ -443,11 +435,12 @@ def triplet_match_accuracy(G1, G2, change_to_original_ids=False):
         "edge_accuracy": edge_accuracy
     }
 
+
 def compute_graph_metrics(graph_list):
     """
-    Computes various statistics across a list of Graph objects, 
+    Computes various statistics across a list of Graph objects,
     where each Graph has a 'graph_dict' containing 'edges' and 'nodes'.
-    
+
     Expects each element in 'graph_list' to be something like:
         Graph(
             graph_dict={
@@ -457,7 +450,7 @@ def compute_graph_metrics(graph_list):
             graph=<networkx graph object>,
             node_mapping={}
         )
-    
+
     Returns a dictionary with the following keys:
         - "with_cycles" (int): How many of the graphs contain at least one cycle.
         - "percentage_with_cycles" (float): Percentage of graphs that have a cycle, out of all.
@@ -467,43 +460,32 @@ def compute_graph_metrics(graph_list):
         - "total_edges" (int): Sum of edges across all graphs.
         - "total_nodes" (int): Sum of nodes across all graphs.
     """
-
     total_graphs = len(graph_list)
     with_cycles = 0
     total_edges = 0
     total_nodes = 0
 
     for graph_object in graph_list:
-        # 'graph_object' is an instance of your Graph class
-        # The dictionary data is in 'graph_object.graph_dict'
-
         edges = graph_object.graph_dict["edges"]
         nodes = graph_object.graph_dict["nodes"]
 
-        # Build a directed graph in NetworkX
         g = nx.DiGraph()
-        
-        # Add nodes
+
         for node_info in nodes:
             g.add_node(node_info["id"])
-        
-        # Add edges
+
         for edge_info in edges:
             g.add_edge(edge_info["source"], edge_info["target"])
-        
-        # Gather local counts
+
         edges_count = g.number_of_edges()
         nodes_count = g.number_of_nodes()
 
-        # Accumulate totals
         total_edges += edges_count
         total_nodes += nodes_count
 
-        # Check if the directed graph is acyclic
         if not nx.is_directed_acyclic_graph(g):
             with_cycles += 1
 
-    # Compute averages (avoid division by zero)
     average_edges_amount = total_edges / total_graphs if total_graphs > 0 else 0.0
     average_nodes_amount = total_nodes / total_graphs if total_graphs > 0 else 0.0
     percentage_with_cycles = (with_cycles / total_graphs * 100) if total_graphs > 0 else 0.0
@@ -517,6 +499,7 @@ def compute_graph_metrics(graph_list):
         "total_edges": total_edges,
         "total_nodes": total_nodes,
     }
+
 
 def all_paths_sampled(G, dialogue):
     """
@@ -543,35 +526,31 @@ def all_paths_sampled(G, dialogue):
         4) For each path, check if its edge utterances appear as a subsequence in the dialogue:
             - We iterate over the dialogue messages in order.
             - For each edge in the path, we see if there's a message in the dialogue containing
-              at least one of the utterances from that edge. 
+              at least one of the utterances from that edge.
             - We must find them in the same order as the path. If we manage to match all edges,
               we say that path is "sampled" by the dialogue.
         5) If all such paths are found in the dialogue, return True; otherwise, False.
     """
 
-    # --- Helper function to find all start nodes ---
     def get_start_nodes(graph):
         start_nodes = [n for n, data in graph.nodes(data=True) if data.get("is_start", False)]
         if not start_nodes:
-            # If no node is explicitly marked as start, 
+            # If no node is explicitly marked as start,
             # consider nodes that have no incoming edges.
             start_nodes = [n for n in graph.nodes if graph.in_degree(n) == 0]
         return start_nodes
 
-    # --- Helper function to find end nodes ---
     def get_end_nodes(graph):
         return [n for n in graph.nodes if graph.out_degree(n) == 0]
 
-    # --- Generate all possible paths from start nodes to end nodes ---
     def get_all_paths(graph, start_nodes, end_nodes):
         """
-        Returns a list of paths, where each path is a list of node IDs 
+        Returns a list of paths, where each path is a list of node IDs
         from one start node to one end node.
         """
         all_paths = []
         for s in start_nodes:
             for e in end_nodes:
-                # This uses built-in DFS for all paths
                 paths = nx.all_simple_paths(graph, source=s, target=e)
                 all_paths.extend(list(paths))
         return all_paths
@@ -580,18 +559,16 @@ def all_paths_sampled(G, dialogue):
         """
         Returns True if the edges along 'path_nodes' appear as a subsequence
         in the messages of the dialogue. Otherwise False.
-        
+
         'messages' is a list of DialogueMessage objects with .text and .participant
         """
-        # Convert path of nodes -> list of edges [(u, v), (v, w), ...]
         edge_sequence = []
         for i in range(len(path_nodes) - 1):
-            u, v = path_nodes[i], path_nodes[i+1]
+            u, v = path_nodes[i], path_nodes[i + 1]
             if graph.has_edge(u, v):
                 data_for_edges = graph.get_edge_data(u, v)
                 all_utterances = set()
 
-                # data_for_edges can be dict for single-edge or dict-of-dicts for multi-edge
                 if isinstance(data_for_edges, dict):
                     # If it's a multi-edge or single-edge, unify utterances
                     for key, edge_info in data_for_edges.items():
@@ -600,32 +577,30 @@ def all_paths_sampled(G, dialogue):
                                 all_utterances.update(edge_info["utterances"])
                             else:
                                 all_utterances.add(edge_info["utterances"])
-                        # In single-edge scenario, there's typically a "weight" or "utterances" in data_for_edges
-                        if "utterances" in data_for_edges:
-                            # fallback single-edge
-                            ut = data_for_edges["utterances"]
-                            if isinstance(ut, list):
-                                all_utterances.update(ut)
-                            else:
-                                all_utterances.add(ut)
-                            break
+
+                    # Fallback single-edge
+                    if "utterances" in data_for_edges:
+                        ut = data_for_edges["utterances"]
+                        if isinstance(ut, list):
+                            all_utterances.update(ut)
+                        else:
+                            all_utterances.add(ut)
+                        # break (можно убрать или оставить, зависит от структуры)
+
                 edge_sequence.append(all_utterances)
             else:
-                # If the graph doesn't actually have this edge, can't match
                 return False
 
-        # Now check if each edge's utterances can appear in messages in order
         msg_index = 0
         for edge_utterances in edge_sequence:
             found = False
             while msg_index < len(messages):
-                text_in_msg = messages[msg_index].text  # <--- Use .text, not dictionary access
+                text_in_msg = messages[msg_index].text
                 if text_in_msg in edge_utterances:
                     found = True
                     msg_index += 1
                     break
-                else:
-                    msg_index += 1
+                msg_index += 1
 
             if not found:
                 return False
@@ -639,12 +614,11 @@ def all_paths_sampled(G, dialogue):
     all_paths = get_all_paths(graph_nx, start_nodes, end_nodes)
 
     if not all_paths:
-        # If no paths exist (maybe an empty or single-node graph), trivially pass
         return True
 
-    # Check each path against the dialogue
     for path in all_paths:
         if not is_path_sampled_in_dialogue(path, graph_nx, messages):
             return False
 
     return True
+
