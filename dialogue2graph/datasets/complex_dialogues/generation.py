@@ -1,7 +1,6 @@
 import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
-from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 import networkx as nx
@@ -55,7 +54,7 @@ class CycleGraphGenerator(BaseModel):
     def __init__(self, **data):
         super().__init__(**data)
 
-    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=42, **kwargs) -> BaseGraph:
+    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=None, **kwargs) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
@@ -79,7 +78,6 @@ class CycleGraphGenerator(BaseModel):
         pass
 
 
-@dataclass
 class GenerationPipeline(BaseModel):
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
@@ -90,7 +88,7 @@ class GenerationPipeline(BaseModel):
     min_cycles: int = 2
     max_fix_attempts: int = 3
     dialogue_sampler: RecursiveDialogueSampler = Field(default_factory=RecursiveDialogueSampler)
-    seed: int = 42
+    seed: Optional[int] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -104,7 +102,7 @@ class GenerationPipeline(BaseModel):
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 0,
         max_fix_attempts: int = 2,
-        seed: int = 42,
+        seed: Optional[int] = None,
     ):
         super().__init__(
             generation_model=generation_model,
@@ -115,8 +113,9 @@ class GenerationPipeline(BaseModel):
             max_fix_attempts=max_fix_attempts,
             seed=seed,
         )
-        self.cache = setup_cache()
         self.seed = seed
+        if self.seed:
+            self.cache = setup_cache()
 
     def validate_graph_cycle_requirement(self, graph: BaseGraph, min_cycles: int = 2) -> Dict[str, Any]:
         """Checks the graph for cycle requirements"""
@@ -170,32 +169,31 @@ class GenerationPipeline(BaseModel):
                 if self.repair_prompt:
                     self.repair_prompt.template = original_template
 
-                validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
-                if validation["is_valid"]:
-                    return {
-                        "is_valid": True,
-                        "graph": current_graph,
-                        "validation_details": {"invalid_transitions": [], "attempts_made": current_attempt + 1, "fixed_count": initial_invalid_count},
-                    }
-                else:
-                    logger.warning(f"⚠️ Found these {validation['invalid_transitions']} invalid transitions after fix attempt")
-
             except Exception as e:
                 logger.error(f"⚠️ Error during fix attempt: {str(e)}")
                 break
 
             current_attempt += 1
 
-        remaining_invalid = len(validation["invalid_transitions"])
-        return {
-            "is_valid": False,
-            "graph": current_graph,
-            "validation_details": {
-                "invalid_transitions": validation["invalid_transitions"],
-                "attempts_made": current_attempt,
-                "fixed_count": initial_invalid_count - remaining_invalid,
-            },
-        }
+        validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
+        if validation["is_valid"]:
+            return {
+                "is_valid": True,
+                "graph": current_graph,
+                "validation_details": {"invalid_transitions": [], "attempts_made": current_attempt + 1, "fixed_count": initial_invalid_count},
+            }
+        else:
+            logger.warning(f"⚠️ Found these {validation['invalid_transitions']} invalid transitions after fix attempt")
+            remaining_invalid = len(validation.get("invalid_transitions", []))
+            return {
+                "is_valid": False,
+                "graph": current_graph,
+                "validation_details": {
+                    "invalid_transitions": validation["invalid_transitions"],
+                    "attempts_made": current_attempt,
+                    "fixed_count": initial_invalid_count - remaining_invalid,
+                },
+            }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
         """Generates and validates a dialogue graph for given topic"""
@@ -213,6 +211,7 @@ class GenerationPipeline(BaseModel):
             logger.info("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
+
             if not all_utterances_present(graph, sampled_dialogues):
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
@@ -273,10 +272,14 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             if isinstance(result, GraphGenerationResult):
                 logger.info(f"✅ Successfully generated graph for {topic}")
                 successful_generations.append(
-                    {"graph": result.graph.model_dump(), "topic": result.topic, "dialogues": [d.model_dump() for d in result.dialogues]}
+                    {
+                        "graph": result.graph.model_dump(),
+                        "topic": result.topic,
+                        "dialogues": result.dialogues,  # The dialogues are already dictionaries
+                    }
                 )
             else:
-                logger.error(f"❌ Failed to generate graph for {topic}")
+                logger.info(f"❌ Failed to generate graph for {topic}")
                 logger.error(f"Error type: {result.error_type}")
                 logger.error(f"Error message: {result.message}")
 
