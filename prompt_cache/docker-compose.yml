@@ -1,0 +1,48 @@
+services:
+
+  db:
+
+    image: postgres
+
+    restart: always
+
+    env_file:
+
+      - .env
+
+    volumes:
+
+      - ./postgres-data:/var/lib/postgresql/data/
+
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    ports:
+
+      - 5432:5432
+
+    environment:
+
+      - POSTGRES_USER=${POSTGRES_USER}
+
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+
+      - POSTGRES_DB=prompt_cache_db
+
+      - PROMPT_CACHE_USER=prompt_cache_user
+
+      - PROMPT_CACHE_PASSWORD=prompt_password
+
+    networks:
+
+      - postgres-network
+
+volumes:
+
+  pgdata:
+
+
+networks:
+
+  postgres-network:
+
+    driver: bridge
