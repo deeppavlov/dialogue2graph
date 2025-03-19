@@ -21,21 +21,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y graphviz libgraphviz-dev python3.11-dev
-
-      - name: Set up Python 3.11
+      - name: set up python '3.11'
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Setup poetry and install dependencies
+      - name: setup poetry and install dependencies
         run: |
           python -m pip install --upgrade pip poetry
           python -m poetry install --with lint --no-ansi --no-interaction
 
-      - name: Run codestyle
+      - name: run codestyle
         run: |
           python -m poetry run poe lint
