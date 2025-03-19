@@ -1,7 +1,6 @@
 import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
-from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 import networkx as nx
@@ -79,7 +78,6 @@ class CycleGraphGenerator(BaseModel):
         pass
 
 
-@dataclass
 class GenerationPipeline(BaseModel):
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
@@ -118,7 +116,6 @@ class GenerationPipeline(BaseModel):
             max_fix_attempts=max_fix_attempts,
             seed=seed,
         )
-
         self.seed = seed
         if self.seed:
             self.cache = setup_cache()
@@ -176,32 +173,31 @@ class GenerationPipeline(BaseModel):
                 if self.repair_prompt:
                     self.repair_prompt.template = original_template
 
-                validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
-                if validation["is_valid"]:
-                    return {
-                        "is_valid": True,
-                        "graph": current_graph,
-                        "validation_details": {"invalid_transitions": [], "attempts_made": current_attempt + 1, "fixed_count": initial_invalid_count},
-                    }
-                else:
-                    logger.warning(f"⚠️ Found these {validation['invalid_transitions']} invalid transitions after fix attempt")
-
             except Exception as e:
                 logger.error(f"⚠️ Error during fix attempt: {str(e)}")
                 break
 
             current_attempt += 1
 
-        remaining_invalid = len(validation["invalid_transitions"])
-        return {
-            "is_valid": False,
-            "graph": current_graph,
-            "validation_details": {
-                "invalid_transitions": validation["invalid_transitions"],
-                "attempts_made": current_attempt,
-                "fixed_count": initial_invalid_count - remaining_invalid,
-            },
-        }
+        validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
+        if validation["is_valid"]:
+            return {
+                "is_valid": True,
+                "graph": current_graph,
+                "validation_details": {"invalid_transitions": [], "attempts_made": current_attempt + 1, "fixed_count": initial_invalid_count},
+            }
+        else:
+            logger.warning(f"⚠️ Found these {validation['invalid_transitions']} invalid transitions after fix attempt")
+            remaining_invalid = len(validation.get("invalid_transitions", []))
+            return {
+                "is_valid": False,
+                "graph": current_graph,
+                "validation_details": {
+                    "invalid_transitions": validation["invalid_transitions"],
+                    "attempts_made": current_attempt,
+                    "fixed_count": initial_invalid_count - remaining_invalid,
+                },
+            }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
         """Generates and validates a dialogue graph for given topic"""
@@ -311,10 +307,14 @@ class LoopedGraphGenerator(TopicGraphGenerator):
                 logger.info(f"✅ Successfully generated graph for {topic}")
                 logger.info(f"ID: {result.dialogues[0].id}")
                 successful_generations.append(
-                    {"graph": result.graph.model_dump(), "topic": result.topic, "dialogues": [d.model_dump() for d in result.dialogues]}
+                    {
+                        "graph": result.graph.model_dump(),
+                        "topic": result.topic,
+                        "dialogues": result.dialogues,  # The dialogues are already dictionaries
+                    }
                 )
             else:
-                logger.error(f"❌ Failed to generate graph for {topic}")
+                logger.info(f"❌ Failed to generate graph for {topic}")
                 logger.error(f"Error type: {result.error_type}")
                 logger.error(f"Error message: {result.message}")
 

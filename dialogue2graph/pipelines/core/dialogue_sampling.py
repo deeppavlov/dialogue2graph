@@ -27,7 +27,6 @@ class EnvSettings(BaseSettings, case_sensitive=True):
 env_settings = EnvSettings()
 
 
-# @AlgorithmRegistry.register(input_type=BaseGraph, output_type=Dialogue)
 class RecursiveDialogueSampler(DialogueGenerator):
     """Recursive dialogue sampler for the graph"""
 
