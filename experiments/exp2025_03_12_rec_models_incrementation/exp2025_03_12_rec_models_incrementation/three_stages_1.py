@@ -1,29 +1,35 @@
+import logging
+from typing import List
+from pydantic import BaseModel, Field
+
 import pandas as pd
 from langchain.prompts import PromptTemplate
 from langchain_openai  import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-from chatsky_llm_autoconfig.algorithms.base import GraphGenerator
-from chatsky_llm_autoconfig.graph import BaseGraph, Graph
-from chatsky_llm_autoconfig.schemas import DialogueGraph, DialogueNodes
-from chatsky_llm_autoconfig.dialogue import Dialogue
-from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
-from chatsky_llm_autoconfig.utils import call_llm_api, nodes2graph
-from chatsky_llm_autoconfig.settings import EnvSettings
-from chatsky_llm_autoconfig.missing_edges_prompt import three_1, three_2
-from chatsky_llm_autoconfig.prompts import (
+from dialogue2graph.pipelines.core.algorithms import GraphGenerator
+from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.core.schemas import DialogueGraph, Node
+from dialogue2graph.pipelines.core.dialogue import Dialogue
+from utils import call_llm_api, nodes2graph
+from settings import EnvSettings
+from missing_edges_prompt import three_1, three_2
+from prompts import (
  graph_example_1, part_1, part_2_v3
 )
-from chatsky_llm_autoconfig.metrics.automatic_metrics import (
-    is_same_structure,
-    compare_graphs
-)
+# from chatsky_llm_autoconfig.metrics.automatic_metrics import (
+#     is_same_structure,
+#     compare_graphs
+# )
 
+class DialogueNodes(BaseModel):
+    nodes: List[Node] = Field(description="List of nodes representing assistant states")
+    reason: str = Field(description="explanation")
 
 env_settings = EnvSettings()
 
-@AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
+# @AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class ThreeStagesGraphGenerator(GraphGenerator):
     """Graph generator based on list of diaolgues.
     Thee stages:
@@ -50,7 +56,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
         base_model = ChatOpenAI(model=self.model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
         model = base_model | PydanticOutputParser(pydantic_object=DialogueNodes)
-        nodes = call_llm_api(prompt.format(graph_example_1=graph_example_1), model, temp=0).model_dump()
+        nodes = call_llm_api(prompt.format(graph_example_1=graph_example_1), model).model_dump()
 
         last_user = False
 
@@ -82,7 +88,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
             model = base_model | PydanticOutputParser(pydantic_object=DialogueGraph)
 
-            result = call_llm_api(prompt.format(graph_dict=graph_dict), model, temp=0)
+            result = call_llm_api(prompt.format(graph_dict=graph_dict), model)
             if result is None:
                 return Graph(graph_dict={})
             result.reason = "Fixes: " + result.reason
@@ -100,10 +106,10 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     
     async def evaluate(self, dialogues, target_graph, report_type = "dict"):
         graph = self.invoke(dialogues)
-        report = {
-            "is_same_structure": is_same_structure(graph, target_graph),
-            "graph_match": compare_graphs(graph, target_graph),
-        }
+        # report = {
+        #     "is_same_structure": is_same_structure(graph, target_graph),
+        #     "graph_match": compare_graphs(graph, target_graph),
+        # }
         if report_type == "dataframe":
             report = pd.DataFrame(report, index=[0])
         elif report_type == "dict":

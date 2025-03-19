@@ -1,27 +1,26 @@
-from chatsky_llm_autoconfig.settings import EnvSettings
+from settings import EnvSettings
 
-from chatsky_llm_autoconfig.algorithms.base import GraphExtender
-from chatsky_llm_autoconfig.dialogue import Dialogue
-from chatsky_llm_autoconfig.graph import Graph, BaseGraph
-from chatsky_llm_autoconfig.schemas import DialogueGraph
+from dialogue2graph.pipelines.core.algorithms import GraphExtender
+from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.core.schemas import DialogueGraph
+from dialogue2graph.pipelines.core.dialogue import Dialogue
 
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
-from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
 
-from chatsky_llm_autoconfig.prompts import prompt_dialogs_and_graph
-from chatsky_llm_autoconfig.utils import call_llm_api
+from prompts import prompt_dialogs_and_graph
+from utils import call_llm_api
 
-from chatsky_llm_autoconfig.metrics.automatic_metrics import (
-    is_same_structure,
-    compare_graphs
-)
+# from chatsky_llm_autoconfig.metrics.automatic_metrics import (
+#     is_same_structure,
+#     compare_graphs
+# )
+
 
 env_settings = EnvSettings()
 
-
-@AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
+# @AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class AppendChain(GraphExtender):
     """
     Attaches an additional dialogue to an existing original dialogue graph.
@@ -66,8 +65,8 @@ class AppendChain(GraphExtender):
     
     async def evaluate(self, dialogues, graph, target_graph):
         result_graph = self.invoke(dialogues, graph)
-        report = {
-            "is_same_structure": is_same_structure(result_graph, target_graph),
-            "graph_match": compare_graphs(result_graph, target_graph),
-        }
+        # report = {
+        #     "is_same_structure": is_same_structure(result_graph, target_graph),
+        #     "graph_match": compare_graphs(result_graph, target_graph),
+        # }
         return report
