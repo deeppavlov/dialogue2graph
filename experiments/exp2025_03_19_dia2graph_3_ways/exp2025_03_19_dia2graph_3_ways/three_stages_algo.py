@@ -25,17 +25,12 @@ embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-m3", model_kwargs={"devi
 
 # @AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class ThreeStagesGraphGenerator(GraphGenerator):
-    """Graph generator based on list of diaolgues.
+    """Graph generator based on list of dialogues.
     Thee stages:
     1. Algorithmic grouping assistant utterances into nodes.
     2. Algorithmic connecting nodes by edges.
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
-    # prompt_name: str = ""
-
-    # def __init__(self, prompt_name: str=""):
-    #     super().__init__()
-    #     self.prompt_name = prompt_name
 
     def invoke(self, dialogues: list[Dialogue] = None, graph: DialogueGraph = None, model_name="chatgpt-4o-latest", temp=0) -> BaseGraph:
 
@@ -58,14 +53,9 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             nodes.append({"id":idx+1, "label": "", "is_start": start, "utterances": group})
 
         print("NODES: ", nodes)
-        # embeddings = HuggingFaceEmbeddings(model_name=env_settings.EMBEDDER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
         graph_dict = nodes2graph(nodes, dialogues, embeddings)
         print("RESULT: ", graph_dict, "\n")
         graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
-
-        # result_graph = Graph(graph_dict=graph_dict)
-        # print("SKIP")
-        # return result_graph 
 
         if not last_user:
             result_graph = Graph(graph_dict=graph_dict)

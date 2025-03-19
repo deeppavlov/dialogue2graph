@@ -1,11 +1,11 @@
 # Experiment name
-Topic2graph generation based non new prompt cycle_graph_generation_prompt_informal
+Topic2graph generation based on new prompt cycle_graph_generation_prompt_informal
 
 ## Hypotheses and steps
 
 Graphs from previous version topic2graph generation based on cycle_graph_generation_prompt_enhanced
 have quite formal language.
-chatgpt-4o is used
+Now chatgpt-4o is used
 
 ## Results
 
