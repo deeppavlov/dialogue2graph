@@ -12,30 +12,47 @@ Chatsky LLM-Autoconfiguration Documentation
 
    The project is being actively developed.
 
-Contents
---------
+:doc:`Getting Started <getting_started>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:doc:`Quickstart <quickstart>`
-..............................
+If you are new to **Chatsky LLM-Autoconfig**, please, check the ``Getting started`` section first to install the project.
 
-If you are new to **Chatsky LLM-Autoconfig**, please, check the :doc:`quickstart` page first to install the project.
+:doc:`Research <research>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-:doc:`User Guide <userguide>`
-................................
+This section contains overview of conducted research including creating data collections, metrics used for graph assessment.
+
+:doc:`User Guides <userguides>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section contains a series of usage examples including graph generation and visualisation.
 
-:doc:`Datasets <datasets>`
-..........................
+:doc:`API Reference <modules>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section contains overview of datasets for dialogue2graph problem.
+The API reference contains documentation for classes and abstractions used in the library which can be used to determine the exact 
+typing and behavior of all the functions involved.
+
+:doc:`Development <development>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``Development`` section shows the library's current development status and specifies the contribution rules.
+
+:doc:`About us <about_us>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can get more info about the development team in the ``About us`` section.
+
 
 
 .. toctree::
    :hidden:
    :maxdepth: 1
    
-   quickstart
-   userguide
-   datasets
+   getting_started
+   research
+   userguides
+   modules
+   development
+   about_us
 

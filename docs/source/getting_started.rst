@@ -1,8 +1,8 @@
-Quickstart
+Getting started
 ===========
 
 Installation
-------------
+~~~~~~~~~~~~
 
 - Install poetry v. 1.8.4 (`detailed installation guide <https://python-poetry.org/docs/>`_) 
 
@@ -29,3 +29,9 @@ Installation
 .. note::
 
     Never hardcode your personal tokens and other sensitive credentials. Use the ``.env`` file to store them.
+
+Key Concepts
+~~~~~~~~~~~~
+
+**Dialogue graph** is a graph that structures goal oriented dialogues. Nodes include dialogue intent and possible utterances. 
+Edges show how intents may be changed during dialogue flow. Edges also include possible utterances that capture intent change.

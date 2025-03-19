@@ -1,8 +1,5 @@
-Userguide
-=========
-
 Generate synthetic graph on certain topic
------------------------------------------
+=========================================
 
 Choose LLMs for generating and validating dialogue graph and invoke graph generation
 

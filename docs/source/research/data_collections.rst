@@ -52,4 +52,3 @@ Load reformatted d2g_generated dataset
     from datasets import load_dataset
 
     dataset = load_dataset("DeepPavlov/d2g_generated", token=True)
-
