@@ -17,15 +17,14 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     """Pydantic settings to get env variables"""
 
     model_config = SettingsConfigDict(
-        env_file=os.environ.get("PATH_TO_ENV", ".env"),
-        env_file_encoding="utf-8",
-        env_file_exists_ok=False  # Makes .env file optional
+        env_file=os.environ.get("PATH_TO_ENV", ".env"), env_file_encoding="utf-8", env_file_exists_ok=False  # Makes .env file optional
     )
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_BASE_URL: Optional[str] = None
     HUGGINGFACE_TOKEN: Optional[str] = None
     SAMPLING_MAX: Optional[int] = 1000000  # Default value
     DEVICE: Optional[str] = "cpu"  # Default value
+
 
 # Try to load settings, fall back to defaults if fails
 try:
