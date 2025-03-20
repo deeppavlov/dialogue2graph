@@ -170,7 +170,7 @@ def triplet_match(G1, G2, change_to_original_ids=False):
         )
         are_isomorphic = GM.is_isomorphic()
     else:
-        # Если один граф MultiDiGraph, а другой DiGraph, 
+        # Если один граф MultiDiGraph, а другой DiGraph,
         # или вообще неизвестный тип, можно либо бросать ошибку, либо делать fallback:
         GM = nx.isomorphism.DiGraphMatcher(
             g1,
@@ -384,6 +384,7 @@ def is_correct_lenght(D1: Dialogue, D2: Dialogue) -> bool:
 def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
     raise NotImplementedError
 
+
 def triplet_match_accuracy(G1, G2, change_to_original_ids=False):
     """
     Calculates a simple accuracy metric for node and edge matching based on 'triplet_match'.
@@ -444,9 +445,10 @@ def triplet_match_accuracy(G1, G2, change_to_original_ids=False):
         "edge_accuracy": edge_accuracy
     }
 
+
 def compute_graph_metrics(graph_list):
     """
-    Computes various statistics across a list of Graph objects, 
+    Computes various statistics across a list of Graph objects,
     where each Graph has a 'graph_dict' containing 'edges' and 'nodes'.
     
     Expects each element in 'graph_list' to be something like:
@@ -544,17 +546,18 @@ def all_paths_sampled(G, dialogue):
         4) For each path, check if its edge utterances appear as a subsequence in the dialogue:
             - We iterate over the dialogue messages in order.
             - For each edge in the path, we see if there's a message in the dialogue containing
-              at least one of the utterances from that edge. 
+              at least one of the utterances from that edge.
             - We must find them in the same order as the path. If we manage to match all edges,
               we say that path is "sampled" by the dialogue.
         5) If all such paths are found in the dialogue, return True; otherwise, False.
     """
 
+
     # --- Helper function to find all start nodes ---
     def get_start_nodes(graph):
         start_nodes = [n for n, data in graph.nodes(data=True) if data.get("is_start", False)]
         if not start_nodes:
-            # If no node is explicitly marked as start, 
+            # If no node is explicitly marked as start,
             # consider nodes that have no incoming edges.
             start_nodes = [n for n in graph.nodes if graph.in_degree(n) == 0]
         return start_nodes
@@ -566,7 +569,7 @@ def all_paths_sampled(G, dialogue):
     # --- Generate all possible paths from start nodes to end nodes ---
     def get_all_paths(graph, start_nodes, end_nodes):
         """
-        Returns a list of paths, where each path is a list of node IDs 
+        Returns a list of paths, where each path is a list of node IDs
         from one start node to one end node.
         """
         all_paths = []
@@ -587,7 +590,7 @@ def all_paths_sampled(G, dialogue):
         # Convert path of nodes -> list of edges [(u, v), (v, w), ...]
         edge_sequence = []
         for i in range(len(path_nodes) - 1):
-            u, v = path_nodes[i], path_nodes[i+1]
+            u, v = path_nodes[i], path_nodes[i + 1]
             if graph.has_edge(u, v):
                 data_for_edges = graph.get_edge_data(u, v)
                 all_utterances = set()
@@ -649,9 +652,3 @@ def all_paths_sampled(G, dialogue):
             return False
 
     return True
-
-
-
-
-
-
