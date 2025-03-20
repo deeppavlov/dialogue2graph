@@ -153,31 +153,15 @@ def triplet_match(G1, G2, change_to_original_ids=False):
 
     # --- ИСПРАВЛЕННАЯ ПРОВЕРКА ТИПА ГРАФА ---
     if isinstance(g1, nx.DiGraph) and isinstance(g2, nx.DiGraph):
-        GM = nx.isomorphism.DiGraphMatcher(
-            g1,
-            g2,
-            edge_match=lambda x, y: (
-                set(x["utterances"]).intersection(set(y["utterances"])) is not None
-            )
-        )
+        GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: (set(x["utterances"]).intersection(set(y["utterances"])) is not None))
         are_isomorphic = GM.is_isomorphic()
     elif isinstance(g1, nx.MultiDiGraph) and isinstance(g2, nx.MultiDiGraph):
-        GM = nx.isomorphism.MultiDiGraphMatcher(
-            g1,
-            g2,
-            edge_match=edge_match_for_multigraph
-        )
+        GM = nx.isomorphism.MultiDiGraphMatcher(g1, g2, edge_match=edge_match_for_multigraph)
         are_isomorphic = GM.is_isomorphic()
     else:
         # Если один граф MultiDiGraph, а другой DiGraph,
         # или вообще неизвестный тип, можно либо бросать ошибку, либо делать fallback:
-        GM = nx.isomorphism.DiGraphMatcher(
-            g1,
-            g2,
-            edge_match=lambda x, y: (
-                set(x["utterances"]).intersection(set(y["utterances"])) is not None
-            )
-        )
+        GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: (set(x["utterances"]).intersection(set(y["utterances"])) is not None))
         are_isomorphic = GM.is_isomorphic()
 
     if are_isomorphic:
@@ -193,14 +177,8 @@ def triplet_match(G1, G2, change_to_original_ids=False):
     edges2 = list(collapse_multiedges(g2.edges(data=True)).keys())
 
     # Полные Jaccard-матрицы
-    _, _, matrix_edges = jaccard_edges(
-        g1.edges(data=True), g2.edges(data=True),
-        verbose=False, return_matrix=True
-    )
-    _, _, matrix_nodes = jaccard_nodes(
-        g1.nodes(data=True), g2.nodes(data=True),
-        verbose=False, return_matrix=True
-    )
+    _, _, matrix_edges = jaccard_edges(g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True)
+    _, _, matrix_nodes = jaccard_nodes(g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True)
 
     # Основной цикл по ребрам
     for i, edge1 in enumerate(edges1):
@@ -211,15 +189,9 @@ def triplet_match(G1, G2, change_to_original_ids=False):
                 node1_src, node1_trg = parse_edge(edge1)
                 node2_src, node2_trg = parse_edge(edge2)
 
-                if (
-                    matrix_nodes[node1_src][node2_src] == 0.0
-                    and matrix_nodes[node1_trg][node2_trg] == 0.0
-                ):
+                if matrix_nodes[node1_src][node2_src] == 0.0 and matrix_nodes[node1_trg][node2_trg] == 0.0:
                     continue
-                elif (
-                    matrix_nodes[node1_src][node2_src] > 0
-                    and matrix_nodes[node1_trg][node2_trg] > 0
-                ):
+                elif matrix_nodes[node1_src][node2_src] > 0 and matrix_nodes[node1_trg][node2_trg] > 0:
                     if matrix_edges[i][j] > mapping_jaccard_values[edge1]:
                         mapping_jaccard_values[edge1] = matrix_edges[i][j]
                         edge_mapping[edge1] = edge2
@@ -268,9 +240,7 @@ def triplet_match(G1, G2, change_to_original_ids=False):
 
         for edge1, edge2 in edge_mapping.items():
             src1, trg1 = edge1.split("->")
-            new_edge_mapping[
-                f"{inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"
-            ] = edge2
+            new_edge_mapping[f"{inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"] = edge2
         return new_node_mapping, new_edge_mapping
 
     return node_mapping, edge_mapping
@@ -430,10 +400,7 @@ def triplet_match_accuracy(G1, G2, change_to_original_ids=False):
     total_edges = len(g1_edges)
     edge_accuracy = matched_edges / total_edges if total_edges > 0 else 0.0
 
-    return {
-        "node_accuracy": node_accuracy,
-        "edge_accuracy": edge_accuracy
-    }
+    return {"node_accuracy": node_accuracy, "edge_accuracy": edge_accuracy}
 
 
 def compute_graph_metrics(graph_list):

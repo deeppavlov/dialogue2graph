@@ -23,7 +23,7 @@ from dialogue2graph.metrics.automatic_metrics import (
     triplet_match,
     triplet_match_accuracy,
     compute_graph_metrics,
-    all_paths_sampled
+    all_paths_sampled,
 )
 
 
