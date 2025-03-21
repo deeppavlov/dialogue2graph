@@ -8,7 +8,6 @@
 
 import os
 import sys
-from pathlib import Path
 
 sys.path.insert(0, os.path.abspath('../../dialogue2graph'))
 
@@ -25,32 +24,22 @@ extensions = [
     'sphinx.ext.napoleon',
     "sphinx.ext.extlinks",
     'sphinx_autodoc_typehints',
+    'sphinxcontrib.apidoc',
 ]
 
 templates_path = ['_templates']
 
-autoapi_keep_files = True
-autoapi_dirs = [Path.cwd().parent.parent / "dialogue2graph"]
-autoapi_options = [
-    "members",
-    "undoc-members",
-    "show-inheritance",
-    "show-module-summary",
-    "special-members",
-    "imported-members",
-]
-autodoc_typehints = "description"
-autoapi_own_page_level = "function"
-autoapi_add_toctree_entry = False
-
 autodoc_default_options = {
     "members": True,
     "undoc-members": False,
-    "private-members": True,
+    "private-members": False,
     "special-members": "__call__",
     "member-order": "bysource",
     "exclude-members": "_abc_impl, model_fields, model_computed_fields, model_config",
 }
+
+apidoc_module_dir = '../../dialogue2graph'
+apidoc_output_dir = 'reference'
 
 
 # -- Options for HTML output -------------------------------------------------
