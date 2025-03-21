@@ -37,9 +37,6 @@ jobs:
           python -m poetry install --with docs --all-extras --no-ansi --no-interaction
 
       - name: build documentation
-        env:
-          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
-          TG_BOT_USERNAME: ${{ secrets.TG_BOT_USERNAME }}
         run: |
           python -m poetry run sphinx-build -b html docs/source/ docs/build/
 
