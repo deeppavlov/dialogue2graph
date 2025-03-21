@@ -4,6 +4,8 @@ Getting started
 Installation
 ~~~~~~~~~~~~
 
+To install the **Chatsky LLM-Autoconfiguration** project, please follow the steps below:
+
 - Install poetry v. 1.8.4 (`detailed installation guide <https://python-poetry.org/docs/>`_) 
 
 .. code-block:: bash
@@ -33,5 +35,5 @@ Installation
 Key Concepts
 ~~~~~~~~~~~~
 
-**Dialogue graph** is a graph that structures goal oriented dialogues. Nodes include dialogue intent and possible utterances. 
-Edges show how intents may be changed during dialogue flow. Edges also include possible utterances that capture intent change.
+A **dialogue graph** is a structured, graph-based representation of conversational data, where **nodes** represent key elements such 
+as utterances, intents, or states, and **edges** define the transitions between these elements.

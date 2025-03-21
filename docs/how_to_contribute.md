@@ -7,7 +7,7 @@ Our static html pages are built using `sphinx`. The pages should be written in `
 ## Contents
 
 ```
-build - here are stored html pages
+build - here are stored html pages (is ignored by git)
 source - here are stored rst files
 ```
 
@@ -16,10 +16,10 @@ source - here are stored rst files
 The pages are build running
 
 ```bash
-python -m poetry run sphinx-build -M html docs/source/ docs/build/
+python -m poetry run sphinx-build -b html docs/source/ docs/build/
 ```
 
-**Note**: sphinx is included in the poetry enviroment. If you are not yet installed poetry dependences, install them first.
+**Note**: sphinx is included in the poetry enviroment. If you haven't yet installed poetry dependences, install them first.
 
 **Links**:
 

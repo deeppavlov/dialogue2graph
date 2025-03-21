@@ -6,28 +6,26 @@
 Chatsky LLM-Autoconfiguration Documentation
 ===========================================
 
-**Chatsky LLM-Autoconfig** allows you to effortlessly create chatsky flows and scripts from dialogues using Large Language Models.
-
-.. note::
-
-   The project is being actively developed.
+**Chatsky LLM-Autoconfiguration** project extends the `Chatsky project <https://github.com/deeppavlov/chatsky>`_ by enhancing `chatsky flows` and `scripts` creation 
+with the help of Large Language Models (LLMs). This project is based on the dialogue2graph approach which helps to transform conversational data into structured, 
+graph-based representations.
 
 :doc:`Getting Started <getting_started>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you are new to **Chatsky LLM-Autoconfig**, please, check the ``Getting started`` section first to install the project.
+The ``Getting started`` section contains instructions of how to install the project. It also includes basic terms used in the documentation.
 
 :doc:`Research <research>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section contains overview of conducted research including creating data collections, metrics used for graph assessment.
+The ``Research`` section contains an overview of conducted research on dialogue2graph problem, including creating data collections, choosing metrics for graph assessment.
 
 :doc:`User Guides <userguides>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This section contains a series of usage examples including graph generation and visualisation.
+This section contains a series of usage examples, including graph generation and visualisation.
 
-:doc:`API Reference <modules>`
+:doc:`API Reference <reference/modules>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The API reference contains documentation for classes and abstractions used in the library which can be used to determine the exact 
@@ -52,7 +50,7 @@ You can get more info about the development team in the ``About us`` section.
    getting_started
    research
    userguides
-   modules
+   reference/modules
    development
    about_us
 

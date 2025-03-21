@@ -1,13 +1,16 @@
 Generate synthetic graph on certain topic
 =========================================
 
-Choose LLMs for generating and validating dialogue graph and invoke graph generation
+Use ``LoopedGraphGenerator`` to create a validated graph from several LLM generated dialogues concerning a given topic. 
 
 .. code-block:: python
 
     from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
     from langchain_openai import ChatOpenAI
 
+1. Choose LLMs for dialogue generation and dialogue validation
+
+.. code-block:: python
 
     gen_model = ChatOpenAI(
         model='gpt-4o',
@@ -20,6 +23,10 @@ Choose LLMs for generating and validating dialogue graph and invoke graph genera
         base_url=os.getenv("OPENAI_BASE_URL"),
         temperature=0,
     )
+
+2. Create ``LoopedGraphGenerator`` and use ``invoke`` method to get a dialogue graph
+
+.. code-block:: python
 
     pipeline = LoopedGraphGenerator(
         generation_model=gen_model,
