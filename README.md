@@ -41,6 +41,8 @@ cd chatsky-llm-autoconfig
 poetry install
 ```
 
+If you are planning to visualize your graphs consider installing **PyGraphviz** from [here](https://pygraphviz.github.io/).
+
 Ensure that dependencies were installed correctly by running any Python script
 
 ```bash
@@ -48,6 +50,7 @@ poetry run python <your_file_name>.py
 ```
 
 Create `.env` file to store credentials
+
 
 **Note:** never hardcode your personal tokens and other sensitive credentials. Use the `.env` file to store them.
 
