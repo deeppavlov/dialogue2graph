@@ -1,10 +1,39 @@
 # chatsky-llm-integration
 
-Chatsky LLM-Autoconfig allows you to effortlessly create chatsky flows and scripts from dialogues using Large Language Models.
+Chatsky LLM-Autoconfig allows you to effortlessly create *chatsky flows* and scripts from dialogues using Large Language Models.
 
-## How to start?
+## Contents
 
-You can simply clone this repo and run poetry install to install all dependencies
+```
+./dialogue2graph - source code
+./examples - usage scenarios
+./experiments - test field for conducting experiments
+./prompt_cache - utils for LLM output caching
+./scripts - scripts for `poethepoet` automation 
+```
+
+## Current Progress
+
+Supported graph types:
+
+- [x]  chain
+- [x]  single cycle
+- [x]  multi-cycle graph
+- [x]  complex graph with cycles
+
+Currently unsupported graph types:
+
+- [ ]  single node cycle
+
+## How to Start
+
+Install poetry v. 1.8.4 ([detailed installation guide](https://python-poetry.org/docs/))
+
+```bash
+pipx install poetry==1.8.4
+```
+
+Clone this repo and install project dependencies
 
 ```bash
 git clone https://github.com/deeppavlov/chatsky-llm-autoconfig.git
@@ -12,58 +41,64 @@ cd chatsky-llm-autoconfig
 poetry install
 ```
 
-Now you can try to run some scripts or previous experiments to see if everything is working as expected.
+If you are planning to visualize your graphs consider installing **PyGraphviz** from [here](https://pygraphviz.github.io/).
 
-To run python file using poetry run the following:
+Ensure that dependencies were installed correctly by running any Python script
 
 ```bash
 poetry run python <your_file_name>.py
 ```
 
-**!!! Put your tokens and other sensitive credentials only in `.env` files and never hardcode them !!!**
+Create `.env` file to store credentials
 
-## Contents
 
+**Note:** never hardcode your personal tokens and other sensitive credentials. Use the `.env` file to store them.
+
+## How to Use
+
+### Generate synthetic graph on certain topic
+
+Choose LLMs for generating and validating dialogue graph and invoke graph generation
+
+```python
+from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
+from langchain_openai import ChatOpenAI
+
+
+gen_model = ChatOpenAI(
+    model='gpt-4o',
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+)
+val_model = ChatOpenAI(
+    model='gpt-3.5-turbo',
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+    temperature=0,
+)
+
+pipeline = LoopedGraphGenerator(
+    generation_model=gen_model,
+    validation_model=val_model,
+)
+
+generated_graph = pipeline.invoke(topic="restaurant reservation")
 ```
-./data - Examples, tests and other dialogue data in JSON format
-./experiments - Test field for experimental features, test data and results
-./scripts - Here we put scripts needed for `poethepoet` automation (you probably do not need to look inside)
-./dev_packages/chatsky_llm_autoconfig - Directory containing all the code for the `chatsky_llm_autoconfig` module
+
+### Sample dialogues from existing dialogue graph
+
+Create graph instance and invoke sampler to get dialogue list
+
+```python
+from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
+from chatsky_llm_autoconfig.graph import Graph
+
+G = Graph(graph_dict={...})
+
+sampler = RecursiveDialogueSampler()
+sampler.invoke(graph=G) #-> list of Dialogue objects
 ```
 
-## Current progress
+## How to Contribute
 
-Supported types of graphs:
-
-- [x]  chain
-- [x]  single cycle
-
-Currently unsupported types:
-
-- [ ]  single node cycle
-- [ ]  multi-cycle graph
-- [ ]  incomplete graph
-- [ ]  complex graph with cycles
-
-## Current algorithms progress
-
-- Generate graph from scratch by topic (input: topic, output: graph) (for dataset generation)
-  - algorithms.topic_graph_generation.CycleGraphGenerator
-
-- change graph without changing graph structure (input: old graph + topic, output: new graph) (for dataset generation)
-
-- sampling from dialogue graph (input: graph, output: dialogue) (for dataset generation)
-  - algorithms.dialogue_generation.DialogueSampler
-
-- augmentation of dialogue (input: dialogue, output: dialogue) (for dataset generation)
-  - algorithms.dialogue_generation.DialogAugmentation
-
-- generate graph from scratch by dialogue (input: dialogue, output: graph) (decisive algorithm)
-  - GeneralGraphGenerator (experiments/2024.11.14_dialogue2graph)
-
-- generate graph based on existing graph (input: old graph + dialog, output: new graph) (extended decision algorithm)
-  - AppendChain (experiments/2024.11.17_concatenating_subchains_prompt)
-
-## How to contribute?
-
-You can find contribution guideline in [CONTRIBUTING.md](https://github.com/deeppavlov/chatsky-llm-autoconfig/blob/main/CONTRIBUTING.md)
+See contribution guideline [CONTRIBUTING.md](https://github.com/deeppavlov/chatsky-llm-autoconfig/blob/main/CONTRIBUTING.md)

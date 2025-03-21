@@ -1,6 +1,5 @@
 from typing import List
 from pydantic import BaseModel, Field
-
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 
 
@@ -28,3 +27,8 @@ class GraphGenerationResult(BaseModel):
     graph: DialogueGraph
     topic: str
     dialogues: List[Dialogue]
+
+
+class CompareResponse(BaseModel):
+    value: bool = Field(default=True, description="compare result")
+    description: str = Field(default=True, description="explanation")

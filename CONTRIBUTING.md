@@ -1,25 +1,23 @@
 # Contributing to chatsky-llm-integration
 
-Thank you for your interest in contributing to the dff-llm-integration project! We welcome contributions from the community to help improve and expand this Chatsky LLM-Autoconfig tool.
+Thank you for your interest in contributing to the chatsky-llm-integration project! We welcome contributions from the community to help improve and expand Chatsky LLM-Autoconfig tool.
 
 ## Getting Started
 
-1. Create a branch for your work. Branch names should start with the goal they are created (`feat`, `fix` etc.)
-2. Checkout to your branch
+1. Create a branch for your work. Preferable branch prefixes are `feat`, `fix`, `exp`.
+2. Switch to your branch
 
 ```bash
 git checkout <your_branch_name>
 ```
 
-3. Set up the development environment:
+3. Set up the development environment (it is activated automatically)
 
 ```bash
 poetry install --with docs,lint,tests
 ```
 
-The environment will be activated automatically.
-
-If you want to delete all the virtual environments, run
+To delete all the virtual environments, run
 
 ```bash
 poetry env remove --all
@@ -27,61 +25,46 @@ poetry env remove --all
 
 ## Updating Dependencies
 
-We use poetry.lock to ensure that all builds with the same lock file have the same 3rd-party library versions. This lets us know whether workflow fails due to our part or because a dependency update breaks something.
-
-In order to update versions specified in poetry.lock, run
+We use poetry as a dependency management tool. `poetry.lock` contains all dependencies for the current project. In order to update versions specified in the `poetry.lock`, run
 
 ```bash
 poetry update
 ```
 
-## How to test your code
-
-To test your algorithm or pipeline you need to follow these steps:
-
-1. Decorate your class with AlgorithRegistry.register() like so:
-
-```python
-from chatsky_llm_autoconfig.autometrics.registry import AlgorithmRegistry
-
-@AlgorithmRegistry.register(input_type=BaseGraph, output_type=list[Dialogue])
-class DialogueSampler(DialogueGenerator)
-```
-
-2. Make sure that `input_type` and `output_type` are matching with the signature of `.invoke()` method
-3. Run
-
-```bash
-poetry run python dev_packages/chatsky_llm_autoconfig/chatsky_llm_autoconfig/autometrics/run_autometrics.py
-```
-
-4. If metrics didn't drop then everything is fine. Add, commit and push as usual.
-
 ## How to Contribute
 
-1. Make your changes and test hypothesis in the `./experiments` folder as it is described in **Conducting experiments** section
+1. Experiment with the graphs (see the following section for a detail) or add new features to Chatsky LLM-Autoconfig tool
 
-3. Ensure linting using commands as
+2. Check linting and try to reformat your code running
 
+    ```bash
+    poetry run poe lint
+    poetry run poe format
+    ```
+
+3. Create a pull request
+
+**Tips:**
+- choose a proper name for your pull request,
+- add clear description of new features and fixes
+
+## Setting Experiments
+
+All conducted experiments should be stored in the `./experiments` folder, each experiment saved in the separate folder and named standardly, `exp<YYYY>_<MM>_<DD>_<hypothesis>`.
+
+To make new experiment with automatic folder creation run
+
+```bash
+poetry new <experiment_name>
 ```
-poetry run poe lint
-poetry run poe format
+
+or, alternatively, if you've already created the folder, run
+
+```bash
+poetry init
 ```
 
-4. Create a pull request with clear description of fixed and features
-
-## Pull Request format
-
-Please, include short description about your PR in it, give it a simple and inderstandable name.
-You can always create a draft PR and request review before you request to merge it into main repository.
-
-## Conducting experiments
-
-Until any of the code make it way to the main repo it should be tested in `./experiments` folder.
-Each of the experiments must lay in the separate folder with name like `<YYYY.MM.DD>_<experiment_name>`.
-Inside of this directory must be a `report.md` file with results, metrics, future plans and other relevant information.
-
-**!!! Do not put images into the folder you are commiting, use GoogleDrive instead !!!**
+**Note**: no images are allowed to put into folder. Please, consider using external links for attaching or using image files
 
 ## Coding Guidelines
 
@@ -90,9 +73,16 @@ Inside of this directory must be a `report.md` file with results, metrics, futur
 - Include docstrings for functions and classes
 - Write unit tests for new features or bug fixes
 
+## Pull Request Format
+
+- Name of your PR (keep it simple yet meaningful)
+- Short description (provide list of changes)
+
+When having any doubts, you can simply create a draft PR and request a review before merging your request.
+
 ## Reporting Issues
 
-If you encounter any bugs or have feature requests, please open an issue on the GitHub repository. Provide as much detail as possible, including:
+If you encounter any bugs or have feature requests, please, open an issue on the GitHub. Provide as much detail as possible, including:
 
 - A clear and descriptive title
 - Steps to reproduce the issue
@@ -102,16 +92,15 @@ If you encounter any bugs or have feature requests, please open an issue on the 
 
 ## Current Focus Areas
 
-We are currently working on supporting various types of graphs. Here's the current status:
+We are currently working on supporting various types of graphs.
 
-Supported types of graphs:
+Supported graph types:
 
 - [x] chain
 - [x] single cycle
+- [x] multi-cycle graph
+- [x] complex graph with cycles
 
-Currently unsupported types:
+Currently unsupported graph types:
 
 - [ ] single node cycle
-- [ ] multi-cycle graph
-- [ ] incomplete graph
-- [ ] complex graph with cycles
