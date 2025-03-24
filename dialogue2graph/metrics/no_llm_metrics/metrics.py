@@ -215,7 +215,6 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
     edges2 = list(_collapse_multiedges(g2.edges(data=True)).keys())
 
     _, _, matrix_edges = _get_jaccard_edges(g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True)
-
     _, _, matrix_nodes = _get_jaccard_nodes(g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True)
 
     for i, edge1 in enumerate(edges1):
@@ -255,10 +254,8 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
     if G1.node_mapping != {} and change_to_original_ids:
         new_node_mapping = {}
         new_edge_mapping = {}
-
-        # какому ключу в старом графе соовтетвует новый ключ в перенумерованном графе
         inverse_mapping = {v: k for k, v in G1.node_mapping.items()}
-        # {1: 1, 3: 2} -> {1: 1, 4:2} если в g1 4 перенумеровалась в 3
+
         for k, v in node_mapping.items():
             if inverse_mapping.get(k) is None and v is None:
                 new_node_mapping[k] = v
@@ -270,8 +267,7 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
         for edge1, edge2 in edge_mapping.items():
             src1, trg1 = edge1.split("->")
             new_edge_mapping[
-                f"""{
-                inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"""
+                f"{inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"
             ] = edge2
         return new_node_mapping, new_edge_mapping
 
@@ -294,7 +290,12 @@ def _get_dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     for dialogue in seq:
         assist_texts = [d.text.lower() for d in dialogue.messages if d.participant == "assistant"]
         user_texts = [d.text.lower() for d in dialogue.messages if d.participant == "user"]
-        result.extend([(a1, u, a2) for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])])
+        result.extend(
+            [
+                (a1, u, a2)
+                for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])
+            ]
+        )
     return set(result)
 
 
@@ -341,9 +342,7 @@ def match_triplets_dg(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
     Args:
         G: BaseGraph object containing the dialogue graph
         dialogues: List of Dialogue objects to check against
-
     """
-
     dialogue_set = _get_dialogue_triplets(dialogues)
     graph_set = _get_graph_triplets(G)
     graph_absent = dialogue_set - graph_set
@@ -377,9 +376,7 @@ def _match_ua(G: BaseGraph, user: str, assistant: str) -> bool:
     Returns:
         True if there is connection, False otherwise
     """
-
     nodes = G.nodes_by_utterance(assistant)
-
     for node in nodes:
         edges = G.edges_by_utterance(user)
         for edge in edges:
@@ -399,9 +396,7 @@ def _match_au(G: BaseGraph, assistant: str, user: str) -> bool:
     Returns:
         True if there is connection, False otherwise
     """
-
     nodes = G.nodes_by_utterance(assistant)
-
     for node in nodes:
         edges = G.edges_by_utterance(user)
         for edge in edges:
@@ -454,13 +449,16 @@ def are_paths_valid(G: BaseGraph, dialogues: list[Dialogue]) -> DialogueValidati
     Returns:
         list: for every dialogue {"value": bool, "description": "description with dialogue_id and list of pairs when there is no connection from one message to another"}
     """
-
     invalid_transitions = []
     for dialogue in dialogues:
         for idx in range(len(dialogue.messages) - 1):
             if not _match_pair(G, dialogue.messages[idx], dialogue.messages[idx + 1]):
                 invalid_transitions.append(
-                    {"from_message": dialogue.messages[idx].text, "to_message": dialogue.messages[idx + 1].text, "dialogue_id": dialogue.id}
+                    {
+                        "from_message": dialogue.messages[idx].text,
+                        "to_message": dialogue.messages[idx + 1].text,
+                        "dialogue_id": dialogue.id,
+                    }
                 )
     if invalid_transitions:
         return {"value": False, "invalid_transitions": invalid_transitions}
@@ -487,11 +485,12 @@ def is_correct_length(D1: Dialogue, D2: Dialogue) -> bool:
 
 
 def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
-     """
+    """
     Placeholder for any advanced similarity check between the dialogues' answers.
     Not implemented.
     """
-     raise NotImplementedError
+    raise NotImplementedError
+
 
 def all_utterances_present(G: BaseGraph, dialogues: List[Dialogue]):
     """
@@ -531,17 +530,14 @@ def all_utterances_present(G: BaseGraph, dialogues: List[Dialogue]):
 def triplet_match_accuracy(G1: BaseGraph, G2: BaseGraph, change_to_original_ids: bool = False) -> dict:
     """
     Calculates a simple accuracy metric for node and edge matching based on 'match_graph_triplets'.
-    
+
     Returns:
         {
             "node_accuracy": fraction_of_matched_nodes_in_G1,
             "edge_accuracy": fraction_of_matched_edges_in_G1
         }
     """
-    # Use the match_graph_triplets function from the new code (replaces triplet_match)
-    node_mapping, edge_mapping = match_graph_triplets(
-        G1, G2, change_to_original_ids=change_to_original_ids
-    )
+    node_mapping, edge_mapping = match_graph_triplets(G1, G2, change_to_original_ids=change_to_original_ids)
 
     # Count matching nodes
     g1_nodes = set(G1.graph.nodes())
@@ -585,7 +581,6 @@ def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
         - "total_edges" (int): Sum of edges across all graphs.
         - "total_nodes" (int): Sum of nodes across all graphs.
     """
-
     total_graphs = len(graph_list)
     with_cycles = 0
     total_edges = 0

@@ -1,11 +1,13 @@
-# tests/test_metrics.py
+# tests/test_automatic_metrics.py
+
 import json
 import pytest
 
-# Import your classes and functions
+# Remove the unused import to fix F401
+# from dialogue2graph.metrics.no_llm_metrics.metrics import match_graph_triplets  # <-- DELETED because it's unused
+
 from dialogue2graph import Graph, Dialogue
 from dialogue2graph.metrics.no_llm_metrics.metrics import (
-    match_graph_triplets,
     is_same_structure,
     match_triplets_dg,
     are_paths_valid,
@@ -16,40 +18,56 @@ from dialogue2graph.metrics.no_llm_metrics.metrics import (
     compute_graph_metrics
 )
 
+
 @pytest.fixture(scope="session")
 def test_data():
     """
-    Read JSON data once per pytest session 
+    Read JSON data once per pytest session
     (scope="session") to avoid re-reading the file.
     """
     with open("tests/test_metrics_data.json", encoding="utf-8") as f:
         data = json.load(f)
     return data
 
+
 @pytest.fixture
 def graph_positive_1(test_data):
-    """Graph #1 from the positive scenario (data[0])."""
+    """
+    Graph #1 from the positive scenario (data[0]).
+    """
     return Graph(graph_dict=test_data[0]["graph"])
+
 
 @pytest.fixture
 def graph_positive_2(test_data):
-    """Graph #2 from the positive scenario (data[1])."""
+    """
+    Graph #2 from the positive scenario (data[1]).
+    """
     return Graph(graph_dict=test_data[1]["graph"])
+
 
 @pytest.fixture
 def graph_negative(test_data):
-    """Graph #3 from the negative scenario (data[2])."""
+    """
+    Graph #3 from the negative scenario (data[2]).
+    """
     return Graph(graph_dict=test_data[2]["graph"])
+
 
 @pytest.fixture
 def dialogues_positive(test_data):
-    """Dialogues for the positive scenario (from data[0])."""
+    """
+    Dialogues for the positive scenario (from data[0]).
+    """
     raw_dialogues = test_data[0]["dialogues"]
     return [Dialogue(**dlg) for dlg in raw_dialogues]
 
+
 @pytest.fixture
 def dialogues_negative(test_data):
-    """Dialogues for the negative scenario (from data[2])."""
+    """
+    Dialogues for the negative scenario (from data[2]).
+    """
     raw_dialogues = test_data[2]["dialogues"]
     return [Dialogue(**dlg) for dlg in raw_dialogues]
 
@@ -58,25 +76,33 @@ def dialogues_negative(test_data):
 # Tests for the positive scenario
 # -------------------------------
 
+
 def test_all_utterances_present_positive(graph_positive_1, dialogues_positive):
     """
-    Check that all utterances (from nodes and edges) of the first graph appear in the positive dialogues.
+    Check that all utterances (from nodes and edges) of the first graph
+    appear in the positive dialogues.
     """
     result = all_utterances_present(graph_positive_1, dialogues_positive)
     assert result is True, f"Expected value=True, but got: {result}"
+
 
 def test_is_same_structure_positive(graph_positive_1, graph_positive_2):
     """
     Check that the two positive graphs are isomorphic (is_same_structure).
     """
-    assert is_same_structure(graph_positive_1, graph_positive_2) is True, "Expected the graphs to have the same structure."
+    assert is_same_structure(graph_positive_1, graph_positive_2) is True, (
+        "Expected the graphs to have the same structure."
+    )
+
 
 def test_match_triplets_dg_positive(graph_positive_1, dialogues_positive):
     """
-    Check that all (assistant-user-assistant) triplets in the dialogues match the triplets in the graph (match_triplets_dg).
+    Check that all (assistant-user-assistant) triplets in the dialogues
+    match the triplets in the graph (match_triplets_dg).
     """
     result = match_triplets_dg(graph_positive_1, dialogues_positive)
     assert result["value"] is True, f"Expected value=True, but got: {result}"
+
 
 def test_are_paths_valid_positive(graph_positive_1, dialogues_positive):
     """
@@ -84,6 +110,7 @@ def test_are_paths_valid_positive(graph_positive_1, dialogues_positive):
     """
     result = are_paths_valid(graph_positive_1, dialogues_positive)
     assert result["value"] is True, f"Not all paths are valid: {result}"
+
 
 def test_match_roles_positive(dialogues_positive):
     """
@@ -96,6 +123,7 @@ def test_match_roles_positive(dialogues_positive):
     d2 = dialogues_positive[1]
     assert match_roles(d1, d2) is True, "Expected the roles to match completely between dialogues."
 
+
 def test_is_correct_length_positive(dialogues_positive):
     """
     Check that the first two positive dialogues have the same number of messages.
@@ -107,6 +135,7 @@ def test_is_correct_length_positive(dialogues_positive):
     d2 = dialogues_positive[1]
     assert is_correct_length(d1, d2) is True, "Expected the dialogues to have the same length."
 
+
 def test_triplet_match_accuracy_positive(graph_positive_1, graph_positive_2):
     """
     Check the matching accuracy (triplet_match_accuracy) between two positive graphs.
@@ -115,6 +144,7 @@ def test_triplet_match_accuracy_positive(graph_positive_1, graph_positive_2):
     acc = triplet_match_accuracy(graph_positive_1, graph_positive_2)
     assert acc["node_accuracy"] == 1.0, "Expected node_accuracy to be 1.0"
     assert acc["edge_accuracy"] == 1.0, "Expected edge_accuracy to be 1.0"
+
 
 def test_compute_graph_metrics_positive(graph_positive_1, graph_positive_2):
     """
@@ -139,21 +169,26 @@ def test_compute_graph_metrics_positive(graph_positive_1, graph_positive_2):
 # Tests for the negative scenario
 # -------------------------------
 
+
 def test_all_utterances_present_negative(graph_negative, dialogues_negative):
     """
     Check that not all utterances of the graph are present in the negative dialogues.
     We expect the function to return NOT True but a set of missing phrases.
     """
     result = all_utterances_present(graph_negative, dialogues_negative)
-    assert isinstance(result, set) and len(result) > 0, \
+    assert isinstance(result, set) and len(result) > 0, (
         "Expected some utterances to be missing in the dialogues."
+    )
+
 
 def test_is_same_structure_negative(graph_positive_1, graph_negative):
     """
     Check that the positive and negative graphs are not isomorphic.
     """
-    assert is_same_structure(graph_positive_1, graph_negative) is False, \
+    assert is_same_structure(graph_positive_1, graph_negative) is False, (
         "Expected the graphs to have different structures."
+    )
+
 
 def test_match_triplets_dg_negative(graph_negative, dialogues_negative):
     """
@@ -164,12 +199,16 @@ def test_match_triplets_dg_negative(graph_negative, dialogues_negative):
     assert result["value"] is False, "Expected value=False in the negative scenario."
     assert "absent_triplets" in result, "Expected 'absent_triplets' key in the result."
 
+
 def test_are_paths_valid_negative(graph_negative, dialogues_negative):
     """
     In the negative example, the paths might still be valid or partially invalid.
     """
     result = are_paths_valid(graph_negative, dialogues_negative)
-    assert result["value"] is True, "Expected value=True in negative data; adjust checks if needed."
+    assert result["value"] is True, (
+        "Expected value=True in negative data; adjust checks if needed."
+    )
+
 
 def test_is_correct_length_negative(dialogues_negative):
     """
@@ -180,14 +219,21 @@ def test_is_correct_length_negative(dialogues_negative):
 
     d1 = dialogues_negative[0]
     d2 = dialogues_negative[1]
-    assert is_correct_length(d1, d2) is False, \
+    assert is_correct_length(d1, d2) is False, (
         "Expected the dialogues to have different lengths, so is_correct_length should be False."
+    )
+
 
 def test_triplet_match_accuracy_negative(graph_positive_1, graph_negative):
     """
-    Check that when comparing a positive graph with a negative graph, the matching accuracy is less than 1.0.
+    Check that when comparing a positive graph with a negative graph,
+    the matching accuracy is less than 1.0.
     """
     acc = triplet_match_accuracy(graph_positive_1, graph_negative)
     # According to data: node_accuracy = 0.875, edge_accuracy = 0.9
-    assert acc["node_accuracy"] < 1.0, "Expected node_accuracy to be less than 1.0 in the negative scenario"
-    assert acc["edge_accuracy"] < 1.0, "Expected edge_accuracy to be less than 1.0 in the negative scenario"
+    assert acc["node_accuracy"] < 1.0, (
+        "Expected node_accuracy to be less than 1.0 in the negative scenario"
+    )
+    assert acc["edge_accuracy"] < 1.0, (
+        "Expected edge_accuracy to be less than 1.0 in the negative scenario"
+    )
