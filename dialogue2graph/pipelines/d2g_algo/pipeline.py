@@ -9,6 +9,7 @@ from .three_stages_algo import ThreeStagesGraphGenerator as AlgoGenerator
 
 load_dotenv()
 
+
 class Pipeline(BasePipeline):
     """Algorithmic graph generator pipeline"""
 
@@ -17,11 +18,10 @@ class Pipeline(BasePipeline):
     def __init__(self, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
         super().__init__(graph_generator=AlgoGenerator(filling_llm, embedder))
 
-
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, data: Dialogue|list[Dialogue]|dict|list[list]|list[dict]) -> Graph:
+    def invoke(self, data: Dialogue | list[Dialogue] | dict | list[list] | list[dict]) -> Graph:
 
         dialogues = parse_data(data)
 

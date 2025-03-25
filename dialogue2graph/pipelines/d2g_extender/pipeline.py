@@ -10,22 +10,24 @@ from dialogue2graph.pipelines.helpers.parse_data import parse_data
 
 load_dotenv()
 
+
 class Pipeline(BasePipeline):
     """LLM graph extender pipeline"""
 
     graph_generator: AlgoGenerator
     graph_extender: Extender
+
     def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
         super().__init__(graph_extender=Extender(extending_llm, filling_llm, embedder), graph_generator=AlgoGenerator(filling_llm, embedder))
 
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, data: Dialogue|list[Dialogue]|dict|list[list]|list[dict]) -> Graph:
+    def invoke(self, data: Dialogue | list[Dialogue] | dict | list[list] | list[dict]) -> Graph:
 
         dialogues = parse_data(data)
         graph = self.graph_generator.invoke(dialogues[:1])
-        for idx in range(1,len(dialogues)):
-            graph = self.graph_extender.invoke(dialogues[idx:idx+1],graph)
+        for idx in range(1, len(dialogues)):
+            graph = self.graph_extender.invoke(dialogues[idx : idx + 1], graph)
 
         return graph

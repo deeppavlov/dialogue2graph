@@ -17,15 +17,16 @@ from dialogue2graph.metrics.no_llm_metrics import is_same_structure
 
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
-from .prompts import (
- graph_example_1, grouping_prompt_1, grouping_prompt_2
-)
+from .prompts import graph_example_1, grouping_prompt_1, grouping_prompt_2
+
 
 class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
+
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
+
 
 class ThreeStagesGraphGenerator(GraphGenerator):
     """Graph generator based on list of dialogues.
@@ -39,10 +40,8 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     filling_llm: BaseChatModel
     embedder: HuggingFaceEmbeddings
 
-
     def __init__(self, grouping_llm: BaseChatModel, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
-        super().__init__(grouping_llm = grouping_llm, filling_llm = filling_llm,
-                         embedder = embedder)
+        super().__init__(grouping_llm=grouping_llm, filling_llm=filling_llm, embedder=embedder)
 
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None) -> BaseGraph:
 
@@ -51,7 +50,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         for idx, dial in enumerate(dialogue):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-        prompt = PromptTemplate(template=grouping_prompt_1+"{graph_example_1}. "+prompt_extra, input_variables=["graph_example_1"], partial_variables=partial_variables)
+        prompt = PromptTemplate(
+            template=grouping_prompt_1 + "{graph_example_1}. " + prompt_extra,
+            input_variables=["graph_example_1"],
+            partial_variables=partial_variables,
+        )
 
         chain = self.grouping_llm | PydanticOutputParser(pydantic_object=DialogueNodes)
 
@@ -61,11 +64,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         _, _, last_user = get_helpers(dialogue)
 
         try:
-            graph_dict = connect_nodes(nodes['nodes'], dialogue, self.embedder)
+            graph_dict = connect_nodes(nodes["nodes"], dialogue, self.embedder)
         except Exception as e:
             print(e)
             return Graph({})
-        graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
+        graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
 
         try:
             if not last_user:
@@ -77,7 +80,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             for idx, dial in enumerate(dialogue):
                 partial_variables[f"var_{idx}"] = dial.to_list()
                 prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-            prompt = PromptTemplate(template=add_edge_prompt_1+"{graph_dict}. "+add_edge_prompt_2+prompt_extra, input_variables=["graph_dict"], partial_variables=partial_variables)
+            prompt = PromptTemplate(
+                template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + prompt_extra,
+                input_variables=["graph_dict"],
+                partial_variables=partial_variables,
+            )
 
             print("PROMPT: ", prompt)
 
@@ -88,8 +95,8 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             if result is None:
                 return Graph(graph_dict={})
             result.reason = "Fixes: " + result.reason
-            graph_dict=result.model_dump()
-            if not all([e['target'] for e in graph_dict['edges']]):
+            graph_dict = result.model_dump()
+            if not all([e["target"] for e in graph_dict["edges"]]):
                 return Graph(graph_dict={})
             result_graph = Graph(graph_dict=graph_dict)
             return result_graph
@@ -100,7 +107,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, dialogues, target_graph, report_type = "dict"):
+    async def evaluate(self, dialogues, target_graph, report_type="dict"):
         graph = self.invoke(dialogues)
         report = {
             "is_same_structure": is_same_structure(graph, target_graph),

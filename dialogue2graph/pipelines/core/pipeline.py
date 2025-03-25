@@ -14,5 +14,3 @@ class Pipeline(BaseModel):
             output = step.invoke(data)
             data = output
         return output
-
-

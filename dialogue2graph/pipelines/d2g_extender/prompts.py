@@ -15,7 +15,7 @@ so number of dialogue paths is multiplied and all the utterances combinations of
 6) Main goal of combining different assistant's utterances into one node is to make the graph structure more efficient and decrease number of nodes.
 6) As a result of combining nodes there can appear new dialogue paths. And not all of them can be logical.
 And the reason of this is a combined node generates combined contexts, meaning every utterance in a combined node will have
-additional context from the other utterance in the node.  
+additional context from the other utterance in the node.
 7) You shall track such cases of illogical paths and separate combined nodes if needed.
 8) Consider all the dialogue paths which appear as a result of combining utterances and make sure they are coherent and logical.
 If they aren't, separate your nodes when needed.

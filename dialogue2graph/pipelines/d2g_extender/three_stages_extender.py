@@ -17,17 +17,17 @@ from dialogue2graph.metrics.no_llm_metrics import is_same_structure
 from dialogue2graph.metrics.llm_metrics import compare_graphs
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
-from .prompts import (
- extending_prompt_part_1, extending_prompt_part_2
-)
+from .prompts import extending_prompt_part_1, extending_prompt_part_2
 
 
 class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
+
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 dialogue_sampler = RecursiveDialogueSampler()
+
 
 class ThreeStagesGraphGenerator(GraphExtender):
     """Graph generator based on graph and additional list of dialogues.
@@ -42,31 +42,31 @@ class ThreeStagesGraphGenerator(GraphExtender):
     embedder: HuggingFaceEmbeddings
 
     def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
-        super().__init__(extending_llm = extending_llm, filling_llm = filling_llm,
-                         embedder = embedder)
+        super().__init__(extending_llm=extending_llm, filling_llm=filling_llm, embedder=embedder)
 
     def invoke(self, dialogues: list[Dialogue] = None, graph: Graph = None) -> BaseGraph:
 
         partial_variables = {}
-        partial_variables["var_0"] = dialogues[0].to_list()
-        prompt_extra = extending_prompt_part_2 + f" Dialogue_0: {{var_0}}"
-        prompt = PromptTemplate(template=extending_prompt_part_1+"{graph}. "+prompt_extra, input_variables=["graph"], partial_variables=partial_variables)
+        dialogue = dialogues[0].to_list()
+        prompt = PromptTemplate(
+            template=extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + "{dialogue}", input_variables=["graph", "dialogue"]
+        )
 
         chain = self.extending_llm | PydanticOutputParser(pydantic_object=DialogueNodes)
-        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict))]
+        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict, dialogue=dialogue))]
         nodes = chain.invoke(messages).model_dump()
 
         _, _, last_user = get_helpers(dialogues)
 
-        for idx in range(len(nodes['nodes'])):
-            nodes['nodes'][idx]['utterances'] = list(set(nodes['nodes'][idx]['utterances']))
+        for idx in range(len(nodes["nodes"])):
+            nodes["nodes"][idx]["utterances"] = list(set(nodes["nodes"][idx]["utterances"]))
         try:
             sampled_dialogues = dialogue_sampler.invoke(graph, 15)
-            graph_dict = connect_nodes(nodes['nodes'], sampled_dialogues, self.embedder)
+            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues, self.embedder)
         except Exception as e:
             print(e)
             return Graph({})
-        graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
+        graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
 
         try:
             if not last_user:
@@ -78,7 +78,11 @@ class ThreeStagesGraphGenerator(GraphExtender):
             for idx, dial in enumerate(dialogues):
                 partial_variables[f"var_{idx}"] = dial.to_list()
                 prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-            prompt = PromptTemplate(template=add_edge_prompt_1+"{graph_dict}. "+add_edge_prompt_2+prompt_extra, input_variables=["graph_dict"], partial_variables=partial_variables)
+            prompt = PromptTemplate(
+                template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + prompt_extra,
+                input_variables=["graph_dict"],
+                partial_variables=partial_variables,
+            )
             messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
             chain = self.filling_llm | PydanticOutputParser(pydantic_object=DialogueGraph)
             result = chain.invoke(messages)
@@ -86,8 +90,8 @@ class ThreeStagesGraphGenerator(GraphExtender):
             if result is None:
                 return Graph(graph_dict={})
             result.reason = "Fixes: " + result.reason
-            graph_dict=result.model_dump()
-            if not all([e['target'] for e in graph_dict['edges']]):
+            graph_dict = result.model_dump()
+            if not all([e["target"] for e in graph_dict["edges"]]):
                 return Graph(graph_dict={})
             result_graph = Graph(graph_dict=graph_dict)
             return result_graph
@@ -97,8 +101,8 @@ class ThreeStagesGraphGenerator(GraphExtender):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-    
-    async def evaluate(self, dialogues, target_graph, report_type = "dict"):
+
+    async def evaluate(self, dialogues, target_graph, report_type="dict"):
         graph = self.invoke(dialogues)
         report = {
             "is_same_structure": is_same_structure(graph, target_graph),

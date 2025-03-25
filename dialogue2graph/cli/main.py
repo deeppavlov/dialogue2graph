@@ -1,4 +1,3 @@
-import os
 import click
 import yaml
 from dotenv import load_dotenv
@@ -33,10 +32,10 @@ def gen_data(env: str, cfg: str, topic: str, output: str):
 
 
 @cli.command()
-@click.option('--env', '-e', help='Path to .env file', default='.env')
+@click.option("--env", "-e", help="Path to .env file", default=".env")
 @click.option("--cfg", "-c", help="Path to cfg.yml file", default="cfg.yml")
-@click.option('--dialogues', '-d', help='Input dialogues file', required=True)
-@click.option('--output', '-o', help='Output graph file', required=True)
+@click.option("--dialogues", "-d", help="Input dialogues file", required=True)
+@click.option("--output", "-o", help="Output graph file", required=True)
 def gen_graph_algo(env: str, cfg: str, dialogues: str, output: str):
     """Generate graph from dialogues data via d2g_algo pipeline"""
     load_dotenv(env)
@@ -48,11 +47,12 @@ def gen_graph_algo(env: str, cfg: str, dialogues: str, output: str):
             print(exc)
     generate_algo(dialogues, config, output)
 
+
 @cli.command()
-@click.option('--env', '-e', help='Path to .env file', default='.env')
+@click.option("--env", "-e", help="Path to .env file", default=".env")
 @click.option("--cfg", "-c", help="Path to cfg.yml file", default="cfg.yml")
-@click.option('--dialogues', '-d', help='Input dialogues file', required=True)
-@click.option('--output', '-o', help='Output graph file', required=True)
+@click.option("--dialogues", "-d", help="Input dialogues file", required=True)
+@click.option("--output", "-o", help="Output graph file", required=True)
 def gen_graph_llm(env: str, cfg: str, dialogues: str, output: str):
     """Generate graph from dialogues data via d2g_llm pipeline"""
     load_dotenv(env)
@@ -64,11 +64,12 @@ def gen_graph_llm(env: str, cfg: str, dialogues: str, output: str):
             print(exc)
     generate_llm(dialogues, config, output)
 
+
 @cli.command()
-@click.option('--env', '-e', help='Path to .env file', default='.env')
+@click.option("--env", "-e", help="Path to .env file", default=".env")
 @click.option("--cfg", "-c", help="Path to cfg.yml file", default="cfg.yml")
-@click.option('--dialogues', '-d', help='Input dialogues file', required=True)
-@click.option('--output', '-o', help='Output graph file', required=True)
+@click.option("--dialogues", "-d", help="Input dialogues file", required=True)
+@click.option("--output", "-o", help="Output graph file", required=True)
 def gen_graph_extender(env: str, cfg: str, dialogues: str, output: str):
     """Generate graph from dialogues data via d2g_llm pipeline"""
     load_dotenv(env)
@@ -79,6 +80,7 @@ def gen_graph_extender(env: str, cfg: str, dialogues: str, output: str):
         except yaml.YAMLError as exc:
             print(exc)
     generate_extender(dialogues, config, output)
+
 
 if __name__ == "__main__":
     cli()

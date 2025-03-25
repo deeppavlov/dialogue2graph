@@ -10,6 +10,7 @@ from .three_stages_llm import ThreeStagesGraphGenerator as LLMGenerator
 
 load_dotenv()
 
+
 class Pipeline(BasePipeline):
     """LLM graph generator pipeline"""
 
@@ -21,7 +22,7 @@ class Pipeline(BasePipeline):
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, data: Dialogue|list[Dialogue]|dict|list[list]|list[dict]) -> Graph:
+    def invoke(self, data: Dialogue | list[Dialogue] | dict | list[list] | list[dict]) -> Graph:
 
         dialogues = parse_data(data)
         graph = self.graph_generator.invoke(dialogues)

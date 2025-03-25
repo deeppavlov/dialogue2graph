@@ -32,8 +32,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     embedder: HuggingFaceEmbeddings
 
     def __init__(self, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
-        super().__init__(filling_llm = filling_llm,
-                         embedder = embedder)
+        super().__init__(filling_llm=filling_llm, embedder=embedder)
 
     def invoke(self, dialogues: list[Dialogue] = None, graph: DialogueGraph = None) -> BaseGraph:
 
@@ -47,20 +46,24 @@ class ThreeStagesGraphGenerator(GraphGenerator):
                 start = True
             else:
                 start = False
-            nodes.append({"id":idx+1, "label": "", "is_start": start, "utterances": group})
+            nodes.append({"id": idx + 1, "label": "", "is_start": start, "utterances": group})
 
         graph_dict = connect_nodes(nodes, dialogues, self.embedder)
-        graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
+        graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
 
         if not last_user:
             result_graph = Graph(graph_dict=graph_dict)
-            return result_graph    
+            return result_graph
         partial_variables = {}
         prompt_extra = ""
         for idx, dial in enumerate(dialogues):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-        prompt = PromptTemplate(template=add_edge_prompt_1+"{graph_dict}. "+add_edge_prompt_2+prompt_extra, input_variables=["graph_dict"], partial_variables=partial_variables)
+        prompt = PromptTemplate(
+            template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + prompt_extra,
+            input_variables=["graph_dict"],
+            partial_variables=partial_variables,
+        )
 
         chain = self.filling_llm | PydanticOutputParser(pydantic_object=DialogueGraph)
 
@@ -69,16 +72,16 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         if result is None:
             return Graph(graph_dict={})
         result.reason = "Fixes: " + result.reason
-        graph_dict=result.model_dump()
-        if not all([e['target'] for e in graph_dict['edges']]):
+        graph_dict = result.model_dump()
+        if not all([e["target"] for e in graph_dict["edges"]]):
             return Graph(graph_dict={})
         result_graph = Graph(graph_dict=graph_dict)
         return result_graph
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-    
-    async def evaluate(self, dialogues, target_graph, report_type = "dict"):
+
+    async def evaluate(self, dialogues, target_graph, report_type="dict"):
         graph = self.invoke(dialogues)
         report = {
             "is_same_structure": is_same_structure(graph, target_graph),

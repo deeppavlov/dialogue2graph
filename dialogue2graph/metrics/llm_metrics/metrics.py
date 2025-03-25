@@ -5,7 +5,6 @@ LLM Metrics.
 This module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
 """
 
-import os
 import logging
 import json
 from typing import List, TypedDict, Union
@@ -228,8 +227,13 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
 
 
 def compare_graphs(
-    G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93,
-    llm_comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo", device="cuda:0"
+    G1: BaseGraph,
+    G2: BaseGraph,
+    embedder: str = "BAAI/bge-m3",
+    sim_th: float = 0.93,
+    llm_comparer: str = "gpt-4o",
+    formatter: str = "gpt-3.5-turbo",
+    device="cuda:0",
 ) -> CompareResponse:
     """
     Compares two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.

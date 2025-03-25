@@ -48,7 +48,8 @@ class RecursiveDialogueSampler(DialogueGenerator):
         finished_nodes = graph.get_ends()
         if not finished_nodes:
             cycle_nodes = find_graph_ends(
-                graph, model=ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=temp)
+                graph,
+                model=ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=temp),
             )["value"]
         finished_nodes = mix_ends(graph, finished_nodes, cycle_nodes)
         while repeats <= upper_limit:
