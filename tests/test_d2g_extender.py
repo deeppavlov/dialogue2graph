@@ -2,7 +2,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import pytest
 from dialogue2graph.pipelines.core.graph import Graph
-from dialogue2graph.pipelines.d2g_algo.pipeline import Pipeline
+from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
 
 
 @pytest.fixture
@@ -172,9 +172,10 @@ def sample_dialogues():
 def test_d2g_algo(sample_dialogues):
     """Test that graph is generated without errors"""
 
+    extending_llm = ChatOpenAI(model="chatgpt-4o-latest", temperature=0)
     filling_llm = ChatOpenAI(model="o3-mini", temperature=1)
     embedder = HuggingFaceEmbeddings(model_name="BAAI/bge-m3", model_kwargs={"device": "cuda:0"})
-    pipeline = Pipeline(filling_llm, embedder)
+    pipeline = Pipeline(extending_llm, filling_llm, embedder)
 
     graph = pipeline.invoke(sample_dialogues)
 

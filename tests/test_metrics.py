@@ -1,6 +1,6 @@
 import pytest
 from dialogue2graph.pipelines.core.graph import Graph
-from dialogue2graph.metrics.automatic_metrics import jaccard_edges, jaccard_nodes, collapse_multiedges, collapse_multinodes
+from dialogue2graph.metrics.no_llm_metrics.metrics import _get_jaccard_edges, _get_jaccard_nodes, _collapse_multiedges, _collapse_multinodes
 
 
 @pytest.fixture
@@ -22,17 +22,17 @@ def test_graph_metrics_initialization(sample_graph_dict):
     edges = list(graph.graph.edges(data=True))
     nodes = list(graph.graph.nodes(data=True))
 
-    collapsed_edges = collapse_multiedges(edges)
+    collapsed_edges = _collapse_multiedges(edges)
     assert isinstance(collapsed_edges, dict)
 
-    collapsed_nodes = collapse_multinodes(nodes)
+    collapsed_nodes = _collapse_multinodes(nodes)
     assert isinstance(collapsed_nodes, dict)
 
     # Test Jaccard metrics
-    max_values, max_indices = jaccard_edges(edges, edges)
+    max_values, max_indices = _get_jaccard_edges(edges, edges)
     assert isinstance(max_values, list)
     assert isinstance(max_indices, list)
 
-    max_values, max_indices = jaccard_nodes(nodes, nodes)
+    max_values, max_indices = _get_jaccard_nodes(nodes, nodes)
     assert isinstance(max_values, list)
     assert isinstance(max_indices, list)
