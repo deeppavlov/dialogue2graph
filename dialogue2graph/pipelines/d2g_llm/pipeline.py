@@ -1,47 +1,28 @@
 # from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
-from pydantic import BaseModel
+from dotenv import load_dotenv
+from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.graph import Graph
-from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.pipelines.cycled_graphs.three_stages_algo import ThreeStagesGraphGenerator as AlgoGenerator
-from dialogue2graph.pipelines.cycled_graphs.three_stages_llm import ThreeStagesGraphGenerator as LLMGenerator
-from dialogue2graph.pipelines.cycled_graphs.three_stages_extender import ThreeStagesGraphGenerator as Extender
+from dialogue2graph.pipelines.helpers.parse_data import parse_data
+from .three_stages_llm import ThreeStagesGraphGenerator as LLMGenerator
 
+load_dotenv()
 
-# class Pipeline(BasePipeline):
-class Pipeline(BaseModel):
-    _preloaded_generators = {}
+class Pipeline(BasePipeline):
+    """LLM graph generator pipeline"""
+
+    graph_generator: LLMGenerator
+
+    def __init__(self, grouping_llm: BaseChatModel, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
+        super().__init__(graph_generator=LLMGenerator(grouping_llm, filling_llm, embedder))
 
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, data: Dialogue|list[Dialogue]|Graph, config_name="algo") -> Graph:
+    def invoke(self, data: Dialogue|list[Dialogue]|dict|list[list]|list[dict]) -> Graph:
 
-        if config_name not in self._preloaded_generators:
-            if config_name == "algo":
-                self._preloaded_generators[config_name] = AlgoGenerator()
-            elif config_name == "llm":
-                self._preloaded_generators[config_name] = LLMGenerator()
-            elif config_name == "extender":
-                self._preloaded_generators[config_name] = Extender()
-                if "algo" not in self._preloaded_generators:
-                    self._preloaded_generators["algo"] = AlgoGenerator()
-        if isinstance(data, Graph):
-            if "sampler" not in self._preloaded_generators:
-                self._preloaded_generators["sampler"] = RecursiveDialogueSampler()
-            dialogues = self._preloaded_generators["sampler"].invoke(data,15)
-        elif isinstance(data, Dialogue):
-            dialogues = [data]
-        elif len(data) > 0 and isinstance(data[0], Dialogue):
-            dialogues = data
-        elif len(data) > 0 and isinstance(data[0], dict):
-            dialogues = [Dialogue().from_list(d['messages']) for d in data]
-
-        if config_name in ["algo","llm"]:
-            graph = self._preloaded_generators[config_name].invoke(dialogues)
-        elif config_name == "extender":
-            graph = self._preloaded_generators["algo"].invoke(dialogues[:1])
-            for idx in range(1,len(data)):
-                graph, _ = self._preloaded_generators[config_name].invoke(dialogues[idx:idx+1],graph)
-
+        dialogues = parse_data(data)
+        graph = self.graph_generator.invoke(dialogues)
         return graph

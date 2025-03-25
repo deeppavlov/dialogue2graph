@@ -9,4 +9,10 @@ class Pipeline(BaseModel):
     def _validate_pipeline(self):
         pass
 
+    def invoke(self, data):
+        for step in self.steps:
+            output = step.invoke(data)
+            data = output
+        return output
+
 

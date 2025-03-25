@@ -1,8 +1,8 @@
-three_1 = """Your input is a dialogue graph from customer chatbot system - it is
+add_edge_prompt_1 = """Your input is a dialogue graph from customer chatbot system - it is
 a set of nodes with assistant's utterances and a set of edges that are
 triggered by user requests: """
 
-three_2 = """This is the end of input graph.
+add_edge_prompt_2 = """This is the end of input graph.
 **Rules:**
 1) is_start field in the node is an entry point to the whole graph.
 2) Nodes are assistant's utterances, edges are utterances from the user.
@@ -37,5 +37,3 @@ find right node and create new edge.
 I will give a list of dialogues, your return is a fixed version of dialogue graph above according to the rules above.
 18) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
 List of dialogues: """
-
-prompt_name = "Feb_10"
