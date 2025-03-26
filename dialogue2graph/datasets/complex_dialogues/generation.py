@@ -310,7 +310,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
                     {
                         "graph": result.graph.model_dump(),
                         "topic": result.topic,
-                        "dialogues": result.dialogues,  # The dialogues are already dictionaries
+                        "dialogues": [dia.model_dump() for dia in result.dialogues],  # The dialogues are already dictionaries
                     }
                 )
             else:
