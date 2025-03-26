@@ -266,9 +266,7 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
 
         for edge1, edge2 in edge_mapping.items():
             src1, trg1 = edge1.split("->")
-            new_edge_mapping[
-                f"{inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"
-            ] = edge2
+            new_edge_mapping[f"{inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"] = edge2
         return new_node_mapping, new_edge_mapping
 
     return node_mapping, edge_mapping
@@ -290,12 +288,7 @@ def _get_dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     for dialogue in seq:
         assist_texts = [d.text.lower() for d in dialogue.messages if d.participant == "assistant"]
         user_texts = [d.text.lower() for d in dialogue.messages if d.participant == "user"]
-        result.extend(
-            [
-                (a1, u, a2)
-                for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])
-            ]
-        )
+        result.extend([(a1, u, a2) for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])])
     return set(result)
 
 
@@ -551,10 +544,7 @@ def triplet_match_accuracy(G1: BaseGraph, G2: BaseGraph, change_to_original_ids:
     total_edges = len(g1_edges)
     edge_accuracy = matched_edges / total_edges if total_edges > 0 else 0.0
 
-    return {
-        "node_accuracy": node_accuracy,
-        "edge_accuracy": edge_accuracy
-    }
+    return {"node_accuracy": node_accuracy, "edge_accuracy": edge_accuracy}
 
 
 def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
