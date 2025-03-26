@@ -26,17 +26,23 @@ from langchain.schema import HumanMessage
 
 
 class EnvSettings(BaseSettings, case_sensitive=True):
+    """Pydantic settings to get env variables"""
 
-    model_config = SettingsConfigDict(env_file=os.environ["PATH_TO_ENV"], env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=os.environ.get("PATH_TO_ENV", ".env"), env_file_encoding="utf-8", env_file_exists_ok=False  # Makes .env file optional
+    )
+    OPENAI_API_KEY: Optional[str] = None
+    OPENAI_BASE_URL: Optional[str] = None
+    HUGGINGFACE_TOKEN: Optional[str] = None
+    SAMPLING_MAX: Optional[int] = 1000000  # Default value
+    DEVICE: Optional[str] = "cpu"  # Default value
 
-    OPENAI_API_KEY: Optional[str]
-    OPENAI_BASE_URL: Optional[str]
-    HUGGINGFACE_TOKEN: Optional[str]
-    SAMPLING_MAX: Optional[int]
-    DEVICE: Optional[str]
 
-
-env_settings = EnvSettings()
+# Try to load settings, fall back to defaults if fails
+try:
+    env_settings = EnvSettings()
+except Exception:
+    env_settings = EnvSettings(_env_file=None)
 
 
 # Set up logging

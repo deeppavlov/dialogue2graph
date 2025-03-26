@@ -22,6 +22,9 @@ class MockChatModel(BaseChatModel):
     def _llm_type(self):
         return "mock"
 
+    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
+        return super()._generate(messages, stop, run_manager, **kwargs)
+
 
 def test_cycle_graph_generator_init():
     """Test CycleGraphGenerator initialization"""
@@ -32,14 +35,16 @@ def test_cycle_graph_generator_init():
 def test_generation_pipeline_init():
     """Test GenerationPipeline initialization"""
     model = MockChatModel()
-    pipeline = GenerationPipeline(generation_model=model, validation_model=model, generation_prompt=None, repair_prompt=None)
+    pipeline = GenerationPipeline(
+        generation_model=model, theme_validation_model=model, validation_model=model, generation_prompt=None, repair_prompt=None
+    )
     assert isinstance(pipeline, GenerationPipeline)
 
 
 def test_looped_graph_generator_init():
     """Test LoopedGraphGenerator initialization"""
     model = MockChatModel()
-    generator = LoopedGraphGenerator(generation_model=model, validation_model=model)
+    generator = LoopedGraphGenerator(generation_model=model, validation_model=model, theme_validation_model=model)
     assert isinstance(generator, LoopedGraphGenerator)
 
 
