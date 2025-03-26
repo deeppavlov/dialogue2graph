@@ -1,0 +1,493 @@
+[
+  {
+    "graph": {
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to buy a house"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I will pay in cash"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I will use a credit card"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Yes, I have no debts"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Actually, I want to use a credit card instead"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 7,
+          "utterances": [
+            "Yes, I have no debts"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 8,
+          "utterances": [
+            "Actually, I want to pay in cash instead"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 9,
+          "utterances": [
+            "Yes, I am ready to proceed"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 10,
+          "utterances": [
+            "No, I need to change my payment method"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 4,
+          "utterances": [
+            "I will use a credit card"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 9,
+          "utterances": [
+            "Yes, I am ready to proceed"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 10,
+          "utterances": [
+            "No, I need to change my payment method"
+          ]
+        },
+        {
+          "source": 8,
+          "target": 3,
+          "utterances": [
+            "I will pay in cash"
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "Yes, finalize the purchase"
+          ]
+        },
+        {
+          "source": 9,
+          "target": 12,
+          "utterances": [
+            "Wait, I need to go back"
+          ]
+        },
+        {
+          "source": 10,
+          "target": 2,
+          "utterances": [
+            "I need to choose a different payment method"
+          ]
+        },
+        {
+          "source": 11,
+          "target": 13,
+          "utterances": [
+            "Thank you, I’m done"
+          ]
+        },
+        {
+          "source": 12,
+          "target": 2,
+          "utterances": [
+            "I need to review my choices"
+          ]
+        }
+      ],
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "How can I help you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "payment_method",
+          "is_start": false,
+          "utterances": [
+            "How would you like to pay—cash or credit card?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "cash_payment",
+          "is_start": false,
+          "utterances": [
+            "Do you confirm that you have no debts?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "credit_payment",
+          "is_start": false,
+          "utterances": [
+            "Do you confirm that you have no debts?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "cash_confirmation",
+          "is_start": false,
+          "utterances": [
+            "Are you ready to proceed with the purchase?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "switch_to_credit",
+          "is_start": false,
+          "utterances": [
+            "You want to switch to a credit card. Is that correct?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "credit_confirmation",
+          "is_start": false,
+          "utterances": [
+            "Are you ready to proceed with the purchase?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "switch_to_cash",
+          "is_start": false,
+          "utterances": [
+            "You want to switch to cash. Is that correct?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "final_confirmation",
+          "is_start": false,
+          "utterances": [
+            "Would you like to finalize the purchase now?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "change_payment",
+          "is_start": false,
+          "utterances": [
+            "Would you like to choose a different payment method?"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "success",
+          "is_start": false,
+          "utterances": [
+            "Your purchase has been completed. Anything else I can help with?"
+          ]
+        },
+        {
+          "id": 12,
+          "label": "go_back",
+          "is_start": false,
+          "utterances": [
+            "Would you like to go back and review your choices?"
+          ]
+        },
+        {
+          "id": 13,
+          "label": "exit",
+          "is_start": false,
+          "utterances": [
+            "Have a great day!"
+          ]
+        }
+      ]
+    },
+    "topic": "buying a house with a cash or a credit card, but buyer cannot have debts",
+    "dialogues": [
+      {
+        "messages": [
+          {
+            "text": "How can I help you today?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I want to buy a house",
+            "participant": "user"
+          },
+          {
+            "text": "How would you like to pay—cash or credit card?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I will use a credit card",
+            "participant": "user"
+          },
+          {
+            "text": "Do you confirm that you have no debts?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Yes, I have no debts",
+            "participant": "user"
+          },
+          {
+            "text": "Are you ready to proceed with the purchase?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Yes, I am ready to proceed",
+            "participant": "user"
+          },
+          {
+            "text": "Would you like to finalize the purchase now?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Yes, finalize the purchase",
+            "participant": "user"
+          },
+          {
+            "text": "Your purchase has been completed. Anything else I can help with?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Thank you, I’m done",
+            "participant": "user"
+          },
+          {
+            "text": "Have a great day!",
+            "participant": "assistant"
+          }
+        ],
+        "topic": "",
+        "validate": true
+      },
+      {
+        "messages": [
+          {
+            "text": "How can I help you today?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I want to buy a house",
+            "participant": "user"
+          },
+          {
+            "text": "How would you like to pay—cash or credit card?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I will use a credit card",
+            "participant": "user"
+          },
+          {
+            "text": "Do you confirm that you have no debts?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Yes, I have no debts",
+            "participant": "user"
+          },
+          {
+            "text": "Are you ready to proceed with the purchase?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Yes, I am ready to proceed",
+            "participant": "user"
+          },
+          {
+            "text": "Would you like to finalize the purchase now?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Wait, I need to go back",
+            "participant": "user"
+          },
+          {
+            "text": "Would you like to go back and review your choices?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I need to review my choices",
+            "participant": "user"
+          },
+          {
+            "text": "How would you like to pay—cash or credit card?",
+            "participant": "assistant"
+          }
+        ],
+        "topic": "",
+        "validate": true
+      },
+      {
+        "messages": [
+          {
+            "text": "How can I help you today?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I want to buy a house",
+            "participant": "user"
+          },
+          {
+            "text": "How would you like to pay—cash or credit card?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I will use a credit card",
+            "participant": "user"
+          },
+          {
+            "text": "Do you confirm that you have no debts?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Yes, I have no debts",
+            "participant": "user"
+          },
+          {
+            "text": "Are you ready to proceed with the purchase?",
+            "participant": "assistant"
+          },
+          {
+            "text": "No, I need to change my payment method",
+            "participant": "user"
+          },
+          {
+            "text": "Would you like to choose a different payment method?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I need to choose a different payment method",
+            "participant": "user"
+          },
+          {
+            "text": "How would you like to pay—cash or credit card?",
+            "participant": "assistant"
+          }
+        ],
+        "topic": "",
+        "validate": true
+      },
+      {
+        "messages": [
+          {
+            "text": "How can I help you today?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I want to buy a house",
+            "participant": "user"
+          },
+          {
+            "text": "How would you like to pay—cash or credit card?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I will pay in cash",
+            "participant": "user"
+          },
+          {
+            "text": "Do you confirm that you have no debts?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Actually, I want to use a credit card instead",
+            "participant": "user"
+          },
+          {
+            "text": "You want to switch to a credit card. Is that correct?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I will use a credit card",
+            "participant": "user"
+          },
+          {
+            "text": "Do you confirm that you have no debts?",
+            "participant": "assistant"
+          }
+        ],
+        "topic": "",
+        "validate": true
+      },
+      {
+        "messages": [
+          {
+            "text": "How can I help you today?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I want to buy a house",
+            "participant": "user"
+          },
+          {
+            "text": "How would you like to pay—cash or credit card?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I will use a credit card",
+            "participant": "user"
+          },
+          {
+            "text": "Do you confirm that you have no debts?",
+            "participant": "assistant"
+          },
+          {
+            "text": "Actually, I want to pay in cash instead",
+            "participant": "user"
+          },
+          {
+            "text": "You want to switch to cash. Is that correct?",
+            "participant": "assistant"
+          },
+          {
+            "text": "I will pay in cash",
+            "participant": "user"
+          },
+          {
+            "text": "Do you confirm that you have no debts?",
+            "participant": "assistant"
+          }
+        ],
+        "topic": "",
+        "validate": true
+      }
+    ]
+  }
+]

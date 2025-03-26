@@ -60,10 +60,20 @@ jobs:
           path: docs/build/
           retention-days: 3
 
-      - name: deploy website
+      - name: deploy website for master
         if: ${{ github.ref == 'refs/heads/master' }}
         uses: JamesIves/github-pages-deploy-action@v4.6.4
         with:
           branch: gh-pages
           folder: docs/build/
+          target-folder: / # Deploy to root for master branch
           single-commit: True
+
+      - name: deploy website for dev
+        if: ${{ github.ref == 'refs/heads/dev' }}
+        uses: JamesIves/github-pages-deploy-action@v4.6.4
+        with:
+          branch: gh-pages
+          folder: docs/build/
+          target-folder: dev # Deploy to /dev subdirectory
+          single-commit: false # Keep history for dev branch
