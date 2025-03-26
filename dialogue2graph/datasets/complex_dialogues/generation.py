@@ -1,7 +1,6 @@
 import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
-from dataclasses import dataclass
 
 from pydantic import BaseModel, Field
 import networkx as nx
@@ -11,14 +10,14 @@ from langchain_core.output_parsers.pydantic import PydanticOutputParser
 from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.metrics.automatic_metrics import all_utterances_present
+from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
 from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
 from dialogue2graph.utils.prompt_caching import setup_cache, add_uuid_to_prompt
 
-from .prompts import cycle_graph_generation_prompt_enhanced, cycle_graph_repair_prompt
+from .prompts import cycle_graph_generation_prompt_informal, cycle_graph_repair_prompt, graph_example
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -55,7 +54,7 @@ class CycleGraphGenerator(BaseModel):
     def __init__(self, **data):
         super().__init__(**data)
 
-    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=42, **kwargs) -> BaseGraph:
+    def invoke(self, model: BaseChatModel, prompt: PromptTemplate, seed=None, **kwargs) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
         """
@@ -79,18 +78,18 @@ class CycleGraphGenerator(BaseModel):
         pass
 
 
-@dataclass
 class GenerationPipeline(BaseModel):
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
+    theme_validation_model: BaseChatModel
     validation_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
-    generation_prompt: Optional[PromptTemplate] = Field(default_factory=lambda: cycle_graph_generation_prompt_enhanced)
+    generation_prompt: Optional[PromptTemplate] = Field(default_factory=lambda: cycle_graph_generation_prompt_informal)
     repair_prompt: Optional[PromptTemplate] = Field(default_factory=lambda: cycle_graph_repair_prompt)
     min_cycles: int = 2
     max_fix_attempts: int = 3
     dialogue_sampler: RecursiveDialogueSampler = Field(default_factory=RecursiveDialogueSampler)
-    seed: int = 42
+    seed: Optional[int] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -99,15 +98,17 @@ class GenerationPipeline(BaseModel):
     def __init__(
         self,
         generation_model: BaseChatModel,
+        theme_validation_model: BaseChatModel,
         validation_model: BaseChatModel,
         generation_prompt: Optional[PromptTemplate],
         repair_prompt: Optional[PromptTemplate],
-        min_cycles: int = 0,
+        min_cycles: int = 2,
         max_fix_attempts: int = 2,
-        seed: int = 42,
+        seed: Optional[int] = None,
     ):
         super().__init__(
             generation_model=generation_model,
+            theme_validation_model=theme_validation_model,
             validation_model=validation_model,
             generation_prompt=generation_prompt,
             repair_prompt=repair_prompt,
@@ -115,8 +116,9 @@ class GenerationPipeline(BaseModel):
             max_fix_attempts=max_fix_attempts,
             seed=seed,
         )
-        self.cache = setup_cache()
         self.seed = seed
+        if self.seed:
+            self.cache = setup_cache()
 
     def validate_graph_cycle_requirement(self, graph: BaseGraph, min_cycles: int = 2) -> Dict[str, Any]:
         """Checks the graph for cycle requirements"""
@@ -143,13 +145,14 @@ class GenerationPipeline(BaseModel):
         """Checks transitions in the graph and attempts to fix invalid ones via LLM"""
         logger.info("Validating initial graph")
         initial_validation = are_triplets_valid(graph, self.validation_model, return_type="detailed")
+        logger.info("Finished validating initial graph")
         if initial_validation["is_valid"]:
             return {"is_valid": True, "graph": graph, "validation_details": {"invalid_transitions": [], "attempts_made": 0, "fixed_count": 0}}
 
         initial_invalid_count = len(initial_validation["invalid_transitions"])
         current_graph = graph
         current_attempt = 0
-
+        logger.warning(f"⚠️ Found these {initial_validation['invalid_transitions']} invalid transitions")
         while current_attempt < max_attempts:
             logger.info(f"🔄 Fix attempt {current_attempt + 1}/{max_attempts}")
             try:
@@ -170,38 +173,45 @@ class GenerationPipeline(BaseModel):
                 if self.repair_prompt:
                     self.repair_prompt.template = original_template
 
-                validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
-                if validation["is_valid"]:
-                    return {
-                        "is_valid": True,
-                        "graph": current_graph,
-                        "validation_details": {"invalid_transitions": [], "attempts_made": current_attempt + 1, "fixed_count": initial_invalid_count},
-                    }
-                else:
-                    logger.warning(f"⚠️ Found these {validation['invalid_transitions']} invalid transitions after fix attempt")
-
             except Exception as e:
                 logger.error(f"⚠️ Error during fix attempt: {str(e)}")
                 break
 
             current_attempt += 1
 
-        remaining_invalid = len(validation["invalid_transitions"])
-        return {
-            "is_valid": False,
-            "graph": current_graph,
-            "validation_details": {
-                "invalid_transitions": validation["invalid_transitions"],
-                "attempts_made": current_attempt,
-                "fixed_count": initial_invalid_count - remaining_invalid,
-            },
-        }
+        validation = are_triplets_valid(current_graph, self.validation_model, return_type="detailed")
+        if validation["is_valid"]:
+            return {
+                "is_valid": True,
+                "graph": current_graph,
+                "validation_details": {"invalid_transitions": [], "attempts_made": current_attempt + 1, "fixed_count": initial_invalid_count},
+            }
+        else:
+            logger.warning(f"⚠️ Found these {validation['invalid_transitions']} invalid transitions after fix attempt")
+            remaining_invalid = len(validation.get("invalid_transitions", []))
+            return {
+                "is_valid": False,
+                "graph": current_graph,
+                "validation_details": {
+                    "invalid_transitions": validation["invalid_transitions"],
+                    "attempts_made": current_attempt,
+                    "fixed_count": initial_invalid_count - remaining_invalid,
+                },
+            }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
         """Generates and validates a dialogue graph for given topic"""
         try:
             logger.info("Generating Graph ...")
-            graph = self.graph_generator.invoke(model=self.generation_model, prompt=self.generation_prompt, topic=topic, seed=self.seed)
+            graph = self.graph_generator.invoke(
+                model=self.generation_model, prompt=self.generation_prompt, graph_example=graph_example, topic=topic, seed=self.seed
+            )
+            logger.info(f"Graph generated is {graph.graph_dict}")
+            if not graph.edges_match_nodes():
+                return GenerationError(error_type=ErrorType.INVALID_GRAPH_STRUCTURE, message="Generated graph is wrong: edges don't match nodes")
+            graph = graph.remove_duplicated_nodes()
+            if graph is None:
+                return GenerationError(error_type=ErrorType.INVALID_GRAPH_STRUCTURE, message="Generated graph is wrong: utterances in nodes doubled")
 
             cycle_validation = self.validate_graph_cycle_requirement(graph, self.min_cycles)
             if not cycle_validation["meets_requirements"]:
@@ -213,27 +223,48 @@ class GenerationPipeline(BaseModel):
             logger.info("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
-            if not all_utterances_present(graph, sampled_dialogues):
+            if not match_triplets_dg(graph, sampled_dialogues)["value"]:
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
                 )
 
-            theme_validation = is_theme_valid(graph, self.validation_model, topic)
+            theme_validation = is_theme_valid(graph, self.theme_validation_model, topic)
             if not theme_validation["value"]:
                 return GenerationError(error_type=ErrorType.INVALID_THEME, message=f"Theme validation failed: {theme_validation['description']}")
 
             logger.info("Validating and fixing transitions...")
             transition_validation = self.check_and_fix_transitions(graph=graph, max_attempts=self.max_fix_attempts)
+            logger.info("Finished validating and fixing transitions")
 
             if not transition_validation["is_valid"]:
                 invalid_transitions = transition_validation["validation_details"]["invalid_transitions"]
                 return GenerationError(
                     error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
-                    message=f"Found {len(invalid_transitions)} invalid transitions"
+                    message=f"Found {len(invalid_transitions)} invalid transitions "
                     f"after {transition_validation['validation_details']['attempts_made']} fix attempts",
                 )
 
-            return GraphGenerationResult(graph=transition_validation["graph"].graph_dict, topic=topic, dialogues=sampled_dialogues)
+            graph = transition_validation["graph"]
+            if transition_validation["validation_details"]["attempts_made"]:
+                if not graph.edges_match_nodes():
+                    return GenerationError(error_type=ErrorType.INVALID_GRAPH_STRUCTURE, message="Generated graph is wrong: edges don't match nodes")
+                graph = graph.remove_duplicated_nodes()
+                if graph is None:
+                    return GenerationError(
+                        error_type=ErrorType.INVALID_GRAPH_STRUCTURE, message="Generated graph is wrong: utterances in nodes doubled"
+                    )
+                print("Sampling dialogues...")
+                sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
+                print(f"Sampled {len(sampled_dialogues)} dialogues")
+                if not match_triplets_dg(graph, sampled_dialogues)["value"]:
+                    return GenerationError(
+                        error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
+                    )
+
+            logger.info(f"going to return: {transition_validation['graph'].graph_dict}")
+            ret = GraphGenerationResult(graph=transition_validation["graph"].graph_dict, topic=topic, dialogues=sampled_dialogues)
+            logger.info(f"ret: {ret}")
+            return ret
 
         except Exception as e:
             logger.error(f"Unexpected error during generation: {str(e)}")
@@ -249,14 +280,16 @@ class LoopedGraphGenerator(TopicGraphGenerator):
     validation_model: BaseChatModel
     pipeline: GenerationPipeline
 
-    def __init__(self, generation_model: BaseChatModel, validation_model: BaseChatModel):
+    def __init__(self, generation_model: BaseChatModel, validation_model: BaseChatModel, theme_validation_model: BaseChatModel):
         super().__init__(
             generation_model=generation_model,
             validation_model=validation_model,
+            theme_validation_model=theme_validation_model,
             pipeline=GenerationPipeline(
                 generation_model=generation_model,
                 validation_model=validation_model,
-                generation_prompt=cycle_graph_generation_prompt_enhanced,
+                theme_validation_model=theme_validation_model,
+                generation_prompt=cycle_graph_generation_prompt_informal,
                 repair_prompt=cycle_graph_repair_prompt,
             ),
         )
@@ -272,11 +305,16 @@ class LoopedGraphGenerator(TopicGraphGenerator):
 
             if isinstance(result, GraphGenerationResult):
                 logger.info(f"✅ Successfully generated graph for {topic}")
+                logger.info(f"ID: {result.dialogues[0].id}")
                 successful_generations.append(
-                    {"graph": result.graph.model_dump(), "topic": result.topic, "dialogues": [d.model_dump() for d in result.dialogues]}
+                    {
+                        "graph": result.graph.model_dump(),
+                        "topic": result.topic,
+                        "dialogues": result.dialogues,  # The dialogues are already dictionaries
+                    }
                 )
             else:
-                logger.error(f"❌ Failed to generate graph for {topic}")
+                logger.info(f"❌ Failed to generate graph for {topic}")
                 logger.error(f"Error type: {result.error_type}")
                 logger.error(f"Error message: {result.message}")
 
