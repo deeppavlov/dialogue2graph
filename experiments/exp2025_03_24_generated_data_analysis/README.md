@@ -23,3 +23,9 @@
 ## Greeting node/edge in the middle of the graph problem
 
 * In D2G data no greeting node appear in the middle of the graph, same goes for edges.
+
+## Duplicate dialogue effect
+
+* There are about 200 dialogues where greeting is repeated in the dialogue. It seems that this dialogues can be split into 2 dialogues, as seemingly this has no effect on graph structure and topic is the same.
+
+* Typical utterance that precedes duplicate: *I have another question*
