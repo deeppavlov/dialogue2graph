@@ -20,6 +20,11 @@ author = 'Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
 
 extensions = [
     'sphinx.ext.autodoc',
+    "sphinx.ext.autosummary",
+    "sphinx.ext.doctest",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
     'sphinx.ext.viewcode', 
     'sphinx.ext.napoleon',
     "sphinx.ext.extlinks",
@@ -38,8 +43,11 @@ autodoc_default_options = {
     "exclude-members": "_abc_impl, model_fields, model_computed_fields, model_config",
 }
 
+autodoc_typehints = "both"
+
 apidoc_module_dir = '../../dialogue2graph'
 apidoc_output_dir = 'reference'
+apidoc_separate_modules = True
 
 
 # -- Options for HTML output -------------------------------------------------
