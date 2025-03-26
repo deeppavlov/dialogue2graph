@@ -6,15 +6,15 @@ from dialogue2graph.metrics.similarity import compare_strings
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
-def connect_nodes(nodes: list, dialogues: list[Dialogue], embedder: HuggingFaceEmbeddings) -> dict:
-    """Connecting dialogue graph nodes with edges via searching dialogue utterances in list of nodes based on embedder similarity model
+def connect_nodes(nodes: list, dialogues: list[Dialogue], utt_sim: HuggingFaceEmbeddings) -> dict:
+    """Connecting dialogue graph nodes with edges via searching dialogue utterances in list of nodes based on utt_sim similarity model
     Input: nodes and list of dialogues
     """
     edges = []
-    node_store = NodeStore(nodes, embedder)
+    node_store = NodeStore(nodes, utt_sim)
     for d in dialogues:
         texts = d.to_list()
-        store = DialogueStore(texts, embedder)
+        store = DialogueStore(texts, utt_sim)
         for n in nodes:
             for u in n["utterances"]:
                 ids = store.search_assistant(u)
@@ -24,7 +24,7 @@ def connect_nodes(nodes: list, dialogues: list[Dialogue], embedder: HuggingFaceE
                             target = node_store.find_node(texts[2 * (int(id) + 1)]["text"])
                             existing = [e for e in edges if e["source"] == n["id"] and e["target"] == target]
                             if existing:
-                                if not any([compare_strings(e, s, embedder) for e in existing[0]["utterances"]]):
+                                if not any([compare_strings(e, s, utt_sim) for e in existing[0]["utterances"]]):
                                     edges = [e for e in edges if e["source"] != n["id"] or e["target"] != target]
                                     edges.append({"source": n["id"], "target": target, "utterances": existing[0]["utterances"] + [s]})
                             else:

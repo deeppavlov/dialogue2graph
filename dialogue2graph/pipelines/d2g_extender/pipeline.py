@@ -17,8 +17,8 @@ class Pipeline(BasePipeline):
     graph_generator: AlgoGenerator
     graph_extender: Extender
 
-    def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
-        super().__init__(graph_extender=Extender(extending_llm, filling_llm, embedder), graph_generator=AlgoGenerator(filling_llm, embedder))
+    def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
+        super().__init__(graph_extender=Extender(extending_llm, filling_llm, sim_model), graph_generator=AlgoGenerator(filling_llm, sim_model))
 
     def _validate_pipeline(self):
         pass

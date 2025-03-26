@@ -39,10 +39,10 @@ class ThreeStagesGraphGenerator(GraphExtender):
 
     extending_llm: BaseChatModel
     filling_llm: BaseChatModel
-    embedder: HuggingFaceEmbeddings
+    sim_model: HuggingFaceEmbeddings
 
-    def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
-        super().__init__(extending_llm=extending_llm, filling_llm=filling_llm, embedder=embedder)
+    def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
+        super().__init__(extending_llm=extending_llm, filling_llm=filling_llm, sim_model=sim_model)
 
     def invoke(self, dialogues: list[Dialogue] = None, graph: Graph = None) -> BaseGraph:
 
@@ -62,7 +62,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
             nodes["nodes"][idx]["utterances"] = list(set(nodes["nodes"][idx]["utterances"]))
         try:
             sampled_dialogues = dialogue_sampler.invoke(graph, 15)
-            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues, self.embedder)
+            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues, self.sim_model)
         except Exception as e:
             print(e)
             return Graph({})

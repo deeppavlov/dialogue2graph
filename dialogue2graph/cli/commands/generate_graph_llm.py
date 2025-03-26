@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
-from langchain.chat_models import ChatOpenAI
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from dialogue2graph.pipelines.d2g_llm.pipeline import Pipeline
+from dialogue2graph.pipelines.models import ModelsAPI
+
+models = ModelsAPI()
 
 
 def generate_llm(dialogues: str, config: dict, output_path: str):
@@ -14,21 +15,21 @@ def generate_llm(dialogues: str, config: dict, output_path: str):
         temp1 = 0
         filler_name = "chatgpt-4o-latest"
         temp2 = 0
-        embedder_name = "BAAI/bge-m3"
+        sim_name = "BAAI/bge-m3"
         device = "cpu"
     else:
         grouper_name = config["models"].get("grouper-model", {}).get("name", "chatgpt-4o-latest")
         temp1 = config["models"].get("grouper-model", {}).get("temperature", 0)
         filler_name = config["models"].get("filler-model", {}).get("name", "chatgpt-4o-latest")
         temp2 = config["models"].get("filler-model", {}).get("temperature", 0)
-        embedder_name = config["models"].get("embedder-model", {}).get("name", "BAAI/bge-m3")
-        device = config["models"].get("embedder-model", {}).get("device", "cpu")
+        sim_name = config["models"].get("sim-model", {}).get("name", "BAAI/bge-m3")
+        device = config["models"].get("sim-model", {}).get("device", "cpu")
 
-    grouping_llm = ChatOpenAI(model=grouper_name, temperature=temp1)
-    filling_llm = ChatOpenAI(model=filler_name, temperature=temp2)
-    embedder = HuggingFaceEmbeddings(model_name=embedder_name, model_kwargs={"device": device})
+    grouping_llm = models("llm", name=grouper_name, temp=temp1)
+    filling_llm = models("llm", name=filler_name, temp=temp2)
+    sim_model = models("similarity", name=sim_name, device=device)
 
-    pipeline = Pipeline(grouping_llm=grouping_llm, filling_llm=filling_llm, embedder=embedder)
+    pipeline = Pipeline(grouping_llm=grouping_llm, filling_llm=filling_llm, sim_model=sim_model)
 
     result = pipeline.invoke(dialogues)
     print("Result:", result.graph_dict)

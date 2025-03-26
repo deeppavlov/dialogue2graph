@@ -1,8 +1,9 @@
 import json
 from pathlib import Path
-from langchain.chat_models import ChatOpenAI
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from dialogue2graph.pipelines.d2g_algo.pipeline import Pipeline
+from dialogue2graph.pipelines.models import ModelsAPI
+
+models = ModelsAPI()
 
 
 def generate_algo(dialogues: str, config: dict, output_path: str):
@@ -12,18 +13,18 @@ def generate_algo(dialogues: str, config: dict, output_path: str):
     if config == {}:
         filler_name = "chatgpt-4o-latest"
         temp = 0
-        embedder_name = "BAAI/bge-m3"
+        sim_name = "BAAI/bge-m3"
         device = "cpu"
     else:
         filler_name = config["models"].get("filler-model", {}).get("name", "chatgpt-4o-latest")
         temp = config["models"].get("filler-model", {}).get("temperature", 0)
-        embedder_name = config["models"].get("embedder-model", {}).get("name", "BAAI/bge-m3")
-        device = config["models"].get("embedder-model", {}).get("device", "cpu")
+        sim_name = config["models"].get("sim-model", {}).get("name", "BAAI/bge-m3")
+        device = config["models"].get("sim-model", {}).get("device", "cpu")
 
-    filling_llm = ChatOpenAI(model=filler_name, temperature=temp)
-    embedder = HuggingFaceEmbeddings(model_name=embedder_name, model_kwargs={"device": device})
+    filling_llm = models("llm", name=filler_name, temp=temp)
+    sim_model = models("similarity", name=sim_name, device=device)
 
-    pipeline = Pipeline(filling_llm=filling_llm, embedder=embedder)
+    pipeline = Pipeline(filling_llm=filling_llm, sim_model=sim_model)
 
     result = pipeline.invoke(dialogues)
     print("Result:", result.graph_dict)

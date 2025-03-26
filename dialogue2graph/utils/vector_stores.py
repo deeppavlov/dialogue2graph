@@ -60,16 +60,16 @@ class NodeStore:
     nodes_store: Chroma
     utterances: list[tuple[str, int]] = []
 
-    def _load_nodes(self, nodes: list, embedder: HuggingFaceEmbeddings):
+    def _load_nodes(self, nodes: list, utt_sim: HuggingFaceEmbeddings):
 
-        self.nodes_store = Chroma(collection_name=str(uuid.uuid4()), embedding_function=embedder)
+        self.nodes_store = Chroma(collection_name=str(uuid.uuid4()), embedding_function=utt_sim)
         self.utterances = [(u.lower(), n["id"]) for n in nodes for u in n["utterances"]]
         docs = [Document(page_content=u[0], id=id, metadata={"id": id}) for id, u in enumerate(self.utterances)]
 
         self.nodes_store.add_documents(documents=docs)
 
-    def __init__(self, nodes: list, embedder: HuggingFaceEmbeddings):
-        self._load_nodes(nodes, embedder)
+    def __init__(self, nodes: list, utt_sim: HuggingFaceEmbeddings):
+        self._load_nodes(nodes, utt_sim)
 
     def find_node(self, utterance: str):
         """Search for node with utterance, return node id or None if not found"""

@@ -29,10 +29,10 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     """
 
     filling_llm: BaseChatModel
-    embedder: HuggingFaceEmbeddings
+    sim_model: HuggingFaceEmbeddings
 
-    def __init__(self, filling_llm: BaseChatModel, embedder: HuggingFaceEmbeddings):
-        super().__init__(filling_llm=filling_llm, embedder=embedder)
+    def __init__(self, filling_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
+        super().__init__(filling_llm=filling_llm, sim_model=sim_model)
 
     def invoke(self, dialogues: list[Dialogue] = None, graph: DialogueGraph = None) -> BaseGraph:
 
@@ -48,7 +48,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
                 start = False
             nodes.append({"id": idx + 1, "label": "", "is_start": start, "utterances": group})
 
-        graph_dict = connect_nodes(nodes, dialogues, self.embedder)
+        graph_dict = connect_nodes(nodes, dialogues, self.sim_model)
         graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
 
         if not last_user:
