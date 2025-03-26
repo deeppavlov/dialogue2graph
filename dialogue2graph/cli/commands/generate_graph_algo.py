@@ -12,19 +12,24 @@ def generate_algo(dialogues: str, config: dict, output_path: str):
 
     if config == {}:
         filler_name = "chatgpt-4o-latest"
-        temp = 0
+        formatter_name = "gpt-4o-mini"
+        filler_temp = 0
+        formatter_temp = 0
         sim_name = "BAAI/bge-m3"
         device = "cpu"
     else:
         filler_name = config["models"].get("filler-model", {}).get("name", "chatgpt-4o-latest")
-        temp = config["models"].get("filler-model", {}).get("temperature", 0)
+        formatter_name = config["models"].get("formatter-model", {}).get("name", "gpt-4o-mini")
+        filler_temp = config["models"].get("filler-model", {}).get("temperature", 0)
+        formatter_temp = config["models"].get("formatter-model", {}).get("temperature", 0)
         sim_name = config["models"].get("sim-model", {}).get("name", "BAAI/bge-m3")
         device = config["models"].get("sim-model", {}).get("device", "cpu")
 
-    filling_llm = models("llm", name=filler_name, temp=temp)
+    filling_llm = models("llm", name=filler_name, temp=filler_temp)
+    formatting_llm = models("llm", name=formatter_name, temp=formatter_temp)
     sim_model = models("similarity", name=sim_name, device=device)
 
-    pipeline = Pipeline(filling_llm=filling_llm, sim_model=sim_model)
+    pipeline = Pipeline(filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
 
     result = pipeline.invoke(dialogues)
     print("Result:", result.graph_dict)

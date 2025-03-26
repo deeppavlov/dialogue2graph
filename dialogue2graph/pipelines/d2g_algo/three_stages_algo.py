@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 from langchain.prompts import PromptTemplate
 from langchain_core.language_models.chat_models import BaseChatModel
-from langchain.output_parsers import PydanticOutputParser
+from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import HumanMessage
 
@@ -29,10 +29,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     """
 
     filling_llm: BaseChatModel
+    formatting_llm: BaseChatModel
     sim_model: HuggingFaceEmbeddings
 
-    def __init__(self, filling_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
-        super().__init__(filling_llm=filling_llm, sim_model=sim_model)
+    def __init__(self, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
+        super().__init__(filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
 
     def invoke(self, dialogues: list[Dialogue] = None, graph: DialogueGraph = None) -> BaseGraph:
 
@@ -65,7 +66,8 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             partial_variables=partial_variables,
         )
 
-        chain = self.filling_llm | PydanticOutputParser(pydantic_object=DialogueGraph)
+        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.formatting_llm)
+        chain = self.filling_llm | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
         result = chain.invoke(messages)

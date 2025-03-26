@@ -174,9 +174,10 @@ def test_d2g_algo(sample_dialogues):
     """Test that graph is generated without errors"""
 
     filling_llm = models("llm", name="o3-mini", temp=1)
+    formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
     sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
 
-    pipeline = Pipeline(filling_llm, sim_model)
+    pipeline = Pipeline(filling_llm, formatting_llm, sim_model)
 
     graph = pipeline.invoke(sample_dialogues)
 

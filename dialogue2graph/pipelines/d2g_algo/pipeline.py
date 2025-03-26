@@ -15,8 +15,8 @@ class Pipeline(BasePipeline):
 
     graph_generator: AlgoGenerator
 
-    def __init__(self, filling_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
-        super().__init__(graph_generator=AlgoGenerator(filling_llm, sim_model))
+    def __init__(self, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
+        super().__init__(graph_generator=AlgoGenerator(filling_llm, formatting_llm, sim_model))
 
     def _validate_pipeline(self):
         pass

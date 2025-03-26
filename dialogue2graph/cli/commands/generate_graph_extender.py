@@ -12,24 +12,29 @@ def generate_extender(dialogues: str, config: dict, output_path: str):
 
     if config == {}:
         extender_name = "chatgpt-4o-latest"
-        temp1 = 0
+        extender_temp = 0
         filler_name = "chatgpt-4o-latest"
-        temp2 = 0
+        filler_temp = 0
+        formatter_name = "gpt-4o-mini"
+        formatter_temp = 0
         sim_name = "BAAI/bge-m3"
         device = "cpu"
     else:
         extender_name = config["models"].get("extender-model", {}).get("name", "chatgpt-4o-latest")
-        temp1 = config["models"].get("extender-model", {}).get("temperature", 0)
+        extender_temp = config["models"].get("extender-model", {}).get("temperature", 0)
         filler_name = config["models"].get("filler-model", {}).get("name", "chatgpt-4o-latest")
-        temp2 = config["models"].get("filler-model", {}).get("temperature", 0)
+        filler_temp = config["models"].get("filler-model", {}).get("temperature", 0)
+        formatter_name = config["models"].get("formatter-model", {}).get("name", "gpt-4o-mini")
+        formatter_temp = config["models"].get("formatter-model", {}).get("temperature", 0)
         sim_name = config["models"].get("sim-model", {}).get("name", "BAAI/bge-m3")
         device = config["models"].get("sim-model", {}).get("device", "cpu")
 
-    extending_llm = models("llm", name=extender_name, temp=temp1)
-    filling_llm = models("llm", name=filler_name, temp=temp2)
+    extending_llm = models("llm", name=extender_name, temp=extender_temp)
+    filling_llm = models("llm", name=filler_name, temp=filler_temp)
+    formatting_llm = models("llm", name=formatter_name, temp=formatter_temp)
     sim_model = models("similarity", name=sim_name, device=device)
 
-    pipeline = Pipeline(extending_llm=extending_llm, filling_llm=filling_llm, sim_model=sim_model)
+    pipeline = Pipeline(extending_llm=extending_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
 
     result = pipeline.invoke(dialogues)
     print("Result:", result.graph_dict)
