@@ -295,9 +295,9 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         )
 
     def invoke(self, topic, seed=42) -> list[dict]:
-        print(f"\n{'='*50}")
+        print(f"\n{'=' * 50}")
         print(f"Generating graph for topic: {topic}")
-        print(f"{'='*50}")
+        print(f"{'=' * 50}")
         successful_generations = []
         try:
             self.pipeline.seed = seed
