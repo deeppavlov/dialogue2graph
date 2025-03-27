@@ -73,3 +73,14 @@ def check_diagonal_similarity(dialogue_1, dialogue_2, embedder):
             return (False, mean_diagonal_similarity)
         
     return (True, mean_diagonal_similarity)
+
+
+def is_correct_length_modified(dialogue_1, dialogue_2):
+    return len(dialogue_1) == len(dialogue_2)
+
+
+def match_roles_modified(dialogue_1, dialogue_2):
+    for phrase_1, phrase_2 in zip(dialogue_1, dialogue_2):
+        if phrase_1['participant'] != phrase_2['participant']:
+            return False
+    return True
