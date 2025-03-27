@@ -23,6 +23,8 @@ psycopg2-binary = "^2.9.10"
 scipy = "^1.15.2"
 sentence-transformers = "^3.4.1"
 datasets = "*"
+click = "^8.1.8"
+pyyaml = "^6.0.2"
 
 [tool.poetry.group.docs]
 optional = true
@@ -76,3 +78,6 @@ format = "scripts.codestyle:_run_black(modify=True)"
 test = "scripts.test:_test"
 metrics = "scripts.metrics:_run_check"
 lint.sequence = ["flake", "black"]
+
+[tool.poetry.scripts]
+dialogue2graph = "dialogue2graph.cli.main:cli"
