@@ -15,9 +15,12 @@ class Pipeline(BasePipeline):
     """LLM graph extender pipeline"""
 
     def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
-        super().__init__(steps=[DataParser(),
-            AlgoGenerator(filling_llm, formatting_llm, sim_model),
-            Extender(extending_llm, filling_llm, formatting_llm, sim_model)]
+        super().__init__(
+            steps=[
+                DataParser(),
+                AlgoGenerator(filling_llm, formatting_llm, sim_model),
+                Extender(extending_llm, filling_llm, formatting_llm, sim_model),
+            ]
         )
 
     def _validate_pipeline(self):
