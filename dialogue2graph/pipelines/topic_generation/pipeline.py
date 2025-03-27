@@ -3,8 +3,8 @@ import json
 from pathlib import Path
 from langchain_openai import ChatOpenAI
 from dialogue2graph.pipelines.core import Pipeline
-from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
+
 
 class TopicGenerationPipeline(Pipeline):
 
@@ -22,10 +22,12 @@ class TopicGenerationPipeline(Pipeline):
             base_url=os.getenv("OPENAI_BASE_URL"),
             temperature=0,
         )
-        self.steps.append(LoopedGraphGenerator(
-            generation_model=gen_model,
-            validation_model=val_model,
-        ))
+        self.steps.append(
+            LoopedGraphGenerator(
+                generation_model=gen_model,
+                validation_model=val_model,
+            )
+        )
 
     def invoke(self, topic: str, output_path: str):
         for step in self.steps:
