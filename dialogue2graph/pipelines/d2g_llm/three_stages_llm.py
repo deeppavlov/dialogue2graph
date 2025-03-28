@@ -36,10 +36,10 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
 
-    grouping_llm: BaseChatModel
-    filling_llm: BaseChatModel
-    formatting_llm: BaseChatModel
-    sim_model: HuggingFaceEmbeddings
+    grouping_llm: BaseChatModel = Field(description="LLM for grouping assistant utterances into nodes")
+    filling_llm: BaseChatModel = Field(description="LLM for adding missing edges")
+    formatting_llm: BaseChatModel = Field(description="LLM for formatting output")
+    sim_model: HuggingFaceEmbeddings = Field(description="Similarity model")
 
     def __init__(self, grouping_llm: BaseChatModel, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
         super().__init__(grouping_llm=grouping_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)

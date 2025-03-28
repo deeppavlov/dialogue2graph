@@ -9,7 +9,10 @@ class Pipeline(BaseModel):
     steps: list[Union[InputParser, DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]] = Field(default_factory=list)
 
     def _validate_pipeline(self):
-        pass
+        """
+        Check if input and output types of steps are compatible.
+        """
+        raise NotImplementedError
 
     def invoke(self, data):
         for step in self.steps:

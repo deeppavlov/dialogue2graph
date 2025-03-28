@@ -27,6 +27,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
+
 class ModelStorage(BaseModel):
 
     storage: dict = Field(default_factory=dict)
@@ -40,10 +41,7 @@ class ModelStorage(BaseModel):
         elif model_type == "emb":
             model = HuggingFaceEmbeddings(**config)
 
-        self.storage[key] = {
-            "model": model,
-            "config": config
-        }
+        self.storage[key] = {"model": model, "config": config}
 
     def save(self, path: str):
         with open(path, "w") as f:
