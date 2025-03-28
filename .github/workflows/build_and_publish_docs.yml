@@ -68,6 +68,7 @@ jobs:
           folder: docs/build/
           target-folder: / # Deploy to root for master branch
           single-commit: True
+          clean: True
 
       - name: deploy website for dev
         if: ${{ github.ref == 'refs/heads/dev' }}
@@ -77,3 +78,8 @@ jobs:
           folder: docs/build/
           target-folder: dev # Deploy to /dev subdirectory
           single-commit: false # Keep history for dev branch
+          clean: True
+
+      - name: print link to the documentation
+        run: |
+          echo "https://deeppavlov.github.io/chatsky/${{ github.head_ref || github.ref_name }}"
