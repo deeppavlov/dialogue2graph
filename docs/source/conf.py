@@ -15,6 +15,20 @@ project = 'Chatsky LLM-Autoconfig'
 copyright = '2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
 author = 'Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
 
+# Get the deployment environment
+on_github = os.environ.get("GITHUB_ACTIONS") == "true"
+
+# Configure URLs for GitHub Pages
+if on_github:
+    html_baseurl = "/chatsky-llm-autoconfig/dev/"
+    html_context = {
+        "display_github": True,
+        "github_user": "deeppavlov",
+        "github_repo": "chatsky-llm-autoconfig",
+        "github_version": "dev",
+        "conf_py_path": "/docs/source/",
+    }
+
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
@@ -56,3 +70,13 @@ html_static_path = ["_static"]
 extlinks = {
     'github_source_link': ("https://github.com/deeppavlov/chatsky-llm-autoconfig/tree/dev/%s", None),
 }
+
+# Add these configurations
+html_theme_options = {
+    "use_edit_page_button": False,
+    "navigation_depth": 3,
+    "show_toc_level": 2,
+}
+
+# Ensure proper path handling
+html_use_relative_paths = True
