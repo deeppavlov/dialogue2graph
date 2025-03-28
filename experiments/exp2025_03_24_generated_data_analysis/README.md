@@ -14,7 +14,7 @@
 |75%       |14.00      |10.00      |12.00          |13.33                 |
 |max       |44.00      |24.00      |96.00          |31.00                 |
 
-* Number of graph edges is usually 1.25-1.4 times greater than number of graph nodes, thus, the graphs tend to have tree structure with few interconnections
+* Number of graph edges is usually 1.25-1.4 times greater than number of graph nodes.
 
 * There is one unusual graph with 96 dialogues in it on topic 'Requesting a prorated refund for early cancellation' (idx 214)
 
@@ -26,6 +26,15 @@
 
 ## Duplicate dialogue effect
 
-* There are about 200 dialogues where greeting is repeated in the dialogue. It seems that this dialogues can be split into 2 dialogues, as seemingly this has no effect on graph structure and topic is the same.
+* There are about 100 dialogues where greeting is repeated in the dialogue. It seems that this dialogues can be split into 2 dialogues, as seemingly this has no effect on graph structure and topic is the same.
 
 * Typical utterance that precedes duplicate: *I have another question*
+
+* There is a strange topic - `Assisting with chatbot limitations.Addressing fake social media accounts.Managing review responses on Google/Yelp.`
+
+* There are about 15 topics that are doubled.
+
+* Associated problems:
+
+    - user requires some change and assistant cannot manage the change
+    - user highlights problems with visible issues that assistant can't see
