@@ -72,11 +72,27 @@ extlinks = {
 }
 
 # Add these configurations
+html_js_files = [
+    "scripts/pydata-sphinx-theme.js",
+    "scripts/bootstrap.js",
+    "scripts/fontawesome.js",
+]
+
+# Fix base URL for GitHub Pages
+html_baseurl = "/chatsky-llm-autoconfig/dev/"
+
+# Important: Add this to handle static files correctly
 html_theme_options = {
     "use_edit_page_button": False,
     "navigation_depth": 3,
     "show_toc_level": 2,
+    # Add this to fix static file paths
+    "static_page_path": "/chatsky-llm-autoconfig/dev/_static/",
 }
 
-# Ensure proper path handling
+# Fix relative URLs for GitHub Pages deployment
 html_use_relative_paths = True
+
+# Ensure all static paths are properly prefixed for GitHub Pages
+if os.environ.get("GITHUB_ACTIONS") == "true":
+    html_static_path_suffix = "/chatsky-llm-autoconfig/dev"
