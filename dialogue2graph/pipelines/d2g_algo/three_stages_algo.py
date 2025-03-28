@@ -9,9 +9,9 @@ from langchain.schema import HumanMessage
 from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.metrics.llm_metrics import compare_graphs
 from dialogue2graph.metrics.no_llm_metrics import is_same_structure
-from dialogue2graph.pipelines.core.schemas import DialogueGraph
-from dialogue2graph.pipelines.core.dialogue import Dialogue
-from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.core.schemas import ReasonGraph
+from dialogue2graph import Dialogue, Graph
+from dialogue2graph.pipelines.core.graph import BaseGraph
 
 from .group_nodes import group_nodes
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
@@ -35,7 +35,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     def __init__(self, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
         super().__init__(filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
 
-    def invoke(self, dialogues: list[Dialogue] = None, graph: DialogueGraph = None) -> BaseGraph:
+    def invoke(self, dialogues: list[Dialogue] = None, graph: ReasonGraph = None) -> BaseGraph:
 
         nodes, starts, last_user = get_helpers(dialogues)
 
@@ -66,7 +66,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             partial_variables=partial_variables,
         )
 
-        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.formatting_llm)
+        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.formatting_llm)
         chain = self.filling_llm | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
@@ -83,11 +83,11 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, dialogues, target_graph, report_type="dict"):
+    def evaluate(self, dialogues, gt_graph, report_type="dict"):
         graph = self.invoke(dialogues)
         report = {
-            "is_same_structure": is_same_structure(graph, target_graph),
-            "graph_match": compare_graphs(graph, target_graph),
+            "is_same_structure": is_same_structure(graph, gt_graph),
+            "graph_match": compare_graphs(graph, gt_graph),
         }
         if report_type == "dataframe":
             report = pd.DataFrame(report, index=[0])

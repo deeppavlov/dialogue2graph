@@ -1,5 +1,5 @@
 extending_prompt_part_1 = """Your input is a dialogue graph from customer chatbot system.
-Your task is to extend set of nodes for the dialogue graph with input dialogue.
+Your task is to extend set of nodes for the dialogue graph with list of input dialogues.
 Dialogue graph is a set of nodes with assistant's utterances and a set of edges that are
 triggered by user requests. Here goes the input graph: """
 
@@ -20,9 +20,9 @@ additional context from the other utterance in the node.
 8) Consider all the dialogue paths which appear as a result of combining utterances and make sure they are coherent and logical.
 If they aren't, separate your nodes when needed.
 9) You mustn't remove assistant's utterances even if they are similar or synonymous. Make sure you keep all the assistant's utterances in the resulting set of nodes.
-10) Doublecheck that all the assistant's utterances from the dialogue are present in resulting set of nodes,
+10) Doublecheck that all the assistant's utterances from the input dialogues are present in resulting set of nodes,
 not a single assistant's utterance to be missed.
 11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
 12) Add reason point to your answer with an explanation why you removed some of utterances.
-I will give you the dialogue, your task is to extend a set of nodes of the graph above with assistant's utterances from the dialogue according to the rules and examples above.
-The dialogue: """
+I will give you the list of dialogues, your task is to extend a set of nodes of the graph above with assistant's utterances from the dialogues according to the rules and examples above.
+The list of dialogues: """

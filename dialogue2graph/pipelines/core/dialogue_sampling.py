@@ -7,7 +7,7 @@ import dialogue2graph.pipelines.core.graph as ch_graph
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
-from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
+from dialogue2graph.metrics.no_llm_metrics import match_dg_triplets, match_dialogue_triplets
 from dialogue2graph.datasets.complex_dialogues.find_graph_ends import find_graph_ends
 from langchain_openai import ChatOpenAI
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -55,7 +55,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph, repeats, finished_nodes)
             if dialogues:
-                if match_triplets_dg(graph, dialogues)["value"]:
+                if match_dg_triplets(graph, dialogues)["value"]:
                     break
             repeats += 1
         if repeats > upper_limit:
@@ -68,7 +68,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
     async def evaluate(self, graph, upper_limit, target_dialogues, report_type=Literal["dict", "dataframe"]):
         dialogues = self.invoke(graph, upper_limit)
         report = {
-            "all_utterances_present": [match_triplets_dg(graph, dialogues)].value,
+            "dialogues_match": [match_dialogue_triplets(dialogues, target_dialogues)["value"]],
             # "all_roles_correct": all(all_roles_correct(dialogues, target_dialogues)),
         }
         if report_type == "dataframe":
@@ -93,7 +93,7 @@ def mix_ends(graph: BaseGraph, ends: list[int], cycles: list[int]) -> list[int]:
     return [e for e in cycles if e not in visited] + ends
 
 
-def all_combinations(path: list, start: dict, next: int, visited: list):
+def get_all_combinations(path: list, start: dict, next: int, visited: list):
     """Recursion to find all utterances combinations in the path of nodes and edges with miltiple utterances
     which start from next element
     visited is path traveled
@@ -107,7 +107,7 @@ def all_combinations(path: list, start: dict, next: int, visited: list):
     if next < len(path):
         # print("MAX: ", max_v)
         for utt in path[next]["text"]:
-            all_combinations(path, {"participant": path[next]["participant"], "text": utt}, next + 1, visited.copy())
+            get_all_combinations(path, {"participant": path[next]["participant"], "text": utt}, next + 1, visited.copy())
     else:
         counter += 1
         if counter == env_settings.SAMPLING_MAX:
@@ -126,7 +126,7 @@ def get_edges(dialogues: list[list[int]]) -> set[tuple[int]]:
     return set(pairs)
 
 
-def edges_in(dialogue: list[int], dialogues: list[list[int]]) -> bool:
+def are_edges_in(dialogue: list[int], dialogues: list[list[int]]) -> bool:
     """Checks whether all the pairs of nodes from dialogue are included in dialogues"""
     return get_edges([dialogue]).issubset(get_edges(dialogues))
 
@@ -136,14 +136,14 @@ def remove_duplicates(dialogues: list[list[int]]) -> list[list[int]]:
     ds_copy = dialogues.copy()
     idx = 0
     for dialogue in dialogues:
-        if edges_in(dialogue, ds_copy[:idx] + ds_copy[idx + 1 :]):
+        if are_edges_in(dialogue, ds_copy[:idx] + ds_copy[idx + 1 :]):
             ds_copy = ds_copy[:idx] + ds_copy[idx + 1 :]
         else:
             idx += 1
     return ds_copy
 
 
-def dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
+def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
     """Find all dialogue doublets with (edge, target) utterances"""
     res = []
     for dialogue in seq:
@@ -155,7 +155,7 @@ def dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
     return set(res)
 
 
-def dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
+def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
     """Find all dialogue triplets with (source, edge, target) utterances"""
 
     res = []
@@ -170,7 +170,9 @@ def remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]:
     """Removes duplicated dialogues from list of dialogues seq"""
     single_seq = [seq[0]]
     for s in seq[1:]:
-        if not dialogue_doublets([s]).issubset(dialogue_doublets(single_seq)) or not dialogue_triplets([s]).issubset(dialogue_triplets(single_seq)):
+        if not get_dialogue_doublets([s]).issubset(get_dialogue_doublets(single_seq)) or not get_dialogue_triplets([s]).issubset(
+            get_dialogue_triplets(single_seq)
+        ):
             single_seq.append(s)
     return single_seq
 
@@ -210,7 +212,7 @@ def get_dialogues(graph: BaseGraph, repeats: int, ends: list[int]) -> list[Dialo
     for f in full_paths:
         visited_list = [[]]
         counter = 0
-        all_combinations(f, {}, 0, [])
+        get_all_combinations(f, {}, 0, [])
         dialogue = [el[1:] for el in visited_list if len(el) == len(f) + 1]
         dialogues.extend(dialogue)
     final_dialogues = list(k for k, _ in itertools.groupby(dialogues))

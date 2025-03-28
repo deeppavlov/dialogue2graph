@@ -292,6 +292,11 @@ def _get_dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     return set(result)
 
 
+def match_dialogue_triplets(s1: list[Dialogue], s2: list[Dialogue]):
+    """Match triplets of two dialogue sequences"""
+    return {"value": _get_dialogue_triplets(s1) == _get_dialogue_triplets(s2)}
+
+
 def _get_graph_triplets(G: BaseGraph):
     """Find all graph triplets with (source, edge, target) utterances"""
     graph = G.graph_dict
@@ -328,7 +333,7 @@ class DGTripletsMatchResult(TypedDict):
     absent_triplets: Optional[List[AbsentTriplet]]
 
 
-def match_triplets_dg(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatchResult:
+def match_dg_triplets(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatchResult:
     """
     Check if all graph triplets match triplets in set of dialogues.
 

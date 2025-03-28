@@ -8,10 +8,11 @@ from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
 from langchain_core.language_models.chat_models import BaseChatModel
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-
+from dialogue2graph.pipelines.core.schemas import DialogueGraph
+from dialogue2graph.pipelines.d2g_algo.three_stages_algo import ThreeStagesGraphGenerator as AlgoGenerator
 from dialogue2graph.pipelines.core.algorithms import GraphExtender
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
-from dialogue2graph.pipelines.core.schemas import DialogueGraph, Node
+from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.metrics.no_llm_metrics import is_same_structure
 from dialogue2graph.metrics.llm_metrics import compare_graphs
@@ -30,7 +31,8 @@ dialogue_sampler = RecursiveDialogueSampler()
 
 
 class ThreeStagesGraphGenerator(GraphExtender):
-    """Graph generator based on graph and additional list of dialogues.
+    """Graph generator which iteratively takes step dialogues and adds them to graph
+    generated on the previous step. First step is done with AlgoGenerator
     Three stages:
     1. LLM extension of graph nodes.
     2. Algorithmic connecting nodes by edges.
@@ -41,39 +43,62 @@ class ThreeStagesGraphGenerator(GraphExtender):
     filling_llm: BaseChatModel
     formatting_llm: BaseChatModel
     sim_model: HuggingFaceEmbeddings
+    step: int
+    algo_generator: AlgoGenerator
 
-    def __init__(self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
-        super().__init__(extending_llm=extending_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
+    def __init__(
+        self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings, step: int = 2
+    ):
+        super().__init__(
+            extending_llm=extending_llm,
+            filling_llm=filling_llm,
+            formatting_llm=formatting_llm,
+            sim_model=sim_model,
+            algo_generator=AlgoGenerator(filling_llm, formatting_llm, sim_model),
+            step=step,
+        )
 
-    def invoke(self, dialogues: list[Dialogue] = None, graph: Graph = None) -> BaseGraph:
+    def _add_step(self, dialogues: list[Dialogue], graph: DialogueGraph) -> DialogueGraph:
 
         partial_variables = {}
-        dialogue = dialogues[0].to_list()
+        prompt_extra = extending_prompt_part_2
+        for idx, dial in enumerate(dialogues):
+            partial_variables[f"var_{idx}"] = dial.to_list()
+            prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
         prompt = PromptTemplate(
-            template=extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + "{dialogue}", input_variables=["graph", "dialogue"]
+            template=extending_prompt_part_1 + "{graph}. " + prompt_extra,
+            input_variables=["graph"],
+            partial_variables=partial_variables,
         )
 
         fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.formatting_llm)
         chain = self.extending_llm | fixed_output_parser
 
-        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict, dialogue=dialogue))]
+        messages = [HumanMessage(content=prompt.format(graph=graph))]
         nodes = chain.invoke(messages).model_dump()
-
-        _, _, last_user = get_helpers(dialogues)
 
         for idx in range(len(nodes["nodes"])):
             nodes["nodes"][idx]["utterances"] = list(set(nodes["nodes"][idx]["utterances"]))
         try:
-            sampled_dialogues = dialogue_sampler.invoke(graph, 15)
-            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues, self.sim_model)
+            sampled_dialogues = dialogue_sampler.invoke(Graph(graph), 15)
+            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues + dialogues, self.sim_model)
         except Exception as e:
             print(e)
             return Graph({})
-        graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
+        graph_dict = {"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]}
+        return graph_dict
 
+    def invoke(self, dialogues: list[Dialogue]) -> BaseGraph:
+
+        cur_graph = self.algo_generator.invoke(dialogues[: self.step]).graph_dict
+        # for seq in dialogues[self.step::self.step]:
+        for point in range(self.step, len(dialogues) - 1, self.step):
+            cur_graph = self._add_step(dialogues[point : point + self.step], cur_graph)
+
+        _, _, last_user = get_helpers(dialogues)
         try:
             if not last_user:
-                result_graph = Graph(graph_dict=graph_dict)
+                result_graph = Graph(graph_dict=cur_graph)
                 return result_graph
 
             partial_variables = {}
@@ -86,9 +111,9 @@ class ThreeStagesGraphGenerator(GraphExtender):
                 input_variables=["graph_dict"],
                 partial_variables=partial_variables,
             )
-            messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
+            messages = [HumanMessage(content=prompt.format(graph_dict=cur_graph))]
 
-            fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.formatting_llm)
+            fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.formatting_llm)
             chain = self.filling_llm | fixed_output_parser
             result = chain.invoke(messages)
 
@@ -107,11 +132,11 @@ class ThreeStagesGraphGenerator(GraphExtender):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, dialogues, target_graph, report_type="dict"):
+    def evaluate(self, dialogues, gt_graph, report_type="dict"):
         graph = self.invoke(dialogues)
         report = {
-            "is_same_structure": is_same_structure(graph, target_graph),
-            "graph_match": compare_graphs(graph, target_graph),
+            "is_same_structure": is_same_structure(graph, gt_graph),
+            "graph_match": compare_graphs(graph, gt_graph),
         }
         if report_type == "dataframe":
             report = pd.DataFrame(report, index=[0])

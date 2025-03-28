@@ -9,7 +9,7 @@ import pytest
 from dialogue2graph import Graph, Dialogue
 from dialogue2graph.metrics.no_llm_metrics.metrics import (
     is_same_structure,
-    match_triplets_dg,
+    match_dg_triplets,
     are_paths_valid,
     match_roles,
     is_correct_length,
@@ -93,12 +93,12 @@ def test_is_same_structure_positive(graph_positive_1, graph_positive_2):
     assert is_same_structure(graph_positive_1, graph_positive_2) is True, "Expected the graphs to have the same structure."
 
 
-def test_match_triplets_dg_positive(graph_positive_1, dialogues_positive):
+def test_match_dg_triplets_positive(graph_positive_1, dialogues_positive):
     """
     Check that all (assistant-user-assistant) triplets in the dialogues
-    match the triplets in the graph (match_triplets_dg).
+    match the triplets in the graph (match_dg_triplets).
     """
-    result = match_triplets_dg(graph_positive_1, dialogues_positive)
+    result = match_dg_triplets(graph_positive_1, dialogues_positive)
     assert result["value"] is True, f"Expected value=True, but got: {result}"
 
 
@@ -184,12 +184,12 @@ def test_is_same_structure_negative(graph_positive_1, graph_negative):
     assert is_same_structure(graph_positive_1, graph_negative) is False, "Expected the graphs to have different structures."
 
 
-def test_match_triplets_dg_negative(graph_negative, dialogues_negative):
+def test_match_dg_triplets_negative(graph_negative, dialogues_negative):
     """
-    Check match_triplets_dg for the negative scenario.
+    Check match_dg_triplets for the negative scenario.
     We expect the result to have value=False (since there are missing triplets).
     """
-    result = match_triplets_dg(graph_negative, dialogues_negative)
+    result = match_dg_triplets(graph_negative, dialogues_negative)
     assert result["value"] is False, "Expected value=False in the negative scenario."
     assert "absent_triplets" in result, "Expected 'absent_triplets' key in the result."
 
