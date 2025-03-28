@@ -36,7 +36,7 @@ except Exception:
 class RecursiveDialogueSampler(DialogueGenerator):
     """Recursive dialogue sampler for the graph"""
 
-    def invoke(self, graph: BaseGraph, upper_limit: int, model_name: str = "o1-mini") -> list[Dialogue]:
+    def invoke(self, graph: BaseGraph, upper_limit: int, model_name: str = "o1-mini", temp=1) -> list[Dialogue]:
         """Finds all the dialogues in the graph
         upper_limit is used to limit repeats used in graph.all_paths method
         model_name is LLM to find cycling nodes when list of finishing nodes is empty
@@ -48,20 +48,18 @@ class RecursiveDialogueSampler(DialogueGenerator):
         finished_nodes = graph.get_ends()
         if not finished_nodes:
             cycle_nodes = find_graph_ends(
-                graph, model=ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=1)
+                graph,
+                model=ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=temp),
             )["value"]
         finished_nodes = mix_ends(graph, finished_nodes, cycle_nodes)
         while repeats <= upper_limit:
             dialogues = get_dialogues(graph, repeats, finished_nodes)
             if dialogues:
                 if match_triplets_dg(graph, dialogues)["value"]:
-                    # print(f"{repeats} repeats works!")
                     break
             repeats += 1
-            # print("REPEATS: ", repeats)
         if repeats > upper_limit:
-            print("Not all utterances present")
-            # return []
+            raise ValueError("Not all utterances present")
         return dialogues
 
     async def ainvoke(self, *args, **kwargs):
