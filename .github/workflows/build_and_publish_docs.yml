@@ -40,8 +40,8 @@ jobs:
         run: |
           python -m poetry run sphinx-build -b html docs/source/ docs/build/
 
-      # - name: remove jekyll theming
-        # run: touch docs/build/.nojekyll
+      - name: remove jekyll theming
+        run: touch docs/build/.nojekyll
 
       - name: save branch name without slashes
         if: ${{ github.ref != 'refs/heads/master' }}
