@@ -9,11 +9,11 @@ from dialogue2graph.pipelines.core.algorithms import InputParser
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+RawDialogsType = Dialogue | list[Dialogue] | dict | list[list] | list[dict] | str
 
+class DialogParser(InputParser):
 
-class DataParser(InputParser):
-
-    def invoke(self, data: Dialogue | list[Dialogue] | dict | list[list] | list[dict] | str) -> List[Dialogue]:
+    def invoke(self, data: RawDialogsType) -> List[Dialogue]:
         """Validate and convert user's data into list of Dialogue
         Input data can be as follows:
         [{'participant': user or assistant, 'text': text}]
