@@ -102,3 +102,13 @@ class GraphExtender(BaseAlgorithm):
 
     async def ainvoke(self, dialogue: Dialogue, graph: BaseGraph) -> BaseGraph:
         raise NotImplementedError
+
+
+class InputParser(BaseAlgorithm):
+    """Parser of user data"""
+
+    def invoke(self, data):
+        raise NotImplementedError
+
+    async def ainvoke(self, data):
+        raise NotImplementedError

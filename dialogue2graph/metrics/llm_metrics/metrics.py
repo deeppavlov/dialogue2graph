@@ -5,16 +5,14 @@ LLM Metrics.
 This module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
 """
 
-import os
 import logging
 import json
-from typing import List, TypedDict, Union, Optional
+from typing import List, TypedDict, Union
 from pydantic import BaseModel, Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
 import numpy as np
 
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
-from dialogue2graph.metrics.embedder import get_similarity
+from dialogue2graph.metrics.similarity import get_similarity
 from dialogue2graph.pipelines.core.schemas import CompareResponse
 from .prompts import compare_graphs_prompt, graph_example
 
@@ -23,27 +21,6 @@ from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
-
-
-class EnvSettings(BaseSettings, case_sensitive=True):
-    """Pydantic settings to get env variables"""
-
-    model_config = SettingsConfigDict(
-        env_file=os.environ.get("PATH_TO_ENV", ".env"), env_file_encoding="utf-8", env_file_exists_ok=False  # Makes .env file optional
-    )
-    OPENAI_API_KEY: Optional[str] = None
-    OPENAI_BASE_URL: Optional[str] = None
-    HUGGINGFACE_TOKEN: Optional[str] = None
-    SAMPLING_MAX: Optional[int] = 1000000  # Default value
-    DEVICE: Optional[str] = "cpu"  # Default value
-
-
-# Try to load settings, fall back to defaults if fails
-try:
-    env_settings = EnvSettings()
-except Exception:
-    env_settings = EnvSettings(_env_file=None)
-
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -250,7 +227,13 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
 
 
 def compare_graphs(
-    G1: BaseGraph, G2: BaseGraph, embedder: str = "BAAI/bge-m3", sim_th: float = 0.93, llm_comparer: str = "gpt-4o", formatter: str = "gpt-3.5-turbo"
+    G1: BaseGraph,
+    G2: BaseGraph,
+    embedder: str = "BAAI/bge-m3",
+    sim_th: float = 0.93,
+    llm_comparer: str = "gpt-4o",
+    formatter: str = "gpt-3.5-turbo",
+    device="cuda:0",
 ) -> CompareResponse:
     """
     Compares two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
@@ -272,8 +255,8 @@ def compare_graphs(
     g1_list, n_edge_utts1 = G1.graph2list()
     g2_list, n_edge_utts2 = G2.graph2list()
 
-    nodes_matrix = get_similarity(nodes1_list, nodes2_list, embedder)  # embeddings for utterances in nodes
-    mix_matrix = get_similarity(g1_list, g2_list, embedder)  # embeddings for utterances in nodes+edges
+    nodes_matrix = get_similarity(nodes1_list, nodes2_list, embedder, device=device)  # embeddings for utterances in nodes
+    mix_matrix = get_similarity(g1_list, g2_list, embedder, device=device)  # embeddings for utterances in nodes+edges
 
     nodes_max = list(np.argmax(nodes_matrix, axis=1))
     mix_max = list(np.argmax(mix_matrix, axis=1))
@@ -299,8 +282,8 @@ def compare_graphs(
         return {"value": True, "description": f"Nodes similarity: {nodes_min}, Nodes+edges similarity: {mix_min}"}
 
     parser = PydanticOutputParser(pydantic_object=CompareResponse)
-    format_model = ChatOpenAI(model=formatter, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
-    model = ChatOpenAI(model=llm_comparer, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
+    format_model = ChatOpenAI(model=formatter)
+    model = ChatOpenAI(model=llm_comparer)
     fixed_output_parser = OutputFixingParser.from_llm(parser=parser, llm=format_model)
     chain = model | fixed_output_parser
     query = compare_graphs_prompt.format(result_form=CompareResponse().model_dump(), graph_example=graph_example, graph_1=g1, graph_2=g2)
