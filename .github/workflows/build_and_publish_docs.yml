@@ -35,10 +35,22 @@ jobs:
         run: |
           python -m pip install --upgrade pip poetry
           python -m poetry install --with docs --all-extras --no-ansi --no-interaction
+          # Explicitly install theme and its dependencies
+          python -m poetry run pip install pydata-sphinx-theme sphinx-copybutton
 
       - name: build documentation
         run: |
-          python -m poetry run sphinx-build -b html docs/source/ docs/build/
+          # Force clean build
+          rm -rf docs/build/
+          python -m poetry run sphinx-build -b html -a -E docs/source/ docs/build/
+
+      - name: check build contents
+        run: |
+          echo "Checking build directory contents:"
+          ls -la docs/build/
+          echo "Checking for CSS files:"
+          find docs/build/ -name "*.css"
+  
 
       - name: remove jekyll theming
         run: touch docs/build/.nojekyll
@@ -68,6 +80,7 @@ jobs:
           folder: docs/build/
           target-folder: / # Deploy to root for master branch
           single-commit: True
+          clean: True
 
       - name: deploy website for dev
         if: ${{ github.ref == 'refs/heads/dev' }}
@@ -77,3 +90,8 @@ jobs:
           folder: docs/build/
           target-folder: dev # Deploy to /dev subdirectory
           single-commit: false # Keep history for dev branch
+          clean: True
+
+      - name: print link to the documentation
+        run: |
+          echo "https://deeppavlov.github.io/chatsky-llm-autoconfig/${{ github.head_ref || github.ref_name }}"
