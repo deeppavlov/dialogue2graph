@@ -13,12 +13,12 @@ class StoredData(BaseModel):
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
     model_type: Union[Literal["llm"], Literal["emb"]] = Field(description="Type of the stored model")
-    model: Optional[BaseChatModel] = Field(description="Model object")
+    model: Optional[BaseChatModel] = Field(description="Model object", default=None)
 
 
 class ModelStorage(BaseModel):
 
-    storage: dict = Field(default_factory=dict)
+    storage: dict[str, StoredData] = Field(default_factory=dict)
 
     def load(self, path: str):
         """
@@ -54,6 +54,9 @@ class ModelStorage(BaseModel):
         if model_type == "llm":
             model = ChatOpenAI(**item.config)
         elif model_type == "emb":
+            # remove "device" from config and pass it to the "model_kwargs" parameter
+            device = item.config.pop("device", None)
+            item.config["model_kwargs"] = {"device": device}
             model = HuggingFaceEmbeddings(**item.config)
 
         item.model = model
