@@ -10,9 +10,7 @@ load_dotenv()
 class Pipeline(BasePipeline):
     """Algorithmic graph generator pipeline"""
 
-    def __init__(
-        self, model_storage: ModelStorage, filling_llm: str = None, formatting_llm: str = None, sim_model: str = None
-    ):
+    def __init__(self, model_storage: ModelStorage, filling_llm: str = None, formatting_llm: str = None, sim_model: str = None):
         # check if models are in model storage
         filling_llm = model_storage.storage.get(filling_llm, None)
         if not filling_llm:

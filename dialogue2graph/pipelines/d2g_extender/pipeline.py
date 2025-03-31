@@ -14,12 +14,7 @@ class Pipeline(BasePipeline):
     """LLM graph extender pipeline"""
 
     def __init__(
-        self, 
-        model_storage: ModelStorage, 
-        extending_llm: str = None, 
-        filling_llm: str = None, 
-        formatting_llm: str = None, 
-        sim_model: str = None
+        self, model_storage: ModelStorage, extending_llm: str = None, filling_llm: str = None, formatting_llm: str = None, sim_model: str = None
     ):
         # check if models are in model storage
         extending_llm = model_storage.storage.get(extending_llm, None)
