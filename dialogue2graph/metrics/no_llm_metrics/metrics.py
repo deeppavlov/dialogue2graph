@@ -610,23 +610,21 @@ def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
     }
 
 
+def _message_has_greeting(text: str) -> bool:
+    return bool(re.match(r"^hello|^hi|^greetings", text, flags=re.IGNORECASE))
+
+
 def is_greeting_repeated(dialogues: list[Dialogue]) -> bool:
     """
     Checks whether greeting is repeated within dialogues.
     Returns True if greeting has been repeated, False otherwise.
     """
-    message_has_greeting = lambda text: bool(
-        re.match(r'^hello|^hi|^greetings', text, flags=re.IGNORECASE)
-    )
     for dialogue in dialogues:
         for i, message in enumerate(dialogue.messages):
-            if (i != 0 and 
-                message.participant == "assistant" and
-                message_has_greeting(message.text)
-            ):
+            if i != 0 and message.participant == "assistant" and _message_has_greeting(message.text):
                 return True
     return False
-    
+
 
 def has_loop_to_start(G: BaseGraph) -> bool:
     """
@@ -637,4 +635,3 @@ def has_loop_to_start(G: BaseGraph) -> bool:
         if edge[1] == 1:
             return True
     return False
-
