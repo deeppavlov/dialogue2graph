@@ -13,7 +13,7 @@ class StoredData(BaseModel):
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
     model_type: Union[Literal["llm"], Literal["emb"]] = Field(description="Type of the stored model")
-    model: Optional[BaseChatModel] = Field(description="Model object", default=None)
+    model: Union[BaseChatModel, HuggingFaceEmbeddings] = Field(description="Model object", default=None)
 
 
 class ModelStorage(BaseModel):
@@ -48,7 +48,6 @@ class ModelStorage(BaseModel):
             - Initializes the model based on the provided configuration and type.
             - Stores the model and its configuration in the storage under the specified key.
         """
-        item = StoredData(key=key, config=config, model_type=model_type)
         if key in self.storage:
             logger.warning(f"Key {key} already exists in storage. Overwriting.")
         if model_type == "llm":
@@ -59,7 +58,7 @@ class ModelStorage(BaseModel):
             item.config["model_kwargs"] = {"device": device}
             model = HuggingFaceEmbeddings(**item.config)
 
-        item.model = model
+        item = StoredData(key=key, config=config, model_type=model_type, model=model)
 
         self.storage[key] = item
 
