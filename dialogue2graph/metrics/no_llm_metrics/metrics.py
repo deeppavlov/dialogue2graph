@@ -9,6 +9,7 @@ for various metrics.
 from typing import List, TypedDict, Optional
 import numpy as np
 import networkx as nx
+import re
 
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
@@ -607,3 +608,33 @@ def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
         "total_edges": total_edges,
         "total_nodes": total_nodes,
     }
+
+
+def is_greeting_repeated(dialogues: list[Dialogue]) -> bool:
+    """
+    Checks whether greeting is repeated within dialogues.
+    Returns True if greeting has been repeated, False otherwise.
+    """
+    message_has_greeting = lambda text: bool(
+        re.match(r'^hello|^hi|^greetings', text, flags=re.IGNORECASE)
+    )
+    for dialogue in dialogues:
+        for i, message in enumerate(dialogue.messages):
+            if (i != 0 and 
+                message.participant == "assistant" and
+                message_has_greeting(message.text)
+            ):
+                return True
+    return False
+    
+
+def has_loop_to_start(G: BaseGraph) -> bool:
+    """
+    Checks whether graph has node returning to the start node.
+    Returns True if there is a loop to start, False otherwise
+    """
+    for edge in G.graph.edges:
+        if edge[1] == 1:
+            return True
+    return False
+
