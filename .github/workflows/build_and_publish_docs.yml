@@ -50,10 +50,6 @@ jobs:
           ls -la docs/build/
           echo "Checking for CSS files:"
           find docs/build/ -name "*.css"
-  
-
-      - name: remove jekyll theming
-        run: touch docs/build/.nojekyll
 
       - name: save branch name without slashes
         if: ${{ github.ref != 'refs/heads/master' }}
@@ -78,8 +74,8 @@ jobs:
         with:
           branch: gh-pages
           folder: docs/build/
-          target-folder: / # Deploy to root for master branch
-          single-commit: True
+          target-folder: master # Deploy to root for master branch
+          single-commit: false
           clean: True
 
       - name: deploy website for dev
