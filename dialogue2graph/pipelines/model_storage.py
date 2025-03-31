@@ -75,5 +75,5 @@ class ModelStorage(BaseModel):
         written to the specified file in YAML format.
         """
         with open(path, "w") as f:
-            storage_dump = {k: v.config.model_dump() for k, v in self.storage.items()}
+            storage_dump = {k: v.config for k, v in self.storage.items()}
             yaml.dump(storage_dump, f)
