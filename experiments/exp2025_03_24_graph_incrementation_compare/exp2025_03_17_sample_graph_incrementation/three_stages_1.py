@@ -9,6 +9,9 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.runnables.base import Runnable
 
+from fixing_parser import EnhancedOutputFixingParser
+from parser_helpers import remove_backticks_and_format
+
 from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import DialogueGraph, Node
@@ -17,7 +20,19 @@ from utils import call_llm_api, nodes2graph
 from settings import EnvSettings
 from missing_edges_prompt import three_1, three_2
 from prompts import (
- graph_example_1, part_1, part_2_v3, dialog_example_1
+ graph_example_1, 
+ graph_example_2,
+ graph_example_3,
+ graph_example_4,
+ dialog_example_1,
+ dialog_example_2,
+ dialog_example_3,
+ dialog_example_4,
+ part_1, 
+ part_2_v3, 
+ dialog_example_1, 
+ few_shot_examples, 
+ instruction,
 )
 # from chatsky_llm_autoconfig.metrics.automatic_metrics import (
 #     is_same_structure,
@@ -42,7 +57,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     model_name: str = ""
     parser_model: ChatOpenAI = None
     base_model: ChatOpenAI = None
-    output_parser: OutputFixingParser = None
+    output_parser: EnhancedOutputFixingParser = None
     model: ChatOpenAI = None
 
     def __init__(self, model_name, prompt_name: str=""):
@@ -52,7 +67,6 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         self.parser_model = ChatOpenAI(model='gpt-4o-mini-2024-07-18', api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
         self.base_model = ChatOpenAI(model=self.model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL)
         self.output_parser = OutputFixingParser.from_llm(self.parser_model, PydanticOutputParser(pydantic_object=DialogueNodes), max_retries=3)
-        print(self.output_parser)
         self.model = self.base_model | self.output_parser
 
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None, topic: str = "") -> BaseGraph:
@@ -62,8 +76,18 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         for idx, dial in enumerate(dialogue):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-        prompt = PromptTemplate(template=part_1+"{dialog_example} \n------\n{graph_example_1}. "+prompt_extra, input_variables=["graph_example_1"], partial_variables=partial_variables)
-        nodes = call_llm_api(prompt.format(graph_example_1=graph_example_1, dialog_example=dialog_example_1), self.model).model_dump()
+        prompt = PromptTemplate(template=part_1+instruction+few_shot_examples+prompt_extra,
+                                partial_variables=partial_variables)
+        prompt = prompt.format(graph_example_1=graph_example_1,
+                               graph_example_2=graph_example_2,
+                               graph_example_3=graph_example_3,
+                               graph_example_4=graph_example_4,
+                               dialog_example_1=dialog_example_1,
+                               dialog_example_2=dialog_example_2,
+                               dialog_example_3=dialog_example_3,
+                               dialog_example_4=dialog_example_4,)
+        #return prompt
+        nodes = call_llm_api(prompt, self.model).model_dump()
 
         last_user = False
 

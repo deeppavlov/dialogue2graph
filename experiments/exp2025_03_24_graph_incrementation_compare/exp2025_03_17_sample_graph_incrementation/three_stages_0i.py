@@ -7,6 +7,8 @@ from langchain.prompts import PromptTemplate
 from langchain_openai  import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 
+from parser_helpers import remove_backticks_and_format
+
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph

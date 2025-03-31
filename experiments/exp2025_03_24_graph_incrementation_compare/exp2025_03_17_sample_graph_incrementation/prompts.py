@@ -783,6 +783,7 @@ Assistant: I found 5 expensive restaurants for you.
 14) Don't modify dialogue utterances even slightly (even a single letter) before placing them into the nodes.
 15) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
 16) Add reason point to your answer with an explanation why you didn't use all the assistant's utterances from all the dialogues.
+17) Edges should always have source and target. If you sure there`is no target for the edge, link to the first node.
 I will give a list of dialogues, your task is to build a set of nodes containing all the utterances from this list according to the rules and examples above.
 List of dialogues: """
 
@@ -834,33 +835,43 @@ Original graph: {orig_graph}
 Additional branch: {new_dial}"""
 
 
+
+instruction = """
+Here's the sequence of actions:
+1. Represent the assistant's replicas as nodes of a graph
+2. Represent the user's replicas as edges of the graph
+3. Use specific assistant or user replicas as utterances
+4. Represent the graph as a json according to the example and description below
+"""
+
+
 dialog_example_1 = """
 Dialog 1:
 
 User: Hello
-Assistent: How can I help?
+Assistant: How can I help?
 User: I need to make an order
-Assistent: What books do you like?
+Assistant: What books do you like?
 User: I would like to purchase Pale Fire and Anna Karenina, please
-Assistent: Please, enter the payment method you would like to use: cash or credit card.
+Assistant: Please, enter the payment method you would like to use: cash or credit card.
 User: Cash
-Assistent: Accepted
+Assistant: Something is wrong, can you please use other payment method or start order again
 
 
 Dialog 2:
 User: Hello
-Assistent: Hello
+Assistant: Hello
 User: I want to order from you
-Assistent: What books do you like?
+Assistant: What books do you like?
 User: One War and Piece in hard cover and one Pride and Prejudice
-Assistent: How would you prefer to pay?
+Assistant: How would you prefer to pay?
 User: With credit card, please
-Assistent: Something is wrong, can you please use other payment method or start order again
+Assistant: Something is wrong, can you please use other payment method or start order again
 """
 
 
 graph_example_1 = {
-    "edges": [
+    'edges': [
         {'source': 1, 'target': 2, 'utterances': ['I need to make an order', 'I want to order from you']},
         {'source': 2, 'target': 3, 'utterances': ['I would like to purchase Pale Fire and Anna Karenina, please', 'One War and Piece in hard cover and one Pride and Prejudice']},
         {"source": 3, "target": 4, "utterances": ["With credit card, please", "Cash"]},
@@ -876,7 +887,130 @@ graph_example_1 = {
       'reason': ""
 }
 
+
+dialog_example_2 = """
+Dialog 1:
+
+User: Hi, I want to book a table.
+Assistant: Sure! For how many people?
+User: For 4, tomorrow at 7 PM.
+Assistant: Please confirm: 4 people, tomorrow at 7 PM.
+User: Yes.
+Assistant: Sorry, no tables available at that time. Would you like to try another time?
+User: How about 8 PM?
+Assistant: Table booked successfully!
+"""
+
 graph_example_2 = {
+    "edges": [
+        {"source": 1, "target": 2, "utterances": ["I want to book a table", "Reservation"]},
+        {"source": 2, "target": 3, "utterances": ["For 4, tomorrow at 7 PM", "2 people today at 6 PM"]},
+        {"source": 3, "target": 4, "utterances": ["Yes", "Confirm"]},
+        {"source": 4, "target": 2, "utterances": ["How about 8 PM?", "Any slots at 9 PM?"]}
+    ],
+    "nodes": [
+        {"id": 1, "label": "start", "is_start": True, "utterances": ["Sure! For how many people?"]},
+        {"id": 2, "label": "ask_details", "is_start": False, "utterances": ["For how many people?"]},
+        {"id": 3, "label": "confirm_booking", "is_start": False, "utterances": ["Please confirm: 4 people, tomorrow at 7 PM"]},
+        {"id": 4, "label": "handle_error", "is_start": False, "utterances": ["Sorry, no tables available. Try another time?"]}
+    ],
+    "reason": ""
+}
+
+
+dialog_example_3 = """
+Dialog 1:
+
+User: Check my account balance.
+Assistant: Confirm your identity. Enter your PIN.
+User: 1234
+Assistant: Incorrect PIN. Retry or reset it?
+User: Retry.
+Assistant: Enter your PIN again.
+User: 5678
+Assistant: Balance: $500.
+"""
+
+graph_example_3 = {
+    "edges": [
+        {"source": 1, "target": 2, "utterances": ["Check my account balance", "What's my balance?"]},
+        {"source": 2, "target": 3, "utterances": ["1234", "PIN: 0000"]},
+        {"source": 3, "target": 2, "utterances": ["Retry", "Try again"]},
+        {"source": 3, "target": 4, "utterances": ["5678", "4321"]}
+    ],
+    "nodes": [
+        {"id": 1, "label": "start", "is_start": True, "utterances": ["Confirm your identity. Enter your PIN."]},
+        {"id": 2, "label": "request_pin", "is_start": False, "utterances": ["Enter your PIN"]},
+        {"id": 3, "label": "invalid_pin", "is_start": False, "utterances": ["Incorrect PIN. Retry or reset?"]},
+        {"id": 4, "label": "display_balance", "is_start": False, "utterances": ["Balance: $500"]}
+    ],
+    "reason": ""
+}
+
+dialog_example_4 = """
+Dialog 1:
+
+User: My internet isn’t working.
+Assistant: Restart your router. Did it help?
+User: No.
+Assistant: Check the cables. Are they connected?
+User: Yes, but still no connection.
+Assistant: I’ll escalate the issue. A technician will contact you.
+"""
+
+graph_example_4 = {
+    "edges": [
+        {"source": 1, "target": 2, "utterances": ["My internet isn’t working", "WiFi is down"]},
+        {"source": 2, "target": 3, "utterances": ["No", "Didn’t work"]},
+        {"source": 3, "target": 4, "utterances": ["Yes, but still no connection", "Cables are fine"]}
+    ],
+    "nodes": [
+        {"id": 1, "label": "start", "is_start": True, "utterances": ["Restart your router. Did it help?"]},
+        {"id": 2, "label": "troubleshoot_router", "is_start": False, "utterances": ["Check the cables. Are they connected?"]},
+        {"id": 3, "label": "check_cables", "is_start": False, "utterances": ["Are cables connected?"]},
+        {"id": 4, "label": "escalate_issue", "is_start": False, "utterances": ["I’ll escalate the issue"]}
+    ],
+    "reason": ""
+}
+
+
+
+few_shot_examples = """
+There is some examples of dialogs and corresponding dialog graphs.
+
+Example 1:
+{dialog_example_1}
+
+Graph:
+{graph_example_1}
+
+--------
+
+Example 2:
+{dialog_example_2}
+
+Graph:
+{graph_example_2}
+
+--------
+
+Example 3:
+{dialog_example_3}
+
+Graph:
+{graph_example_3}
+
+--------
+
+Example 4:
+{dialog_example_4}
+
+Graph:
+{graph_example_4}
+
+"""
+
+graph_example_02 = {
     "edges":
         [{"source": 1,
   "target": 2,

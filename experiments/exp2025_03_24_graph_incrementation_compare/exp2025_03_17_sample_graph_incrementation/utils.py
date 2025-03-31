@@ -7,6 +7,7 @@ from embedder import compare_strings
 
 from langchain.schema import HumanMessage
 from langchain_community.embeddings import HuggingFaceEmbeddings
+import re
 
 env_settings = EnvSettings()
 
