@@ -3,15 +3,14 @@ from typing import List
 import pandas as pd
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
-from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import HumanMessage
 
 from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import DialogueGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.metrics.llm_metrics import compare_graphs
 from dialogue2graph.metrics.no_llm_metrics import is_same_structure
 
@@ -36,13 +35,32 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
 
-    grouping_llm: BaseChatModel = Field(description="LLM for grouping assistant utterances into nodes")
-    filling_llm: BaseChatModel = Field(description="LLM for adding missing edges")
-    formatting_llm: BaseChatModel = Field(description="LLM for formatting output")
-    sim_model: HuggingFaceEmbeddings = Field(description="Similarity model")
+    model_storage: ModelStorage = Field(description="Model storage")
+    grouping_llm: str = Field(description="LLM for grouping assistant utterances into nodes")
+    filling_llm: str = Field(description="LLM for adding missing edges")
+    formatting_llm: str = Field(description="LLM for formatting output")
+    sim_model: str = Field(description="Similarity model")
 
-    def __init__(self, grouping_llm: BaseChatModel, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
-        super().__init__(grouping_llm=grouping_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
+    def __init__(self, model_storage: ModelStorage, grouping_llm: str, filling_llm: str, formatting_llm: str, sim_model: str):
+        # if grouping_llm not in model_storage.storage:
+        #     model_storage.add(key="d2g_llm_grouping_llm:v1", config={"name": "gpt-4o-latest", "temperature": 0}, model_type="llm")
+        #     grouping_llm = "d2g_llm_grouping_llm:v1"
+
+        # if filling_llm not in model_storage.storage:
+        #     model_storage.add(key="d2g_llm_filling_llm:v1", config={"name": "o3-mini", "temperature": 1}, model_type="llm")
+        #     filling_llm = "d2g_llm_filling_llm:v1"
+
+        # if formatting_llm not in model_storage.storage:
+        #     model_storage.add(key="d2g_llm_formatting_llm:v1", config={"name": "gpt-4o-mini", "temperature": 0}, model_type="llm")
+        #     formatting_llm = "d2g_llm_formatting_llm:v1"
+
+        # if sim_model not in model_storage.storage:
+        #     model_storage.add(key="d2g_llm_sim_model:v1", config={"model_name": "BAAI/bge-m3", "device": "cuda:0"}, model_type="emb")
+        #     sim_model = "d2g_llm_sim_model:v1"
+
+        super().__init__(
+            model_storage=model_storage, grouping_llm=grouping_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model
+        )
 
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None) -> BaseGraph:
 
@@ -57,8 +75,10 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             partial_variables=partial_variables,
         )
 
-        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.formatting_llm)
-        chain = self.grouping_llm | fixed_output_parser
+        fixed_output_parser = OutputFixingParser.from_llm(
+            parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model
+        )
+        chain = self.model_storage.storage[self.grouping_llm].model | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph_example_1=graph_example_1))]
         nodes = chain.invoke(messages).model_dump()
@@ -66,7 +86,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         _, _, last_user = get_helpers(dialogue)
 
         try:
-            graph_dict = connect_nodes(nodes["nodes"], dialogue, self.sim_model)
+            graph_dict = connect_nodes(nodes["nodes"], dialogue, self.model_storage.storage[self.sim_model].model)
         except Exception as e:
             print(e)
             return Graph({})
@@ -90,8 +110,10 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
             print("PROMPT: ", prompt)
 
-            fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.formatting_llm)
-            chain = self.filling_llm | fixed_output_parser
+            fixed_output_parser = OutputFixingParser.from_llm(
+                parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.model_storage.storage[self.formatting_llm].model
+            )
+            chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
 
             messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
 
