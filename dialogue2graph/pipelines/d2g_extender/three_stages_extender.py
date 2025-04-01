@@ -51,11 +51,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
         sim_model: str,
     ):
         super().__init__(
-            model_storage=model_storage,
-            extending_llm=extending_llm,
-            filling_llm=filling_llm,
-            formatting_llm=formatting_llm,
-            sim_model=sim_model
+            model_storage=model_storage, extending_llm=extending_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model
         )
 
     def invoke(self, dialogues: list[Dialogue] = None, graph: Graph = None) -> BaseGraph:
@@ -67,8 +63,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
             )
 
             fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=DialogueNodes),
-                llm=self.model_storage.storage[self.formatting_llm].model
+                parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model
             )
             chain = self.model_storage.storage[self.extending_llm].model | fixed_output_parser
 
@@ -104,8 +99,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
             messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
 
             fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=DialogueGraph),
-                llm=self.model_storage.storage[self.formatting_llm].model
+                parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.model_storage.storage[self.formatting_llm].model
             )
             chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
             result = chain.invoke(messages)

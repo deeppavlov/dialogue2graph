@@ -29,7 +29,7 @@ class TopicGenerationPipeline(BasePipeline):
                     "api_key": os.getenv("OPENAI_API_KEY"),
                     "base_url": os.getenv("OPENAI_BASE_URL"),
                 },
-                model_type="llm"
+                model_type="llm",
             )
 
         if validation_llm not in model_storage.storage:
@@ -41,7 +41,7 @@ class TopicGenerationPipeline(BasePipeline):
                     "base_url": os.getenv("OPENAI_BASE_URL"),
                     "temperature": 0,
                 },
-                model_type="llm"
+                model_type="llm",
             )
 
         if theme_validation_llm not in model_storage.storage:
@@ -53,7 +53,7 @@ class TopicGenerationPipeline(BasePipeline):
                     "base_url": os.getenv("OPENAI_BASE_URL"),
                     "temperature": 0,
                 },
-                model_type="llm"
+                model_type="llm",
             )
 
         super().__init__(

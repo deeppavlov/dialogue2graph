@@ -40,12 +40,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     sim_model: str = Field(description="Similarity model")
 
     def __init__(self, model_storage: ModelStorage, filling_llm: str, formatting_llm: str, sim_model: str):
-        super().__init__(
-            model_storage=model_storage,
-            filling_llm=filling_llm,
-            formatting_llm=formatting_llm,
-            sim_model=sim_model
-        )
+        super().__init__(model_storage=model_storage, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
 
     def invoke(self, dialogue: list[Dialogue] = None, graph: DialogueGraph = None) -> BaseGraph:
         try:
@@ -80,8 +75,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             )
 
             fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=DialogueGraph),
-                llm=self.model_storage.storage[self.formatting_llm].model
+                parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.model_storage.storage[self.formatting_llm].model
             )
             chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
 

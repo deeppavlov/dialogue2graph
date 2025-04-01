@@ -278,7 +278,7 @@ class GenerationPipeline(BaseModel):
 
 class LoopedGraphGenerator(TopicGraphGenerator):
     """Graph generator for topic-based dialogue generation with model storage support"""
-    
+
     model_storage: ModelStorage = Field(description="Model storage")
     generation_llm: str = Field(description="LLM for graph generation")
     validation_llm: str = Field(description="LLM for validation")
