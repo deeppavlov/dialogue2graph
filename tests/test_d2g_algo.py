@@ -194,12 +194,7 @@ def test_d2g_algo(sample_dialogues):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
-        model_storage=ms,
-        filling_llm="filling_llm",
-        formatting_llm="formatting_llm",
-        sim_model="sim_model"
-    )
+    pipeline = Pipeline(model_storage=ms, filling_llm="filling_llm", formatting_llm="formatting_llm", sim_model="sim_model")
 
     graph = pipeline.invoke(sample_dialogues)
 

@@ -1,7 +1,7 @@
 from dialogue2graph.datasets.complex_dialogues.generation import (
     CycleGraphGenerator,
     GenerationPipeline,
-    LoopedGraphGenerator,
+    # LoopedGraphGenerator,
     ErrorType,
     GenerationError,
 )

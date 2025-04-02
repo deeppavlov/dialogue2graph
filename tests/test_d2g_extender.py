@@ -180,24 +180,17 @@ def test_d2g_extender(sample_dialogues):
 
     ms.add(
         key="extending_llm",
-        config={"name": "gpt-4o-latest", "temperature": 1,
-                "api_key": os.getenv("OPENAI_API_KEY"),
-                "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"name": "gpt-4o-latest", "temperature": 1, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
         model_type="llm",
     )
     ms.add(
         key="filling_llm",
-        config={"name": "o3-mini",
-                "temperature": 1,
-                "api_key": os.getenv("OPENAI_API_KEY"),
-                "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"name": "o3-mini", "temperature": 1, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
         model_type="llm",
     )
     ms.add(
         key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0,
-                "api_key": os.getenv("OPENAI_API_KEY"),
-                "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"name": "gpt-4o-mini", "temperature": 0, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
         model_type="llm",
     )
     ms.add(
@@ -206,12 +199,7 @@ def test_d2g_extender(sample_dialogues):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
-        model_storage=ms,
-        extending_llm="extending_llm",
-        filling_llm="filling_llm",
-        formatting_llm="formatting_llm"
-    )
+    pipeline = Pipeline(model_storage=ms, extending_llm="extending_llm", filling_llm="filling_llm", formatting_llm="formatting_llm")
 
     graph = pipeline.invoke(sample_dialogues)
 

@@ -9,6 +9,7 @@ if not dotenv.find_dotenv():
     pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
 ms = ModelStorage()
 
+
 @pytest.fixture
 def sample_dialogues():
     return [
