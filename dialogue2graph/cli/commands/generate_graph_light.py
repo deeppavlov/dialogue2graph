@@ -6,7 +6,7 @@ from dialogue2graph.pipelines.models import ModelsAPI
 models = ModelsAPI()
 
 
-def generate_algo(dialogues: str, config: dict, output_path: str):
+def generate_light(dialogues: str, config: dict, output_path: str):
     """Generates graph from dialogues via d2g_algo pipeline using parameters from config
     and saves graph dictionary to output_path"""
 

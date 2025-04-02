@@ -10,13 +10,13 @@ from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.pipelines.d2g_algo.three_stages_algo import ThreeStagesGraphGenerator as AlgoGenerator
+from dialogue2graph.pipelines.d2g_light.three_stages_light import ThreeStagesGraphGenerator as LightGenerator
 from dialogue2graph.pipelines.core.algorithms import GraphExtender
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
-from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType, PipelineRawDataType
+from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
 from .prompts import extending_prompt_part_1, extending_prompt_part_2
 
@@ -47,7 +47,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
     formatting_llm: BaseChatModel
     sim_model: HuggingFaceEmbeddings
     step: int
-    algo_generator: AlgoGenerator
+    algo_generator: LightGenerator
     step1_evals: list[callable]
     extender_evals: list[callable]
     step2_evals: list[callable]
@@ -70,7 +70,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
             filling_llm=filling_llm,
             formatting_llm=formatting_llm,
             sim_model=sim_model,
-            algo_generator=AlgoGenerator(filling_llm, formatting_llm, sim_model, step2_evals, end_evals),
+            algo_generator=LightGenerator(filling_llm, formatting_llm, sim_model, step2_evals, end_evals),
             step1_evals=step1_evals,
             extender_evals=extender_evals,
             step2_evals=step2_evals,
@@ -115,14 +115,9 @@ class ThreeStagesGraphGenerator(GraphExtender):
             start_point = 0
             report = {}
         else:
-            supported_graph = None
-            true_graph = None
-            if pipeline_data.supported_graph:
-                supported_graph = pipeline_data.supported_graph.graph_dict
-            if pipeline_data.true_graph:
-                supported_graph = pipeline_data.true_graph.graph_dict
-            raw_data = PipelineRawDataType(dialogs=pipeline_data.dialogs[: self.step], supported_graph=supported_graph, true_graph=true_graph)
-            cur_graph, report = self.algo_generator.invoke(raw_data)
+            raw_data = PipelineDataType(dialogs=pipeline_data.dialogs[: self.step], true_graph=pipeline_data.true_graph)
+            cur_graph, report = self.algo_generator.invoke(raw_data, enable_evals)
+            report = {f"d2g_light:{k}": v for k, v in report.items()}
             start_point = self.step
         if enable_evals and pipeline_data.true_graph is not None:
             report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step1"))
@@ -133,7 +128,6 @@ class ThreeStagesGraphGenerator(GraphExtender):
 
         _, _, last_user = get_helpers(pipeline_data.dialogs)
         try:
-            # result_graph = Graph(graph_dict=cur_graph)
             if enable_evals and pipeline_data.true_graph is not None:
                 report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step2"))
             if not last_user:

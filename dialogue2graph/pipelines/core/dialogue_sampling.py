@@ -12,6 +12,8 @@ from dialogue2graph.datasets.complex_dialogues.find_graph_ends import find_graph
 from langchain_openai import ChatOpenAI
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+visited_list = [[]]
+
 
 class EnvSettings(BaseSettings, case_sensitive=True):
     """Pydantic settings to get env variables"""

@@ -1,8 +1,10 @@
 import json
 import pytest
-from dialogue2graph import Graph, Dialogue
+from dialogue2graph import metrics
+from dialogue2graph import Dialogue
 from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
 from dialogue2graph.pipelines.models import ModelsAPI
+from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
 models = ModelsAPI()
 
@@ -23,7 +25,7 @@ def graph_positive_1(test_data):
     """
     Graph #1 from the positive scenario (data[0]).
     """
-    return Graph(graph_dict=test_data[0]["graph"])
+    return test_data[0]["graph"]
 
 
 @pytest.fixture
@@ -31,7 +33,7 @@ def graph_negative(test_data):
     """
     Graph #3 from the negative scenario (data[2]).
     """
-    return Graph(graph_dict=test_data[2]["graph"])
+    return test_data[2]["graph"]
 
 
 @pytest.fixture
@@ -61,14 +63,28 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
     formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
     sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
 
-    pipeline = Pipeline(extending_llm, filling_llm, formatting_llm, sim_model, 2)
+    pipeline = Pipeline(
+        "d2g_ext",
+        extending_llm,
+        filling_llm,
+        formatting_llm,
+        sim_model,
+        step1_evals=metrics.PreDGEvalBase,
+        extender_evals=metrics.PreDGEvalBase,
+        step2_evals=metrics.DGEvalBase,
+        end_evals=metrics.DGEvalBase,
+        step=1,
+    )
 
-    result = pipeline.invoke(dialogues_positive, graph_positive_1)
-    assert result["is_same_structure"] is True, f"Expected value=True, but got: {result['is_same_structure']}"
-    assert result["graph_match"]["value"] is True, result["graph_match"]["description"]
+    raw_data = PipelineRawDataType(dialogs=dialogues_positive, true_graph=graph_positive_1)
+    _, report = pipeline.invoke(raw_data, enable_evals=True)
+
+    assert (
+        report.properties["complex_graph_comparison"]["value"] is True
+    ), f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
 
 
-def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
+def test_d2g_extender_negative(dialogues_negative, graph_negative):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
@@ -77,8 +93,20 @@ def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
     formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
     sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
 
-    pipeline = Pipeline(extending_llm, filling_llm, formatting_llm, sim_model, 2)
+    pipeline = Pipeline(
+        "d2g_ext",
+        extending_llm,
+        filling_llm,
+        formatting_llm,
+        sim_model,
+        step1_evals=metrics.PreDGEvalBase,
+        extender_evals=metrics.PreDGEvalBase,
+        step2_evals=metrics.DGEvalBase,
+        end_evals=metrics.DGEvalBase,
+        step=1,
+    )
 
-    result = pipeline.invoke(dialogues_negative, graph_positive_1)
-    assert result["is_same_structure"] is False, "Expected value=False in the negative scenario."
-    assert result["graph_match"]["value"] is False, "Expected value=False in the negative scenario."
+    raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_negative)
+    _, report = pipeline.invoke(raw_data, enable_evals=True)
+
+    assert report.properties["complex_graph_comparison"]["value"] is False, "Expected value=False in the negative scenario."

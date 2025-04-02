@@ -4,7 +4,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
 
-from .three_stages_extender import ThreeStagesGraphGenerator as Extender
+from dialogue2graph.pipelines.d2g_extender.three_stages_extender import ThreeStagesGraphGenerator as Extender
 
 
 load_dotenv()

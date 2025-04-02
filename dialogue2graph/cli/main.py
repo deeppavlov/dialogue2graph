@@ -2,7 +2,7 @@ import click
 import yaml
 from dotenv import load_dotenv
 from .commands.generate_data import generate_data
-from .commands.generate_graph_algo import generate_algo
+from .commands.generate_graph_light import generate_algo
 from .commands.generate_graph_llm import generate_llm
 from .commands.generate_graph_extender import generate_extender
 
@@ -36,7 +36,7 @@ def gen_data(env: str, cfg: str, topic: str, output: str):
 @click.option("--cfg", "-c", help="Path to cfg.yml file", default="cfg.yml")
 @click.option("--dialogues", "-d", help="Input dialogues file", required=True)
 @click.option("--output", "-o", help="Output graph file", required=True)
-def gen_graph_algo(env: str, cfg: str, dialogues: str, output: str):
+def gen_graph_light(env: str, cfg: str, dialogues: str, output: str):
     """Generate graph from dialogues data via d2g_algo pipeline"""
     load_dotenv(env)
     with open(cfg) as stream:
