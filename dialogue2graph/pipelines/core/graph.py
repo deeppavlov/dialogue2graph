@@ -6,6 +6,7 @@ import abc
 import logging
 
 logger = logging.getLogger(__name__)
+visited_list = [[]]
 
 
 class BaseGraph(BaseModel, abc.ABC):
@@ -248,7 +249,7 @@ class Graph(BaseGraph):
         """Recursion to find all the graph paths with ids of graph nodes
         where node with id=start added to last repeats elements in the visited path do not have any occurance
         visited_list is global variable to store the result"""
-        global visited_list
+        # global visited_list
         if len(visited) < repeats or not self._list_in(visited[-repeats:] + [start], visited):
             visited.append(start)
             for edge in self.edge_by_source(start):
@@ -261,7 +262,7 @@ class Graph(BaseGraph):
         visited_list is global variable to store the result
         """
 
-        global visited_list
+        # global visited_list
 
         graph = self.graph_dict
         if len(visited) <= len(graph["edges"]) and end not in visited_list[-1]:

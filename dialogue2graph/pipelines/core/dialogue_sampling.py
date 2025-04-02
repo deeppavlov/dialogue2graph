@@ -13,6 +13,7 @@ from langchain_openai import ChatOpenAI
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 visited_list = [[]]
+counter = 0
 
 
 class EnvSettings(BaseSettings, case_sensitive=True):
@@ -103,7 +104,7 @@ def get_all_combinations(path: list, start: dict, next: int, visited: list):
     counter counts number of combinations
     If counter is too big, an error raised"""
 
-    global visited_list, counter
+    global counter
     visited.append(start)
 
     if next < len(path):
