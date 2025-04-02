@@ -1,6 +1,7 @@
 import yaml
 import logging
 from typing import Literal, Union, Dict
+from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
 from langchain_openai import ChatOpenAI
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -84,7 +85,7 @@ class ModelStorage(BaseModel):
 
     storage: Dict[str, StoredData] = Field(default_factory=dict)
 
-    def load(self, path: str):
+    def load(self, path: Path):
         """
         Load model configurations from a YAML file into the storage.
 
