@@ -90,7 +90,7 @@ Create graph instance and invoke sampler to get dialogue list
 
 ```python
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from chatsky_llm_autoconfig.graph import Graph
+from dialogue2graph.pipelines.core.graph import Graph
 
 G = Graph(graph_dict={...})
 
