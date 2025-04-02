@@ -3,7 +3,6 @@ from pathlib import Path
 from dialogue2graph.pipelines.d2g_algo.pipeline import Pipeline
 from dialogue2graph.pipelines.models import ModelsAPI
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
-from dialogue2graph import metrics
 
 models = ModelsAPI()
 
@@ -31,12 +30,11 @@ def generate_light(dialogues: str, config: dict, output_path: str):
     formatting_llm = models("llm", name=formatter_name, temp=formatter_temp)
     sim_model = models("similarity", name=sim_name, device=device)
 
-    pipeline = Pipeline("d2g_light", filling_llm, formatting_llm, sim_model, step2_evals=metrics.DGEvalBase, end_evals=metrics.DGEvalBase)
+    pipeline = Pipeline("d2g_light", filling_llm, formatting_llm, sim_model, step2_evals=[], end_evals=[])
 
     raw_data = PipelineRawDataType(dialogs=dialogues)
-    _, report = pipeline.invoke(raw_data, enable_evals=True)
+    result, _ = pipeline.invoke(raw_data)
 
-    result = pipeline.invoke(dialogues)
     print("Result:", result.graph_dict)
 
     # Save results

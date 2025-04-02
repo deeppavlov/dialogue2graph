@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 from dialogue2graph.pipelines.d2g_llm.pipeline import Pipeline
 from dialogue2graph.pipelines.models import ModelsAPI
+from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
 models = ModelsAPI()
 
@@ -34,9 +35,10 @@ def generate_llm(dialogues: str, config: dict, output_path: str):
     formatting_llm = models("llm", name=formatter_name, temp=formatter_temp)
     sim_model = models("similarity", name=sim_name, device=device)
 
-    pipeline = Pipeline(grouping_llm=grouping_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
+    pipeline = Pipeline("d2g_llm", grouping_llm, filling_llm, formatting_llm, sim_model, step2_evals=[], end_evals=[])
 
-    result = pipeline.invoke(dialogues)
+    raw_data = PipelineRawDataType(dialogs=dialogues)
+    result, _ = pipeline.invoke(raw_data)
     print("Result:", result.graph_dict)
 
     # Save results

@@ -2,7 +2,7 @@ import click
 import yaml
 from dotenv import load_dotenv
 from .commands.generate_data import generate_data
-from .commands.generate_graph_light import generate_algo
+from .commands.generate_graph_light import generate_light
 from .commands.generate_graph_llm import generate_llm
 from .commands.generate_graph_extender import generate_extender
 
@@ -45,7 +45,7 @@ def gen_graph_light(env: str, cfg: str, dialogues: str, output: str):
             config = yaml.safe_load(stream)
         except yaml.YAMLError as exc:
             print(exc)
-    generate_algo(dialogues, config, output)
+    generate_light(dialogues, config, output)
 
 
 @cli.command()
