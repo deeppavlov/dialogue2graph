@@ -41,7 +41,11 @@ cd dialogue2graph
 poetry install
 ```
 
-If you are planning to visualize your graphs consider installing **PyGraphviz** from [here](https://pygraphviz.github.io/).
+If you are planning to visualize your graphs consider installing **PyGraphviz** from [here](https://pygraphviz.github.io/) and also add it to the poetry environment.
+
+```bash
+poetry add pygraphviz
+```
 
 Ensure that dependencies were installed correctly by running any Python script
 
