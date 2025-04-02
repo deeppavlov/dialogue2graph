@@ -614,6 +614,10 @@ def _message_has_greeting(text: str) -> bool:
     return bool(re.match(r"^hello|^hi|^greetings", text, flags=re.IGNORECASE))
 
 
+def _message_has_closing(text: str) -> bool:
+    return bool(re.search(r"have a (great|good|nice) day.$|goodbye.$", text, flags=re.IGNORECASE))
+
+
 def is_greeting_repeated(dialogues: list[Dialogue]) -> bool:
     """
     Checks whether greeting is repeated within dialogues.
@@ -622,6 +626,19 @@ def is_greeting_repeated(dialogues: list[Dialogue]) -> bool:
     for dialogue in dialogues:
         for i, message in enumerate(dialogue.messages):
             if i != 0 and message.participant == "assistant" and _message_has_greeting(message.text):
+                return True
+    return False
+
+
+def is_closed_too_early(dialogues: list[Dialogue]) -> bool:
+    """
+    Checks if assistant tried to close dialogue in the middle.
+    Returns True if closing appeared too early, False otherwise.
+    """
+    for dialogue in dialogues:
+        last_turn_idx = len(dialogue.messages) - 1
+        for i, message in enumerate(dialogue.messages):
+            if i != last_turn_idx and message.participant == "assistant" and _message_has_closing(message.text):
                 return True
     return False
 

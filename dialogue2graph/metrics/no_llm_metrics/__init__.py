@@ -7,4 +7,6 @@ from .metrics import (
     match_roles,
     is_correct_length,
     is_same_structure,
+    is_greeting_repeated,
+    is_closed_too_early,
 )
