@@ -1,6 +1,6 @@
-# chatsky-llm-integration
+# Dialogue2Graph
 
-Chatsky LLM-Autoconfig allows you to effortlessly create *chatsky flows* and scripts from dialogues using Large Language Models.
+Dialogue2Graph allows you to effortlessly create *chatsky flows* and scripts from dialogues using Large Language Models.
 
 ## Contents
 
@@ -36,8 +36,8 @@ pipx install poetry==1.8.4
 Clone this repo and install project dependencies
 
 ```bash
-git clone https://github.com/deeppavlov/chatsky-llm-autoconfig.git
-cd chatsky-llm-autoconfig
+git clone https://github.com/deeppavlov/dialogue2graph.git
+cd dialogue2graph
 poetry install
 ```
 
@@ -50,7 +50,6 @@ poetry run python <your_file_name>.py
 ```
 
 Create `.env` file to store credentials
-
 
 **Note:** never hardcode your personal tokens and other sensitive credentials. Use the `.env` file to store them.
 
@@ -101,4 +100,4 @@ sampler.invoke(graph=G) #-> list of Dialogue objects
 
 ## How to Contribute
 
-See contribution guideline [CONTRIBUTING.md](https://github.com/deeppavlov/chatsky-llm-autoconfig/blob/main/CONTRIBUTING.md)
+See contribution guideline [CONTRIBUTING.md](https://github.com/deeppavlov/dialogue2graph/blob/dev/CONTRIBUTING.md)
