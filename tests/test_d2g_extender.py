@@ -1,9 +1,12 @@
+import os
 import pytest
+import dotenv
 from dialogue2graph.pipelines.core.graph import Graph
 from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
-from dialogue2graph.pipelines.models import ModelsAPI
+from dialogue2graph.pipelines.model_storage import ModelStorage
 
-models = ModelsAPI()
+dotenv.load_dotenv()
+ms = ModelStorage()
 
 
 @pytest.fixture
@@ -170,16 +173,43 @@ def sample_dialogues():
     ]
 
 
-def test_d2g_algo(sample_dialogues):
+def test_d2g_extender(sample_dialogues):
     """Test that graph is generated without errors"""
 
-    extending_llm = models("llm", name="chatgpt-4o-latest", temp=0)
-    filling_llm = models("llm", name="o3-mini", temp=1)
-    formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
+    ms.add(
+        key="extending_llm",
+        config={"name": "gpt-4o-latest", "temperature": 1,
+                "api_key": os.getenv("OPENAI_API_KEY"),
+                "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="filling_llm",
+        config={"name": "o3-mini",
+                "temperature": 1,
+                "api_key": os.getenv("OPENAI_API_KEY"),
+                "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="formatting_llm",
+        config={"name": "gpt-4o-mini", "temperature": 0,
+                "api_key": os.getenv("OPENAI_API_KEY"),
+                "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="sim_model",
+        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+        model_type="emb",
+    )
 
-    sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
-
-    pipeline = Pipeline(extending_llm, filling_llm, formatting_llm, sim_model)
+    pipeline = Pipeline(
+        model_storage=ms,
+        extending_llm="extending_llm",
+        filling_llm="filling_llm",
+        formatting_llm="formatting_llm"
+    )
 
     graph = pipeline.invoke(sample_dialogues)
 

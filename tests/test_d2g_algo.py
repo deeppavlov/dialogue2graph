@@ -1,9 +1,11 @@
 import pytest
+import dotenv
 from dialogue2graph.pipelines.core.graph import Graph
 from dialogue2graph.pipelines.d2g_algo.pipeline import Pipeline
-from dialogue2graph.pipelines.models import ModelsAPI
+from dialogue2graph.pipelines.model_storage import ModelStorage
 
-models = ModelsAPI()
+dotenv.load_dotenv()
+ms = ModelStorage()
 
 
 @pytest.fixture
@@ -173,11 +175,28 @@ def sample_dialogues():
 def test_d2g_algo(sample_dialogues):
     """Test that graph is generated without errors"""
 
-    filling_llm = models("llm", name="o3-mini", temp=1)
-    formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
-    sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
+    ms.add(
+        key="filling_llm",
+        config={"name": "o3-mini", "temperature": 1},
+        model_type="llm",
+    )
+    ms.add(
+        key="formatting_llm",
+        config={"name": "gpt-4o-mini", "temperature": 0},
+        model_type="llm",
+    )
+    ms.add(
+        key="sim_model",
+        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+        model_type="emb",
+    )
 
-    pipeline = Pipeline(filling_llm, formatting_llm, sim_model)
+    pipeline = Pipeline(
+        model_storage=ms,
+        filling_llm="filling_llm",
+        formatting_llm="formatting_llm",
+        sim_model="sim_model"
+    )
 
     graph = pipeline.invoke(sample_dialogues)
 

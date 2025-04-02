@@ -1,5 +1,6 @@
 import yaml
 import logging
+import dotenv
 from typing import Literal, Union, Dict
 from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
@@ -7,6 +8,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 
+dotenv.load_dotenv()
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",

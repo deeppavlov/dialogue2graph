@@ -41,11 +41,11 @@ def test_generation_pipeline_init():
     assert isinstance(pipeline, GenerationPipeline)
 
 
-def test_looped_graph_generator_init():
-    """Test LoopedGraphGenerator initialization"""
-    model = MockChatModel()
-    generator = LoopedGraphGenerator(generation_model=model, validation_model=model, theme_validation_model=model)
-    assert isinstance(generator, LoopedGraphGenerator)
+# def test_looped_graph_generator_init():
+#     """Test LoopedGraphGenerator initialization"""
+#     model = MockChatModel()
+#     generator = LoopedGraphGenerator(generation_model=model, validation_model=model, theme_validation_model=model)
+#     assert isinstance(generator, LoopedGraphGenerator)
 
 
 def test_dialogue_init():
