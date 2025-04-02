@@ -1,22 +1,22 @@
 import logging
-import pandas as pd
 from typing import List
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
 from langchain_core.language_models.chat_models import BaseChatModel
+
+from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.pipelines.core.schemas import DialogueGraph
 from dialogue2graph.pipelines.d2g_algo.three_stages_algo import ThreeStagesGraphGenerator as AlgoGenerator
 from dialogue2graph.pipelines.core.algorithms import GraphExtender
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
-from dialogue2graph.metrics.no_llm_metrics import is_same_structure
-from dialogue2graph.metrics.llm_metrics import compare_graphs
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
+from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType, PipelineRawDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
 from .prompts import extending_prompt_part_1, extending_prompt_part_2
 
@@ -26,6 +26,8 @@ class DialogueNodes(BaseModel):
     reason: str = Field(description="explanation")
 
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 dialogue_sampler = RecursiveDialogueSampler()
 
@@ -39,26 +41,44 @@ class ThreeStagesGraphGenerator(GraphExtender):
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     extending_llm: BaseChatModel
     filling_llm: BaseChatModel
     formatting_llm: BaseChatModel
     sim_model: HuggingFaceEmbeddings
     step: int
     algo_generator: AlgoGenerator
+    step1_evals: list[callable]
+    extender_evals: list[callable]
+    step2_evals: list[callable]
+    end_evals: list[callable]
 
     def __init__(
-        self, extending_llm: BaseChatModel, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings, step: int = 2
+        self,
+        extending_llm: BaseChatModel,
+        filling_llm: BaseChatModel,
+        formatting_llm: BaseChatModel,
+        sim_model: HuggingFaceEmbeddings,
+        step1_evals: list[callable],
+        extender_evals: list[callable],
+        step2_evals: list[callable],
+        end_evals: list[callable],
+        step: int = 2,
     ):
         super().__init__(
             extending_llm=extending_llm,
             filling_llm=filling_llm,
             formatting_llm=formatting_llm,
             sim_model=sim_model,
-            algo_generator=AlgoGenerator(filling_llm, formatting_llm, sim_model),
+            algo_generator=AlgoGenerator(filling_llm, formatting_llm, sim_model, step2_evals, end_evals),
+            step1_evals=step1_evals,
+            extender_evals=extender_evals,
+            step2_evals=step2_evals,
+            end_evals=end_evals,
             step=step,
         )
 
-    def _add_step(self, dialogues: list[Dialogue], graph: DialogueGraph) -> DialogueGraph:
+    def _add_step(self, dialogues: list[Dialogue], graph: Graph) -> Graph:
 
         partial_variables = {}
         prompt_extra = extending_prompt_part_2
@@ -74,36 +94,54 @@ class ThreeStagesGraphGenerator(GraphExtender):
         fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.formatting_llm)
         chain = self.extending_llm | fixed_output_parser
 
-        messages = [HumanMessage(content=prompt.format(graph=graph))]
+        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict))]
         nodes = chain.invoke(messages).model_dump()
 
         for idx in range(len(nodes["nodes"])):
             nodes["nodes"][idx]["utterances"] = list(set(nodes["nodes"][idx]["utterances"]))
         try:
-            sampled_dialogues = dialogue_sampler.invoke(Graph(graph), 15)
+            sampled_dialogues = dialogue_sampler.invoke(graph, 15)
             graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues + dialogues, self.sim_model)
         except Exception as e:
-            print(e)
+            logger.error("Error in dialog sampler: %s", e)
             return Graph({})
         graph_dict = {"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]}
-        return graph_dict
+        return Graph(graph_dict)
 
-    def invoke(self, dialogues: list[Dialogue]) -> BaseGraph:
+    def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
 
-        cur_graph = self.algo_generator.invoke(dialogues[: self.step]).graph_dict
-        # for seq in dialogues[self.step::self.step]:
-        for point in range(self.step, len(dialogues) - 1, self.step):
-            cur_graph = self._add_step(dialogues[point : point + self.step], cur_graph)
+        if pipeline_data.supported_graph is not None:
+            cur_graph = pipeline_data.supported_graph
+            start_point = 0
+            report = {}
+        else:
+            supported_graph = None
+            true_graph = None
+            if pipeline_data.supported_graph:
+                supported_graph = pipeline_data.supported_graph.graph_dict
+            if pipeline_data.true_graph:
+                supported_graph = pipeline_data.true_graph.graph_dict
+            raw_data = PipelineRawDataType(dialogs=pipeline_data.dialogs[: self.step], supported_graph=supported_graph, true_graph=true_graph)
+            cur_graph, report = self.algo_generator.invoke(raw_data)
+            start_point = self.step
+        if enable_evals and pipeline_data.true_graph is not None:
+            report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step1"))
+        for point in range(start_point, len(pipeline_data.dialogs) - 1, self.step):
+            cur_graph = self._add_step(pipeline_data.dialogs[point : point + self.step], cur_graph)
+            if enable_evals and pipeline_data.true_graph is not None:
+                report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "extender"))
 
-        _, _, last_user = get_helpers(dialogues)
+        _, _, last_user = get_helpers(pipeline_data.dialogs)
         try:
+            # result_graph = Graph(graph_dict=cur_graph)
+            if enable_evals and pipeline_data.true_graph is not None:
+                report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step2"))
             if not last_user:
-                result_graph = Graph(graph_dict=cur_graph)
-                return result_graph
+                return cur_graph, report
 
             partial_variables = {}
             prompt_extra = ""
-            for idx, dial in enumerate(dialogues):
+            for idx, dial in enumerate(pipeline_data.dialogs):
                 partial_variables[f"var_{idx}"] = dial.to_list()
                 prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
             prompt = PromptTemplate(
@@ -111,36 +149,33 @@ class ThreeStagesGraphGenerator(GraphExtender):
                 input_variables=["graph_dict"],
                 partial_variables=partial_variables,
             )
-            messages = [HumanMessage(content=prompt.format(graph_dict=cur_graph))]
+            messages = [HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))]
 
             fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.formatting_llm)
             chain = self.filling_llm | fixed_output_parser
             result = chain.invoke(messages)
 
             if result is None:
-                return Graph(graph_dict={})
+                return Graph(graph_dict={}), report
             result.reason = "Fixes: " + result.reason
             graph_dict = result.model_dump()
             if not all([e["target"] for e in graph_dict["edges"]]):
-                return Graph(graph_dict={})
+                return Graph(graph_dict={}), report
             result_graph = Graph(graph_dict=graph_dict)
-            return result_graph
+            if enable_evals and pipeline_data.true_graph is not None:
+                report.update(self.evaluate(result_graph, pipeline_data.true_graph, "end"))
+            return result_graph, report
         except Exception as e:
+            logger.error("Error in step3: %s", e)
             print(e)
-            return Graph({})
+            return Graph({}), report
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    def evaluate(self, dialogues, gt_graph, report_type="dict"):
-        graph = self.invoke(dialogues)
-        report = {
-            "is_same_structure": is_same_structure(graph, gt_graph),
-            "graph_match": compare_graphs(graph, gt_graph),
-        }
-        if report_type == "dataframe":
-            report = pd.DataFrame(report, index=[0])
-        elif report_type == "dict":
-            return report
-        else:
-            raise ValueError(f"Invalid report_type: {report_type}")
+    def evaluate(self, graph, gt_graph, eval_stage: str) -> metrics.DGReportType:
+
+        report = {}
+        for metric in getattr(self, eval_stage + "_evals"):
+            report[metric.__name__ + ":" + eval_stage] = metric(graph, gt_graph)
+        return report

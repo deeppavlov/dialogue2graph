@@ -1,6 +1,6 @@
 import logging
 from typing import List
-import pandas as pd
+from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
 from langchain_core.language_models.chat_models import BaseChatModel
@@ -8,16 +8,20 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import HumanMessage
 
-from dialogue2graph import Dialogue, Graph
+from dialogue2graph import metrics
+from dialogue2graph import Graph
 from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
-from dialogue2graph.metrics.llm_metrics import compare_graphs
-from dialogue2graph.metrics.no_llm_metrics import is_same_structure
+
 
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
+from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
 from .prompts import graph_example_1, grouping_prompt_1, grouping_prompt_2
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class DialogueNodes(BaseModel):
@@ -36,19 +40,37 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
 
+    model_config = ConfigDict(arbitrary_types_allowed=True)
     grouping_llm: BaseChatModel
     filling_llm: BaseChatModel
     formatting_llm: BaseChatModel
     sim_model: HuggingFaceEmbeddings
+    step2_evals: list[callable]
+    end_evals: list[callable]
 
-    def __init__(self, grouping_llm: BaseChatModel, filling_llm: BaseChatModel, formatting_llm: BaseChatModel, sim_model: HuggingFaceEmbeddings):
-        super().__init__(grouping_llm=grouping_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
+    def __init__(
+        self,
+        grouping_llm: BaseChatModel,
+        filling_llm: BaseChatModel,
+        formatting_llm: BaseChatModel,
+        sim_model: HuggingFaceEmbeddings,
+        step2_evals: list[callable],
+        end_evals: list[callable],
+    ):
+        super().__init__(
+            grouping_llm=grouping_llm,
+            filling_llm=filling_llm,
+            formatting_llm=formatting_llm,
+            sim_model=sim_model,
+            step2_evals=step2_evals,
+            end_evals=end_evals,
+        )
 
-    def invoke(self, dialogues: list[Dialogue] = None, graph: ReasonGraph = None) -> BaseGraph:
+    def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
 
         partial_variables = {}
         prompt_extra = grouping_prompt_2
-        for idx, dial in enumerate(dialogues):
+        for idx, dial in enumerate(pipeline_data.dialogs):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
         prompt = PromptTemplate(
@@ -63,23 +85,27 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         messages = [HumanMessage(content=prompt.format(graph_example_1=graph_example_1))]
         nodes = chain.invoke(messages).model_dump()
 
-        _, _, last_user = get_helpers(dialogues)
+        _, _, last_user = get_helpers(pipeline_data.dialogs)
 
         try:
-            graph_dict = connect_nodes(nodes["nodes"], dialogues, self.sim_model)
+            graph_dict = connect_nodes(nodes["nodes"], pipeline_data.dialogs, self.sim_model)
         except Exception as e:
-            print(e)
-            return Graph({})
+            logger.error("Error in connecting nodes: %s", e)
+            return Graph({}), {}
         graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
 
         try:
+            result_graph = Graph(graph_dict=graph_dict)
+            if enable_evals and pipeline_data.true_graph is not None:
+                report = self.evaluate(result_graph, pipeline_data.true_graph, "step2")
+            else:
+                report = {}
             if not last_user:
-                result_graph = Graph(graph_dict=graph_dict)
-                return result_graph
+                return result_graph, report
 
             partial_variables = {}
             prompt_extra = ""
-            for idx, dial in enumerate(dialogues):
+            for idx, dial in enumerate(pipeline_data.dialogs):
                 partial_variables[f"var_{idx}"] = dial.to_list()
                 prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
             prompt = PromptTemplate(
@@ -95,29 +121,25 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
             result = chain.invoke(messages)
             if result is None:
-                return Graph(graph_dict={})
+                return Graph(graph_dict={}), report
             result.reason = "Fixes: " + result.reason
             graph_dict = result.model_dump()
             if not all([e["target"] for e in graph_dict["edges"]]):
-                return Graph(graph_dict={})
+                return Graph(graph_dict={}), report
             result_graph = Graph(graph_dict=graph_dict)
-            return result_graph
+            if enable_evals and pipeline_data.true_graph is not None:
+                report.update(self.evaluate(result_graph, pipeline_data.true_graph, "end"))
+            return result_graph, report
         except Exception as e:
-            print(e)
-            return Graph({})
+            logger.error("Error in step3: %s", e)
+            return Graph({}), {}
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    def evaluate(self, dialogues, gt_graph, report_type="dict"):
-        graph = self.invoke(dialogues)
-        report = {
-            "is_same_structure": is_same_structure(graph, gt_graph),
-            "graph_match": compare_graphs(graph, gt_graph),
-        }
-        if report_type == "dataframe":
-            report = pd.DataFrame(report, index=[0])
-        elif report_type == "dict":
-            return report
-        else:
-            raise ValueError(f"Invalid report_type: {report_type}")
+    def evaluate(self, graph, gt_graph, eval_stage: str) -> metrics.DGReportType:
+
+        report = {}
+        for metric in getattr(self, eval_stage + "_evals"):
+            report[metric.__name__ + ":" + eval_stage] = metric(graph, gt_graph)
+        return report

@@ -37,4 +37,4 @@ class GraphGenerationResult(BaseModel):
 
 class CompareResponse(BaseModel):
     value: bool = Field(default=True, description="compare result")
-    description: str = Field(default=True, description="explanation")
+    description: str = Field(description="explanation")

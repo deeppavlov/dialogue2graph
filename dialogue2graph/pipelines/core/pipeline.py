@@ -1,24 +1,30 @@
-import pandas as pd
+import time
 from typing import Union
 from pydantic import BaseModel, Field
-from dialogue2graph.pipelines.core.graph import Graph
-from dialogue2graph.pipelines.core.algorithms import DialogAugmentation, DialogueGenerator, GraphGenerator, InputParser, GraphExtender
+from dialogue2graph.pipelines.core.algorithms import DialogAugmentation, DialogueGenerator, GraphGenerator, GraphExtender
+from dialogue2graph.pipelines.helpers.parse_data import DataParser, PipelineRawDataType, PipelineDataType
+from dialogue2graph.pipelines.report import PipelineReport
 
 
 class Pipeline(BaseModel):
-    steps: list[Union[InputParser, DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]] = Field(default_factory=list)
+    name: str = Field(description="Name of the pipeline")
+    steps: list[Union[DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]] = Field(default_factory=list)
 
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, data, gt: Graph = None) -> Graph | dict | pd.DataFrame:
-        n_invokes = len(self.steps)
-        if gt:
-            n_invokes = len(self.steps) - 1
-            output = data
-        for step in self.steps[:n_invokes]:
-            output = step.invoke(data)
-            data = output
-        if gt:
-            output = self.steps[-1].evaluate(output, gt)
-        return output
+    def invoke(self, raw_data: PipelineRawDataType, enable_evals=False):
+        data: PipelineDataType = DataParser().invoke(raw_data)
+        report = PipelineReport(service=self.name)
+        st_time = time.time()
+        output = data
+        for step in self.steps:
+            output, step_report = step.invoke(output, enable_evals=enable_evals)
+            report.add_subreport(step_report)
+        end_time = time.time()
+        report.add_property("time", end_time - st_time)
+        # report.add_property("simple_graph_comparison", simple_graph_comparison(output, data))
+        # if enable_evals:
+        #     report.add_property("complex_graph_comparison", complex_graph_comparison(output, data))
+
+        return output, report
