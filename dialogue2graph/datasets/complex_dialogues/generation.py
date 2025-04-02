@@ -10,7 +10,7 @@ from langchain_core.output_parsers.pydantic import PydanticOutputParser
 from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
+from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg, is_greeting_repeated, is_closed_too_early
 from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
@@ -130,7 +130,10 @@ class GenerationPipeline(BaseModel):
             for i, cycle in enumerate(cycles, 1):
                 logger.info(f"Cycle {i}: {' -> '.join(map(str, cycle + [cycle[0]]))}")
 
-            meets_requirements = cycles_count >= min_cycles
+            number_cycle_requirement = cycles_count >= min_cycles
+            no_start_cycle_requirement = not any([1 in c for c in cycles])
+            meets_requirements = number_cycle_requirement and no_start_cycle_requirement
+
             if meets_requirements:
                 logger.info("✅ Graph meets cycle requirements")
             else:
@@ -226,6 +229,12 @@ class GenerationPipeline(BaseModel):
             if not match_triplets_dg(graph, sampled_dialogues)["value"]:
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
+                )
+            if is_greeting_repeated(sampled_dialogues):
+                return GenerationError(error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Opening is repeated")
+            if is_closed_too_early(sampled_dialogues):
+                return GenerationError(
+                    error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Closing appears in the middle of a dialogue"
                 )
 
             theme_validation = is_theme_valid(graph, self.theme_validation_model, topic)
