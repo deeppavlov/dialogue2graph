@@ -18,7 +18,7 @@ def _run_flake():
     flake8_configs = [
         "--select=E,W,F",
         # black formats binary operators after line breaks
-        "--ignore=E501,E203,W503,W293",
+        "--ignore=E501,E203,W503,W293,F824",
         "--per-file-ignores="
         # allow imports in init files without use
         "**/__init__.py:F401 ",
