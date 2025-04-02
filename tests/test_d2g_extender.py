@@ -6,6 +6,8 @@ from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
 dotenv.load_dotenv()
+if not dotenv.find_dotenv():
+    pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
 ms = ModelStorage()
 
 
