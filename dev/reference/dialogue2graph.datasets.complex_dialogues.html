@@ -424,8 +424,274 @@
 </dd></dl>
 
 </section>
-<section id="dialogue2graph-datasets-complex-dialogues-generation-module">
-<h2>dialogue2graph.datasets.complex_dialogues.generation module<a class="headerlink" href="#dialogue2graph-datasets-complex-dialogues-generation-module" title="Link to this heading">#</a></h2>
+<section id="module-dialogue2graph.datasets.complex_dialogues.generation">
+<span id="dialogue2graph-datasets-complex-dialogues-generation-module"></span><h2>dialogue2graph.datasets.complex_dialogues.generation module<a class="headerlink" href="#module-dialogue2graph.datasets.complex_dialogues.generation" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.ErrorType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">ErrorType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#ErrorType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Types of errors that can occur during generation</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.ErrorType.INVALID_GRAPH_STRUCTURE">
+<span class="sig-name descname"><span class="pre">INVALID_GRAPH_STRUCTURE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'invalid_graph_structure'</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.INVALID_GRAPH_STRUCTURE" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.ErrorType.TOO_MANY_CYCLES">
+<span class="sig-name descname"><span class="pre">TOO_MANY_CYCLES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'too_many_cycles'</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.TOO_MANY_CYCLES" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.ErrorType.SAMPLING_FAILED">
+<span class="sig-name descname"><span class="pre">SAMPLING_FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'sampling_failed'</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.SAMPLING_FAILED" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.ErrorType.INVALID_THEME">
+<span class="sig-name descname"><span class="pre">INVALID_THEME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'invalid_theme'</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.INVALID_THEME" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.ErrorType.GENERATION_FAILED">
+<span class="sig-name descname"><span class="pre">GENERATION_FAILED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'generation_failed'</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.GENERATION_FAILED" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationError">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">GenerationError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Base error with essential fields</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationError.error_type">
+<span class="sig-name descname"><span class="pre">error_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType" title="dialogue2graph.datasets.complex_dialogues.generation.ErrorType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ErrorType</span></code></a></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError.error_type" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationError.message">
+<span class="sig-name descname"><span class="pre">message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError.message" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">CycleGraphGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.cache" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config.arbitrary_types_allowed">
+<span class="sig-name descname"><span class="pre">arbitrary_types_allowed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config.arbitrary_types_allowed" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'allow'</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config.extra" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.invoke" title="Link to this definition">#</a></dt>
+<dd><p>Generate a cyclic dialogue graph based on the topic input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.ainvoke">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ainvoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.ainvoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.ainvoke" title="Link to this definition">#</a></dt>
+<dd><p>Async version of invoke - to be implemented</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.evaluate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">GenerationPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repair_prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fix_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_model">
+<span class="sig-name descname"><span class="pre">generation_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChatModel</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.theme_validation_model">
+<span class="sig-name descname"><span class="pre">theme_validation_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChatModel</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.theme_validation_model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validation_model">
+<span class="sig-name descname"><span class="pre">validation_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChatModel</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validation_model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.graph_generator">
+<span class="sig-name descname"><span class="pre">graph_generator</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CycleGraphGenerator</span></code></a></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.graph_generator" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_prompt">
+<span class="sig-name descname"><span class="pre">generation_prompt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">PromptTemplate</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_prompt" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.repair_prompt">
+<span class="sig-name descname"><span class="pre">repair_prompt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">PromptTemplate</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.repair_prompt" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.min_cycles">
+<span class="sig-name descname"><span class="pre">min_cycles</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.min_cycles" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.max_fix_attempts">
+<span class="sig-name descname"><span class="pre">max_fix_attempts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.max_fix_attempts" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.dialogue_sampler">
+<span class="sig-name descname"><span class="pre">dialogue_sampler</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">RecursiveDialogueSampler</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.dialogue_sampler" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config.arbitrary_types_allowed">
+<span class="sig-name descname"><span class="pre">arbitrary_types_allowed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config.arbitrary_types_allowed" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'allow'</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config.extra" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.seed" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.cache" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validate_graph_cycle_requirement">
+<span class="sig-name descname"><span class="pre">validate_graph_cycle_requirement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline.validate_graph_cycle_requirement"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validate_graph_cycle_requirement" title="Link to this definition">#</a></dt>
+<dd><p>Checks the graph for cycle requirements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.check_and_fix_transitions">
+<span class="sig-name descname"><span class="pre">check_and_fix_transitions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline.check_and_fix_transitions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.check_and_fix_transitions" title="Link to this definition">#</a></dt>
+<dd><p>Checks transitions in the graph and attempts to fix invalid ones via LLM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generate_and_validate">
+<span class="sig-name descname"><span class="pre">generate_and_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline.generate_and_validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generate_and_validate" title="Link to this definition">#</a></dt>
+<dd><p>Generates and validates a dialogue graph for given topic</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">GraphGenerationResult</span></code>, <a class="reference internal" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError" title="dialogue2graph.datasets.complex_dialogues.generation.GenerationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenerationError</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.__call__" title="Link to this definition">#</a></dt>
+<dd><p>Shorthand for generate_and_validate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">GraphGenerationResult</span></code>, <a class="reference internal" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError" title="dialogue2graph.datasets.complex_dialogues.generation.GenerationError"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenerationError</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">LoopedGraphGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_llm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#LoopedGraphGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TopicGraphGenerator</span></code></p>
+<p>Graph generator for topic-based dialogue generation with model storage support</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.model_storage">
+<span class="sig-name descname"><span class="pre">model_storage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.model_storage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.generation_llm">
+<span class="sig-name descname"><span class="pre">generation_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.generation_llm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.validation_llm">
+<span class="sig-name descname"><span class="pre">validation_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.validation_llm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.theme_validation_llm">
+<span class="sig-name descname"><span class="pre">theme_validation_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.theme_validation_llm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.pipeline">
+<span class="sig-name descname"><span class="pre">pipeline</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline" title="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">GenerationPipeline</span></code></a></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.pipeline" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#LoopedGraphGenerator.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#LoopedGraphGenerator.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.evaluate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-dialogue2graph.datasets.complex_dialogues.prompts">
 <span id="dialogue2graph-datasets-complex-dialogues-prompts-module"></span><h2>dialogue2graph.datasets.complex_dialogues.prompts module<a class="headerlink" href="#module-dialogue2graph.datasets.complex_dialogues.prompts" title="Link to this heading">#</a></h2>
@@ -487,7 +753,67 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.find_graph_ends.find_graph_ends"><code class="docutils literal notranslate"><span class="pre">find_graph_ends()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph-datasets-complex-dialogues-generation-module">dialogue2graph.datasets.complex_dialogues.generation module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.datasets.complex_dialogues.generation">dialogue2graph.datasets.complex_dialogues.generation module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType"><code class="docutils literal notranslate"><span class="pre">ErrorType</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.INVALID_GRAPH_STRUCTURE"><code class="docutils literal notranslate"><span class="pre">ErrorType.INVALID_GRAPH_STRUCTURE</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.TOO_MANY_CYCLES"><code class="docutils literal notranslate"><span class="pre">ErrorType.TOO_MANY_CYCLES</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.SAMPLING_FAILED"><code class="docutils literal notranslate"><span class="pre">ErrorType.SAMPLING_FAILED</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.INVALID_THEME"><code class="docutils literal notranslate"><span class="pre">ErrorType.INVALID_THEME</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.GENERATION_FAILED"><code class="docutils literal notranslate"><span class="pre">ErrorType.GENERATION_FAILED</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError"><code class="docutils literal notranslate"><span class="pre">GenerationError</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError.error_type"><code class="docutils literal notranslate"><span class="pre">GenerationError.error_type</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationError.message"><code class="docutils literal notranslate"><span class="pre">GenerationError.message</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.cache"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.cache</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.Config</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config.arbitrary_types_allowed"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.Config.arbitrary_types_allowed</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config.extra"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.Config.extra</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.invoke"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.invoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.ainvoke"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.ainvoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.evaluate"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.evaluate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_model"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.generation_model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.theme_validation_model"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.theme_validation_model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validation_model"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.validation_model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.graph_generator"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.graph_generator</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_prompt"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.generation_prompt</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.repair_prompt"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.repair_prompt</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.min_cycles"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.min_cycles</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.max_fix_attempts"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.max_fix_attempts</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.dialogue_sampler"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.dialogue_sampler</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.Config</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config.arbitrary_types_allowed"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.Config.arbitrary_types_allowed</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config.extra"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.Config.extra</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.seed"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.seed</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.cache"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.cache</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validate_graph_cycle_requirement"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.validate_graph_cycle_requirement()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.check_and_fix_transitions"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.check_and_fix_transitions()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generate_and_validate"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.generate_and_validate()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.__call__"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.__call__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.model_storage"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.model_storage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.generation_llm"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.generation_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.validation_llm"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.validation_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.theme_validation_llm"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.theme_validation_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.pipeline"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.pipeline</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.invoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.evaluate"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.evaluate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.datasets.complex_dialogues.prompts">dialogue2graph.datasets.complex_dialogues.prompts module</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.datasets.complex_dialogues">Module contents</a></li>
 </ul>
