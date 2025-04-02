@@ -38,6 +38,9 @@ autodoc_default_options = {
     "exclude-members": "_abc_impl, model_fields, model_computed_fields, model_config",
 }
 
+# Mock imports that cause issues
+autodoc_mock_imports = ['datasets']
+
 apidoc_module_dir = '../../dialogue2graph'
 apidoc_output_dir = 'reference'
 
