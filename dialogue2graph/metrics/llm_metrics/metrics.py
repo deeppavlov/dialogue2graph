@@ -38,7 +38,9 @@ class GraphValidationResult(TypedDict):
     invalid_transitions: List[InvalidTransition]
 
 
-def are_triplets_valid(G: Graph, model: BaseChatModel, return_type: str = "dict") -> Union[dict, GraphValidationResult]:
+def are_triplets_valid(
+    G: Graph, model: BaseChatModel, return_type: str = "dict"
+) -> Union[dict, GraphValidationResult]:
     """
     Validates dialogue graph structure and logical transitions between nodes.
 
@@ -62,7 +64,12 @@ def are_triplets_valid(G: Graph, model: BaseChatModel, return_type: str = "dict"
 
     # Create prompt template
     triplet_validate_prompt = PromptTemplate(
-        input_variables=["json_graph", "source_utterances", "edge_utterances", "target_utterances"],
+        input_variables=[
+            "json_graph",
+            "source_utterances",
+            "edge_utterances",
+            "target_utterances",
+        ],
         template="""
     You are evaluating if dialog transitions make logical sense.
     
@@ -101,11 +108,15 @@ def are_triplets_valid(G: Graph, model: BaseChatModel, return_type: str = "dict"
         target_id = edge["target"]
 
         if source_id not in node_map or target_id not in node_map:
-            description = f"Invalid edge: missing node reference {source_id} -> {target_id}"
+            description = (
+                f"Invalid edge: missing node reference {source_id} -> {target_id}"
+            )
             is_valid = False
             descriptions.append(description)
             if return_type == "detailed":
-                invalid_transitions.append({"from_": [], "user": [], "to": [], "reason": description})
+                invalid_transitions.append(
+                    {"from_": [], "user": [], "to": [], "reason": description}
+                )
             continue
 
         # Get utterances
@@ -129,11 +140,21 @@ def are_triplets_valid(G: Graph, model: BaseChatModel, return_type: str = "dict"
             descriptions.append(result.description)
             if return_type == "detailed":
                 invalid_transitions.append(
-                    {"from_": source_node["utterances"], "user": edge["utterances"], "to": target_node["utterances"], "reason": result.description}
+                    {
+                        "from_": source_node["utterances"],
+                        "user": edge["utterances"],
+                        "to": target_node["utterances"],
+                        "reason": result.description,
+                    }
                 )
 
     if return_type == "dict":
-        return {"value": is_valid, "description": " ".join(descriptions) if descriptions else "All transitions are valid."}
+        return {
+            "value": is_valid,
+            "description": " ".join(descriptions)
+            if descriptions
+            else "All transitions are valid.",
+        }
     else:  # return_type == "detailed"
         return {"is_valid": is_valid, "invalid_transitions": invalid_transitions}
 
@@ -221,7 +242,9 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
             return False
         for edge1 in edges1:
             for edge2 in edges2:
-                if nodes_map[edge1["target"]] == edge2["target"] and len(edge1["utterances"]) != len(edge2["utterances"]):
+                if nodes_map[edge1["target"]] == edge2["target"] and len(
+                    edge1["utterances"]
+                ) != len(edge2["utterances"]):
                     return False
     return True
 
@@ -249,29 +272,51 @@ def compare_graphs(
     nodes2_list = G2.nodes2list()
 
     if len(nodes1_list) != len(nodes2_list):
-        return {"value": False, "description": f"Numbers of nodes do not match: {len(nodes1_list)} != {len(nodes2_list)}"}
+        return {
+            "value": False,
+            "description": f"Numbers of nodes do not match: {len(nodes1_list)} != {len(nodes2_list)}",
+        }
 
     # g1_list, g2_list - concatenations of utterances of every node and its outgoing edges
     g1_list, n_edge_utts1 = G1.graph2list()
     g2_list, n_edge_utts2 = G2.graph2list()
 
-    nodes_matrix = get_similarity(nodes1_list, nodes2_list, embedder, device=device)  # embeddings for utterances in nodes
-    mix_matrix = get_similarity(g1_list, g2_list, embedder, device=device)  # embeddings for utterances in nodes+edges
+    nodes_matrix = get_similarity(
+        nodes1_list, nodes2_list, embedder, device=device
+    )  # embeddings for utterances in nodes
+    mix_matrix = get_similarity(
+        g1_list, g2_list, embedder, device=device
+    )  # embeddings for utterances in nodes+edges
 
     nodes_max = list(np.argmax(nodes_matrix, axis=1))
     mix_max = list(np.argmax(mix_matrix, axis=1))
     if nodes_max != mix_max:
-        return {"value": False, "description": f"Mapping for nodes {nodes_max} doesn't match mapping for nodes+edges {mix_max}"}
+        return {
+            "value": False,
+            "description": f"Mapping for nodes {nodes_max} doesn't match mapping for nodes+edges {mix_max}",
+        }
     if len(set(nodes_max)) < len(nodes1_list):
-        return {"value": False, "description": "At least one of nodes corresponds to more than one in another graph"}
+        return {
+            "value": False,
+            "description": "At least one of nodes corresponds to more than one in another graph",
+        }
 
     if n_edge_utts1 != n_edge_utts2:
-        return {"value": False, "description": "Graphs have different number of user's utterances"}
+        return {
+            "value": False,
+            "description": "Graphs have different number of user's utterances",
+        }
     if len(set(mix_max)) < len(g1_list):
-        return {"value": False, "description": "At least one of nodes concatenated with edges corresponds to more than one in another graph"}
+        return {
+            "value": False,
+            "description": "At least one of nodes concatenated with edges corresponds to more than one in another graph",
+        }
 
     if not _compare_edge_lens(G1, G2, mix_max):
-        return {"value": False, "description": "At least one pair of edges has different number of utterances"}
+        return {
+            "value": False,
+            "description": "At least one pair of edges has different number of utterances",
+        }
 
     nodes_min = np.min(np.max(nodes_matrix, axis=1))
     mix_min = np.min(np.max(mix_matrix, axis=1))
@@ -279,13 +324,21 @@ def compare_graphs(
     full_min = min(nodes_min, mix_min)
 
     if full_min >= sim_th:
-        return {"value": True, "description": f"Nodes similarity: {nodes_min}, Nodes+edges similarity: {mix_min}"}
+        return {
+            "value": True,
+            "description": f"Nodes similarity: {nodes_min}, Nodes+edges similarity: {mix_min}",
+        }
 
     parser = PydanticOutputParser(pydantic_object=CompareResponse)
     format_model = ChatOpenAI(model=formatter)
     model = ChatOpenAI(model=llm_comparer)
     fixed_output_parser = OutputFixingParser.from_llm(parser=parser, llm=format_model)
     chain = model | fixed_output_parser
-    query = compare_graphs_prompt.format(result_form=CompareResponse().model_dump(), graph_example=graph_example, graph_1=g1, graph_2=g2)
+    query = compare_graphs_prompt.format(
+        result_form=CompareResponse().model_dump(),
+        graph_example=graph_example,
+        graph_1=g1,
+        graph_2=g2,
+    )
     messages = [HumanMessage(content=query)]
     return chain.invoke(messages)

@@ -58,11 +58,7 @@ build-backend = "poetry.core.masonry.api"
 optional = true
 
 [tool.poetry.group.lint.dependencies]
-flake8 = "*"
-isort = "*"
-black = "*"
-mypy = "*"
-
+ruff = "*"
 
 [tool.poetry.group.tests]
 optional = true
@@ -74,12 +70,9 @@ pytest = "*"
 default_task_type = "script"
 
 [tool.poe.tasks]
-flake = "scripts.codestyle:_run_flake"
-black = "scripts.codestyle:_run_black(modify=False)"
-format = "scripts.codestyle:_run_black(modify=True)"
 test = "scripts.test:quick_test"
-metrics = "scripts.metrics:_run_check"
-lint.sequence = ["flake", "black"]
+lint = "scripts.codestyle:_check"
+format = "scripts.codestyle:_format"
 
 [tool.poetry.scripts]
 dialogue2graph = "dialogue2graph.cli.main:cli"

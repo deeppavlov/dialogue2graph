@@ -1,1 +1,1 @@
-from dialogue2graph.datasets.core import Dataset
+from dialogue2graph.datasets.core import Dataset as Dataset

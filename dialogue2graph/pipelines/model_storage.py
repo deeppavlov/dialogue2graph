@@ -37,8 +37,12 @@ class StoredData(BaseModel):
 
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
-    model_type: Union[Literal["llm"], Literal["emb"]] = Field(description="Type of the stored model")
-    model: Union[HuggingFaceEmbeddings, BaseChatModel] = Field(description="Model object")
+    model_type: Union[Literal["llm"], Literal["emb"]] = Field(
+        description="Type of the stored model"
+    )
+    model: Union[HuggingFaceEmbeddings, BaseChatModel] = Field(
+        description="Model object"
+    )
 
     @model_validator(mode="before")
     def validate_model(cls, values):
@@ -47,7 +51,9 @@ class StoredData(BaseModel):
                 raise ValueError("LLM model must be an instance of BaseChatModel")
         elif values.get("model_type") == "emb":
             if not isinstance(values.get("model"), HuggingFaceEmbeddings):
-                raise ValueError("Embedding model must be an instance of HuggingFaceEmbeddings")
+                raise ValueError(
+                    "Embedding model must be an instance of HuggingFaceEmbeddings"
+                )
         return values
 
     class Config:
@@ -99,14 +105,18 @@ class ModelStorage(BaseModel):
             with open(path, "r") as f:
                 loaded_storage = yaml.safe_load(f)
                 for key, config in loaded_storage.items():
-                    self.add(key=key, config=config, model_type=config.pop("model_type"))
+                    self.add(
+                        key=key, config=config, model_type=config.pop("model_type")
+                    )
                     logger.debug(f"Loaded model configuration for '{key}'")
             logger.info(f"Successfully loaded {len(loaded_storage)} models from {path}")
         except Exception as e:
             logger.error(f"Failed to load model configurations from {path}: {e}")
             raise
 
-    def add(self, key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]):
+    def add(
+        self, key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]
+    ):
         """
         Add a new model configuration to the storage.
         Args:
@@ -121,17 +131,23 @@ class ModelStorage(BaseModel):
             logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
         try:
             if model_type == "llm":
-                logger.debug(f"Initializing LLM model for key '{key}' with config: {config}")
+                logger.debug(
+                    f"Initializing LLM model for key '{key}' with config: {config}"
+                )
                 model_instance = ChatOpenAI(**config)
             elif model_type == "emb":
                 device = config.pop("device", None)
                 if device:
                     config["model_kwargs"] = {"device": device}
-                logger.debug(f"Initializing embedding model for key '{key}' with config: {config}")
+                logger.debug(
+                    f"Initializing embedding model for key '{key}' with config: {config}"
+                )
                 model_instance = HuggingFaceEmbeddings(**config)
 
             logger.debug("Created model instance of type: %s", type(model_instance))
-            item = StoredData(key=key, config=config, model_type=model_type, model=model_instance)
+            item = StoredData(
+                key=key, config=config, model_type=model_type, model=model_instance
+            )
             self.storage[key] = item
             logger.info(f"Added {model_type} model '{key}' to storage")
         except Exception as e:

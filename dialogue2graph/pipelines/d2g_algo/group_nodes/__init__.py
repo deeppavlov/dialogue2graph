@@ -1,1 +1,1 @@
-from .group_nodes import group_nodes
+from .group_nodes import group_nodes as group_nodes

@@ -1,1 +1,1 @@
-from .pipeline import TopicGenerationPipeline
+from .pipeline import TopicGenerationPipeline as TopicGenerationPipeline
