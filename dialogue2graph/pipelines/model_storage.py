@@ -14,6 +14,24 @@ logging.basicConfig(
 
 
 class StoredData(BaseModel):
+    """
+    StoredData is a Pydantic model that represents the storage structure for a model, its configuration, and metadata.
+
+    Attributes:
+        key (str): Key for the stored model.
+        config (dict): Configuration for the stored model.
+        model_type (Union[Literal["llm"], Literal["emb"]]): Type of the stored model, either "llm" (language model) or "emb" (embedding model).
+        model (Union[HuggingFaceEmbeddings, BaseChatModel]): The actual model object, which can either be a HuggingFaceEmbeddings instance or a BaseChatModel instance.
+
+    Methods:
+        validate_model(cls, values):
+            Validates the `model` attribute based on the `model_type`. Ensures that:
+            - If `model_type` is "llm", the `model` must be an instance of BaseChatModel.
+            - If `model_type` is "emb", the `model` must be an instance of HuggingFaceEmbeddings.
+            Raises:
+                ValueError: If the `model` does not match the expected type for the given `model_type`.
+    """
+
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
     model_type: Union[Literal["llm"], Literal["emb"]] = Field(description="Type of the stored model")
@@ -35,6 +53,34 @@ class StoredData(BaseModel):
 
 
 class ModelStorage(BaseModel):
+    """
+    ModelStorage is a class for managing the storage of model configurations and instances.
+    It provides functionality to load configurations from a YAML file, add new models to the storage,
+    and save the current storage state back to a YAML file.
+
+    Attributes:
+        storage (Dict[str, StoredData]): A dictionary that holds the stored model configurations
+            and their corresponding instances.
+
+    Methods:
+        load(path: str):
+
+
+            Raises:
+                Exception: If there is an error while loading the configurations.
+
+        add(key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]):
+
+
+            Raises:
+                Exception: If there is an error while adding the model to the storage.
+
+        save(path: str):
+
+
+            Raises:
+                Exception: If there is an error while saving the storage.
+    """
 
     storage: Dict[str, StoredData] = Field(default_factory=dict)
 
