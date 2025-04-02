@@ -1,11 +1,10 @@
 import json
-import os
 from pathlib import Path
-from langchain_openai import ChatOpenAI
 from dialogue2graph.pipelines.topic_generation.pipeline import TopicGenerationPipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
 ms = ModelStorage()
+
 
 def generate_data(topic: str, config: dict, output_path: str):
     """Generate dialogue data for a given topic"""

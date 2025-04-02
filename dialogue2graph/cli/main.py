@@ -1,5 +1,4 @@
 import click
-import yaml
 from dotenv import load_dotenv
 from .commands.generate_data import generate_data
 from .commands.generate_graph_algo import generate_algo
