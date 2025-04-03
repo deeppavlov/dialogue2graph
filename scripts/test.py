@@ -7,3 +7,7 @@ def _test() -> int:
     """
     args = ["--tb=long", "-vv", "--cache-clear", "tests/"]
     return pytest.main(args)
+
+
+def quick_test():
+    exit(_test())

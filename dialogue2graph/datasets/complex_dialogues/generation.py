@@ -15,6 +15,7 @@ from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_vali
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
+from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.utils.prompt_caching import setup_cache, add_uuid_to_prompt
 
 from .prompts import cycle_graph_generation_prompt_informal, cycle_graph_repair_prompt, graph_example
@@ -285,19 +286,30 @@ class GenerationPipeline(BaseModel):
 
 
 class LoopedGraphGenerator(TopicGraphGenerator):
-    generation_model: BaseChatModel
-    validation_model: BaseChatModel
+    """Graph generator for topic-based dialogue generation with model storage support"""
+
+    model_storage: ModelStorage = Field(description="Model storage")
+    generation_llm: str = Field(description="LLM for graph generation")
+    validation_llm: str = Field(description="LLM for validation")
+    theme_validation_llm: str = Field(description="LLM for theme validation")
     pipeline: GenerationPipeline
 
-    def __init__(self, generation_model: BaseChatModel, validation_model: BaseChatModel, theme_validation_model: BaseChatModel):
+    def __init__(
+        self,
+        model_storage: ModelStorage,
+        generation_llm: str,
+        validation_llm: str,
+        theme_validation_llm: str,
+    ):
         super().__init__(
-            generation_model=generation_model,
-            validation_model=validation_model,
-            theme_validation_model=theme_validation_model,
+            model_storage=model_storage,
+            generation_llm=generation_llm,
+            validation_llm=validation_llm,
+            theme_validation_llm=theme_validation_llm,
             pipeline=GenerationPipeline(
-                generation_model=generation_model,
-                validation_model=validation_model,
-                theme_validation_model=theme_validation_model,
+                generation_model=model_storage.storage[generation_llm].model,
+                validation_model=model_storage.storage[validation_llm].model,
+                theme_validation_model=model_storage.storage[theme_validation_llm].model,
                 generation_prompt=cycle_graph_generation_prompt_informal,
                 repair_prompt=cycle_graph_repair_prompt,
             ),
