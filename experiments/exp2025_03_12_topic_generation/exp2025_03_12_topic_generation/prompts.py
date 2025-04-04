@@ -301,7 +301,7 @@ cycle_graph_generation_prompt = PromptTemplate.from_template(
 #      * Restart specific parts of the conversation
 #      * Change their mind about earlier decisions
 #    - Include clear exit points from each major decision path
-   
+
 # 3. Core Path Types:
 #    - Main success path (completing the intended task)
 #    - Multiple modification paths (returning to change choices)
@@ -344,7 +344,7 @@ cycle_graph_generation_prompt = PromptTemplate.from_template(
 # )
 
 # That means modification path connects another node with one of preceding nodes, it cannot stay with same node.
-#    - Each assistant message (node) must be a precise question or statement that expects a specific type of response  
+#    - Each assistant message (node) must be a precise question or statement that expects a specific type of response
 #    - The conversation should look logical and shall not contain unnecessary repetitions
 #    - All sources and targets in edges shall not be empty or null
 #    - All utterances shall not be empty lists
@@ -381,7 +381,7 @@ cycle_graph_generation_prompt = PromptTemplate.from_template(
 # answer to which it modifies, but follows next assistant's question "Would you like that hot or iced?" instead.
 # After assistant's phrase first goes direct user's answer in any dialogue, "medium please" in the example above.
 # Further after modification question goes additional assistant's reaction "Of course! What size would you like instead?" where
-# assistant modifies their question two steps before: "What size coffee would you like?". 
+# assistant modifies their question two steps before: "What size coffee would you like?".
 # Further follows user's alternative answer then dialogue flow returns to its standard way.
 # So you need to add several different details per node for some of nodes.
 # Make sure there is only one edge with more than one utterance.
@@ -474,7 +474,7 @@ Return ONLY the valid JSON without any additional text, commentaries or explanat
 """
 )
 
-cycle_graph_generation_prompt_informal= PromptTemplate.from_template(
+cycle_graph_generation_prompt_informal = PromptTemplate.from_template(
     """
 Create a dialogue graph for real conversations between two people about {topic}. The graph must follow these requirements:
 
@@ -639,7 +639,7 @@ triggered by user requests. Here goes the input graph: """
 # 10) Nodes shall be grouped so that source and target of any edge are different.
 # 10) You must use all the assistant's utterances in resulting set of nodes, not a single utterance to be missed.
 # 10) Any edge in the resultng graph connects only different nodes.
-# If speaker refers to something absent in the previous context, such dialogues 
+# If speaker refers to something absent in the previous context, such dialogues
 # 7) New dialogues which appear as a result of grouping process in step 5) shall be logical and following the context.
 # If you see that groups cause such situations:
 # new resulting dialogues look illogical,
@@ -910,121 +910,241 @@ List of dialogues: """
 # List of dialogues: """
 
 
-
 graph_example_1 = {
     "edges": [
-        {'source': 1, 'target': 2, 'utterances': ['I need to make an order', 'I want to order from you']},
-        {'source': 2, 'target': 3, 'utterances': ['I would like to purchase Pale Fire and Anna Karenina, please', 'One War and Piece in hard cover and one Pride and Prejudice']},
+        {
+            "source": 1,
+            "target": 2,
+            "utterances": ["I need to make an order", "I want to order from you"],
+        },
+        {
+            "source": 2,
+            "target": 3,
+            "utterances": [
+                "I would like to purchase Pale Fire and Anna Karenina, please",
+                "One War and Piece in hard cover and one Pride and Prejudice",
+            ],
+        },
         {"source": 3, "target": 4, "utterances": ["With credit card, please", "Cash"]},
-        {"source": 4, "target": 2, "utterances": ["Start new order"]}
+        {"source": 4, "target": 2, "utterances": ["Start new order"]},
     ],
-    'nodes':
-      [
-          {'id': 1, 'label': 'start', 'is_start': True, 'utterances': [ 'How can I help?', 'Hello']},
-          {'id': 2, 'label': 'ask_books', 'is_start': False, 'utterances': [ 'What books do you like?']},
-          {'id': 3, 'label': 'ask_payment_method', 'is_start': False, 'utterances': [ 'Please, enter the payment method you would like to use: cash or credit card.', 'How would you prefer to pay?']},
-          {"id": 4, "label": "ask_to_redo", "is_start": False, "utterances": [ "Something is wrong, can you please use other payment method or start order again"]}
-      ],
-      'reason': ""
+    "nodes": [
+        {
+            "id": 1,
+            "label": "start",
+            "is_start": True,
+            "utterances": ["How can I help?", "Hello"],
+        },
+        {
+            "id": 2,
+            "label": "ask_books",
+            "is_start": False,
+            "utterances": ["What books do you like?"],
+        },
+        {
+            "id": 3,
+            "label": "ask_payment_method",
+            "is_start": False,
+            "utterances": [
+                "Please, enter the payment method you would like to use: cash or credit card.",
+                "How would you prefer to pay?",
+            ],
+        },
+        {
+            "id": 4,
+            "label": "ask_to_redo",
+            "is_start": False,
+            "utterances": [
+                "Something is wrong, can you please use other payment method or start order again"
+            ],
+        },
+    ],
+    "reason": "",
 }
 
 graph_example_2 = {
-    'edges':
-        [{'source': 1,
-  'target': 2,
-  'utterances': ["I'm looking for an Indian restaurant, preferably in the centre of town."]},
- {'source': 2,
-  'target': 5,
-  'utterances': ['I would prefer cheap restaurants.']},
- {'source': 5,
-  'target': 7,
-  'utterances': ['Sure please book a table there fore 7 people at 12:15 on saturday']},
- {'source': 1,
-  'target': 5,
-  'utterances': ['I am looking for a restaurant. The restaurant should be in the moderate price range and should be in the east']},
- {'source': 5,
-  'target': 10,
-  'utterances': ['The restaurant should serve italian food.']},
- {'source': 6,
-  'target': 7,
-  'utterances': ['I will have 5 people and we would like 12:15 if possible. Thanks.']},
- {'source': 7,
-  'target': 9,
-  'utterances': ["No that's all I needed. Thank you!",
-   'Thanks for you help. I only need the restaurant reservation. Goodbye.']},
- {'source': 10,
-  'target': 11,
-  'utterances': ['What other restaurants in that area serve Italian food?']},
- {'source': 11,
-  'target': 6,
-  'utterances': ['No, that will do. Can I book a table for monday?']},
- {'source': 1,
-  'target': 3,
-  'utterances': ["I'm looking for a place to dine on the south side of town. Please find a place that's in the expensive price range."]},
- {'source': 3,
-  'target': 8,
-  'utterances': ['Do you have a favorite you could recommend? I will need the phone and postcode and food type also please.']},
- {'source': 1,
-  'target': 4,
-  'utterances': ['I am looking for a cheap restaurant in the centre.']},
- {'source': 4,
-  'target': 8,
-  'utterances': ["Yes, may I have the address, postcode, and phone number for Golden House? I'll book it myself."]},
- {'source': 8,
-  'target': 9,
-  'utterances': ['No, that will be it. Thank you for your help.',
-   "Thanks, that's all I need. Have a nice day."]}],
-   'nodes':
-    [
-        [{'id': 1,
-  'label': 'start',
-  'is_start': True,
-  'utterances': ['Hello! How can I help you?']},
- {'id': 2,
-  'label': 'ask_price_range',
-  'is_start': False,
-  'utterances': ['There are a number of options for Indian restaurants in the centre of town. What price range would you like?']},
- {'id': 3,
-  'label': 'ask_cuisine_preference',
-  'is_start': False,
-  'utterances': ['I found five expensive restaurants on the south side of town. Would you prefer Chinese, Indian, Italian or Mexican?']},
- {'id': 4,
-  'label': 'ask_interest_in_options',
-  'is_start': False,
-  'utterances': ['I have found many possibilities. Golden house is chinese and the river bar steakhouse and grill serves modern european. Are either of those of interest for you?']},
- {'id': 5,
-  'label': 'provide_recommendations',
-  'is_start': False,
-  'utterances': ['Try curry prince or pizza hut fen ditton',
-   'I was able to find three options in your price range, may I recommend The Gandhi?']},
- {'id': 6,
-  'label': 'ask_reservation_details',
-  'is_start': False,
-  'utterances': ['Absolutely, how many people will you have and what time are you wanting the reservation?']},
- {'id': 7,
-  'label': 'confirm_booking',
-  'is_start': False,
-  'utterances': ['I was able to book that for you. They will reserve your table for 15 minutes. Your reference number is 6EQ61SD9 . Is there anything more I can help with?',
-   'You are booked, the reference number is AF2GJ7G6, may I assist with anything else?']},
- {'id': 8,
-  'label': 'provide_contact_info',
-  'is_start': False,
-  'utterances': ['They are located at 12 Lensfield Road City Centre, postcode cb21eg, and phone number 01842753771.',
-   'If you ask me, the Chiquito Restaurant Bar serves the best Mexican food around. Their postcode is cb17dy. You can reach them at 01223400170. Can I help with anything else?']},
- {'id': 9,
-  'label': 'closing',
-  'is_start': False,
-  'utterances': ['Thank you for calling, enjoy!',
-   "You're welcome. Thank you for contacting Cambridge TownInfo centre, and have a great day.",
-   'Thank you. Have a nice day.',
-   'Thank you for using our service. Have a great day.']},
- {'id': 10,
-  'label': 'offer_reservation',
-  'is_start': False,
-  'utterances': ['Pizza hut fen ditton serves italian food in the east, would you like a reservation?']},
- {'id': 11,
-  'label': 'confirm_no_other_areas',
-  'is_start': False,
-  'utterances': ['Pizza hut fen ditton is the only Italian restaurant, in the east, in the moderate price range. Do you want me to try other areas?']}]
-    ]
+    "edges": [
+        {
+            "source": 1,
+            "target": 2,
+            "utterances": [
+                "I'm looking for an Indian restaurant, preferably in the centre of town."
+            ],
+        },
+        {"source": 2, "target": 5, "utterances": ["I would prefer cheap restaurants."]},
+        {
+            "source": 5,
+            "target": 7,
+            "utterances": [
+                "Sure please book a table there fore 7 people at 12:15 on saturday"
+            ],
+        },
+        {
+            "source": 1,
+            "target": 5,
+            "utterances": [
+                "I am looking for a restaurant. The restaurant should be in the moderate price range and should be in the east"
+            ],
+        },
+        {
+            "source": 5,
+            "target": 10,
+            "utterances": ["The restaurant should serve italian food."],
+        },
+        {
+            "source": 6,
+            "target": 7,
+            "utterances": [
+                "I will have 5 people and we would like 12:15 if possible. Thanks."
+            ],
+        },
+        {
+            "source": 7,
+            "target": 9,
+            "utterances": [
+                "No that's all I needed. Thank you!",
+                "Thanks for you help. I only need the restaurant reservation. Goodbye.",
+            ],
+        },
+        {
+            "source": 10,
+            "target": 11,
+            "utterances": ["What other restaurants in that area serve Italian food?"],
+        },
+        {
+            "source": 11,
+            "target": 6,
+            "utterances": ["No, that will do. Can I book a table for monday?"],
+        },
+        {
+            "source": 1,
+            "target": 3,
+            "utterances": [
+                "I'm looking for a place to dine on the south side of town. Please find a place that's in the expensive price range."
+            ],
+        },
+        {
+            "source": 3,
+            "target": 8,
+            "utterances": [
+                "Do you have a favorite you could recommend? I will need the phone and postcode and food type also please."
+            ],
+        },
+        {
+            "source": 1,
+            "target": 4,
+            "utterances": ["I am looking for a cheap restaurant in the centre."],
+        },
+        {
+            "source": 4,
+            "target": 8,
+            "utterances": [
+                "Yes, may I have the address, postcode, and phone number for Golden House? I'll book it myself."
+            ],
+        },
+        {
+            "source": 8,
+            "target": 9,
+            "utterances": [
+                "No, that will be it. Thank you for your help.",
+                "Thanks, that's all I need. Have a nice day.",
+            ],
+        },
+    ],
+    "nodes": [
+        [
+            {
+                "id": 1,
+                "label": "start",
+                "is_start": True,
+                "utterances": ["Hello! How can I help you?"],
+            },
+            {
+                "id": 2,
+                "label": "ask_price_range",
+                "is_start": False,
+                "utterances": [
+                    "There are a number of options for Indian restaurants in the centre of town. What price range would you like?"
+                ],
+            },
+            {
+                "id": 3,
+                "label": "ask_cuisine_preference",
+                "is_start": False,
+                "utterances": [
+                    "I found five expensive restaurants on the south side of town. Would you prefer Chinese, Indian, Italian or Mexican?"
+                ],
+            },
+            {
+                "id": 4,
+                "label": "ask_interest_in_options",
+                "is_start": False,
+                "utterances": [
+                    "I have found many possibilities. Golden house is chinese and the river bar steakhouse and grill serves modern european. Are either of those of interest for you?"
+                ],
+            },
+            {
+                "id": 5,
+                "label": "provide_recommendations",
+                "is_start": False,
+                "utterances": [
+                    "Try curry prince or pizza hut fen ditton",
+                    "I was able to find three options in your price range, may I recommend The Gandhi?",
+                ],
+            },
+            {
+                "id": 6,
+                "label": "ask_reservation_details",
+                "is_start": False,
+                "utterances": [
+                    "Absolutely, how many people will you have and what time are you wanting the reservation?"
+                ],
+            },
+            {
+                "id": 7,
+                "label": "confirm_booking",
+                "is_start": False,
+                "utterances": [
+                    "I was able to book that for you. They will reserve your table for 15 minutes. Your reference number is 6EQ61SD9 . Is there anything more I can help with?",
+                    "You are booked, the reference number is AF2GJ7G6, may I assist with anything else?",
+                ],
+            },
+            {
+                "id": 8,
+                "label": "provide_contact_info",
+                "is_start": False,
+                "utterances": [
+                    "They are located at 12 Lensfield Road City Centre, postcode cb21eg, and phone number 01842753771.",
+                    "If you ask me, the Chiquito Restaurant Bar serves the best Mexican food around. Their postcode is cb17dy. You can reach them at 01223400170. Can I help with anything else?",
+                ],
+            },
+            {
+                "id": 9,
+                "label": "closing",
+                "is_start": False,
+                "utterances": [
+                    "Thank you for calling, enjoy!",
+                    "You're welcome. Thank you for contacting Cambridge TownInfo centre, and have a great day.",
+                    "Thank you. Have a nice day.",
+                    "Thank you for using our service. Have a great day.",
+                ],
+            },
+            {
+                "id": 10,
+                "label": "offer_reservation",
+                "is_start": False,
+                "utterances": [
+                    "Pizza hut fen ditton serves italian food in the east, would you like a reservation?"
+                ],
+            },
+            {
+                "id": 11,
+                "label": "confirm_no_other_areas",
+                "is_start": False,
+                "utterances": [
+                    "Pizza hut fen ditton is the only Italian restaurant, in the east, in the moderate price range. Do you want me to try other areas?"
+                ],
+            },
+        ]
+    ],
 }

@@ -9,11 +9,11 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../../dialogue2graph'))
+sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
 
-project = 'Chatsky LLM-Autoconfig'
-copyright = '2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
-author = 'Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
+project = "Chatsky LLM-Autoconfig"
+copyright = "2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
+author = "Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
 
 # Get the deployment environment
 on_github = os.environ.get("GITHUB_ACTIONS") == "true"
@@ -33,15 +33,15 @@ if on_github:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode', 
-    'sphinx.ext.napoleon',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
-    'sphinx_autodoc_typehints',
-    'sphinxcontrib.apidoc',
+    "sphinx_autodoc_typehints",
+    "sphinxcontrib.apidoc",
 ]
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 autodoc_default_options = {
     "members": True,
@@ -53,10 +53,10 @@ autodoc_default_options = {
 }
 
 # Mock imports that cause issues
-autodoc_mock_imports = ['datasets']
+autodoc_mock_imports = ["datasets"]
 
-apidoc_module_dir = '../../dialogue2graph'
-apidoc_output_dir = 'reference'
+apidoc_module_dir = "../../dialogue2graph"
+apidoc_output_dir = "reference"
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -71,7 +71,10 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 
 extlinks = {
-    'github_source_link': ("https://github.com/deeppavlov/chatsky-llm-autoconfig/tree/dev/%s", None),
+    "github_source_link": (
+        "https://github.com/deeppavlov/chatsky-llm-autoconfig/tree/dev/%s",
+        None,
+    ),
 }
 
 # Add these configurations
