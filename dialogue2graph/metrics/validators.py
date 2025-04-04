@@ -37,7 +37,7 @@ START_TURNS = [
     "Welcome to our assistant service! How can I assist you?",
     "Welcome to our assistant service! How can I help you?",
     "Welcome to our assistant service! Would you like to do this?",
-    "Welcome to our assistant service! Could you tell me this?"
+    "Welcome to our assistant service! Could you tell me this?",
 ]
 
 END_TURNS = [
@@ -50,12 +50,13 @@ END_TURNS = [
     "Alright, if you need anything else, feel free to reach out. Have a great day!",
     "I'm sorry to see you go. Your subscription has been canceled. If you have any feedback, feel free to reach out to us.",
     "Alright, if you have any other questions in the future, feel free to reach out. Have a great day!",
-    "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!"
+    "Alright, if you need any further assistance, feel free to reach out. Have a great presentation!",
 ]
-    
+
 
 class OpeningValidation(BaseModel):
     isOpening: bool = Field(description="Whether the given utterance is considered greeting or not")
+
 
 class ClosingValidation(BaseModel):
     isClosing: bool = Field(description="Whether the given utterance is considered closing or not")
@@ -76,12 +77,13 @@ def _message_has_greeting_llm(model: BaseChatModel, text: str) -> bool:
 
     Reply in JSON format:
     {{"isOpening": true or false}}
-    """
+    """,
     )
     parser = PydanticOutputParser(pydantic_object=OpeningValidation)
     opening_val_chain = start_prompt | model | parser
     result = opening_val_chain.invoke({"text": text})
     return result.isOpening
+
 
 def _message_has_closing_re(regex: str, text: str) -> bool:
     return bool(re.search(regex, text, flags=re.IGNORECASE))
@@ -98,7 +100,7 @@ def _message_has_closing_llm(model: BaseChatModel, text: str) -> bool:
 
     Reply in JSON format:
     {{"isClosing": true or false}}
-    """
+    """,
     )
     parser = PydanticOutputParser(pydantic_object=ClosingValidation)
     closing_val_chain = close_prompt | model | parser
@@ -112,13 +114,13 @@ def _get_mean_vector(model: HuggingFaceEmbeddings):
     return start_vectors.mean(axis=0)
 
 
-def is_greeting_repeated_regex(dialogs: List[Dialogue], regex: str=None) -> bool:
+def is_greeting_repeated_regex(dialogs: List[Dialogue], regex: str = None) -> bool:
     """
     Checks if greeting is repeated within dialogues using regular expression.
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         regex (str): Regular expression to find start turns. Defaults to None, so standard regex is used.
-    Returns 
+    Returns
         bool: True if greeting has been repeated, False otherwise.
     """
     if not regex:
@@ -130,13 +132,13 @@ def is_greeting_repeated_regex(dialogs: List[Dialogue], regex: str=None) -> bool
     return False
 
 
-def is_dialog_closed_too_early_regex(dialogs: List[Dialogue], regex: str=None) -> bool:
+def is_dialog_closed_too_early_regex(dialogs: List[Dialogue], regex: str = None) -> bool:
     """
     Checks if assistant tried to close dialogue in the middle using regular expression.
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         regex (str): Regular expression to find end turns. Defaults to None, so standard regex is used.
-    Returns 
+    Returns
         bool: True if closing appeared too early, False otherwise.
     """
     if not regex:
@@ -149,26 +151,26 @@ def is_dialog_closed_too_early_regex(dialogs: List[Dialogue], regex: str=None) -
     return False
 
 
-def is_greeting_repeated_emb_llm(dialogs: List[Dialogue], model_storage: ModelStorage, starts: list=None) -> bool:
+def is_greeting_repeated_emb_llm(dialogs: List[Dialogue], model_storage: ModelStorage, starts: list = None) -> bool:
     """
     Checks if greeting is repeated within dialogues using pairwise distance and LLM assessment.
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         model_storage (ModelStorage): Model storage containing embedder and LLM model for evaluation.
         starts (list): List of opening phrases. Defaults to None, so standard opening phrases are used.
-    Returns 
+    Returns
         bool: True if greeting has been repeated, False otherwise.
     """
     if not starts:
         starts = START_TURNS
 
-    embedder_model = [m.model for m in model_storage.storage.values() if m.model_type == 'emb']
+    embedder_model = [m.model for m in model_storage.storage.values() if m.model_type == "emb"]
     if not embedder_model:
         raise TypeError("Embedder model is not found")
     else:
         embedder_model = embedder_model[0]
 
-    llm_model = [m.model for m in model_storage.storage.values() if m.model_type == 'llm']
+    llm_model = [m.model for m in model_storage.storage.values() if m.model_type == "llm"]
     if not llm_model:
         raise TypeError("LLM model is not found")
     else:
@@ -182,30 +184,30 @@ def is_greeting_repeated_emb_llm(dialogs: List[Dialogue], model_storage: ModelSt
                     llm_eval = _message_has_greeting_llm(llm_model, message.text)
                     if llm_eval:
                         return True
-                
+
     return False
 
 
-def is_dialog_closed_too_early_emb_llm(dialogs: List[Dialogue], model_storage: ModelStorage, ends: list=None) -> bool:
+def is_dialog_closed_too_early_emb_llm(dialogs: List[Dialogue], model_storage: ModelStorage, ends: list = None) -> bool:
     """
     Checks if assistant tried to close dialogue in the middle using pairwise distance and LLM assessment.
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         model_storage (ModelStorage): Model storage containing embedder and LLM model for evaluation.
         ends (list): List of closing phrases. Defaults to None, so standard closing phrases are used.
-    Returns 
+    Returns
         bool: True if greeting has been repeated, False otherwise.
     """
     if not ends:
         ends = END_TURNS
 
-    embedder_model = [m.model for m in model_storage.storage.values() if m.model_type == 'emb']
+    embedder_model = [m.model for m in model_storage.storage.values() if m.model_type == "emb"]
     if not embedder_model:
         raise TypeError("Embedder model is not found")
     else:
         embedder_model = embedder_model[0]
 
-    llm_model = [m.model for m in model_storage.storage.values() if m.model_type == 'llm']
+    llm_model = [m.model for m in model_storage.storage.values() if m.model_type == "llm"]
     if not llm_model:
         raise TypeError("LLM model is not found")
     else:
@@ -219,5 +221,5 @@ def is_dialog_closed_too_early_emb_llm(dialogs: List[Dialogue], model_storage: M
                     llm_eval = _message_has_closing_llm(llm_model, message.text)
                     if llm_eval:
                         return True
-                
+
     return False
