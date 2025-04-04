@@ -26,6 +26,7 @@ datasets = "*"
 click = "^8.1.8"
 pyyaml = "^6.0.2"
 langchain-chroma = "^0.2.2"
+langchain-huggingface = "^0.1.2"
 
 [tool.poetry.group.docs]
 optional = true
@@ -53,7 +54,6 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
-
 [tool.poetry.group.lint]
 optional = true
 
@@ -62,7 +62,6 @@ flake8 = "*"
 isort = "*"
 black = "*"
 mypy = "*"
-
 
 
 [tool.poetry.group.tests]
@@ -78,7 +77,7 @@ default_task_type = "script"
 flake = "scripts.codestyle:_run_flake"
 black = "scripts.codestyle:_run_black(modify=False)"
 format = "scripts.codestyle:_run_black(modify=True)"
-test = "scripts.test:_test"
+test = "scripts.test:quick_test"
 metrics = "scripts.metrics:_run_check"
 lint.sequence = ["flake", "black"]
 

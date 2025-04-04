@@ -1,0 +1,37 @@
+dialogue2graph.datasets.complex\_dialogues package
+==================================================
+
+Submodules
+----------
+
+dialogue2graph.datasets.complex\_dialogues.find\_graph\_ends module
+-------------------------------------------------------------------
+
+.. automodule:: dialogue2graph.datasets.complex_dialogues.find_graph_ends
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+dialogue2graph.datasets.complex\_dialogues.generation module
+------------------------------------------------------------
+
+.. automodule:: dialogue2graph.datasets.complex_dialogues.generation
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+dialogue2graph.datasets.complex\_dialogues.prompts module
+---------------------------------------------------------
+
+.. automodule:: dialogue2graph.datasets.complex_dialogues.prompts
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: dialogue2graph.datasets.complex_dialogues
+   :members:
+   :undoc-members:
+   :show-inheritance:

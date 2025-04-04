@@ -1,0 +1,19 @@
+dialogue2graph.datasets package
+===============================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   dialogue2graph.datasets.complex_dialogues
+   dialogue2graph.datasets.core
+
+Module contents
+---------------
+
+.. automodule:: dialogue2graph.datasets
+   :members:
+   :undoc-members:
+   :show-inheritance:
