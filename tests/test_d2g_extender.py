@@ -1,12 +1,18 @@
+import os
 import json
 import pytest
+import dotenv
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
 from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
-from dialogue2graph.pipelines.models import ModelsAPI
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
+from dialogue2graph.pipelines.model_storage import ModelStorage
 
-models = ModelsAPI()
+dotenv.load_dotenv()
+if not dotenv.find_dotenv():
+    pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
+ms = ModelStorage()
+
 
 
 @pytest.fixture(scope="session")
@@ -58,17 +64,34 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
     """Test that d2g_algo pipeline returns True for GT=graph_positive_1
     and input=dialogues_positive"""
 
-    extending_llm = models("llm", name="chatgpt-4o-latest", temp=0)
-    filling_llm = models("llm", name="o3-mini", temp=1)
-    formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
-    sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
+    ms.add(
+        key="extending_llm",
+        config={"name": "chatgpt-4o-latest", "temperature": 0.8, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="filling_llm",
+        config={"name": "o3-mini", "temperature": 1, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="formatting_llm",
+        config={"name": "gpt-4o-mini", "temperature": 0, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="sim_model",
+        config={"model_name": "BAAI/bge-m3", "device": "cuda:0"},
+        model_type="emb",
+    )
 
     pipeline = Pipeline(
-        "d2g_ext",
-        extending_llm,
-        filling_llm,
-        formatting_llm,
-        sim_model,
+        name="d2g_ext",
+        model_storage=ms,
+        extending_llm="extending_llm",
+        filling_llm="filling_llm",
+        formatting_llm="formatting_llm",
+        sim_model="sim_model",
         step1_evals=metrics.PreDGEvalBase,
         extender_evals=metrics.PreDGEvalBase,
         step2_evals=metrics.DGEvalBase,
@@ -88,17 +111,34 @@ def test_d2g_extender_negative(dialogues_negative, graph_negative):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
-    extending_llm = models("llm", name="chatgpt-4o-latest", temp=0)
-    filling_llm = models("llm", name="o3-mini", temp=1)
-    formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
-    sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
+    ms.add(
+        key="extending_llm",
+        config={"name": "chatgpt-4o-latest", "temperature": 0, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="filling_llm",
+        config={"name": "o3-mini", "temperature": 1, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="formatting_llm",
+        config={"name": "gpt-4o-mini", "temperature": 0, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        model_type="llm",
+    )
+    ms.add(
+        key="sim_model",
+        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+        model_type="emb",
+    )
 
     pipeline = Pipeline(
-        "d2g_ext",
-        extending_llm,
-        filling_llm,
-        formatting_llm,
-        sim_model,
+        name="d2g_ext",
+        model_storage=ms,
+        extending_llm="extending_llm",
+        filling_llm="filling_llm",
+        formatting_llm="formatting_llm",
+        sim_model="sim_model",
         step1_evals=metrics.PreDGEvalBase,
         extender_evals=metrics.PreDGEvalBase,
         step2_evals=metrics.DGEvalBase,

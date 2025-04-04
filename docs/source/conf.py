@@ -11,9 +11,23 @@ import sys
 
 sys.path.insert(0, os.path.abspath('../../dialogue2graph'))
 
-project = 'Chatsky LLM-Autoconfig'
+project = 'Dialogue2Graph'
 copyright = '2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
 author = 'Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
+
+# Get the deployment environment
+on_github = os.environ.get("GITHUB_ACTIONS") == "true"
+
+# Configure URLs for GitHub Pages
+if on_github:
+    html_baseurl = "/dialogue2graph/dev/"
+    html_context = {
+        "display_github": True,
+        "github_user": "deeppavlov",
+        "github_repo": "dialogue2graph",
+        "github_version": "dev",
+        "conf_py_path": "/docs/source/",
+    }
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -38,6 +52,9 @@ autodoc_default_options = {
     "exclude-members": "_abc_impl, model_fields, model_computed_fields, model_config",
 }
 
+# Mock imports that cause issues
+autodoc_mock_imports = ['datasets']
+
 apidoc_module_dir = '../../dialogue2graph'
 apidoc_output_dir = 'reference'
 
@@ -45,8 +62,40 @@ apidoc_output_dir = 'reference'
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'pydata_sphinx_theme'
+# html_theme = 'alabaster'
+html_theme = "pydata_sphinx_theme"
+
+# Add any paths that contain custom static files (such as style sheets) here,
+# relative to this directory. They are copied after the builtin static files,
+# so a file named "default.css" will overwrite the builtin "default.css".
+html_static_path = ["_static"]
 
 extlinks = {
-    'github_source_link': ("https://github.com/deeppavlov/chatsky-llm-autoconfig/tree/dev/%s", None),
+    'github_source_link': ("https://github.com/deeppavlov/dialogue2graph/tree/dev/%s", None),
 }
+
+# Add these configurations
+html_js_files = [
+    "scripts/pydata-sphinx-theme.js",
+    "scripts/bootstrap.js",
+    "scripts/fontawesome.js",
+]
+
+# Fix base URL for GitHub Pages
+html_baseurl = "/dialogue2graph/dev/"
+
+# Important: Add this to handle static files correctly
+html_theme_options = {
+    "use_edit_page_button": False,
+    "navigation_depth": 3,
+    "show_toc_level": 2,
+    # Add this to fix static file paths
+    "static_page_path": "/dialogue2graph/dev/_static/",
+}
+
+# Fix relative URLs for GitHub Pages deployment
+html_use_relative_paths = True
+
+# Ensure all static paths are properly prefixed for GitHub Pages
+if os.environ.get("GITHUB_ACTIONS") == "true":
+    html_static_path_suffix = "/dialogue2graph/dev"

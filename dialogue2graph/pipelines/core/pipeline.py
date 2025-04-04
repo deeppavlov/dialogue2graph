@@ -2,12 +2,12 @@ import time
 from typing import Union
 from pydantic import BaseModel, Field
 from dialogue2graph.pipelines.core.algorithms import DialogAugmentation, DialogueGenerator, GraphGenerator, GraphExtender
-from dialogue2graph.pipelines.helpers.parse_data import DataParser, PipelineRawDataType, PipelineDataType
+from dialogue2graph.pipelines.helpers.parse_data import RawDGParser, PipelineRawDataType, PipelineDataType
 from dialogue2graph.pipelines.report import PipelineReport
 from dialogue2graph.metrics import compare_graphs_full, compare_graphs_light
 
 
-class Pipeline(BaseModel):
+class BasePipeline(BaseModel):
     name: str = Field(description="Name of the pipeline")
     steps: list[Union[DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]] = Field(default_factory=list)
 
@@ -15,7 +15,7 @@ class Pipeline(BaseModel):
         pass
 
     def invoke(self, raw_data: PipelineRawDataType, enable_evals=False):
-        data: PipelineDataType = DataParser().invoke(raw_data)
+        data: PipelineDataType = RawDGParser().invoke(raw_data)
         report = PipelineReport(service=self.name)
         st_time = time.time()
         output = data

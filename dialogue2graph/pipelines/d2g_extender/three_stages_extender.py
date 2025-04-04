@@ -10,11 +10,12 @@ from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.pipelines.d2g_light.three_stages_light import ThreeStagesGraphGenerator as LightGenerator
+from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
 from dialogue2graph.pipelines.core.algorithms import GraphExtender
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
@@ -23,7 +24,7 @@ from .prompts import extending_prompt_part_1, extending_prompt_part_2
 
 class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
-    reason: str = Field(description="explanation")
+    # reason: str = Field(description="explanation")
 
 
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +33,7 @@ logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 dialogue_sampler = RecursiveDialogueSampler()
 
 
-class ThreeStagesGraphGenerator(GraphExtender):
+class LLMGraphExtender(GraphExtender):
     """Graph generator which iteratively takes step dialogues and adds them to graph
     generated on the previous step. First step is done with AlgoGenerator
     Three stages:
@@ -42,12 +43,13 @@ class ThreeStagesGraphGenerator(GraphExtender):
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    extending_llm: BaseChatModel
-    filling_llm: BaseChatModel
-    formatting_llm: BaseChatModel
-    sim_model: HuggingFaceEmbeddings
+    model_storage: ModelStorage = Field(description="Model storage")
+    extending_llm: str = Field(description="LLM for extending graph nodes")
+    filling_llm: str = Field(description="LLM for adding missing edges")
+    formatting_llm: str = Field(description="LLM for formatting output")
+    sim_model: str = Field(description="Similarity model")
     step: int
-    algo_generator: LightGenerator
+    graph_generator: LightGraphGenerator
     step1_evals: list[callable]
     extender_evals: list[callable]
     step2_evals: list[callable]
@@ -55,10 +57,11 @@ class ThreeStagesGraphGenerator(GraphExtender):
 
     def __init__(
         self,
-        extending_llm: BaseChatModel,
-        filling_llm: BaseChatModel,
-        formatting_llm: BaseChatModel,
-        sim_model: HuggingFaceEmbeddings,
+        model_storage: ModelStorage,
+        extending_llm: str,
+        filling_llm: str,
+        formatting_llm: str,
+        sim_model: str,
         step1_evals: list[callable],
         extender_evals: list[callable],
         step2_evals: list[callable],
@@ -66,11 +69,12 @@ class ThreeStagesGraphGenerator(GraphExtender):
         step: int = 2,
     ):
         super().__init__(
+            model_storage=model_storage,
             extending_llm=extending_llm,
             filling_llm=filling_llm,
             formatting_llm=formatting_llm,
             sim_model=sim_model,
-            algo_generator=LightGenerator(filling_llm, formatting_llm, sim_model, step2_evals, end_evals),
+            graph_generator=LightGraphGenerator(model_storage, filling_llm, formatting_llm, sim_model, step2_evals, end_evals),
             step1_evals=step1_evals,
             extender_evals=extender_evals,
             step2_evals=step2_evals,
@@ -91,8 +95,8 @@ class ThreeStagesGraphGenerator(GraphExtender):
             partial_variables=partial_variables,
         )
 
-        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.formatting_llm)
-        chain = self.extending_llm | fixed_output_parser
+        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model)
+        chain = self.model_storage.storage[self.extending_llm].model | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict))]
         nodes = chain.invoke(messages).model_dump()
@@ -101,7 +105,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
             nodes["nodes"][idx]["utterances"] = list(set(nodes["nodes"][idx]["utterances"]))
         try:
             sampled_dialogues = dialogue_sampler.invoke(graph, 15)
-            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues + dialogues, self.sim_model)
+            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues + dialogues, self.model_storage.storage[self.sim_model].model)
         except Exception as e:
             logger.error("Error in dialog sampler: %s", e)
             return Graph({})
@@ -116,7 +120,7 @@ class ThreeStagesGraphGenerator(GraphExtender):
             report = {}
         else:
             raw_data = PipelineDataType(dialogs=pipeline_data.dialogs[: self.step], true_graph=pipeline_data.true_graph)
-            cur_graph, report = self.algo_generator.invoke(raw_data, enable_evals)
+            cur_graph, report = self.graph_generator.invoke(raw_data, enable_evals)
             report = {f"d2g_light:{k}": v for k, v in report.items()}
             start_point = self.step
         if enable_evals and pipeline_data.true_graph is not None:
@@ -145,8 +149,9 @@ class ThreeStagesGraphGenerator(GraphExtender):
             )
             messages = [HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))]
 
-            fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.formatting_llm)
-            chain = self.filling_llm | fixed_output_parser
+            fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model)
+            chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+
             result = chain.invoke(messages)
 
             if result is None:

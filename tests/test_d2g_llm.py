@@ -1,13 +1,16 @@
 import json
 import pytest
+import dotenv
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
 from dialogue2graph.pipelines.d2g_llm.pipeline import Pipeline
-from dialogue2graph.pipelines.models import ModelsAPI
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
+from dialogue2graph.pipelines.model_storage import ModelStorage
 
-models = ModelsAPI()
-
+dotenv.load_dotenv()
+if not dotenv.find_dotenv():
+    pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
+ms = ModelStorage()
 
 @pytest.fixture(scope="session")
 def test_data():
@@ -58,12 +61,38 @@ def test_d2g_llm_positive(dialogues_positive, graph_positive_1):
     """Test that d2g_algo pipeline returns True for GT=graph_positive_1
     and input=dialogues_positive"""
 
-    grouping_llm = models("llm", name="chatgpt-4o-latest", temp=0)
-    filling_llm = models("llm", name="o3-mini", temp=1)
-    formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
-    sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
+    ms.add(
+        key="grouping_llm",
+        config={"name": "chatgpt-4o-latest", "temperature": 0},
+        model_type="llm",
+    )
+    ms.add(
+        key="filling_llm",
+        config={"name": "o3-mini", "temperature": 1},
+        model_type="llm",
+    )
+    ms.add(
+        key="formatting_llm",
+        config={"name": "gpt-4o-mini", "temperature": 0},
+        model_type="llm",
+    )
+    ms.add(
+        key="sim_model",
+        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+        model_type="emb",
+    )
 
-    pipeline = Pipeline("d2g_llm", grouping_llm, filling_llm, formatting_llm, sim_model, step2_evals=metrics.DGEvalBase, end_evals=metrics.DGEvalBase)
+    pipeline = Pipeline(
+        name="d2g_llm",
+        model_storage=ms,
+        grouping_llm="grouping_llm",
+        filling_llm="filling_llm",
+        formatting_llm="formatting_llm",
+        sim_model="sim_model",
+        step2_evals=metrics.DGEvalBase,
+        end_evals=metrics.DGEvalBase
+        )
+
 
     raw_data = PipelineRawDataType(dialogs=dialogues_positive, true_graph=graph_positive_1)
     _, report = pipeline.invoke(raw_data, enable_evals=True)
@@ -77,12 +106,37 @@ def test_d2g_llm_negative(dialogues_negative, graph_negative):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
-    grouping_llm = models("llm", name="chatgpt-4o-latest", temp=0)
-    filling_llm = models("llm", name="o3-mini", temp=1)
-    formatting_llm = models("llm", name="gpt-4o-mini", temp=0)
-    sim_model = models("similarity", name="BAAI/bge-m3", device="cuda:0")
+    ms.add(
+        key="grouping_llm",
+        config={"name": "chatgpt-4o-latest", "temperature": 0},
+        model_type="llm",
+    )
+    ms.add(
+        key="filling_llm",
+        config={"name": "o3-mini", "temperature": 1},
+        model_type="llm",
+    )
+    ms.add(
+        key="formatting_llm",
+        config={"name": "gpt-4o-mini", "temperature": 0},
+        model_type="llm",
+    )
+    ms.add(
+        key="sim_model",
+        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+        model_type="emb",
+    )
 
-    pipeline = Pipeline("d2g_llm", grouping_llm, filling_llm, formatting_llm, sim_model, step2_evals=metrics.DGEvalBase, end_evals=metrics.DGEvalBase)
+    pipeline = Pipeline(
+        name="d2g_llm",
+        model_storage=ms,
+        grouping_llm="grouping_llm",
+        filling_llm="filling_llm",
+        formatting_llm="formatting_llm",
+        sim_model="sim_model",
+        step2_evals=metrics.DGEvalBase,
+        end_evals=metrics.DGEvalBase
+        )
 
     raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_negative)
     _, report = pipeline.invoke(raw_data, enable_evals=True)

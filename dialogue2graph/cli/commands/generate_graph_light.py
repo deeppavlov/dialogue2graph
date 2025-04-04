@@ -1,45 +1,32 @@
 import json
 from pathlib import Path
-from dialogue2graph.pipelines.d2g_algo.pipeline import Pipeline
-from dialogue2graph.pipelines.models import ModelsAPI
+from dialogue2graph.pipelines.d2g_light.pipeline import Pipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
+from dialogue2graph.pipelines.model_storage import ModelStorage
 
-models = ModelsAPI()
+ms = ModelStorage()
 
 
-def generate_light(dialogues: str, config: dict, output_path: str):
+def generate_light(dialogues: str, graph: str, tgraph: str, config: dict, output_path: str):
     """Generates graph from dialogues via d2g_algo pipeline using parameters from config
     and saves graph dictionary to output_path"""
 
-    if config == {}:
-        filler_name = "chatgpt-4o-latest"
-        formatter_name = "gpt-4o-mini"
-        filler_temp = 0
-        formatter_temp = 0
-        sim_name = "BAAI/bge-m3"
-        device = "cpu"
+    if config != {}:
+        ms.load(config)
+    pipeline = Pipeline("d2g_light", ms)
+
+    raw_data = PipelineRawDataType(dialogs=dialogues, supported_graph=graph, true_graph=tgraph)
+    result, report = pipeline.invoke(raw_data)
+
+
+    if output_path is not None:
+        # Save results
+        output_file = Path(output_path)
+        output_file.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(output_file, "w", encoding="utf-8") as f:
+            json.dump({"graph": result.graph_dict}, f, indent=2, ensure_ascii=False)
+            json.dump({"report": report}, f, indent=2, ensure_ascii=False)
     else:
-        filler_name = config["models"].get("filler-model", {}).get("name", "chatgpt-4o-latest")
-        formatter_name = config["models"].get("formatter-model", {}).get("name", "gpt-4o-mini")
-        filler_temp = config["models"].get("filler-model", {}).get("temperature", 0)
-        formatter_temp = config["models"].get("formatter-model", {}).get("temperature", 0)
-        sim_name = config["models"].get("sim-model", {}).get("name", "BAAI/bge-m3")
-        device = config["models"].get("sim-model", {}).get("device", "cpu")
-
-    filling_llm = models("llm", name=filler_name, temp=filler_temp)
-    formatting_llm = models("llm", name=formatter_name, temp=formatter_temp)
-    sim_model = models("similarity", name=sim_name, device=device)
-
-    pipeline = Pipeline("d2g_light", filling_llm, formatting_llm, sim_model, step2_evals=[], end_evals=[])
-
-    raw_data = PipelineRawDataType(dialogs=dialogues)
-    result, _ = pipeline.invoke(raw_data)
-
-    print("Result:", result.graph_dict)
-
-    # Save results
-    output_file = Path(output_path)
-    output_file.parent.mkdir(parents=True, exist_ok=True)
-
-    with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(result.graph_dict, f, indent=2, ensure_ascii=False)
+        print(json.dumps({"graph": result.graph_dict}, f, indent=2, ensure_ascii=False))
+        print(json.dumps({"report": report}, f, indent=2, ensure_ascii=False))

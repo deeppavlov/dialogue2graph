@@ -1,9 +1,8 @@
 import logging
+from pydantic import Field
 from pydantic import ConfigDict
 from langchain.prompts import PromptTemplate
-from langchain_core.language_models.chat_models import BaseChatModel
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import HumanMessage
 
 from dialogue2graph import metrics
@@ -11,7 +10,7 @@ from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.schemas import ReasonGraph
 from dialogue2graph import Graph
 from dialogue2graph.pipelines.core.graph import BaseGraph
-
+from dialogue2graph.pipelines.model_storage import ModelStorage
 from .group_nodes import group_nodes
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
@@ -19,33 +18,87 @@ from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_ed
 
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
+    # ModelStorage is a class for managing the storage of model configurations and instances.
+    # It provides functionality to load configurations from a YAML file, add new models to the storage,
+    # and save the current storage state back to a YAML file.
 
-class ThreeStagesGraphGenerator(GraphGenerator):
-    """Graph generator based on list of dialogues.
-    Three stages:
-    1. Algorithmic grouping assistant utterances into nodes.
-    2. Algorithmic connecting nodes by edges.
-    3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
+    # Attributes:
+    #     storage (Dict[str, StoredData]): A dictionary that holds the stored model configurations
+    #         and their corresponding instances.
+
+    # Methods:
+    #     load(path: str):
+
+
+    #         Raises:
+    #             Exception: If there is an error while loading the configurations.
+
+    #     add(key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]):
+
+
+    #         Raises:
+    #             Exception: If there is an error while adding the model to the storage.
+
+    #     save(path: str):
+
+
+    #         Raises:
+    #             Exception: If there is an error while saving the storage.
+    # """
+
+class LightGraphGenerator(GraphGenerator):
+    """Graph generator from list of dialogues.
+
+    Attributes:
+        model_config: It's a parameter for internal use of Pydantic
+        model_storage: Model storage
+        filling_llm: Name of LLM for adding missing edges
+        formatting_llm: Name of LLM for formatting other LLMs output
+        sim_model: HuggingFace name for similarity model
+        step2_evals: Evaluation metrics called after stage 2 with connecting nodes by edges
+        end_evals: Evaluation metrics called at the end of generation process")
     """
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    filling_llm: BaseChatModel
-    formatting_llm: BaseChatModel
-    sim_model: HuggingFaceEmbeddings
-    step2_evals: list[callable]
-    end_evals: list[callable]
+    model_storage: ModelStorage = Field(description="Model storage")
+    filling_llm: str = Field(description="LLM for adding missing edges")
+    formatting_llm: str = Field(description="LLM for formatting output")
+    sim_model: str = Field(description="Similarity model")
+    step2_evals: list[callable] = Field(default_factory=list, description="Metrics after stage 2")
+    end_evals: list[callable] = Field(default_factory=list, description="Metrics at the end")
 
     def __init__(
         self,
-        filling_llm: BaseChatModel,
-        formatting_llm: BaseChatModel,
-        sim_model: HuggingFaceEmbeddings,
-        step2_evals: list[callable],
-        end_evals: list[callable],
+        model_storage: ModelStorage,
+        filling_llm: str,
+        formatting_llm: str,
+        sim_model: str,
+        step2_evals: list[callable] | None = None,
+        end_evals: list[callable] | None = None,
     ):
-        super().__init__(filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model, step2_evals=step2_evals, end_evals=end_evals)
+        if step2_evals is None:
+            step2_evals = []
+        if end_evals is None:
+            end_evals = []
+        super().__init__(model_storage=model_storage, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model, step2_evals=step2_evals, end_evals=end_evals)
 
     def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
+        """Primary method of the three stages generation algorithm:
+        1. Algorithmic grouping assistant utterances into nodes.
+        2. Algorithmic connecting nodes by edges.
+        3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
+        
+        Args:
+          pipeline_data:
+            data for generation and evaluation:
+              dialogs for generation, of List[Dialogue] type
+              true_graph for evaluation, of Graph type
+        Returns:
+          tuple of resulted graph of Graph type and report dictionary like in example below:
+          {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
+        Raises:
+        
+        """
 
         nodes, starts, last_user = get_helpers(pipeline_data.dialogs)
 
@@ -59,7 +112,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
                 start = False
             nodes.append({"id": idx + 1, "label": "", "is_start": start, "utterances": group})
 
-        graph_dict = connect_nodes(nodes, pipeline_data.dialogs, self.sim_model)
+        graph_dict = connect_nodes(nodes, pipeline_data.dialogs, self.model_storage.storage[self.sim_model].model)
         graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
 
         result_graph = Graph(graph_dict=graph_dict)
@@ -82,8 +135,8 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             partial_variables=partial_variables,
         )
 
-        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.formatting_llm)
-        chain = self.filling_llm | fixed_output_parser
+        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model)
+        chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
         result = chain.invoke(messages)

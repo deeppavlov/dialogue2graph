@@ -1,10 +1,11 @@
 import json
 from pathlib import Path
 from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
-from dialogue2graph.pipelines.models import ModelsAPI
+from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
-models = ModelsAPI()
+
+ms = ModelStorage()
 
 
 def generate_extender(dialogues: str, config: dict, output_path: str):

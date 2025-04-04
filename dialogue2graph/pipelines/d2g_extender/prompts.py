@@ -23,6 +23,5 @@ If they aren't, separate your nodes when needed.
 10) Doublecheck that all the assistant's utterances from the input dialogues are present in resulting set of nodes,
 not a single assistant's utterance to be missed.
 11) You must always return valid JSON fenced by a markdown code block. Do not return any additional text.
-12) Add reason point to your answer with an explanation why you removed some of utterances.
 I will give you the list of dialogues, your task is to extend a set of nodes of the graph above with assistant's utterances from the dialogues according to the rules and examples above.
 The list of dialogues: """

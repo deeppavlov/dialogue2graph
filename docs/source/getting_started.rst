@@ -1,10 +1,10 @@
 Getting started
-===========
+===============
 
 Installation
 ~~~~~~~~~~~~
 
-To install the **Chatsky LLM-Autoconfiguration** project, please follow the steps below:
+To install the **Dialogue2Graph** project, please follow the steps below:
 
 - Install poetry v. 1.8.4 (`detailed installation guide <https://python-poetry.org/docs/>`_) 
 
@@ -16,8 +16,8 @@ To install the **Chatsky LLM-Autoconfiguration** project, please follow the step
 
 .. code-block:: bash
 
-    git clone https://github.com/deeppavlov/chatsky-llm-autoconfig.git
-    cd chatsky-llm-autoconfig
+    git https://github.com/deeppavlov/dialogue2graph.git
+    cd dialogue2graph
     poetry install
 
 - Ensure that dependencies were installed correctly by running any Python script
