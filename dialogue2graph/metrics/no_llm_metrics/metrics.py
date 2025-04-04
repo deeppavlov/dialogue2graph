@@ -9,7 +9,6 @@ for various metrics.
 from typing import List, TypedDict, Optional
 import numpy as np
 import networkx as nx
-import re
 
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
@@ -608,47 +607,3 @@ def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
         "total_edges": total_edges,
         "total_nodes": total_nodes,
     }
-
-
-def _message_has_greeting(text: str) -> bool:
-    return bool(re.match(r"^hello|^hi|^greetings", text, flags=re.IGNORECASE))
-
-
-def _message_has_closing(text: str) -> bool:
-    return bool(re.search(r"have a (great|good|nice) day.$|goodbye.$", text, flags=re.IGNORECASE))
-
-
-def is_greeting_repeated(dialogues: list[Dialogue]) -> bool:
-    """
-    Checks whether greeting is repeated within dialogues.
-    Returns True if greeting has been repeated, False otherwise.
-    """
-    for dialogue in dialogues:
-        for i, message in enumerate(dialogue.messages):
-            if i != 0 and message.participant == "assistant" and _message_has_greeting(message.text):
-                return True
-    return False
-
-
-def is_closed_too_early(dialogues: list[Dialogue]) -> bool:
-    """
-    Checks if assistant tried to close dialogue in the middle.
-    Returns True if closing appeared too early, False otherwise.
-    """
-    for dialogue in dialogues:
-        last_turn_idx = len(dialogue.messages) - 1
-        for i, message in enumerate(dialogue.messages):
-            if i != last_turn_idx and message.participant == "assistant" and _message_has_closing(message.text):
-                return True
-    return False
-
-
-def has_loop_to_start(G: BaseGraph) -> bool:
-    """
-    Checks whether graph has node returning to the start node.
-    Returns True if there is a loop to start, False otherwise
-    """
-    for edge in G.graph.edges:
-        if edge[1] == 1:
-            return True
-    return False
