@@ -40,7 +40,9 @@ class Pipeline(BasePipeline):
         super().__init__(
             name=name,
             steps=[
-                LLMGraphExtender(model_storage, extending_llm, filling_llm, formatting_llm, sim_model, step1_evals, extender_evals, step2_evals, end_evals, step),
+                LLMGraphExtender(
+                    model_storage, extending_llm, filling_llm, formatting_llm, sim_model, step1_evals, extender_evals, step2_evals, end_evals, step
+                ),
             ],
         )
 

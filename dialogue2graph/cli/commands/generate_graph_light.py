@@ -1,5 +1,5 @@
 import json
-from pathlib import Path
+from pathlib import Path, PosixPath
 from dialogue2graph.pipelines.d2g_light.pipeline import Pipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
@@ -7,7 +7,7 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 ms = ModelStorage()
 
 
-def generate_light(dialogues: str, graph: str, tgraph: str, config: dict, output_path: str):
+def generate_light(dialogues: PosixPath, tgraph: PosixPath, config: dict, output_path: str):
     """Generates graph from dialogues via d2g_algo pipeline using parameters from config
     and saves graph dictionary to output_path"""
 
@@ -15,9 +15,8 @@ def generate_light(dialogues: str, graph: str, tgraph: str, config: dict, output
         ms.load(config)
     pipeline = Pipeline("d2g_light", ms)
 
-    raw_data = PipelineRawDataType(dialogs=dialogues, supported_graph=graph, true_graph=tgraph)
+    raw_data = PipelineRawDataType(dialogs=dialogues, true_graph=tgraph)
     result, report = pipeline.invoke(raw_data)
-
 
     if output_path is not None:
         # Save results

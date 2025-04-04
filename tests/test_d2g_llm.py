@@ -12,6 +12,7 @@ if not dotenv.find_dotenv():
     pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
 ms = ModelStorage()
 
+
 @pytest.fixture(scope="session")
 def test_data():
     """
@@ -90,9 +91,8 @@ def test_d2g_llm_positive(dialogues_positive, graph_positive_1):
         formatting_llm="formatting_llm",
         sim_model="sim_model",
         step2_evals=metrics.DGEvalBase,
-        end_evals=metrics.DGEvalBase
-        )
-
+        end_evals=metrics.DGEvalBase,
+    )
 
     raw_data = PipelineRawDataType(dialogs=dialogues_positive, true_graph=graph_positive_1)
     _, report = pipeline.invoke(raw_data, enable_evals=True)
@@ -135,8 +135,8 @@ def test_d2g_llm_negative(dialogues_negative, graph_negative):
         formatting_llm="formatting_llm",
         sim_model="sim_model",
         step2_evals=metrics.DGEvalBase,
-        end_evals=metrics.DGEvalBase
-        )
+        end_evals=metrics.DGEvalBase,
+    )
 
     raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_negative)
     _, report = pipeline.invoke(raw_data, enable_evals=True)

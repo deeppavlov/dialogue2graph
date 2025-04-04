@@ -14,7 +14,6 @@ if not dotenv.find_dotenv():
 ms = ModelStorage()
 
 
-
 @pytest.fixture(scope="session")
 def test_data():
     """

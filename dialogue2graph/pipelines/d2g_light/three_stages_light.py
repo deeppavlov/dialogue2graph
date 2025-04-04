@@ -18,33 +18,34 @@ from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_ed
 
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
-    # ModelStorage is a class for managing the storage of model configurations and instances.
-    # It provides functionality to load configurations from a YAML file, add new models to the storage,
-    # and save the current storage state back to a YAML file.
+# ModelStorage is a class for managing the storage of model configurations and instances.
+# It provides functionality to load configurations from a YAML file, add new models to the storage,
+# and save the current storage state back to a YAML file.
 
-    # Attributes:
-    #     storage (Dict[str, StoredData]): A dictionary that holds the stored model configurations
-    #         and their corresponding instances.
+# Attributes:
+#     storage (Dict[str, StoredData]): A dictionary that holds the stored model configurations
+#         and their corresponding instances.
 
-    # Methods:
-    #     load(path: str):
-
-
-    #         Raises:
-    #             Exception: If there is an error while loading the configurations.
-
-    #     add(key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]):
+# Methods:
+#     load(path: str):
 
 
-    #         Raises:
-    #             Exception: If there is an error while adding the model to the storage.
+#         Raises:
+#             Exception: If there is an error while loading the configurations.
 
-    #     save(path: str):
+#     add(key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]):
 
 
-    #         Raises:
-    #             Exception: If there is an error while saving the storage.
-    # """
+#         Raises:
+#             Exception: If there is an error while adding the model to the storage.
+
+#     save(path: str):
+
+
+#         Raises:
+#             Exception: If there is an error while saving the storage.
+# """
+
 
 class LightGraphGenerator(GraphGenerator):
     """Graph generator from list of dialogues. Based on algorithm with embedding similarity usage.
@@ -80,14 +81,21 @@ class LightGraphGenerator(GraphGenerator):
             step2_evals = []
         if end_evals is None:
             end_evals = []
-        super().__init__(model_storage=model_storage, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model, step2_evals=step2_evals, end_evals=end_evals)
+        super().__init__(
+            model_storage=model_storage,
+            filling_llm=filling_llm,
+            formatting_llm=formatting_llm,
+            sim_model=sim_model,
+            step2_evals=step2_evals,
+            end_evals=end_evals,
+        )
 
     def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
         """Primary method of the three stages generation algorithm:
         1. Algorithmic grouping assistant utterances into nodes: group_nodes.
         2. Algorithmic connecting nodes by edges: connect_nodes.
         3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
-        
+
         Args:
           pipeline_data:
             data for generation and evaluation:
@@ -97,7 +105,7 @@ class LightGraphGenerator(GraphGenerator):
           tuple of resulted graph of Graph type and report dictionary like in example below:
           {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
         Raises:
-        
+
         """
 
         nodes, starts, last_user = get_helpers(pipeline_data.dialogs)
@@ -135,7 +143,9 @@ class LightGraphGenerator(GraphGenerator):
             partial_variables=partial_variables,
         )
 
-        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model)
+        fixed_output_parser = OutputFixingParser.from_llm(
+            parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model
+        )
         chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]

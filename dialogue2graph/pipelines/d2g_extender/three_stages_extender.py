@@ -3,10 +3,8 @@ from typing import List
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
-from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
@@ -95,7 +93,9 @@ class LLMGraphExtender(GraphExtender):
             partial_variables=partial_variables,
         )
 
-        fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model)
+        fixed_output_parser = OutputFixingParser.from_llm(
+            parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model
+        )
         chain = self.model_storage.storage[self.extending_llm].model | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict))]
@@ -149,7 +149,9 @@ class LLMGraphExtender(GraphExtender):
             )
             messages = [HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))]
 
-            fixed_output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model)
+            fixed_output_parser = OutputFixingParser.from_llm(
+                parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model
+            )
             chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
 
             result = chain.invoke(messages)

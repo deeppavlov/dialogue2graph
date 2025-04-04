@@ -38,8 +38,9 @@ class Pipeline(BasePipeline):
         if sim_model not in model_storage.storage:
             model_storage.add(key=sim_model, config={"model_name": "BAAI/bge-m3", "device": "cpu"}, model_type="emb")
 
-
-        super().__init__(name=name, steps=[LLMGraphGenerator(model_storage, grouping_llm, filling_llm, formatting_llm, sim_model, step2_evals, end_evals)])
+        super().__init__(
+            name=name, steps=[LLMGraphGenerator(model_storage, grouping_llm, filling_llm, formatting_llm, sim_model, step2_evals, end_evals)]
+        )
 
     def _validate_pipeline(self):
         pass

@@ -1,12 +1,13 @@
 import json
-from pathlib import Path
+from pathlib import Path, PosixPath
 from dialogue2graph.pipelines.d2g_llm.pipeline import Pipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
 ms = ModelStorage()
 
-def generate_llm(dialogues: str, tgraph: str, config: dict, output_path: str):
+
+def generate_llm(dialogues: PosixPath, tgraph: PosixPath, config: dict, output_path: str):
     """Generates graph from dialogues via d2g_llm pipeline using parameters from config
     and saves graph dictionary to output_path"""
 
@@ -16,7 +17,6 @@ def generate_llm(dialogues: str, tgraph: str, config: dict, output_path: str):
 
     raw_data = PipelineRawDataType(dialogs=dialogues, true_graph=tgraph)
     result, report = pipeline.invoke(raw_data)
-    print("Result:", result.graph_dict)
 
     if output_path is not None:
         # Save results
@@ -29,4 +29,3 @@ def generate_llm(dialogues: str, tgraph: str, config: dict, output_path: str):
     else:
         print(json.dumps({"graph": result.graph_dict}, f, indent=2, ensure_ascii=False))
         print(json.dumps({"report": report}, f, indent=2, ensure_ascii=False))
-
