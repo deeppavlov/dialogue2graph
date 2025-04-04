@@ -20,8 +20,8 @@ class BasePipeline(BaseModel):
         st_time = time.time()
         output = data
         for step in self.steps:
-            output, step_report = step.invoke(output, enable_evals=enable_evals)
-            report.add_subreport(step_report)
+            output, subreport = step.invoke(output, enable_evals=enable_evals)
+            report.add_subreport(subreport)
         end_time = time.time()
         report.add_property("time", end_time - st_time)
         report.add_property("simple_graph_comparison", compare_graphs_light(output, data))

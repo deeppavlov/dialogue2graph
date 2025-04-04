@@ -47,7 +47,7 @@ logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
     # """
 
 class LightGraphGenerator(GraphGenerator):
-    """Graph generator from list of dialogues.
+    """Graph generator from list of dialogues. Based on algorithm with embedding similarity usage.
 
     Attributes:
         model_config: It's a parameter for internal use of Pydantic
@@ -84,8 +84,8 @@ class LightGraphGenerator(GraphGenerator):
 
     def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
         """Primary method of the three stages generation algorithm:
-        1. Algorithmic grouping assistant utterances into nodes.
-        2. Algorithmic connecting nodes by edges.
+        1. Algorithmic grouping assistant utterances into nodes: group_nodes.
+        2. Algorithmic connecting nodes by edges: connect_nodes.
         3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
         
         Args:

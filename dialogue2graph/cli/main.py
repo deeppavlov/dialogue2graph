@@ -1,5 +1,5 @@
 import click
-import yaml
+from pathlib import PosixPath
 from dotenv import load_dotenv
 from .commands.generate_data import generate_data
 from .commands.generate_graph_light import generate_light
@@ -30,7 +30,7 @@ def gen_data(env: str, cfg: str, topic: str, output: str):
 @click.option("--dialogues", "-d", help="Input dialogues file", required=True)
 @click.option("--tgraph", "-t", help="Input true graph file", required=True)
 @click.option("--output", "-o", help="Output graph file", required=True)
-def gen_graph_light(env: str, cfg: str, dialogues: str, graph: str, tgraph: str, output: str):
+def gen_graph_light(env: str, cfg: str, dialogues: PosixPath, graph: PosixPath, tgraph: PosixPath, output: PosixPath):
     """Generate graph from dialogues data via d2g_algo pipeline"""
     load_dotenv(env)
     generate_light(dialogues, graph, tgraph, cfg, output)
@@ -42,7 +42,7 @@ def gen_graph_light(env: str, cfg: str, dialogues: str, graph: str, tgraph: str,
 @click.option("--dialogues", "-d", help="Input dialogues file", required=True)
 @click.option("--tgraph", "-t", help="Input true graph file", required=True)
 @click.option("--output", "-o", help="Output graph file", required=False)
-def gen_graph_llm(env: str, cfg: str, dialogues: str, tgraph: str, output: str):
+def gen_graph_llm(env: str, cfg: str, dialogues: PosixPath, tgraph: PosixPath, output: PosixPath):
     """Generate graph from dialogues data via d2g_llm pipeline"""
     load_dotenv(env)
     generate_llm(dialogues, tgraph, cfg, output)
@@ -54,7 +54,7 @@ def gen_graph_llm(env: str, cfg: str, dialogues: str, tgraph: str, output: str):
 @click.option("--dialogues", "-d", help="Input dialogues file", required=True)
 @click.option("--graph", "-g", help="Input graph file", required=True)
 @click.option("--output", "-o", help="Output graph file", required=True)
-def gen_graph_extender(env: str, cfg: str, dialogues: str, output: str):
+def gen_graph_extender(env: str, cfg: str, dialogues: PosixPath, output: PosixPath):
     """Generate graph from dialogues data via d2g_llm pipeline"""
     load_dotenv(env)
     generate_extender(dialogues, cfg, output)

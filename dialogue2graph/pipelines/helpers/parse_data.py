@@ -13,9 +13,9 @@ from dialogue2graph.pipelines.core import graph
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # RawDialogsType = Dialogue | list[Dialogue] | dict | list[list] | list[dict] | str
-RawDialogsType = dict | list[list] | list[dict] | Dialogue | list[Dialogue] | str
+RawDialogsType = dict | list[list] | list[dict] | Dialogue | list[Dialogue] | PosixPath
 ValidatedDialogType = List[DialogueMessage] | List[List[DialogueMessage]] | Dialogue | List[Dialogue]
-RawGraphType = schemas.DialogueGraph | dict | str
+RawGraphType = schemas.DialogueGraph | dict | PosixPath
 ValidatedGraphType = schemas.DialogueGraph | None
 
 class PipelineRawDataType(BaseModel):
@@ -50,8 +50,8 @@ class RawDGParser(InputParser):
             return []
         return dialog_validation
 
-    def _get_dialogues_from_file(self, file_path: str) -> ValidatedDialogType:
-        if file_path.endswith(".json"):
+    def _get_dialogues_from_file(self, file_path: PosixPath) -> ValidatedDialogType:
+        if file_path.suffix == ".json":
             try:
                 with open(file_path) as f:
                     raw_dialogs = json.load(f)
@@ -72,8 +72,8 @@ class RawDGParser(InputParser):
             logger.error("File extension is not json: %s", file_path)
             return []
 
-    def _get_graph_from_file(self, file_path: str, key_name: str) -> ValidatedGraphType:
-        if file_path.endswith(".json"):
+    def _get_graph_from_file(self, file_path: PosixPath, key_name: str) -> ValidatedGraphType:
+        if file_path.suffix == ".json":
             try:
                 with open(file_path) as f:
                     raw_graph = json.load(f)
