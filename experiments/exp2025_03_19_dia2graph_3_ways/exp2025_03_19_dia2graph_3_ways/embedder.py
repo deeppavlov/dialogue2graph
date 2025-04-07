@@ -3,6 +3,7 @@ from sentence_transformers import SentenceTransformer
 
 # from chatsky_llm_autoconfig.schemas import DialogueMessage
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.metrics.similarity import compare_strings
 from settings import EnvSettings
 
 

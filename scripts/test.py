@@ -29,12 +29,12 @@ def coverage():
     test_coverage_threshold = 80
 
     args = [
-        "tests/",
         "--cov=dialogue2graph",
         f"--cov-fail-under={test_coverage_threshold}",
         "--cov-report=html",
         "--cov-report=term",
         "--tb=long",
         "-vv",
+        "tests/",
     ]
     return pytest.main(args)
