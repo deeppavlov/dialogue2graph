@@ -17,8 +17,11 @@ from utils import call_llm_api
 #     compare_graphs
 # )
 
+from dialogue2graph.metrics.no_llm_metrics import is_same_structure
+from dialogue2graph.metrics.llm_metrics import compare_graphs
 
 env_settings = EnvSettings()
+
 
 # @AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class AppendChain(GraphExtender):
@@ -32,20 +35,27 @@ class AppendChain(GraphExtender):
     Returns:
         graph
     """
+
     prompt: str = ""
+
     def __init__(self):
         super().__init__()
         self.prompt = PromptTemplate.from_template(prompt_dialogs_and_graph)
 
-    def invoke(self, dialogues: list[Dialogue] = None, graph: Graph = None) -> BaseGraph:
-        print("model:  ",env_settings.GENERATION_MODEL_NAME)
-        base_model = ChatOpenAI(model=env_settings.GENERATION_MODEL_NAME, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=0)
+    def invoke(
+        self, dialogues: list[Dialogue] = None, graph: Graph = None
+    ) -> BaseGraph:
+        print("model:  ", env_settings.GENERATION_MODEL_NAME)
+        base_model = ChatOpenAI(
+            model=env_settings.GENERATION_MODEL_NAME,
+            api_key=env_settings.OPENAI_API_KEY,
+            base_url=env_settings.OPENAI_BASE_URL,
+            temperature=0,
+        )
         model = base_model | PydanticOutputParser(pydantic_object=DialogueGraph)
 
         final_prompt = self.prompt.format(
-            orig_dial=dialogues[0],
-            orig_graph=graph.graph_dict,
-            new_dial=dialogues[1]
+            orig_dial=dialogues[0], orig_graph=graph.graph_dict, new_dial=dialogues[1]
         )
 
         result = call_llm_api(final_prompt, model, temp=0)
@@ -53,8 +63,8 @@ class AppendChain(GraphExtender):
             return Graph(graph_dict={})
 
         graph_dict = result.model_dump()
-        
-        if not all([e['target'] for e in graph_dict['edges']]):
+
+        if not all([e["target"] for e in graph_dict["edges"]]):
             return Graph(graph_dict={}), []
 
         result_graph = Graph(graph_dict=graph_dict)
@@ -62,11 +72,11 @@ class AppendChain(GraphExtender):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-    
+
     async def evaluate(self, dialogues, graph, target_graph):
         result_graph = self.invoke(dialogues, graph)
-        # report = {
-        #     "is_same_structure": is_same_structure(result_graph, target_graph),
-        #     "graph_match": compare_graphs(result_graph, target_graph),
-        # }
+        report = {
+            "is_same_structure": is_same_structure(result_graph, target_graph),
+            "graph_match": compare_graphs(result_graph, target_graph),
+        }
         return report
