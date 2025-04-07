@@ -1,2 +1,4 @@
-from dialogue2graph.pipelines.core.dialogue import Dialogue as Dialogue
-from dialogue2graph.pipelines.core.graph import Graph as Graph
+from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.pipelines.core.graph import Graph
+
+__all__ = ["Dialogue", "Graph"]
