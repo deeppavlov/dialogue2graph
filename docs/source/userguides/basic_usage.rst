@@ -22,7 +22,7 @@ Each ``Pipeline`` has it's own default models, but you can override them by pass
     ms.add(
         "my_formatting_model",
         config={
-            "name": "gpt-3.5-turbo"
+            "model": "gpt-3.5-turbo"
         },
         model_type="llm",
     )
@@ -30,7 +30,7 @@ Each ``Pipeline`` has it's own default models, but you can override them by pass
     ms.add(
         "my_embedding_model",
         config={
-            "name": "sentence-transformers/all-MiniLM-L6-v2"
+            "model_name": "sentence-transformers/all-MiniLM-L6-v2"
         },
         model_type="emb",
     )

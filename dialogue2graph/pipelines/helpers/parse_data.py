@@ -12,8 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 class DataParser(InputParser):
-
-    def invoke(self, data: Dialogue | list[Dialogue] | dict | list[list] | list[dict] | str) -> List[Dialogue]:
+    def invoke(
+        self, data: Dialogue | list[Dialogue] | dict | list[list] | list[dict] | str
+    ) -> List[Dialogue]:
         """Validate and convert user's data into list of Dialogue
         Input data can be as follows:
         [{'participant': user or assistant, 'text': text}]
@@ -25,9 +26,13 @@ class DataParser(InputParser):
         """
 
         try:
-            validation = TypeAdapter(Dialogue | List[DialogueMessage] | List[List[DialogueMessage]] | PosixPath | List[Dialogue]).validate_python(
-                data
-            )
+            validation = TypeAdapter(
+                Dialogue
+                | List[DialogueMessage]
+                | List[List[DialogueMessage]]
+                | PosixPath
+                | List[Dialogue]
+            ).validate_python(data)
         except ValidationError as e:
             logger.error(f"Input data validation error: {e}")
             return []
@@ -37,7 +42,12 @@ class DataParser(InputParser):
                 if isinstance(dialogues, dict):
                     dialogues = [dialogues]
             try:
-                validation = TypeAdapter(Dialogue | List[DialogueMessage] | List[List[DialogueMessage]] | List[Dialogue]).validate_python(dialogues)
+                validation = TypeAdapter(
+                    Dialogue
+                    | List[DialogueMessage]
+                    | List[List[DialogueMessage]]
+                    | List[Dialogue]
+                ).validate_python(dialogues)
             except ValidationError as e:
                 logger.error(f"File {data} data validation error: {e}")
                 return []
@@ -49,7 +59,9 @@ class DataParser(InputParser):
                 dialogues = validation
             elif isinstance(validation[0], DialogueMessage):
                 dialogues = [Dialogue(messages=validation)]
-            elif isinstance(validation[0], List) and isinstance(validation[0][0], DialogueMessage):
+            elif isinstance(validation[0], List) and isinstance(
+                validation[0][0], DialogueMessage
+            ):
                 dialogues = [Dialogue(messages=dialogue) for dialogue in validation]
         else:
             dialogues = []

@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 from langchain.prompts import PromptTemplate
-from langchain_openai  import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
@@ -21,7 +21,10 @@ from missing_edges_prompt import three_1, three_2
 env_settings = EnvSettings()
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
-embeddings = HuggingFaceEmbeddings(model_name="BAAI/bge-m3", model_kwargs={"device": env_settings.DEVICE})
+embeddings = HuggingFaceEmbeddings(
+    model_name="BAAI/bge-m3", model_kwargs={"device": env_settings.DEVICE}
+)
+
 
 # @AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class ThreeStagesGraphGenerator(GraphGenerator):
@@ -32,17 +35,33 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
     """
 
-    def invoke(self, dialogues: list[Dialogue] = None, graph: DialogueGraph = None, model_name="chatgpt-4o-latest", temp=0) -> BaseGraph:
-
-        base_model = ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=temp)
+    def invoke(
+        self,
+        dialogues: list[Dialogue] = None,
+        graph: DialogueGraph = None,
+        model_name="chatgpt-4o-latest",
+        temp=0,
+    ) -> BaseGraph:
+        base_model = ChatOpenAI(
+            model=model_name,
+            api_key=env_settings.OPENAI_API_KEY,
+            base_url=env_settings.OPENAI_BASE_URL,
+            temperature=temp,
+        )
         nexts, nodes, starts, neigbhours, last_user = dialogues2list(dialogues)
-        
-        print("LISTS_N: ",[(i,n) for i,n in enumerate(nexts)])
-        print("LISTS: ",[(i,n) for i,n in enumerate(nodes)])
 
-        groups = nodes2groups(dialogues, nodes, [" ".join(p) for p in nexts], [n+ " ".join(p) + " " for p,n in zip(nexts, nodes)], neigbhours)
+        print("LISTS_N: ", [(i, n) for i, n in enumerate(nexts)])
+        print("LISTS: ", [(i, n) for i, n in enumerate(nodes)])
 
-        print ("NODES: ", groups)
+        groups = nodes2groups(
+            dialogues,
+            nodes,
+            [" ".join(p) for p in nexts],
+            [n + " ".join(p) + " " for p, n in zip(nexts, nodes)],
+            neigbhours,
+        )
+
+        print("NODES: ", groups)
         # print ("MIX: ", mix)
         nodes = []
         for idx, group in enumerate(groups):
@@ -50,23 +69,33 @@ class ThreeStagesGraphGenerator(GraphGenerator):
                 start = True
             else:
                 start = False
-            nodes.append({"id":idx+1, "label": "", "is_start": start, "utterances": group})
+            nodes.append(
+                {"id": idx + 1, "label": "", "is_start": start, "utterances": group}
+            )
 
         print("NODES: ", nodes)
         graph_dict = nodes2graph(nodes, dialogues, embeddings)
         print("RESULT: ", graph_dict, "\n")
-        graph_dict = {"nodes": graph_dict['nodes'], "edges": graph_dict['edges'], "reason": ""}
+        graph_dict = {
+            "nodes": graph_dict["nodes"],
+            "edges": graph_dict["edges"],
+            "reason": "",
+        }
 
         if not last_user:
             result_graph = Graph(graph_dict=graph_dict)
             print("SKIP")
-            return result_graph    
+            return result_graph
         partial_variables = {}
         prompt_extra = ""
         for idx, dial in enumerate(dialogues):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-        prompt = PromptTemplate(template=three_1+"{graph_dict}. "+three_2+prompt_extra, input_variables=["graph_dict"], partial_variables=partial_variables)
+        prompt = PromptTemplate(
+            template=three_1 + "{graph_dict}. " + three_2 + prompt_extra,
+            input_variables=["graph_dict"],
+            partial_variables=partial_variables,
+        )
 
         print("PROMPT: ", prompt)
 
@@ -77,16 +106,16 @@ class ThreeStagesGraphGenerator(GraphGenerator):
         if result is None:
             return Graph(graph_dict={})
         result.reason = "Fixes: " + result.reason
-        graph_dict=result.model_dump()
-        if not all([e['target'] for e in graph_dict['edges']]):
+        graph_dict = result.model_dump()
+        if not all([e["target"] for e in graph_dict["edges"]]):
             return Graph(graph_dict={})
         result_graph = Graph(graph_dict=graph_dict)
         return result_graph
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-    
-    async def evaluate(self, dialogues, target_graph, report_type = "dict"):
+
+    async def evaluate(self, dialogues, target_graph, report_type="dict"):
         graph = self.invoke(dialogues)
         report = {
             "is_same_structure": is_same_structure(graph, target_graph),
