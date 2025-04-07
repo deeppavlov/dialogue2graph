@@ -30,7 +30,14 @@ def gen_data(env: str, cfg: str, topic: str, output: str):
 @click.option("--dialogues", "-d", help="Input dialogues file", required=True)
 @click.option("--tgraph", "-t", help="Input true graph file", required=True)
 @click.option("--output", "-o", help="Output graph file", required=True)
-def gen_graph_light(env: str, cfg: str, dialogues: PosixPath, graph: PosixPath, tgraph: PosixPath, output: PosixPath):
+def gen_graph_light(
+    env: str,
+    cfg: str,
+    dialogues: PosixPath,
+    graph: PosixPath,
+    tgraph: PosixPath,
+    output: PosixPath,
+):
     """Generate graph from dialogues data via d2g_algo pipeline"""
     load_dotenv(env)
     generate_light(dialogues, graph, tgraph, cfg, output)
@@ -42,7 +49,9 @@ def gen_graph_light(env: str, cfg: str, dialogues: PosixPath, graph: PosixPath, 
 @click.option("--dialogues", "-d", help="Input dialogues file", required=True)
 @click.option("--tgraph", "-t", help="Input true graph file", required=True)
 @click.option("--output", "-o", help="Output graph file", required=False)
-def gen_graph_llm(env: str, cfg: str, dialogues: PosixPath, tgraph: PosixPath, output: PosixPath):
+def gen_graph_llm(
+    env: str, cfg: str, dialogues: PosixPath, tgraph: PosixPath, output: PosixPath
+):
     """Generate graph from dialogues data via d2g_llm pipeline"""
     load_dotenv(env)
     generate_llm(dialogues, tgraph, cfg, output)

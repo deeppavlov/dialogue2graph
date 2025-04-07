@@ -14,7 +14,9 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # RawDialogsType = Dialogue | list[Dialogue] | dict | list[list] | list[dict] | str
 RawDialogsType = dict | list[list] | list[dict] | Dialogue | list[Dialogue] | PosixPath
-ValidatedDialogType = List[DialogueMessage] | List[List[DialogueMessage]] | Dialogue | List[Dialogue]
+ValidatedDialogType = (
+    List[DialogueMessage] | List[List[DialogueMessage]] | Dialogue | List[Dialogue]
+)
 RawGraphType = schemas.DialogueGraph | dict | PosixPath
 ValidatedGraphType = schemas.DialogueGraph | None
 
@@ -32,11 +34,14 @@ class PipelineDataType(BaseModel):
 
 
 class RawDGParser(InputParser):
-
-    def _validate_raw_graph(self, raw_graph: RawGraphType) -> ValidatedGraphType | PosixPath:
+    def _validate_raw_graph(
+        self, raw_graph: RawGraphType
+    ) -> ValidatedGraphType | PosixPath:
         if raw_graph is not None:
             try:
-                graph_validation = TypeAdapter(schemas.DialogueGraph | PosixPath).validate_python(raw_graph)
+                graph_validation = TypeAdapter(
+                    schemas.DialogueGraph | PosixPath
+                ).validate_python(raw_graph)
             except ValidationError as e:
                 logger.error(f"Input data validation error: {e}")
                 return None
@@ -44,9 +49,13 @@ class RawDGParser(InputParser):
         else:
             return None
 
-    def _validate_raw_dialogs(self, raw_dialogs: RawDialogsType) -> ValidatedDialogType | PosixPath:
+    def _validate_raw_dialogs(
+        self, raw_dialogs: RawDialogsType
+    ) -> ValidatedDialogType | PosixPath:
         try:
-            dialog_validation = TypeAdapter(ValidatedDialogType | PosixPath).validate_python(raw_dialogs)
+            dialog_validation = TypeAdapter(
+                ValidatedDialogType | PosixPath
+            ).validate_python(raw_dialogs)
         except ValidationError as e:
             logger.error(f"Input data validation error: {e}")
             return []
@@ -74,7 +83,9 @@ class RawDGParser(InputParser):
             logger.error("File extension is not json: %s", file_path)
             return []
 
-    def _get_graph_from_file(self, file_path: PosixPath, key_name: str) -> ValidatedGraphType:
+    def _get_graph_from_file(
+        self, file_path: PosixPath, key_name: str
+    ) -> ValidatedGraphType:
         if file_path.suffix == ".json":
             try:
                 with open(file_path) as f:
@@ -118,24 +129,38 @@ class RawDGParser(InputParser):
                 dialogues = dialog_validation
             elif isinstance(dialog_validation[0], DialogueMessage):
                 dialogues = [Dialogue(messages=dialog_validation)]
-            elif isinstance(dialog_validation[0], List) and isinstance(dialog_validation[0][0], DialogueMessage):
-                dialogues = [Dialogue(messages=dialogue) for dialogue in dialog_validation]
+            elif isinstance(dialog_validation[0], List) and isinstance(
+                dialog_validation[0][0], DialogueMessage
+            ):
+                dialogues = [
+                    Dialogue(messages=dialogue) for dialogue in dialog_validation
+                ]
         else:
             dialogues = []
 
         supported_graph_validation = self._validate_raw_graph(raw_data.supported_graph)
         if isinstance(supported_graph_validation, PosixPath):
-            supported_graph_validation = self._get_graph_from_file(raw_data.supported_graph, "graph")
+            supported_graph_validation = self._get_graph_from_file(
+                raw_data.supported_graph, "graph"
+            )
 
         true_graph_validation = self._validate_raw_graph(raw_data.true_graph)
         if isinstance(true_graph_validation, PosixPath):
-            true_graph_validation = self._get_graph_from_file(raw_data.true_graph, "true_graph")
+            true_graph_validation = self._get_graph_from_file(
+                raw_data.true_graph, "true_graph"
+            )
         if supported_graph_validation is not None:
-            supported_graph_validation = graph.Graph(supported_graph_validation.model_dump())
+            supported_graph_validation = graph.Graph(
+                supported_graph_validation.model_dump()
+            )
         if true_graph_validation is not None:
             true_graph_validation = graph.Graph(true_graph_validation.model_dump())
 
-        return PipelineDataType(dialogs=dialogues, supported_graph=supported_graph_validation, true_graph=true_graph_validation)
+        return PipelineDataType(
+            dialogs=dialogues,
+            supported_graph=supported_graph_validation,
+            true_graph=true_graph_validation,
+        )
 
     def evaluate(self, *args, report_type="dict", **kwargs):
         return super().evaluate(*args, report_type=report_type, **kwargs)

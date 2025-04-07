@@ -7,7 +7,9 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 ms = ModelStorage()
 
 
-def generate_llm(dialogues: PosixPath, tgraph: PosixPath, config: dict, output_path: str):
+def generate_llm(
+    dialogues: PosixPath, tgraph: PosixPath, config: dict, output_path: str
+):
     """Generates graph from dialogues via d2g_llm pipeline using parameters from config
     and saves graph dictionary to output_path"""
 

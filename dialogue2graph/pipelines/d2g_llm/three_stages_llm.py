@@ -17,13 +17,13 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
-        add_edge_prompt_1,
-        add_edge_prompt_2
+    add_edge_prompt_1,
+    add_edge_prompt_2,
 )
 from dialogue2graph.pipelines.d2g_llm.prompts import (
-        graph_example_1,
-        grouping_prompt_1,
-        grouping_prompt_2
+    graph_example_1,
+    grouping_prompt_1,
+    grouping_prompt_2,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -48,12 +48,18 @@ class LLMGraphGenerator(GraphGenerator):
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
     model_storage: ModelStorage = Field(description="Model storage")
-    grouping_llm: str = Field(description="LLM for grouping assistant utterances into nodes")
+    grouping_llm: str = Field(
+        description="LLM for grouping assistant utterances into nodes"
+    )
     filling_llm: str = Field(description="LLM for adding missing edges")
     formatting_llm: str = Field(description="LLM for formatting output")
     sim_model: str = Field(description="Similarity model")
-    step2_evals: list[Callable] = Field(default_factory=list, description="Metrics after stage 2")
-    end_evals: list[Callable] = Field(default_factory=list, description="Metrics at the end")
+    step2_evals: list[Callable] = Field(
+        default_factory=list, description="Metrics after stage 2"
+    )
+    end_evals: list[Callable] = Field(
+        default_factory=list, description="Metrics at the end"
+    )
 
     def __init__(
         self,
@@ -81,9 +87,8 @@ class LLMGraphGenerator(GraphGenerator):
         )
 
     def invoke(
-            self, pipeline_data: PipelineDataType, enable_evals: bool = False
-            ) -> tuple[BaseGraph, metrics.DGReportType]:
-
+        self, pipeline_data: PipelineDataType, enable_evals: bool = False
+    ) -> tuple[BaseGraph, metrics.DGReportType]:
         partial_variables = {}
         prompt_extra = grouping_prompt_2
         for idx, dial in enumerate(pipeline_data.dialogs):
@@ -149,11 +154,12 @@ class LLMGraphGenerator(GraphGenerator):
             )
 
             fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(
-                    pydantic_object=ReasonGraph),
-                    llm=self.model_storage.storage[self.formatting_llm].model
+                parser=PydanticOutputParser(pydantic_object=ReasonGraph),
+                llm=self.model_storage.storage[self.formatting_llm].model,
             )
-            chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+            chain = (
+                self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+            )
 
             messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
 
@@ -166,7 +172,9 @@ class LLMGraphGenerator(GraphGenerator):
                 return Graph(graph_dict={}), report
             result_graph = Graph(graph_dict=graph_dict)
             if enable_evals and pipeline_data.true_graph is not None:
-                report.update(self.evaluate(result_graph, pipeline_data.true_graph, "end"))
+                report.update(
+                    self.evaluate(result_graph, pipeline_data.true_graph, "end")
+                )
             return result_graph, report
         except Exception as e:
             logger.error("Error in step3: %s", e)
@@ -176,7 +184,6 @@ class LLMGraphGenerator(GraphGenerator):
         return self.invoke(*args, **kwargs)
 
     def evaluate(self, graph, gt_graph, eval_stage: str) -> metrics.DGReportType:
-
         report = {}
         for metric in getattr(self, eval_stage + "_evals"):
             report[metric.__name__ + ":" + eval_stage] = metric(graph, gt_graph)

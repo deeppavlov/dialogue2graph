@@ -8,7 +8,13 @@ from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 ms = ModelStorage()
 
 
-def generate_extender(dialogues: PosixPath, graph: PosixPath, tgraph: PosixPath, config: dict, output_path: str):
+def generate_extender(
+    dialogues: PosixPath,
+    graph: PosixPath,
+    tgraph: PosixPath,
+    config: dict,
+    output_path: str,
+):
     """Generates graph from dialogues via d2g_llm pipeline using parameters from config
     and saves graph dictionary to output_path"""
 
@@ -16,7 +22,9 @@ def generate_extender(dialogues: PosixPath, graph: PosixPath, tgraph: PosixPath,
         ms.load(config)
     pipeline = Pipeline("d2g_ext", ms, step=1)
 
-    raw_data = PipelineRawDataType(dialogs=dialogues, supported_graph=graph, true_graph=tgraph)
+    raw_data = PipelineRawDataType(
+        dialogs=dialogues, supported_graph=graph, true_graph=tgraph
+    )
     result, _ = pipeline.invoke(raw_data)
 
     # Save results

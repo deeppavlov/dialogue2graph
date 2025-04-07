@@ -5,12 +5,12 @@ from dialogue2graph.pipelines.core.algorithms import (
     DialogAugmentation,
     DialogueGenerator,
     GraphGenerator,
-    GraphExtender
+    GraphExtender,
 )
 from dialogue2graph.pipelines.helpers.parse_data import (
     RawDGParser,
     PipelineRawDataType,
-    PipelineDataType
+    PipelineDataType,
 )
 from dialogue2graph.pipelines.report import PipelineReport
 from dialogue2graph.metrics import compare_graphs_full, compare_graphs_light
@@ -18,11 +18,9 @@ from dialogue2graph.metrics import compare_graphs_full, compare_graphs_light
 
 class BasePipeline(BaseModel):
     name: str = Field(description="Name of the pipeline")
-    steps: list[Union[
-        DialogueGenerator,
-        DialogAugmentation,
-        GraphGenerator,
-        GraphExtender]] = Field(default_factory=list)
+    steps: list[
+        Union[DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]
+    ] = Field(default_factory=list)
 
     def _validate_pipeline(self):
         pass
@@ -37,8 +35,12 @@ class BasePipeline(BaseModel):
             report.add_subreport(subreport)
         end_time = time.time()
         report.add_property("time", end_time - st_time)
-        report.add_property("simple_graph_comparison", compare_graphs_light(output, data))
+        report.add_property(
+            "simple_graph_comparison", compare_graphs_light(output, data)
+        )
         if enable_evals:
-            report.add_property("complex_graph_comparison", compare_graphs_full(output, data))
+            report.add_property(
+                "complex_graph_comparison", compare_graphs_full(output, data)
+            )
 
         return output, report

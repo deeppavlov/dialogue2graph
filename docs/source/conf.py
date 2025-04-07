@@ -11,9 +11,9 @@ import sys
 
 sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
 
-project = 'Dialogue2Graph'
-copyright = '2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
-author = 'Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin'
+project = "Dialogue2Graph"
+copyright = "2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
+author = "Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
 
 # Get the deployment environment
 on_github = os.environ.get("GITHUB_ACTIONS") == "true"
@@ -71,7 +71,10 @@ html_theme = "pydata_sphinx_theme"
 html_static_path = ["_static"]
 
 extlinks = {
-    'github_source_link': ("https://github.com/deeppavlov/dialogue2graph/tree/dev/%s", None),
+    "github_source_link": (
+        "https://github.com/deeppavlov/dialogue2graph/tree/dev/%s",
+        None,
+    ),
 }
 
 # Add these configurations

@@ -7,7 +7,10 @@ from typing import Optional
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
-from dialogue2graph.metrics.no_llm_metrics import match_dg_triplets, match_dialogue_triplets
+from dialogue2graph.metrics.no_llm_metrics import (
+    match_dg_triplets,
+    match_dialogue_triplets,
+)
 from dialogue2graph.datasets.complex_dialogues.find_cycle_ends import find_cycle_ends
 from langchain_openai import ChatOpenAI
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -93,7 +96,9 @@ class RecursiveDialogueSampler(DialogueGenerator):
     ):
         dialogues = self.invoke(graph, upper_limit)
         report = {
-            "dialogues_match": [match_dialogue_triplets(dialogues, target_dialogues)["value"]],
+            "dialogues_match": [
+                match_dialogue_triplets(dialogues, target_dialogues)["value"]
+            ],
             # "all_roles_correct": all(all_roles_correct(dialogues, target_dialogues)),
         }
         if report_type == "dataframe":
@@ -105,7 +110,9 @@ class RecursiveDialogueSampler(DialogueGenerator):
             raise ValueError(f"Invalid report_type: {report_type}")
 
 
-def mix_ends(graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]) -> list[int]:
+def mix_ends(
+    graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]
+) -> list[int]:
     """Find ids from cycle_ends_ids from where there are no paths to any node id in end_ids.
     So adds more ends to ends when necessary and returns altogether"""
     end_paths = []
@@ -117,7 +124,9 @@ def mix_ends(graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]) ->
     return [e for e in cycle_ends_ids if e not in end_paths] + end_ids
 
 
-def get_all_sequences(path: list, last_message: dict, start_idx: int, visited_messages: list):
+def get_all_sequences(
+    path: list, last_message: dict, start_idx: int, visited_messages: list
+):
     """Recursion to find all dialogue suquences in the path of nodes and edges with miltiple utterances
     which start from element of full_path with start_idx index number
     visited_messages is path traveled so far
@@ -130,7 +139,12 @@ def get_all_sequences(path: list, last_message: dict, start_idx: int, visited_me
 
     if start_idx < len(path):
         for utt in path[start_idx]["text"]:
-            dialogues += get_all_sequences(path, {"participant": path[start_idx]["participant"], "text": utt}, start_idx + 1, visited_messages.copy())
+            dialogues += get_all_sequences(
+                path,
+                {"participant": path[start_idx]["participant"], "text": utt},
+                start_idx + 1,
+                visited_messages.copy(),
+            )
     else:
         path_counter.counter += 1
         if path_counter.counter == env_settings.SAMPLING_MAX:
@@ -206,14 +220,16 @@ def remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]:
         return []
     single_seq = [non_empty_seq[0]]
     for s in non_empty_seq[1:]:
-        if not get_dialogue_doublets([s]).issubset(get_dialogue_doublets(single_seq)) or not get_dialogue_triplets([s]).issubset(
-            get_dialogue_triplets(single_seq)
-        ):
+        if not get_dialogue_doublets([s]).issubset(
+            get_dialogue_doublets(single_seq)
+        ) or not get_dialogue_triplets([s]).issubset(get_dialogue_triplets(single_seq)):
             single_seq.append(s)
     return single_seq
 
 
-def get_dialogues(graph: BaseGraph, repeats_limit: int, end_nodes_ids: list[int]) -> list[Dialogue]:
+def get_dialogues(
+    graph: BaseGraph, repeats_limit: int, end_nodes_ids: list[int]
+) -> list[Dialogue]:
     """Find all the dialogues in the graph finishing with end_nodes_ids
     repeats_limit is used for graph.all_paths method to limit set of sampled dialogues"""
 
@@ -233,12 +249,22 @@ def get_dialogues(graph: BaseGraph, repeats_limit: int, end_nodes_ids: list[int]
     for path in node_paths:
         dialogue = []
         for idx, s in enumerate(path[:-1]):
-            dialogue.append({"text": graph.get_nodes_by_id(s)["utterances"], "participant": "assistant"})
+            dialogue.append(
+                {
+                    "text": graph.get_nodes_by_id(s)["utterances"],
+                    "participant": "assistant",
+                }
+            )
             sources = graph.get_edges_by_source(s)
             targets = graph.get_edges_by_target(path[idx + 1])
             edge = [e for e in sources if e in targets][0]
             dialogue.append(({"text": edge["utterances"], "participant": "user"}))
-        dialogue.append({"text": graph.get_nodes_by_id(path[-1])["utterances"], "participant": "assistant"})
+        dialogue.append(
+            {
+                "text": graph.get_nodes_by_id(path[-1])["utterances"],
+                "participant": "assistant",
+            }
+        )
         dialogue_paths.append(dialogue)
     dialogues = []
     for path in dialogue_paths:
