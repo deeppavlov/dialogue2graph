@@ -134,6 +134,9 @@ class GenerationPipeline(BaseModel):
 
             number_cycle_requirement = cycles_count >= min_cycles
             no_start_cycle_requirement = not any([1 in c for c in cycles])
+            if not no_start_cycle_requirement:
+                logger.info("Detected cycle containing start node")
+
             meets_requirements = number_cycle_requirement and no_start_cycle_requirement
 
             if meets_requirements:
@@ -233,10 +236,10 @@ class GenerationPipeline(BaseModel):
                     error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - not all utterances are present"
                 )
             if is_greeting_repeated_regex(sampled_dialogues):
-                return GenerationError(error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Opening is repeated")
+                return GenerationError(error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Opening phrases are repeated")
             if is_dialog_closed_too_early_regex(sampled_dialogues):
                 return GenerationError(
-                    error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Closing appears in the middle of a dialogue"
+                    error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Closing phrases appear in the middle of a dialogue"
                 )
 
             theme_validation = is_theme_valid(graph, self.theme_validation_model, topic)
