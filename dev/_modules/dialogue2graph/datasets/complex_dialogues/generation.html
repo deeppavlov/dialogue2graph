@@ -380,6 +380,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.dialogue_sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveDialogueSampler</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">match_triplets_dg</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.llm_metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">are_triplets_valid</span><span class="p">,</span> <span class="n">is_theme_valid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_validators</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_greeting_repeated_regex</span><span class="p">,</span> <span class="n">is_dialog_closed_too_early_regex</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">Graph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.algorithms</span><span class="w"> </span><span class="kn">import</span> <span class="n">TopicGraphGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">GraphGenerationResult</span><span class="p">,</span> <span class="n">DialogueGraph</span>
@@ -541,7 +542,13 @@
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cycles</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cycle </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="s1">&#39; -&gt; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="w"> </span><span class="n">cycle</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">[</span><span class="n">cycle</span><span class="p">[</span><span class="mi">0</span><span class="p">]]))</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-            <span class="n">meets_requirements</span> <span class="o">=</span> <span class="n">cycles_count</span> <span class="o">&gt;=</span> <span class="n">min_cycles</span>
+            <span class="n">number_cycle_requirement</span> <span class="o">=</span> <span class="n">cycles_count</span> <span class="o">&gt;=</span> <span class="n">min_cycles</span>
+            <span class="n">no_start_cycle_requirement</span> <span class="o">=</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="mi">1</span> <span class="ow">in</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cycles</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">no_start_cycle_requirement</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Detected cycle containing start node&quot;</span><span class="p">)</span>
+
+            <span class="n">meets_requirements</span> <span class="o">=</span> <span class="n">number_cycle_requirement</span> <span class="ow">and</span> <span class="n">no_start_cycle_requirement</span>
+
             <span class="k">if</span> <span class="n">meets_requirements</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✅ Graph meets cycle requirements&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -686,6 +693,15 @@
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
                     <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span>
                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - not all utterances are present&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_greeting_repeated_regex</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
+                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - Opening phrases are repeated&quot;</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="n">is_dialog_closed_too_early_regex</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
+                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - Closing phrases appear in the middle of a dialogue&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="n">theme_validation</span> <span class="o">=</span> <span class="n">is_theme_valid</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theme_validation_model</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span>
