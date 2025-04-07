@@ -1,4 +1,5 @@
 import pytest
+import dotenv
 
 from dialogue2graph import Dialogue
 from dialogue2graph.metrics.validators import (
@@ -9,6 +10,10 @@ from dialogue2graph.metrics.validators import (
 )
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
+
+dotenv.load_dotenv()
+if not dotenv.find_dotenv():
+    pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
 
 MODEL_STORAGE = ModelStorage()
 MODEL_STORAGE.add(
