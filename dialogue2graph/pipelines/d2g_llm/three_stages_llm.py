@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Callable
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
@@ -45,8 +45,8 @@ class LLMGraphGenerator(GraphGenerator):
     filling_llm: str = Field(description="LLM for adding missing edges")
     formatting_llm: str = Field(description="LLM for formatting output")
     sim_model: str = Field(description="Similarity model")
-    step2_evals: list[callable] = Field(default_factory=list, description="Metrics after stage 2")
-    end_evals: list[callable] = Field(default_factory=list, description="Metrics at the end")
+    step2_evals: list[Callable] = Field(default_factory=list, description="Metrics after stage 2")
+    end_evals: list[Callable] = Field(default_factory=list, description="Metrics at the end")
 
     def __init__(
         self,
@@ -55,8 +55,8 @@ class LLMGraphGenerator(GraphGenerator):
         filling_llm: str,
         formatting_llm: str,
         sim_model: str,
-        step2_evals: list[callable] | None = None,
-        end_evals: list[callable] | None = None,
+        step2_evals: list[Callable] | None = None,
+        end_evals: list[Callable] | None = None,
     ):
         if step2_evals is None:
             step2_evals = []
@@ -76,7 +76,6 @@ class LLMGraphGenerator(GraphGenerator):
     def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
 
         partial_variables = {}
-        print("DIALGS: ", pipeline_data.dialogs)
         prompt_extra = grouping_prompt_2
         for idx, dial in enumerate(pipeline_data.dialogs):
             partial_variables[f"var_{idx}"] = dial.to_list()
@@ -90,15 +89,12 @@ class LLMGraphGenerator(GraphGenerator):
         fixed_output_parser = OutputFixingParser.from_llm(
             parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model
         )
-        print("CONNECTING: ", self.model_storage.storage[self.grouping_llm].model)
         chain = self.model_storage.storage[self.grouping_llm].model | fixed_output_parser
 
         messages = [HumanMessage(content=prompt.format(graph_example_1=graph_example_1))]
         nodes = chain.invoke(messages).model_dump()
 
         _, _, last_user = get_helpers(pipeline_data.dialogs)
-
-        print("NODES: ", nodes["nodes"])
 
         try:
             graph_dict = connect_nodes(nodes["nodes"], pipeline_data.dialogs, self.model_storage.storage[self.sim_model].model)
@@ -126,8 +122,6 @@ class LLMGraphGenerator(GraphGenerator):
                 input_variables=["graph_dict"],
                 partial_variables=partial_variables,
             )
-
-            print("PROMPT: ", prompt)
 
             fixed_output_parser = OutputFixingParser.from_llm(
                 parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model

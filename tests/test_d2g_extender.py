@@ -1,4 +1,3 @@
-import os
 import json
 import pytest
 import dotenv
@@ -65,17 +64,17 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
 
     ms.add(
         key="extending_llm",
-        config={"name": "chatgpt-4o-latest", "temperature": 0.8, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"model": "chatgpt-4o-latest", "temperature": 0},
         model_type="llm",
     )
     ms.add(
         key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"model": "o3-mini", "temperature": 1},
         model_type="llm",
     )
     ms.add(
         key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"model": "gpt-4o-mini", "temperature": 0},
         model_type="llm",
     )
     ms.add(
@@ -106,23 +105,23 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
     ), f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
 
 
-def test_d2g_extender_negative(dialogues_negative, graph_negative):
+def test_d2g_extender_negative(dialogues_negative, graph_positive):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
     ms.add(
         key="extending_llm",
-        config={"name": "chatgpt-4o-latest", "temperature": 0, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"model": "chatgpt-4o-latest", "temperature": 0},
         model_type="llm",
     )
     ms.add(
         key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"model": "o3-mini", "temperature": 1},
         model_type="llm",
     )
     ms.add(
         key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0, "api_key": os.getenv("OPENAI_API_KEY"), "base_url": os.getenv("OPENAI_BASE_URL")},
+        config={"model": "gpt-4o-mini", "temperature": 0},
         model_type="llm",
     )
     ms.add(
@@ -145,7 +144,7 @@ def test_d2g_extender_negative(dialogues_negative, graph_negative):
         step=1,
     )
 
-    raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_negative)
+    raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_positive)
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
     assert report.properties["complex_graph_comparison"]["value"] is False, "Expected value=False in the negative scenario."

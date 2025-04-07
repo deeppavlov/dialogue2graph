@@ -91,7 +91,7 @@ class RawDGParser(InputParser):
             raw_graph = raw_graph[key_name]
             if isinstance(raw_graph, list) and raw_graph:
                 raw_graph = raw_graph[0]
-            return self._validate_raw_dialogs(raw_graph)
+            return self._validate_raw_graph(raw_graph)
         else:
             logger.error("File extension is not json: %s", file_path)
             return None
@@ -130,7 +130,6 @@ class RawDGParser(InputParser):
         true_graph_validation = self._validate_raw_graph(raw_data.true_graph)
         if isinstance(true_graph_validation, PosixPath):
             true_graph_validation = self._get_graph_from_file(raw_data.true_graph, "true_graph")
-
         if supported_graph_validation is not None:
             supported_graph_validation = graph.Graph(supported_graph_validation.model_dump())
         if true_graph_validation is not None:

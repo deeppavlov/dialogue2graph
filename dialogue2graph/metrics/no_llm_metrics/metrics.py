@@ -6,12 +6,17 @@ This module contains functions that automatically (without using LLMs) checks Gr
 for various metrics.
 """
 
+import logging
 from typing import List, TypedDict, Optional
 import numpy as np
 import networkx as nx
 
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def _collapse_multiedges(edges):
@@ -345,8 +350,9 @@ def match_dg_triplets(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
     graph_set = _get_graph_triplets(G)
     graph_absent = dialogue_set - graph_set
     dialogue_absent = graph_set - dialogue_set
+
     if dialogue_set.issubset(graph_set):
-        print("Graph has all the dialogues")
+        logger.info("Graph has all the dialogues")
     if not len(graph_absent) and not len(dialogue_absent):
         return {"value": True}
     if len(dialogue_absent):

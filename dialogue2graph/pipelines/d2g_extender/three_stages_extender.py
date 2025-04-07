@@ -168,7 +168,6 @@ class LLMGraphExtender(GraphExtender):
             return result_graph, report
         except Exception as e:
             logger.error("Error in step3: %s", e)
-            print(e)
             return Graph({}), report
 
     async def ainvoke(self, *args, **kwargs):

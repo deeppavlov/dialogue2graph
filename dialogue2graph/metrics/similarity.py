@@ -12,7 +12,6 @@ def compare_strings(first: str, second: str, embedder: HuggingFaceEmbeddings, em
 
     evaluator_2 = load_evaluator("pairwise_embedding_distance", embeddings=embedder)
     score = evaluator_2.evaluate_string_pairs(prediction=first, prediction_b=second)["score"]
-    # print("SCORE: ", score)
     return score <= embedder_th
 
 

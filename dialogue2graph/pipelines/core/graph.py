@@ -6,7 +6,6 @@ import abc
 import logging
 
 logger = logging.getLogger(__name__)
-visited_list = [[]]
 
 
 class BaseGraph(BaseModel, abc.ABC):
@@ -54,11 +53,11 @@ class BaseGraph(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_path(self):
+    def find_paths(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def all_paths(self):
+    def get_all_paths(self):
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -245,39 +244,37 @@ class Graph(BaseGraph):
         self.graph_dict = {"edges": edges, "nodes": [n for n in nodes if n["id"] not in to_remove]}
         return self.remove_duplicated_edges()
 
-    def all_paths(self, start: int, visited: list[int], repeats: int):
-        """Recursion to find all the graph paths with ids of graph nodes
-        where node with id=start added to last repeats elements in the visited path do not have any occurance
-        visited_list is global variable to store the result"""
-        # global visited_list
-        if len(visited) < repeats or not self._list_in(visited[-repeats:] + [start], visited):
-            visited.append(start)
-            for edge in self.edge_by_source(start):
-                self.all_paths(edge["target"], visited.copy(), repeats)
-        visited_list.append(visited)
+    def get_all_paths(self, start_node_id: int, visited_nodes: list[int], repeats_limit: int):
+        """Recursion to find all the graph paths consisting of nodes ids
+        which start from node with id=start_node_id
+        and do not repeat last repeats_limit elements of the visited_nodes"""
 
-    def find_path(self, start: int, end: int, visited: list):
-        """Recursion to find path from start node id to end node id
-        visited is path traveled
-        visited_list is global variable to store the result
-        """
+        visited_paths = [[]]
+        if len(visited_nodes) < repeats_limit or not self._list_in(visited_nodes[-repeats_limit:] + [start_node_id], visited_nodes):
+            visited_nodes.append(start_node_id)
+            for edge in self.edge_by_source(start_node_id):
+                visited_paths += self.get_all_paths(edge["target"], visited_nodes.copy(), repeats_limit)
+        visited_paths.append(visited_nodes)
+        return visited_paths
 
-        # global visited_list
+    def find_paths(self, start_node_id: int, end_node_id: int, visited_nodes: list):
+        """Recursion to find path from start_node_id to end_node_id
+        visited_nodes is path traveled so far"""
+        visited_paths = [[]]
 
         graph = self.graph_dict
-        if len(visited) <= len(graph["edges"]) and end not in visited_list[-1]:
-            visited.append(start)
-            if end not in visited:
-                for edge in self.edge_by_source(start):
-                    self.find_path(edge["target"], end, visited)
+        if len(visited_nodes) <= len(graph["edges"]) and end_node_id not in visited_paths[-1]:
+            visited_nodes.append(start_node_id)
+            if end_node_id not in visited_nodes:
+                for edge in self.edge_by_source(start_node_id):
+                    visited_paths += self.find_paths(edge["target"], end_node_id, visited_nodes)
         else:
-            visited.append(start)
-        visited_list.append(visited)
+            visited_nodes.append(start_node_id)
+        visited_paths.append(visited_nodes)
+        return visited_paths
 
     def get_ends(self):
         """Find finishing nodes which have no outgoing edges"""
-
-        global visited_list
 
         graph = self.graph_dict
         sources = list(set([g["source"] for g in graph["edges"]]))
@@ -288,9 +285,8 @@ class Graph(BaseGraph):
         for f in finishes:
             for n in graph["nodes"]:
                 if n["id"] != f:
-                    visited_list = [[]]
-                    self.find_path(n["id"], f, [])
-                if any([f in v for v in visited_list]):
+                    visited_paths = self.find_paths(n["id"], f, [])
+                if any([f in v for v in visited_paths]):
                     visited.add(n["id"])
         if len(visited) < len(graph["nodes"]):
             finishes += [v["id"] for v in graph["nodes"] if v["id"] not in visited]

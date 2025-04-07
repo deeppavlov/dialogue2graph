@@ -6,7 +6,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from dialogue2graph.pipelines.core.graph import Graph
 
 
-def find_graph_ends(G: Graph, model: BaseChatModel) -> dict[str]:
+def find_cycle_ends(G: Graph, model: BaseChatModel) -> dict[str]:
     """
     To find nodes in dialogue graph G by condition in graph_ends_prompt_template with help of model.
 
