@@ -1,4 +1,5 @@
 import logging
+import pandas as pd
 from typing import List
 from pydantic import BaseModel, Field
 
@@ -12,6 +13,8 @@ from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import DialogueGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.metrics.no_llm_metrics import is_same_structure
+from dialogue2graph.metrics.llm_metrics import compare_graphs
 from utils import call_llm_api, nodes2graph, dialogues2list
 from missing_edges_prompt import three_1, three_2
 from prompts import graph_example_1, part_1, part_2

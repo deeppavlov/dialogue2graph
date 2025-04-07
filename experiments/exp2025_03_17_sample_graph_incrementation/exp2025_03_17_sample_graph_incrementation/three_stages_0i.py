@@ -12,11 +12,8 @@ from utils import call_llm_api
 from settings import EnvSettings
 from missing_edges_prompt import three_1, three_2
 from prompts import part_1i0, part_2i0
-# from chatsky_llm_autoconfig.metrics.automatic_metrics import (
-#     is_same_structure,
-#     compare_graphs
-# )
-
+from dialogue2graph.metrics.no_llm_metrics import is_same_structure
+from dialogue2graph.metrics.llm_metrics import compare_graphs
 
 env_settings = EnvSettings()
 dialogue_sampler = RecursiveDialogueSampler()
@@ -103,10 +100,10 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
     async def evaluate(self, dialogues, target_graph, report_type="dict"):
         graph = self.invoke(dialogues)
-        # report = {
-        #     "is_same_structure": is_same_structure(graph, target_graph),
-        #     "graph_match": compare_graphs(graph, target_graph),
-        # }
+        report = {
+            "is_same_structure": is_same_structure(graph, target_graph),
+            "graph_match": compare_graphs(graph, target_graph),
+        }
         if report_type == "dataframe":
             report = pd.DataFrame(report, index=[0])
         elif report_type == "dict":
