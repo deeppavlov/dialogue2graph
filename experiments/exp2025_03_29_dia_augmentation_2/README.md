@@ -31,5 +31,5 @@ A synthetic dataset with augmented dialogs was obtained. The dataset contains 39
 ## Issues and future plans
 
 Remaining issues:
-1. The final dataset does not contain all the original dialogues, because some of them had errors during augmentation. These dialogues/examples were removed. Error analysis and re-augmentation should be perfomed later on. 
+1. The final dataset does not contain all the original dialogues, because some of them had errors during augmentation. These dialogues/examples were removed. Error analysis and re-augmentation should be performed later on. 
 2. The final dataset contains dialogues/graphs with a greeting in the middle. They will be removed or replaced with new ones (without this error) in the next experiments.
