@@ -1,5 +1,6 @@
 import logging
 from pydantic import Field
+from typing import Callable
 from pydantic import ConfigDict
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
@@ -37,8 +38,8 @@ class LightGraphGenerator(GraphGenerator):
     filling_llm: str = Field(description="LLM for adding missing edges")
     formatting_llm: str = Field(description="LLM for formatting output")
     sim_model: str = Field(description="Similarity model")
-    step2_evals: list[callable] = Field(default_factory=list, description="Metrics after stage 2")
-    end_evals: list[callable] = Field(default_factory=list, description="Metrics at the end")
+    step2_evals: list[Callable] = Field(default_factory=list, description="Metrics after stage 2")
+    end_evals: list[Callable] = Field(default_factory=list, description="Metrics at the end")
 
     def __init__(
         self,
@@ -46,8 +47,8 @@ class LightGraphGenerator(GraphGenerator):
         filling_llm: str,
         formatting_llm: str,
         sim_model: str,
-        step2_evals: list[callable] | None = None,
-        end_evals: list[callable] | None = None,
+        step2_evals: list[Callable] | None = None,
+        end_evals: list[Callable] | None = None,
     ):
         if step2_evals is None:
             step2_evals = []
