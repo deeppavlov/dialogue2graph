@@ -25,19 +25,19 @@ class BaseGraph(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def nodes_by_utterance(self):
+    def find_nodes_by_utterance(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def edges_by_utterance(self):
+    def find_edges_by_utterance(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def node_by_id(self):
+    def get_nodes_by_id(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def edges_match_nodes(self):
+    def match_edges_nodes(self):
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -60,12 +60,19 @@ class BaseGraph(BaseModel, abc.ABC):
     def get_all_paths(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def nodes2list(self):
+    def get_edges_by_source(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def graph2list(self):
+    def get_edges_by_target(self):
+        raise NotImplementedError
+
+    def get_nodes_by_source(self):
+        raise NotImplementedError
+
+    def get_list_from_nodes(self):
+        raise NotImplementedError
+
+    def get_list_from_graph(self):
         raise NotImplementedError
 
 
@@ -77,7 +84,7 @@ class Graph(BaseGraph):
         if graph_dict:
             self.load_graph()
 
-    def _list_in(self, a: list, b: list) -> bool:
+    def _is_seq_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
@@ -88,7 +95,7 @@ class Graph(BaseGraph):
         left = edge_seq.copy()
         for pair in edge_seq:
             for s in seq:
-                if self._list_in(list(pair), s):
+                if self._is_seq_in(list(pair), s):
                     left -= set([pair])
                     if len(left) == 0:
                         return True
@@ -162,24 +169,24 @@ class Graph(BaseGraph):
         plt.axis("off")
         plt.show()
 
-    def nodes_by_utterance(self, utterance: str) -> list[dict]:
+    def find_nodes_by_utterance(self, utterance: str) -> list[dict]:
         return [node for node in self.graph_dict["nodes"] if utterance in node["utterances"]]
 
-    def edges_by_utterance(self, utterance: str) -> list[dict]:
+    def find_edges_by_utterance(self, utterance: str) -> list[dict]:
         return [edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]]
 
-    def node_by_id(self, id: int):
+    def get_nodes_by_id(self, id: int):
         for node in self.graph_dict["nodes"]:
             if node["id"] == id:
                 return node
 
-    def edge_by_source(self, id: int):
+    def get_edges_by_source(self, id: int):
         return [edge for edge in self.graph_dict["edges"] if edge["source"] == id]
 
-    def edge_by_target(self, id: int):
+    def get_edges_by_target(self, id: int):
         return [edge for edge in self.graph_dict["edges"] if edge["target"] == id]
 
-    def edges_match_nodes(self) -> bool:
+    def match_edges_nodes(self) -> bool:
         """Checks whether source and target of all the edges correspond to nodes"""
         graph = self.graph_dict
 
@@ -250,9 +257,9 @@ class Graph(BaseGraph):
         and do not repeat last repeats_limit elements of the visited_nodes"""
 
         visited_paths = [[]]
-        if len(visited_nodes) < repeats_limit or not self._list_in(visited_nodes[-repeats_limit:] + [start_node_id], visited_nodes):
+        if len(visited_nodes) < repeats_limit or not self._is_seq_in(visited_nodes[-repeats_limit:] + [start_node_id], visited_nodes):
             visited_nodes.append(start_node_id)
-            for edge in self.edge_by_source(start_node_id):
+            for edge in self.get_edges_by_source(start_node_id):
                 visited_paths += self.get_all_paths(edge["target"], visited_nodes.copy(), repeats_limit)
         visited_paths.append(visited_nodes)
         return visited_paths
@@ -266,7 +273,7 @@ class Graph(BaseGraph):
         if len(visited_nodes) <= len(graph["edges"]) and end_node_id not in visited_paths[-1]:
             visited_nodes.append(start_node_id)
             if end_node_id not in visited_nodes:
-                for edge in self.edge_by_source(start_node_id):
+                for edge in self.get_edges_by_source(start_node_id):
                     visited_paths += self.find_paths(edge["target"], end_node_id, visited_nodes)
         else:
             visited_nodes.append(start_node_id)
@@ -292,7 +299,7 @@ class Graph(BaseGraph):
             finishes += [v["id"] for v in graph["nodes"] if v["id"] not in visited]
         return finishes
 
-    def nodes2list(self) -> list:
+    def get_list_from_nodes(self) -> list:
         """Returns list of concatenations of all nodes utterances"""
         graph = self.graph_dict
         res = []
@@ -305,7 +312,7 @@ class Graph(BaseGraph):
 
         return res
 
-    def graph2list(self) -> tuple[list[str], int]:
+    def get_list_from_graph(self) -> tuple[list[str], int]:
         """Returns:
         res_list - concatenation of utterances of every node and its outgoing edges
         n_edges - total number of utterances in all edges

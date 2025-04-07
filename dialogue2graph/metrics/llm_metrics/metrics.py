@@ -215,8 +215,8 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
         nodes_map[n] = nodes2[max[idx]]
 
     for node1, node2 in zip(nodes1, [nodes_map[n] for n in nodes1]):
-        edges1 = G1.edge_by_source(node1)
-        edges2 = G2.edge_by_source(node2)
+        edges1 = G1.get_edges_by_source(node1)
+        edges2 = G2.get_edges_by_source(node2)
         if len(edges1) != len(edges2):
             return False
         for edge1 in edges1:
@@ -245,15 +245,15 @@ def compare_graphs(
     g2 = G2.graph_dict
 
     # list of concatenations of all nodes utterances:
-    nodes1_list = G1.nodes2list()
-    nodes2_list = G2.nodes2list()
+    nodes1_list = G1.get_list_from_nodes()
+    nodes2_list = G2.get_list_from_nodes()
 
     if len(nodes1_list) != len(nodes2_list):
         return {"value": False, "description": f"Numbers of nodes do not match: {len(nodes1_list)} != {len(nodes2_list)}"}
 
     # g1_list, g2_list - concatenations of utterances of every node and its outgoing edges
-    g1_list, n_edge_utts1 = G1.graph2list()
-    g2_list, n_edge_utts2 = G2.graph2list()
+    g1_list, n_edge_utts1 = G1.get_list_from_graph()
+    g2_list, n_edge_utts2 = G2.get_list_from_graph()
 
     nodes_matrix = get_similarity(nodes1_list, nodes2_list, embedder, device=device)  # embeddings for utterances in nodes
     mix_matrix = get_similarity(g1_list, g2_list, embedder, device=device)  # embeddings for utterances in nodes+edges

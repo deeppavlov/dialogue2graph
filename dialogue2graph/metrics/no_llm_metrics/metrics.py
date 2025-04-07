@@ -380,9 +380,9 @@ def _match_ua(G: BaseGraph, user: str, assistant: str) -> bool:
     Returns:
         True if there is connection, False otherwise
     """
-    nodes = G.nodes_by_utterance(assistant)
+    nodes = G.find_nodes_by_utterance(assistant)
     for node in nodes:
-        edges = G.edges_by_utterance(user)
+        edges = G.find_edges_by_utterance(user)
         for edge in edges:
             if edge["target"] == node["id"]:
                 return True
@@ -400,9 +400,9 @@ def _match_au(G: BaseGraph, assistant: str, user: str) -> bool:
     Returns:
         True if there is connection, False otherwise
     """
-    nodes = G.nodes_by_utterance(assistant)
+    nodes = G.find_nodes_by_utterance(assistant)
     for node in nodes:
-        edges = G.edges_by_utterance(user)
+        edges = G.find_edges_by_utterance(user)
         for edge in edges:
             if edge["source"] == node["id"]:
                 return True

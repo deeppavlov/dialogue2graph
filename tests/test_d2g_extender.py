@@ -105,7 +105,7 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
     ), f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
 
 
-def test_d2g_extender_negative(dialogues_negative, graph_positive):
+def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
@@ -144,7 +144,7 @@ def test_d2g_extender_negative(dialogues_negative, graph_positive):
         step=1,
     )
 
-    raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_positive)
+    raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_positive_1)
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
     assert report.properties["complex_graph_comparison"]["value"] is False, "Expected value=False in the negative scenario."

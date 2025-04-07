@@ -18,34 +18,6 @@ from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_ed
 
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
-# ModelStorage is a class for managing the storage of model configurations and instances.
-# It provides functionality to load configurations from a YAML file, add new models to the storage,
-# and save the current storage state back to a YAML file.
-
-# Attributes:
-#     storage (Dict[str, StoredData]): A dictionary that holds the stored model configurations
-#         and their corresponding instances.
-
-# Methods:
-#     load(path: str):
-
-
-#         Raises:
-#             Exception: If there is an error while loading the configurations.
-
-#     add(key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]):
-
-
-#         Raises:
-#             Exception: If there is an error while adding the model to the storage.
-
-#     save(path: str):
-
-
-#         Raises:
-#             Exception: If there is an error while saving the storage.
-# """
-
 
 class LightGraphGenerator(GraphGenerator):
     """Graph generator from list of dialogues. Based on algorithm with embedding similarity usage.
