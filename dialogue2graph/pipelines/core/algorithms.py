@@ -23,7 +23,9 @@ class BaseAlgorithm(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def evaluate(self, *args, report_type: Literal["dict", "dataframe"] = "dict", **kwargs) -> Union[dict, DataFrame]:
+    def evaluate(
+        self, *args, report_type: Literal["dict", "dataframe"] = "dict", **kwargs
+    ) -> Union[dict, DataFrame]:
         raise NotImplementedError
 
 
@@ -42,7 +44,9 @@ class DialogueGenerator(BaseAlgorithm):
     def __init__(self):
         super().__init__()
 
-    def invoke(self, graph: BaseGraph, start_node: int = 1, end_node: int = 0, topic: str = "") -> List[Dialogue]:
+    def invoke(
+        self, graph: BaseGraph, start_node: int = 1, end_node: int = 0, topic: str = ""
+    ) -> List[Dialogue]:
         raise NotImplementedError
 
 
@@ -57,7 +61,7 @@ class DialogAugmentation(BaseAlgorithm):
     :param topic: The topic to guide the augmentation process (optional).
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     def invoke(self, dialogue: Dialogue, topic: str = "") -> Dialogue:

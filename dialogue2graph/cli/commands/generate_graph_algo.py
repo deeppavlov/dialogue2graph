@@ -1,35 +1,19 @@
 import json
 from pathlib import Path
 from dialogue2graph.pipelines.d2g_algo.pipeline import Pipeline
-from dialogue2graph.pipelines.models import ModelsAPI
+from dialogue2graph.pipelines.model_storage import ModelStorage
 
-models = ModelsAPI()
+ms = ModelStorage()
 
 
-def generate_algo(dialogues: str, config: dict, output_path: str):
+def generate_algo(dialogues: str, config: Path, output_path: str):
     """Generates graph from dialogues via d2g_algo pipeline using parameters from config
     and saves graph dictionary to output_path"""
 
-    if config == {}:
-        filler_name = "chatgpt-4o-latest"
-        formatter_name = "gpt-4o-mini"
-        filler_temp = 0
-        formatter_temp = 0
-        sim_name = "BAAI/bge-m3"
-        device = "cpu"
-    else:
-        filler_name = config["models"].get("filler-model", {}).get("name", "chatgpt-4o-latest")
-        formatter_name = config["models"].get("formatter-model", {}).get("name", "gpt-4o-mini")
-        filler_temp = config["models"].get("filler-model", {}).get("temperature", 0)
-        formatter_temp = config["models"].get("formatter-model", {}).get("temperature", 0)
-        sim_name = config["models"].get("sim-model", {}).get("name", "BAAI/bge-m3")
-        device = config["models"].get("sim-model", {}).get("device", "cpu")
+    if config != {}:
+        ms.load(config)
 
-    filling_llm = models("llm", name=filler_name, temp=filler_temp)
-    formatting_llm = models("llm", name=formatter_name, temp=formatter_temp)
-    sim_model = models("similarity", name=sim_name, device=device)
-
-    pipeline = Pipeline(filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model)
+    pipeline = Pipeline(ms)
 
     result = pipeline.invoke(dialogues)
     print("Result:", result.graph_dict)

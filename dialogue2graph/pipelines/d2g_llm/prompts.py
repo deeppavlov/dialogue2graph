@@ -37,7 +37,11 @@ List of dialogues: """
 
 graph_example_1 = {
     "edges": [
-        {"source": 1, "target": 2, "utterances": ["I need to make an order", "I want to order from you"]},
+        {
+            "source": 1,
+            "target": 2,
+            "utterances": ["I need to make an order", "I want to order from you"],
+        },
         {
             "source": 2,
             "target": 3,
@@ -50,19 +54,34 @@ graph_example_1 = {
         {"source": 4, "target": 2, "utterances": ["Start new order"]},
     ],
     "nodes": [
-        {"id": 1, "label": "start", "is_start": True, "utterances": ["How can I help?", "Hello"]},
-        {"id": 2, "label": "ask_books", "is_start": False, "utterances": ["What books do you like?"]},
+        {
+            "id": 1,
+            "label": "start",
+            "is_start": True,
+            "utterances": ["How can I help?", "Hello"],
+        },
+        {
+            "id": 2,
+            "label": "ask_books",
+            "is_start": False,
+            "utterances": ["What books do you like?"],
+        },
         {
             "id": 3,
             "label": "ask_payment_method",
             "is_start": False,
-            "utterances": ["Please, enter the payment method you would like to use: cash or credit card.", "How would you prefer to pay?"],
+            "utterances": [
+                "Please, enter the payment method you would like to use: cash or credit card.",
+                "How would you prefer to pay?",
+            ],
         },
         {
             "id": 4,
             "label": "ask_to_redo",
             "is_start": False,
-            "utterances": ["Something is wrong, can you please use other payment method or start order again"],
+            "utterances": [
+                "Something is wrong, can you please use other payment method or start order again"
+            ],
         },
     ],
     "reason": "",

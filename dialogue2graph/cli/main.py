@@ -1,5 +1,4 @@
 import click
-import yaml
 from dotenv import load_dotenv
 from .commands.generate_data import generate_data
 from .commands.generate_graph_algo import generate_algo
@@ -21,14 +20,7 @@ def cli():
 def gen_data(env: str, cfg: str, topic: str, output: str):
     """Generate dialogue data for a given topic"""
     load_dotenv(env)
-    with open(cfg) as stream:
-        config: dict = {}
-        try:
-            config = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-
-    generate_data(topic, config, output)
+    generate_data(topic, cfg, output)
 
 
 @cli.command()
@@ -39,13 +31,7 @@ def gen_data(env: str, cfg: str, topic: str, output: str):
 def gen_graph_algo(env: str, cfg: str, dialogues: str, output: str):
     """Generate graph from dialogues data via d2g_algo pipeline"""
     load_dotenv(env)
-    with open(cfg) as stream:
-        config: dict = {}
-        try:
-            config = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    generate_algo(dialogues, config, output)
+    generate_algo(dialogues, cfg, output)
 
 
 @cli.command()
@@ -56,13 +42,7 @@ def gen_graph_algo(env: str, cfg: str, dialogues: str, output: str):
 def gen_graph_llm(env: str, cfg: str, dialogues: str, output: str):
     """Generate graph from dialogues data via d2g_llm pipeline"""
     load_dotenv(env)
-    with open(cfg) as stream:
-        config: dict = {}
-        try:
-            config = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    generate_llm(dialogues, config, output)
+    generate_llm(dialogues, cfg, output)
 
 
 @cli.command()
@@ -73,13 +53,7 @@ def gen_graph_llm(env: str, cfg: str, dialogues: str, output: str):
 def gen_graph_extender(env: str, cfg: str, dialogues: str, output: str):
     """Generate graph from dialogues data via d2g_llm pipeline"""
     load_dotenv(env)
-    with open(cfg) as stream:
-        config: dict = {}
-        try:
-            config = yaml.safe_load(stream)
-        except yaml.YAMLError as exc:
-            print(exc)
-    generate_extender(dialogues, config, output)
+    generate_extender(dialogues, cfg, output)
 
 
 if __name__ == "__main__":

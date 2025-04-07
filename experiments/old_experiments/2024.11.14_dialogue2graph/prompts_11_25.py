@@ -231,133 +231,137 @@ create_graph_prompt = PromptTemplate.from_template(
 
 graph_example_1 = {
     "edges": [
-#        {'source': 1, 'target': 2, 'utterances': ['I need to make an order']},
-        {'source': 1, 'target': 2, 'utterances': ['I want to order from you']},
-        {'source': 2, 'target': 3, 'utterances': ['I would like to purchase Pale Fire and Anna Karenina, please']},
+        #        {'source': 1, 'target': 2, 'utterances': ['I need to make an order']},
+        {"source": 1, "target": 2, "utterances": ["I want to order from you"]},
+        {
+            "source": 2,
+            "target": 3,
+            "utterances": [
+                "I would like to purchase Pale Fire and Anna Karenina, please"
+            ],
+        },
         {"source": 3, "target": 4, "utterances": ["With credit card, please"]},
-        {"source": 4, "target": 2, "utterances": ["Start new order"]}
+        {"source": 4, "target": 2, "utterances": ["Start new order"]},
     ],
-    'nodes':
-      [
-          {'id': 1, 'label': 'start', 'is_start': True, 'utterances': [ 'How can I help?', 'Hello']},
-          {'id': 2, 'label': 'ask_books', 'is_start': False, 'utterances': [ 'What books do you like?']},
-          {'id': 3, 'label': 'ask_payment_method', 'is_start': False, 'utterances': [ 'Please, enter the payment method you would like to use: cash or credit card.']},
-          {"id": 4, "label": "ask_to_redo", "is_start": False, "utterances": [ "Something is wrong, can you please use other payment method or start order again"]}
-      ],
-      'reason': ""
+    "nodes": [
+        {
+            "id": 1,
+            "label": "start",
+            "is_start": True,
+            "utterances": ["How can I help?", "Hello"],
+        },
+        {
+            "id": 2,
+            "label": "ask_books",
+            "is_start": False,
+            "utterances": ["What books do you like?"],
+        },
+        {
+            "id": 3,
+            "label": "ask_payment_method",
+            "is_start": False,
+            "utterances": [
+                "Please, enter the payment method you would like to use: cash or credit card."
+            ],
+        },
+        {
+            "id": 4,
+            "label": "ask_to_redo",
+            "is_start": False,
+            "utterances": [
+                "Something is wrong, can you please use other payment method or start order again"
+            ],
+        },
+    ],
+    "reason": "",
 }
 
 dialogue_example_2 = [
-            {
-                "text": "How can I help?",
-                "participant": "assistant"
-            },
-            {
-                "text": "I need to make an order",
-                "participant": "user"
-            },
-            {
-                "text": "Which books would you like to order?",
-                "participant": "assistant"
-            },
-            {
-                "text": "One War and Piece in hard cover and one Pride and Prejudice",
-                "participant": "user"
-            },
-            {
-                "text": "Please, enter the payment method you would like to use: cash or credit card.",
-                "participant": "assistant"
-            },
-            {
-                "text": "With credit card, please",
-                "participant": "user"
-            },
-            {
-                "text": "Something is wrong, can you please use other payment method or start order again",
-                "participant": "assistant"
-            },
-            {
-                "text": "I will enter new payment method",
-                "participant": "user"
-            }
-            # {
-            #     "text": "Please, enter the payment method you would like to use: cash or credit card.",
-            #     "participant": "assistant"
-            # }
-            # {
-            #     "text": "Which books would you like to order?",
-            #     "participant": "assistant"
-            # }
-        ]
+    {"text": "How can I help?", "participant": "assistant"},
+    {"text": "I need to make an order", "participant": "user"},
+    {"text": "Which books would you like to order?", "participant": "assistant"},
+    {
+        "text": "One War and Piece in hard cover and one Pride and Prejudice",
+        "participant": "user",
+    },
+    {
+        "text": "Please, enter the payment method you would like to use: cash or credit card.",
+        "participant": "assistant",
+    },
+    {"text": "With credit card, please", "participant": "user"},
+    {
+        "text": "Something is wrong, can you please use other payment method or start order again",
+        "participant": "assistant",
+    },
+    {"text": "I will enter new payment method", "participant": "user"},
+    # {
+    #     "text": "Please, enter the payment method you would like to use: cash or credit card.",
+    #     "participant": "assistant"
+    # }
+    # {
+    #     "text": "Which books would you like to order?",
+    #     "participant": "assistant"
+    # }
+]
 
 graph_example_2 = {
     "edges": [
-                {
-                    "source": 1,
-                    "target": 2,
-                    "utterances": [
-                        "I need to make an order"
-#                        "I want to order from you"
-                    ]
-                },
-                {
-                    "source": 2,
-                    "target": 3,
-                    "utterances": [
-#                        "I would like to purchase 'Pale Fire' and 'Anna Karenina', please",
-                        "One War and Piece in hard cover and one Pride and Prejudice"
-                    ]
-                },
-                {
-                    "source": 3,
-                    "target": 4,
-                    "utterances": [
-                        # "Cash",
-                        "With credit card, please"
-                    ]
-                },
-                {
-                    "source": 4,
-                    "target": 3,
-                    "utterances": [
-                        "I will enter new payment method"
-                    ]
-                }
+        {
+            "source": 1,
+            "target": 2,
+            "utterances": [
+                "I need to make an order"
+                #                        "I want to order from you"
             ],
-            "nodes": [
-                {
-                    "id": 1,
-                    "label": "start",
-                    "is_start": True,
-                    "utterances": [
-                        "How can I help?"
-                    ]
-                },
-                {
-                    "id": 2,
-                    "label": "ask_item",
-                    "is_start": False,
-                    "utterances": [
-                        "Which books would you like to order?"
-                    ]
-                },
-                {
-                    "id": 3,
-                    "label": "ask_payment_method",
-                    "is_start": False,
-                    "utterances": [
-                        "Please, enter the payment method you would like to use: cash or credit card."
-                    ]
-                },
-                {
-                    "id": 4,
-                    "label": "ask_to_redo",
-                    "is_start": False,
-                    "utterances": [
-                        "Something is wrong, can you please use other payment method or start order again"
-                    ]
-                }
-            ]
+        },
+        {
+            "source": 2,
+            "target": 3,
+            "utterances": [
+                #                        "I would like to purchase 'Pale Fire' and 'Anna Karenina', please",
+                "One War and Piece in hard cover and one Pride and Prejudice"
+            ],
+        },
+        {
+            "source": 3,
+            "target": 4,
+            "utterances": [
+                # "Cash",
+                "With credit card, please"
+            ],
+        },
+        {"source": 4, "target": 3, "utterances": ["I will enter new payment method"]},
+    ],
+    "nodes": [
+        {
+            "id": 1,
+            "label": "start",
+            "is_start": True,
+            "utterances": ["How can I help?"],
+        },
+        {
+            "id": 2,
+            "label": "ask_item",
+            "is_start": False,
+            "utterances": ["Which books would you like to order?"],
+        },
+        {
+            "id": 3,
+            "label": "ask_payment_method",
+            "is_start": False,
+            "utterances": [
+                "Please, enter the payment method you would like to use: cash or credit card."
+            ],
+        },
+        {
+            "id": 4,
+            "label": "ask_to_redo",
+            "is_start": False,
+            "utterances": [
+                "Something is wrong, can you please use other payment method or start order again"
+            ],
+        },
+    ],
 }
 
 
@@ -513,12 +517,11 @@ prompts["general_graph_generation_prompt"] = PromptTemplate.from_template(
     "Cyclic graph means you don't duplicate nodes, but connect new edge to one of previously created nodes instead. "
     "When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes. "
     "If you see it is possible not to create new node with same or similar utterance, but instead create next edge connecting back to that node, then it is place for a cycle here. "
-    #"Never create nodes with user's utterances. "
+    # "Never create nodes with user's utterances. "
     # "Don't repeat assistance's utterance from one of existing nodes, just cycle to previously created node with that utterance. "
     "IMPORTANT: All assistant's utterances are nodes, but all user's utterances are edges. "
     "All the dialogues you've prompted are cyclic. "
     "Before answering you must check where the dialogue can cycle and make the first node of a cycle a target node for the last node of the cycle. "
-
     # "Return ONLY JSON string in plain text (no code blocks) without any additional commentaries. "
     "You must always return valid JSON fenced by a markdown code block. Do not return any additional text. "
     "Here goes the dialogue, build a cyclic graph according to the instructions above. "
@@ -554,7 +557,7 @@ prompts["general_graph_generation_prompt_try_2"] = PromptTemplate.from_template(
     "When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes. "
     "If you see it is possible not to create new node with same or similar utterance, but instead create next edge connecting back to that node, then it is place for a cycle here. "
     "When you create new edge connecting to new node, you must create this node. "
-    #"Never create nodes with user's utterances. "
+    # "Never create nodes with user's utterances. "
     # "Don't repeat assistance's utterance from one of existing nodes, just cycle to previously created node with that utterance. "
     "IMPORTANT: "
     "All assistant's utterances are nodes, but all user's utterances are edges. "
@@ -620,7 +623,7 @@ prompts["specific_graph_generation_prompt"] = PromptTemplate.from_template(
     "Another dialogue example: {dialogue_example_2}"
     "It shall result in the graph below: {graph_example_2}"
     "This is the end of the example."
-    #"A cycle is a closed path in a graph, which means that it starts and ends at the same vertex and passes through a sequence of distinct vertices and edges."
+    # "A cycle is a closed path in a graph, which means that it starts and ends at the same vertex and passes through a sequence of distinct vertices and edges."
     # "Use cycle in a graph when you see that assistant repeats phrase which already was used earlier in dialogue, and make this repeat the first node of this cycle. "
     # "This repeat means that you don't create new node, but use node you created before for this assistant's utterance. "
     # "User's utterance in a dialogue before this repeating utterance will be an edge leading from cycle's last node to the cycle's start node (the node with the repeating assistant's utterance). "
@@ -629,7 +632,6 @@ prompts["specific_graph_generation_prompt"] = PromptTemplate.from_template(
     "2) Every utterance from the dialogue, "
     "whether it is from user or assistanst, shall be present in the graph. "
     "3) Do not make up utterances that aren’t present in the dialogue. "
-
     # "3) The final node MUST connect back to an existing node. "
     "4) Graph must be cyclic - no dead ends. "
     "5) When you go to next user's utterance, first try to find answer relevant to that utterance from one of previously created nodes. "
@@ -651,25 +653,20 @@ prompts["specific_graph_generation_prompt"] = PromptTemplate.from_template(
     # "then find node duplicates and repeat procedure from step 11. "
     # "5) All edges must connect to existing nodes"
     "9) You must always return valid JSON fenced by a markdown code block. Do not return any additional text. "
-
     # "7) Responses must acknowledge what the user has already specified. "
     # "6) The cycle point should make logical sense. "
     "I will give a dialogue, your task is to build a graph for this dialogue according to the rules and examples above. "
-
     # "Do not make up utterances that aren’t present in the dialogue. "
     # "Please do not combine "
     # "utterances from multiedges in one list, write them separately like in example above. "
     # "Do not forget ending nodes with goodbyes. "
-
     # "IMPORTANT: All the dialogues you've prompted are cyclic so the conversation MUST return to an existing node"
     # "When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes. "
     # "If you see it is possible not to create new node with same or similar utterance, but instead create next edge connecting back to that node, then it is place for a cycle here. "
     # "The cycle shall be organized so that you don't duplicate either user's utterances or nodes with same utterances. "
     # "Before answering you must check where the dialogue can loop or cycle and make the first node of a cycle a target node for the last node of the cycle. "
     # "All the dialogues start from assistant's utterance, so first node of any loop cannot be first node of the whole graph. "
-
-#    "Return ONLY JSON string in plain text (no code blocks) without any additional commentaries."
-    
+    #    "Return ONLY JSON string in plain text (no code blocks) without any additional commentaries."
     "Dialogue: {dialog}"
 )
 
@@ -684,8 +681,8 @@ prompts["second_graph_generation_prompt"] = PromptTemplate.from_template(
     "1) Nodes must be assistant's utterances, edges must be utterances from the user. "
     "2) When you go to next user's utterance, first try to find answer relevant to that utterance from one of previously created nodes. "
     "If it is found then create next edge connecting back to the node with the right answer. Don't create more nodes after that step. "
-    "3) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph. " 
-    "4) Every user's utterance from the dialogue shall be present in one and only one edge of a graph. "    
+    "3) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph. "
+    "4) Every user's utterance from the dialogue shall be present in one and only one edge of a graph. "
     "5) Use ony utterances from the dialogue. It is prohibited to create new utterances different from input ones. "
     "6) Never create nodes with user's utterances. "
     "7) Graph must be cyclic - no dead ends. "
@@ -697,7 +694,6 @@ prompts["second_graph_generation_prompt"] = PromptTemplate.from_template(
 )
 
 
-
 prompts["third_graph_generation_prompt"] = PromptTemplate.from_template(
     "Your input is a dialogue from customer chatbot system. "
     "Your task is to create a cyclic dialogue graph corresponding to the dialogue. "
@@ -707,8 +703,8 @@ prompts["third_graph_generation_prompt"] = PromptTemplate.from_template(
     "This is the end of the example."
     "**Rules:**"
     "1) Nodes must be assistant's utterances, edges must be utterances from the user. "
-    "2) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph. " 
-    "3) Every user's utterance from the dialogue shall be present in one and only one edge of a graph. "    
+    "2) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph. "
+    "3) Every user's utterance from the dialogue shall be present in one and only one edge of a graph. "
     "4) Use ony utterances from the dialogue. It is prohibited to create new utterances different from input ones. "
     "6) Never create nodes with user's utterances. "
     "7) Graph must be cyclic - no dead ends. "
@@ -718,9 +714,9 @@ prompts["third_graph_generation_prompt"] = PromptTemplate.from_template(
     "Dialogue: {dialog}"
 )
 
-#user's follow-up concern loops back to the problem elaboration stage, maintaining a logical and continuous support flo
-#"Cycle starts at the 'elaborate_problem' node (id:2) because it acknowledges and addresses new user concerns when the user mentions another issue."
-#"The cycle starts at the 'ask_membership_type' node as it represents the problem elaboration stage. This allows the user's intent to register another member to loop back to selecting a membership type, ensuring a continuous and logical registration flow."
+# user's follow-up concern loops back to the problem elaboration stage, maintaining a logical and continuous support flo
+# "Cycle starts at the 'elaborate_problem' node (id:2) because it acknowledges and addresses new user concerns when the user mentions another issue."
+# "The cycle starts at the 'ask_membership_type' node as it represents the problem elaboration stage. This allows the user's intent to register another member to loop back to selecting a membership type, ensuring a continuous and logical registration flow."
 
 prompts["fourth_graph_generation_prompt"] = PromptTemplate.from_template(
     "Your input is a dialogue from customer chatbot system. "
@@ -734,14 +730,14 @@ prompts["fourth_graph_generation_prompt"] = PromptTemplate.from_template(
     # "Another dialogue example: {dialogue_example_2}"
     # "It shall result in the graph below: {graph_example_2}"
     # "This is the end of the example."
-    #"A cycle is a closed path in a graph, which means that it starts and ends at the same vertex and passes through a sequence of distinct vertices and edges."
+    # "A cycle is a closed path in a graph, which means that it starts and ends at the same vertex and passes through a sequence of distinct vertices and edges."
     # "Use cycle in a graph when you see that assistant repeats phrase which already was used earlier in dialogue, and make this repeat the first node of this cycle. "
     # "This repeat means that you don't create new node, but use node you created before for this assistant's utterance. "
     # "User's utterance in a dialogue before this repeating utterance will be an edge leading from cycle's last node to the cycle's start node (the node with the repeating assistant's utterance). "
     "**Rules:**"
     "1) Nodes must be assistant's utterances, edges must be utterances from the user. "
-    "2) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph. " 
-    "3) Every user's utterance from the dialogue shall be present in one and only one edge of a graph. "    
+    "2) Every assistance's utterance from the dialogue shall be present in one and only one node of a graph. "
+    "3) Every user's utterance from the dialogue shall be present in one and only one edge of a graph. "
     "4) Use ony utterances from the dialogue. It is prohibited to create new utterances different from input ones. "
     "6) Never create nodes with user's utterances. "
     # "3) The final node MUST connect back to an existing node. "
@@ -757,15 +753,13 @@ prompts["fourth_graph_generation_prompt"] = PromptTemplate.from_template(
     # "9) For the start of the cycle choose the node where assistant's answer will show user that information from their request (in looping back edge) is understood and taken into account. "
     # "If you see it is possible not to create new node with same or similar utterance, but instead create next edge connecting back to that node, then it is place for a cycle here. "
     # "For the start of the cycle choose such a node where the assistant's answer will be based on information from that edge. "
-
     # "10) Use one of assistant's utterances from the dialogue for the cycle point, don't add/create more nodes with same or simiar utterances. "
     # "Number of nodes is the number of unique node ID's. "
     # "Remember that the number of nodes cannot exceed the number of assistant's phrases. "
-    # "When you add node with same utterances it duplicates nodes and increases number of nodes. So when this situation takes place, just combine such two duplicates into one node. " 
+    # "When you add node with same utterances it duplicates nodes and increases number of nodes. So when this situation takes place, just combine such two duplicates into one node. "
     # "10) It is prohibited to duplicate nodes with same assistant's utterances. "
     # "11) Duplicated nodes are "
     "10) Number of nodes and edges cannot exceed number of utterances in a dialogue. "
-
     # "9) Categorical imperative: The number of nodes must be equal to number of assistant's phrases. "
     # "10) Categorical imperative: The number of edges must be equal to the number of user's utterances. "
     # "Don't create more nodes, use existing ones. "
@@ -774,7 +768,6 @@ prompts["fourth_graph_generation_prompt"] = PromptTemplate.from_template(
     # "8) Number of nodes must be equal to the number of assistant's utterances. "
     # "9) Number of edges must be equal to the number of user's utterances. "
     # "7) Exceeding the number of edges over the number of user's utterances is prohibited.  "
-
     # "8) The nodes are duplicated if there are at least two nodes with same utterances. "
     # "6) After the graph is created, it is necessary to check whether utterances in the nodes are duplicated. "
     # "If they are, it is necessary to remove duplicating nodes and connect the edges "
@@ -794,21 +787,17 @@ prompts["fourth_graph_generation_prompt"] = PromptTemplate.from_template(
     # "7) Responses must acknowledge what the user has already specified. "
     # "6) The cycle point should make logical sense. "
     "I will give a dialogue, your task is to build a graph for this dialogue according to the rules and examples above. "
-
     # "Do not make up utterances that aren’t present in the dialogue. "
     # "Please do not combine "
     # "utterances from multiedges in one list, write them separately like in example above. "
     # "Do not forget ending nodes with goodbyes. "
-
     # "IMPORTANT: All the dialogues you've prompted are cyclic so the conversation MUST return to an existing node"
     # "When you go to next user's utterance, first try to answer to that utterance with utterance from one of previously created nodes. "
     # "If you see it is possible not to create new node with same or similar utterance, but instead create next edge connecting back to that node, then it is place for a cycle here. "
     # "The cycle shall be organized so that you don't duplicate either user's utterances or nodes with same utterances. "
     # "Before answering you must check where the dialogue can loop or cycle and make the first node of a cycle a target node for the last node of the cycle. "
     # "All the dialogues start from assistant's utterance, so first node of any loop cannot be first node of the whole graph. "
-
-#    "Return ONLY JSON string in plain text (no code blocks) without any additional commentaries."
-    
+    #    "Return ONLY JSON string in plain text (no code blocks) without any additional commentaries."
     "Dialogue: {dialog}"
 )
 
@@ -826,7 +815,7 @@ compare_graphs_prompt = PromptTemplate.from_template(
     "Form of the answer is {result_form} ."
     # "Output your response in the demanded json format. "
     "You must always return only valid JSON fenced by a markdown code block. Do not return any additional text. "
-    "Next are graph1: {graph_1} and graph2: {graph_2}" 
+    "Next are graph1: {graph_1} and graph2: {graph_2}"
 )
 
 check_graph_utterances_prompt = PromptTemplate.from_template(

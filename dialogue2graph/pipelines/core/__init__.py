@@ -1,2 +1,4 @@
-from .dialogue_sampling import RecursiveDialogueSampler
-from .pipeline import Pipeline
+from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
+from dialogue2graph.pipelines.core.pipeline import BasePipeline
+
+__all__ = ["RecursiveDialogueSampler", "BasePipeline"]
