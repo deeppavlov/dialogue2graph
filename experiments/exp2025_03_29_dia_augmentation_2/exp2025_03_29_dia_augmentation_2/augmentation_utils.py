@@ -52,7 +52,7 @@ def check_no_duplicates_one_uttr_list(dialogue):
         else:
             counter = Counter(utterances)
             common_elements = [k for k, v in counter.items() if v > 1]
-            print('common_elements:', common_elements.items())
+            print('common_elements:', common_elements)
             return False
     
 
