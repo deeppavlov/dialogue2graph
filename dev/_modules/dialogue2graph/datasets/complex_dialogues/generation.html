@@ -386,7 +386,11 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.utils.prompt_caching</span><span class="w"> </span><span class="kn">import</span> <span class="n">setup_cache</span><span class="p">,</span> <span class="n">add_uuid_to_prompt</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">cycle_graph_generation_prompt_informal</span><span class="p">,</span> <span class="n">cycle_graph_repair_prompt</span><span class="p">,</span> <span class="n">graph_example</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">cycle_graph_generation_prompt_informal</span><span class="p">,</span>
+    <span class="n">cycle_graph_repair_prompt</span><span class="p">,</span>
+    <span class="n">graph_example</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="c1"># Configure logging</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
@@ -436,7 +440,9 @@
 
 <div class="viewcode-block" id="CycleGraphGenerator.invoke">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.invoke">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptTemplate</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptTemplate</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Generate a cyclic dialogue graph based on the topic input.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -476,11 +482,17 @@
     <span class="n">theme_validation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
     <span class="n">validation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
     <span class="n">graph_generator</span><span class="p">:</span> <span class="n">CycleGraphGenerator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">CycleGraphGenerator</span><span class="p">)</span>
-    <span class="n">generation_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cycle_graph_generation_prompt_informal</span><span class="p">)</span>
-    <span class="n">repair_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cycle_graph_repair_prompt</span><span class="p">)</span>
+    <span class="n">generation_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cycle_graph_generation_prompt_informal</span>
+    <span class="p">)</span>
+    <span class="n">repair_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cycle_graph_repair_prompt</span>
+    <span class="p">)</span>
     <span class="n">min_cycles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">max_fix_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
-    <span class="n">dialogue_sampler</span><span class="p">:</span> <span class="n">RecursiveDialogueSampler</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">RecursiveDialogueSampler</span><span class="p">)</span>
+    <span class="n">dialogue_sampler</span><span class="p">:</span> <span class="n">RecursiveDialogueSampler</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="n">RecursiveDialogueSampler</span>
+    <span class="p">)</span>
     <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="GenerationPipeline.Config">
@@ -517,7 +529,9 @@
 
 <div class="viewcode-block" id="GenerationPipeline.validate_graph_cycle_requirement">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validate_graph_cycle_requirement">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate_graph_cycle_requirement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">min_cycles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate_graph_cycle_requirement</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">min_cycles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks the graph for cycle requirements&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;🔍 Checking graph requirements...&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -531,8 +545,14 @@
             <span class="k">if</span> <span class="n">meets_requirements</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;✅ Graph meets cycle requirements&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Graph doesn&#39;t meet cycle requirements (minimum </span><span class="si">{</span><span class="n">min_cycles</span><span class="si">}</span><span class="s2"> cycles needed)&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;meets_requirements&quot;</span><span class="p">:</span> <span class="n">meets_requirements</span><span class="p">,</span> <span class="s2">&quot;cycles&quot;</span><span class="p">:</span> <span class="n">cycles</span><span class="p">,</span> <span class="s2">&quot;cycles_count&quot;</span><span class="p">:</span> <span class="n">cycles_count</span><span class="p">}</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;❌ Graph doesn&#39;t meet cycle requirements (minimum </span><span class="si">{</span><span class="n">min_cycles</span><span class="si">}</span><span class="s2"> cycles needed)&quot;</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;meets_requirements&quot;</span><span class="p">:</span> <span class="n">meets_requirements</span><span class="p">,</span>
+                <span class="s2">&quot;cycles&quot;</span><span class="p">:</span> <span class="n">cycles</span><span class="p">,</span>
+                <span class="s2">&quot;cycles_count&quot;</span><span class="p">:</span> <span class="n">cycles_count</span><span class="p">,</span>
+            <span class="p">}</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;❌ Validation error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -541,25 +561,41 @@
 
 <div class="viewcode-block" id="GenerationPipeline.check_and_fix_transitions">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.check_and_fix_transitions">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_and_fix_transitions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">max_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_and_fix_transitions</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">max_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks transitions in the graph and attempts to fix invalid ones via LLM&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validating initial graph&quot;</span><span class="p">)</span>
-        <span class="n">initial_validation</span> <span class="o">=</span> <span class="n">are_triplets_valid</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_model</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;detailed&quot;</span><span class="p">)</span>
+        <span class="n">initial_validation</span> <span class="o">=</span> <span class="n">are_triplets_valid</span><span class="p">(</span>
+            <span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_model</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;detailed&quot;</span>
+        <span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Finished validating initial graph&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">initial_validation</span><span class="p">[</span><span class="s2">&quot;is_valid&quot;</span><span class="p">]:</span>
-            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;is_valid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;graph&quot;</span><span class="p">:</span> <span class="n">graph</span><span class="p">,</span> <span class="s2">&quot;validation_details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;invalid_transitions&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;attempts_made&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;fixed_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="s2">&quot;is_valid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;graph&quot;</span><span class="p">:</span> <span class="n">graph</span><span class="p">,</span>
+                <span class="s2">&quot;validation_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;invalid_transitions&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;attempts_made&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="s2">&quot;fixed_count&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">}</span>
 
         <span class="n">initial_invalid_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">initial_validation</span><span class="p">[</span><span class="s2">&quot;invalid_transitions&quot;</span><span class="p">])</span>
         <span class="n">current_graph</span> <span class="o">=</span> <span class="n">graph</span>
         <span class="n">current_attempt</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Found these </span><span class="si">{</span><span class="n">initial_validation</span><span class="p">[</span><span class="s1">&#39;invalid_transitions&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> invalid transitions&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;⚠️ Found these </span><span class="si">{</span><span class="n">initial_validation</span><span class="p">[</span><span class="s1">&#39;invalid_transitions&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> invalid transitions&quot;</span>
+        <span class="p">)</span>
         <span class="k">while</span> <span class="n">current_attempt</span> <span class="o">&lt;</span> <span class="n">max_attempts</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;🔄 Fix attempt </span><span class="si">{</span><span class="n">current_attempt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">max_attempts</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="c1"># Add UUID to repair prompt</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">repair_prompt</span><span class="p">:</span>
                     <span class="n">original_template</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">repair_prompt</span><span class="o">.</span><span class="n">template</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">repair_prompt</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">add_uuid_to_prompt</span><span class="p">(</span><span class="n">original_template</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">repair_prompt</span><span class="o">.</span><span class="n">template</span> <span class="o">=</span> <span class="n">add_uuid_to_prompt</span><span class="p">(</span>
+                        <span class="n">original_template</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+                    <span class="p">)</span>
 
                 <span class="n">current_graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_generator</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
                     <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_model</span><span class="p">,</span>
@@ -579,15 +615,23 @@
 
             <span class="n">current_attempt</span> <span class="o">+=</span> <span class="mi">1</span>
 
-        <span class="n">validation</span> <span class="o">=</span> <span class="n">are_triplets_valid</span><span class="p">(</span><span class="n">current_graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_model</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;detailed&quot;</span><span class="p">)</span>
+        <span class="n">validation</span> <span class="o">=</span> <span class="n">are_triplets_valid</span><span class="p">(</span>
+            <span class="n">current_graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">validation_model</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s2">&quot;detailed&quot;</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">validation</span><span class="p">[</span><span class="s2">&quot;is_valid&quot;</span><span class="p">]:</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;is_valid&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;graph&quot;</span><span class="p">:</span> <span class="n">current_graph</span><span class="p">,</span>
-                <span class="s2">&quot;validation_details&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;invalid_transitions&quot;</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">&quot;attempts_made&quot;</span><span class="p">:</span> <span class="n">current_attempt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;fixed_count&quot;</span><span class="p">:</span> <span class="n">initial_invalid_count</span><span class="p">},</span>
+                <span class="s2">&quot;validation_details&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;invalid_transitions&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                    <span class="s2">&quot;attempts_made&quot;</span><span class="p">:</span> <span class="n">current_attempt</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="s2">&quot;fixed_count&quot;</span><span class="p">:</span> <span class="n">initial_invalid_count</span><span class="p">,</span>
+                <span class="p">},</span>
             <span class="p">}</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Found these </span><span class="si">{</span><span class="n">validation</span><span class="p">[</span><span class="s1">&#39;invalid_transitions&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> invalid transitions after fix attempt&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;⚠️ Found these </span><span class="si">{</span><span class="n">validation</span><span class="p">[</span><span class="s1">&#39;invalid_transitions&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> invalid transitions after fix attempt&quot;</span>
+            <span class="p">)</span>
             <span class="n">remaining_invalid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">validation</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;invalid_transitions&quot;</span><span class="p">,</span> <span class="p">[]))</span>
             <span class="k">return</span> <span class="p">{</span>
                 <span class="s2">&quot;is_valid&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -607,16 +651,28 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating Graph ...&quot;</span><span class="p">)</span>
             <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_generator</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_model</span><span class="p">,</span> <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_prompt</span><span class="p">,</span> <span class="n">graph_example</span><span class="o">=</span><span class="n">graph_example</span><span class="p">,</span> <span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span>
+                <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_model</span><span class="p">,</span>
+                <span class="n">prompt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_prompt</span><span class="p">,</span>
+                <span class="n">graph_example</span><span class="o">=</span><span class="n">graph_example</span><span class="p">,</span>
+                <span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span>
+                <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph generated is </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">graph_dict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges_match_nodes</span><span class="p">():</span>
-                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span><span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: edges don&#39;t match nodes&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
+                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: edges don&#39;t match nodes&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
             <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">remove_duplicated_nodes</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">graph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span><span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: utterances in nodes doubled&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
+                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: utterances in nodes doubled&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
 
-            <span class="n">cycle_validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_graph_cycle_requirement</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cycles</span><span class="p">)</span>
+            <span class="n">cycle_validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate_graph_cycle_requirement</span><span class="p">(</span>
+                <span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_cycles</span>
+            <span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">cycle_validation</span><span class="p">[</span><span class="s2">&quot;meets_requirements&quot;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
                     <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">TOO_MANY_CYCLES</span><span class="p">,</span>
@@ -628,19 +684,27 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sampled </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">)</span><span class="si">}</span><span class="s2"> dialogues&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">match_triplets_dg</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sampled_dialogues</span><span class="p">)[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
-                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - not all utterances are present&quot;</span>
+                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - not all utterances are present&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
 
             <span class="n">theme_validation</span> <span class="o">=</span> <span class="n">is_theme_valid</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theme_validation_model</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">theme_validation</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span><span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_THEME</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Theme validation failed: </span><span class="si">{</span><span class="n">theme_validation</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
+                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_THEME</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Theme validation failed: </span><span class="si">{</span><span class="n">theme_validation</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Validating and fixing transitions...&quot;</span><span class="p">)</span>
-            <span class="n">transition_validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_and_fix_transitions</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">max_attempts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_fix_attempts</span><span class="p">)</span>
+            <span class="n">transition_validation</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_and_fix_transitions</span><span class="p">(</span>
+                <span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">max_attempts</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_fix_attempts</span>
+            <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Finished validating and fixing transitions&quot;</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="ow">not</span> <span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;is_valid&quot;</span><span class="p">]:</span>
-                <span class="n">invalid_transitions</span> <span class="o">=</span> <span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;validation_details&quot;</span><span class="p">][</span><span class="s2">&quot;invalid_transitions&quot;</span><span class="p">]</span>
+                <span class="n">invalid_transitions</span> <span class="o">=</span> <span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;validation_details&quot;</span><span class="p">][</span>
+                    <span class="s2">&quot;invalid_transitions&quot;</span>
+                <span class="p">]</span>
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
                     <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
                     <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">invalid_transitions</span><span class="p">)</span><span class="si">}</span><span class="s2"> invalid transitions &quot;</span>
@@ -650,28 +714,40 @@
             <span class="n">graph</span> <span class="o">=</span> <span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;validation_details&quot;</span><span class="p">][</span><span class="s2">&quot;attempts_made&quot;</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges_match_nodes</span><span class="p">():</span>
-                    <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span><span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: edges don&#39;t match nodes&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
+                        <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: edges don&#39;t match nodes&quot;</span><span class="p">,</span>
+                    <span class="p">)</span>
                 <span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">remove_duplicated_nodes</span><span class="p">()</span>
                 <span class="k">if</span> <span class="n">graph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
-                        <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: utterances in nodes doubled&quot;</span>
+                        <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: utterances in nodes doubled&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sampling dialogues...&quot;</span><span class="p">)</span>
                 <span class="n">sampled_dialogues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialogue_sampler</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sampled </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">)</span><span class="si">}</span><span class="s2"> dialogues&quot;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">match_triplets_dg</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sampled_dialogues</span><span class="p">)[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
                     <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
-                        <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - not all utterances are present&quot;</span>
+                        <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span>
+                        <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - not all utterances are present&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;going to return: </span><span class="si">{</span><span class="n">transition_validation</span><span class="p">[</span><span class="s1">&#39;graph&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">graph_dict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">ret</span> <span class="o">=</span> <span class="n">GraphGenerationResult</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">,</span> <span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span> <span class="n">dialogues</span><span class="o">=</span><span class="n">sampled_dialogues</span><span class="p">)</span>
+            <span class="n">ret</span> <span class="o">=</span> <span class="n">GraphGenerationResult</span><span class="p">(</span>
+                <span class="n">graph</span><span class="o">=</span><span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">,</span>
+                <span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span>
+                <span class="n">dialogues</span><span class="o">=</span><span class="n">sampled_dialogues</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ret: </span><span class="si">{</span><span class="n">ret</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">ret</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error during generation: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span><span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">GENERATION_FAILED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unexpected error during generation: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
+                <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">GENERATION_FAILED</span><span class="p">,</span>
+                <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Unexpected error during generation: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GenerationPipeline.__call__">
@@ -709,7 +785,9 @@
             <span class="n">pipeline</span><span class="o">=</span><span class="n">GenerationPipeline</span><span class="p">(</span>
                 <span class="n">generation_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">generation_llm</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
                 <span class="n">validation_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">validation_llm</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
-                <span class="n">theme_validation_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">theme_validation_llm</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">theme_validation_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span>
+                    <span class="n">theme_validation_llm</span>
+                <span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
                 <span class="n">generation_prompt</span><span class="o">=</span><span class="n">cycle_graph_generation_prompt_informal</span><span class="p">,</span>
                 <span class="n">repair_prompt</span><span class="o">=</span><span class="n">cycle_graph_repair_prompt</span><span class="p">,</span>
             <span class="p">),</span>
@@ -733,7 +811,9 @@
                     <span class="p">{</span>
                         <span class="s2">&quot;graph&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(),</span>
                         <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">topic</span><span class="p">,</span>
-                        <span class="s2">&quot;dialogues&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">dia</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="k">for</span> <span class="n">dia</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">dialogues</span><span class="p">],</span>  <span class="c1"># The dialogues are already dictionaries</span>
+                        <span class="s2">&quot;dialogues&quot;</span><span class="p">:</span> <span class="p">[</span>
+                            <span class="n">dia</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="k">for</span> <span class="n">dia</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">dialogues</span>
+                        <span class="p">],</span>  <span class="c1"># The dialogues are already dictionaries</span>
                     <span class="p">}</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
