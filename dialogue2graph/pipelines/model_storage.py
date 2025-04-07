@@ -104,6 +104,7 @@ class ModelStorage(BaseModel):
         try:
             with open(path, "r") as f:
                 loaded_storage = yaml.safe_load(f)
+                
                 for key, config in loaded_storage.items():
                     self.add(
                         key=key, config=config, model_type=config.pop("model_type")
@@ -164,7 +165,11 @@ class ModelStorage(BaseModel):
         logger.debug(f"Attempting to save model storage to {path}")
         try:
             with open(path, "w") as f:
-                storage_dump = {k: v.config for k, v in self.storage.items()}
+                storage_dump = {}
+                for model_key in self.storage:
+                    storage_dump[model_key] = {}
+                    storage_dump[model_key]["config"] = self.storage[model_key].config
+                    storage_dump[model_key]["model_type"] = self.storage[model_key].model_type
                 yaml.dump(storage_dump, f)
             logger.info(f"Saved {len(self.storage)} models to {path}")
         except Exception as e:
