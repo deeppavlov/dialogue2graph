@@ -104,22 +104,3 @@ def count_uttr_variations(dialogue):
         if len(utterances) < 2:
             return False        
     return True
-
-
-# def validate_dialogues_by_pairs(dialogues, augmented_dialogues, return_result=False):
-#     failure_instances_length, failure_instances_roles, errors = [], [], []
-
-#     for i, (orig_dia, aug_dia) in enumerate(zip(dialogues, augmented_dialogues)):
-#         try:
-#             if is_correct_length_modified(orig_dia, aug_dia) == False:
-#                 failure_instances_length.append(i)
-#         except Exception as length_error:
-#             errors.append((i, f'length_error: {length_error}'))
-
-#         try:
-#             if match_roles_modified(orig_dia, aug_dia) == False:
-#                 failure_instances_roles.append(i)
-#         except Exception as roles_error:
-#             errors.append((i, f'roles_error: {roles_error}'))        
-
-#     return failure_instances_length, failure_instances_roles, errors
