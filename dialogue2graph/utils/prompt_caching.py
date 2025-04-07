@@ -115,7 +115,9 @@ def setup_cache(use_in_memory: bool = False):
 
         database_url = os.getenv("DATABASE_URL")
         if not database_url:
-            logger.warning("DATABASE_URL not found in environment, falling back to in-memory cache")
+            logger.warning(
+                "DATABASE_URL not found in environment, falling back to in-memory cache"
+            )
             return setup_cache(use_in_memory=True)
 
         engine = create_engine(database_url)

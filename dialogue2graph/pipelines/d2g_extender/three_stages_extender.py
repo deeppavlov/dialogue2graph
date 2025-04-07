@@ -15,7 +15,10 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.metrics.no_llm_metrics import is_same_structure
 from dialogue2graph.metrics.llm_metrics import compare_graphs
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
-from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
+from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
+    add_edge_prompt_1,
+    add_edge_prompt_2,
+)
 from .prompts import extending_prompt_part_1, extending_prompt_part_2
 
 
@@ -51,36 +54,64 @@ class ThreeStagesGraphGenerator(GraphExtender):
         sim_model: str,
     ):
         super().__init__(
-            model_storage=model_storage, extending_llm=extending_llm, filling_llm=filling_llm, formatting_llm=formatting_llm, sim_model=sim_model
+            model_storage=model_storage,
+            extending_llm=extending_llm,
+            filling_llm=filling_llm,
+            formatting_llm=formatting_llm,
+            sim_model=sim_model,
         )
 
-    def invoke(self, dialogues: list[Dialogue] = None, graph: Graph = None) -> BaseGraph:
+    def invoke(
+        self, dialogues: list[Dialogue] = None, graph: Graph = None
+    ) -> BaseGraph:
         try:
             partial_variables = {}
             dialogue = dialogues[0].to_list()
             prompt = PromptTemplate(
-                template=extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + "{dialogue}", input_variables=["graph", "dialogue"]
+                template=extending_prompt_part_1
+                + "{graph}. "
+                + extending_prompt_part_2
+                + "{dialogue}",
+                input_variables=["graph", "dialogue"],
             )
 
             fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model
+                parser=PydanticOutputParser(pydantic_object=DialogueNodes),
+                llm=self.model_storage.storage[self.formatting_llm].model,
             )
-            chain = self.model_storage.storage[self.extending_llm].model | fixed_output_parser
+            chain = (
+                self.model_storage.storage[self.extending_llm].model
+                | fixed_output_parser
+            )
 
-            messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict, dialogue=dialogue))]
+            messages = [
+                HumanMessage(
+                    content=prompt.format(graph=graph.graph_dict, dialogue=dialogue)
+                )
+            ]
             nodes = chain.invoke(messages).model_dump()
 
             _, _, last_user = get_helpers(dialogues)
 
             for idx in range(len(nodes["nodes"])):
-                nodes["nodes"][idx]["utterances"] = list(set(nodes["nodes"][idx]["utterances"]))
+                nodes["nodes"][idx]["utterances"] = list(
+                    set(nodes["nodes"][idx]["utterances"])
+                )
             try:
                 sampled_dialogues = dialogue_sampler.invoke(graph, 15)
-                graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues, self.model_storage.storage[self.sim_model].model)
+                graph_dict = connect_nodes(
+                    nodes["nodes"],
+                    sampled_dialogues,
+                    self.model_storage.storage[self.sim_model].model,
+                )
             except Exception as e:
                 print(e)
                 return Graph({})
-            graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
+            graph_dict = {
+                "nodes": graph_dict["nodes"],
+                "edges": graph_dict["edges"],
+                "reason": "",
+            }
 
             if not last_user:
                 result_graph = Graph(graph_dict=graph_dict)
@@ -92,16 +123,22 @@ class ThreeStagesGraphGenerator(GraphExtender):
                 partial_variables[f"var_{idx}"] = dial.to_list()
                 prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
             prompt = PromptTemplate(
-                template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + prompt_extra,
+                template=add_edge_prompt_1
+                + "{graph_dict}. "
+                + add_edge_prompt_2
+                + prompt_extra,
                 input_variables=["graph_dict"],
                 partial_variables=partial_variables,
             )
             messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
 
             fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=DialogueGraph), llm=self.model_storage.storage[self.formatting_llm].model
+                parser=PydanticOutputParser(pydantic_object=DialogueGraph),
+                llm=self.model_storage.storage[self.formatting_llm].model,
             )
-            chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+            chain = (
+                self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+            )
             result = chain.invoke(messages)
 
             if result is None:
