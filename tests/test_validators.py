@@ -2,26 +2,30 @@ import pytest
 import dotenv
 
 from dialogue2graph import Dialogue
-from dialogue2graph.metrics.validators import (
+from dialogue2graph.metrics.no_llm_validators import (
     is_greeting_repeated_regex,
-    is_greeting_repeated_emb_llm,
     is_dialog_closed_too_early_regex,
+)
+from dialogue2graph.metrics.llm_validators import (
+    is_greeting_repeated_emb_llm,
     is_dialog_closed_too_early_emb_llm,
 )
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
 
 dotenv.load_dotenv()
-if not dotenv.find_dotenv():
-    pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
 
-MODEL_STORAGE = ModelStorage()
-MODEL_STORAGE.add(
-    "my_emb",
-    config={"model_name": "BAAI/bge-m3"},
-    model_type="emb",
-)
-MODEL_STORAGE.add("my_llm", config={"name": "gpt-4o-mini"}, model_type="llm")
+
+@pytest.fixture
+def model_storage():
+    model_storage = ModelStorage()
+    model_storage.add(
+        "my_emb",
+        config={"model_name": "BAAI/bge-m3"},
+        model_type="emb",
+    )
+    model_storage.add("my_llm", config={"name": "gpt-4o-mini"}, model_type="llm")
+    return (model_storage, "my_emb", "my_llm")
 
 
 @pytest.fixture
@@ -97,11 +101,13 @@ def test_re_end(good_example, bye_x2_example):
     assert is_dialog_closed_too_early_regex(bye_x2_example) is True
 
 
-def test_emb_llm_start(good_example, hello_x2_example):
-    assert is_greeting_repeated_emb_llm(good_example, MODEL_STORAGE, "my_emb", "my_llm") is False
-    assert is_greeting_repeated_emb_llm(hello_x2_example, MODEL_STORAGE, "my_emb", "my_llm") is True
+@pytest.mark.skipif(not dotenv.find_dotenv(), reason="No env. file was found")
+def test_emb_llm_start(good_example, hello_x2_example, model_storage):
+    assert is_greeting_repeated_emb_llm(good_example, *model_storage) is False
+    assert is_greeting_repeated_emb_llm(hello_x2_example, *model_storage) is True
 
 
-def test_emb_llm_end(good_example, bye_x2_example):
-    assert is_dialog_closed_too_early_emb_llm(good_example, MODEL_STORAGE, "my_emb", "my_llm") is False
-    assert is_dialog_closed_too_early_emb_llm(bye_x2_example, MODEL_STORAGE, "my_emb", "my_llm") is True
+@pytest.mark.skipif(not dotenv.find_dotenv(), reason="No env. file was found")
+def test_emb_llm_end(good_example, bye_x2_example, model_storage):
+    assert is_dialog_closed_too_early_emb_llm(good_example, *model_storage) is False
+    assert is_dialog_closed_too_early_emb_llm(bye_x2_example, *model_storage) is True

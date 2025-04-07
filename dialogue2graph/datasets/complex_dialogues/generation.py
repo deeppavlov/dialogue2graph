@@ -12,7 +12,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
 from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
-from dialogue2graph.metrics.validators import is_greeting_repeated_regex, is_dialog_closed_too_early_regex
+from dialogue2graph.metrics.no_llm_validators import is_greeting_repeated_regex, is_dialog_closed_too_early_regex
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
