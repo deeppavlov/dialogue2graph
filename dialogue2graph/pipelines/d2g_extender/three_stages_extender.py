@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Callable
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
@@ -16,8 +16,12 @@ from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
-from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
-from .prompts import extending_prompt_part_1, extending_prompt_part_2
+from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
+      add_edge_prompt_1, add_edge_prompt_2
+)
+from dialogue2graph.pipelines.d2g_extender.prompts import (
+      extending_prompt_part_1, extending_prompt_part_2
+)
 
 
 class DialogueNodes(BaseModel):
@@ -48,10 +52,10 @@ class LLMGraphExtender(GraphExtender):
     sim_model: str = Field(description="Similarity model")
     step: int
     graph_generator: LightGraphGenerator
-    step1_evals: list[callable]
-    extender_evals: list[callable]
-    step2_evals: list[callable]
-    end_evals: list[callable]
+    step1_evals: list[Callable]
+    extender_evals: list[Callable]
+    step2_evals: list[Callable]
+    end_evals: list[Callable]
 
     def __init__(
         self,
@@ -60,10 +64,10 @@ class LLMGraphExtender(GraphExtender):
         filling_llm: str,
         formatting_llm: str,
         sim_model: str,
-        step1_evals: list[callable],
-        extender_evals: list[callable],
-        step2_evals: list[callable],
-        end_evals: list[callable],
+        step1_evals: list[Callable],
+        extender_evals: list[Callable],
+        step2_evals: list[Callable],
+        end_evals: list[Callable],
         step: int = 2,
     ):
         super().__init__(
@@ -112,7 +116,9 @@ class LLMGraphExtender(GraphExtender):
         graph_dict = {"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]}
         return Graph(graph_dict)
 
-    def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
+    def invoke(
+            self, pipeline_data: PipelineDataType, enable_evals: bool = False
+            ) -> tuple[BaseGraph, metrics.DGReportType]:
 
         if pipeline_data.supported_graph is not None:
             cur_graph = pipeline_data.supported_graph
@@ -143,7 +149,10 @@ class LLMGraphExtender(GraphExtender):
                 partial_variables[f"var_{idx}"] = dial.to_list()
                 prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
             prompt = PromptTemplate(
-                template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + prompt_extra,
+                template=add_edge_prompt_1
+                + "{graph_dict}. "
+                + add_edge_prompt_2
+                + prompt_extra,
                 input_variables=["graph_dict"],
                 partial_variables=partial_variables,
             )

@@ -38,7 +38,9 @@ def find_cycle_ends(G: Graph, model: BaseChatModel) -> dict[str]:
     {{"ends": [id1, id2, ...], "description": "Brief explanation of your decision"}}
     """
 
-    graph_ends_prompt = PromptTemplate(input_variables=["json_graph"], template=graph_ends_prompt_template)
+    graph_ends_prompt = PromptTemplate(
+        input_variables=["json_graph"], template=graph_ends_prompt_template
+    )
 
     parser = PydanticOutputParser(pydantic_object=GraphEndsResult)
 

@@ -67,6 +67,9 @@ class TopicGenerationPipeline(BasePipeline):
             ]
         )
 
+    def _validate_pipeline(self):
+        pass
+
     def invoke(self, topic: str, output_path: str):
         for step in self.steps:
             output = step.invoke(topic=topic)

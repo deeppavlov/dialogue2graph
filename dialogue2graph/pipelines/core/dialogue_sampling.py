@@ -27,7 +27,9 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     """Pydantic settings to get env variables"""
 
     model_config = SettingsConfigDict(
-        env_file=os.environ.get("PATH_TO_ENV", ".env"), env_file_encoding="utf-8", env_file_exists_ok=False  # Makes .env file optional
+        env_file=os.environ.get("PATH_TO_ENV", ".env"),
+        env_file_encoding="utf-8",
+        env_file_exists_ok=False,  # Makes .env file optional
     )
     OPENAI_API_KEY: Optional[str] = None
     OPENAI_BASE_URL: Optional[str] = None
@@ -46,7 +48,9 @@ except Exception:
 class RecursiveDialogueSampler(DialogueGenerator):
     """Recursive dialogue sampler for the graph"""
 
-    def invoke(self, graph: BaseGraph, upper_limit: int, model_name: str = "o1-mini", temp=1) -> list[Dialogue]:
+    def invoke(
+        self, graph: BaseGraph, upper_limit: int, model_name: str = "o1-mini", temp=1
+    ) -> list[Dialogue]:
         """Finds all the dialogues in the graph
         upper_limit is used to limit repeats used in graph.get_all_paths method
         model_name is LLM to find cycling nodes when list of finishing nodes is empty
@@ -59,7 +63,12 @@ class RecursiveDialogueSampler(DialogueGenerator):
         if not finished_nodes:
             cycle_ends = find_cycle_ends(
                 graph,
-                model=ChatOpenAI(model=model_name, api_key=env_settings.OPENAI_API_KEY, base_url=env_settings.OPENAI_BASE_URL, temperature=temp),
+                model=ChatOpenAI(
+                    model=model_name,
+                    api_key=env_settings.OPENAI_API_KEY,
+                    base_url=env_settings.OPENAI_BASE_URL,
+                    temperature=temp,
+                ),
             )["value"]
         finished_nodes = mix_ends(graph, finished_nodes, cycle_ends)
         while repeats <= upper_limit:
@@ -75,7 +84,13 @@ class RecursiveDialogueSampler(DialogueGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, graph, upper_limit, target_dialogues, report_type=Literal["dict", "dataframe"]):
+    async def evaluate(
+        self,
+        graph,
+        upper_limit,
+        target_dialogues,
+        report_type=Literal["dict", "dataframe"],
+    ):
         dialogues = self.invoke(graph, upper_limit)
         report = {
             "dialogues_match": [match_dialogue_triplets(dialogues, target_dialogues)["value"]],
@@ -171,7 +186,16 @@ def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
     for dialogue in seq:
         assist_texts = [d["text"] for d in dialogue if d["participant"] == "assistant"]
         user_texts = [d["text"] for d in dialogue if d["participant"] == "user"]
-        res.extend([(a1, u, a2) for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])])
+        res.extend(
+            [
+                (a1, u, a2)
+                for a1, u, a2 in zip(
+                    assist_texts[:-1],
+                    user_texts[: len(assist_texts) - 1],
+                    assist_texts[1:],
+                )
+            ]
+        )
     return set(res)
 
 

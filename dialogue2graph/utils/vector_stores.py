@@ -16,12 +16,17 @@ class DialogueStore:
     score_threshold: int
 
     def _load_dialogue(self, dialogue: list, embedder: HuggingFaceEmbeddings):
-
-        self.assistant_store = Chroma(collection_name=str(uuid.uuid4()), embedding_function=embedder)
-        self.user_store = Chroma(collection_name=str(uuid.uuid4()), embedding_function=embedder)
+        self.assistant_store = Chroma(
+            collection_name=str(uuid.uuid4()), embedding_function=embedder
+        )
+        self.user_store = Chroma(
+            collection_name=str(uuid.uuid4()), embedding_function=embedder
+        )
         assistant = [
             Document(page_content=d["text"].lower(), id=id, metadata={"id": id})
-            for id, d in enumerate([d for d in dialogue if d["participant"] == "assistant"])
+            for id, d in enumerate(
+                [d for d in dialogue if d["participant"] == "assistant"]
+            )
         ]
         user = [
             Document(page_content=d["text"].lower(), id=id, metadata={"id": id})
@@ -32,7 +37,9 @@ class DialogueStore:
         self.assistant_store.add_documents(documents=assistant)
         self.user_store.add_documents(documents=user)
 
-    def __init__(self, dialogue: list, embedder: HuggingFaceEmbeddings, score_threshold=0.995):
+    def __init__(
+        self, dialogue: list, embedder: HuggingFaceEmbeddings, score_threshold=0.995
+    ):
         self.score_threshold = score_threshold
         self._load_dialogue(dialogue, embedder)
 
@@ -40,7 +47,9 @@ class DialogueStore:
         """search for utterance over assistant store
         return found documents ids"""
         docs = self.assistant_store.similarity_search_with_relevance_scores(
-            utterance.lower(), k=self.assistant_size, score_threshold=self.score_threshold
+            utterance.lower(),
+            k=self.assistant_size,
+            score_threshold=self.score_threshold,
         )
         res = [d[0].metadata["id"] for d in docs]
         res.sort()
@@ -61,10 +70,14 @@ class NodeStore:
     utterances: list[tuple[str, int]] = []
 
     def _load_nodes(self, nodes: list, utt_sim: HuggingFaceEmbeddings):
-
-        self.nodes_store = Chroma(collection_name=str(uuid.uuid4()), embedding_function=utt_sim)
+        self.nodes_store = Chroma(
+            collection_name=str(uuid.uuid4()), embedding_function=utt_sim
+        )
         self.utterances = [(u.lower(), n["id"]) for n in nodes for u in n["utterances"]]
-        docs = [Document(page_content=u[0], id=id, metadata={"id": id}) for id, u in enumerate(self.utterances)]
+        docs = [
+            Document(page_content=u[0], id=id, metadata={"id": id})
+            for id, u in enumerate(self.utterances)
+        ]
 
         self.nodes_store.add_documents(documents=docs)
 
@@ -73,7 +86,9 @@ class NodeStore:
 
     def find_node(self, utterance: str):
         """Search for node with utterance, return node id or None if not found"""
-        docs = self.nodes_store.similarity_search_with_relevance_scores(utterance.lower(), k=1, score_threshold=0.9)
+        docs = self.nodes_store.similarity_search_with_relevance_scores(
+            utterance.lower(), k=1, score_threshold=0.9
+        )
         if docs:
             return self.utterances[docs[0][0].metadata["id"]][1]
         return None

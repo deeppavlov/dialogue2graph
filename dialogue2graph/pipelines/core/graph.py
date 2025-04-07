@@ -77,7 +77,6 @@ class BaseGraph(BaseModel, abc.ABC):
 
 
 class Graph(BaseGraph):
-
     def __init__(self, graph_dict: dict, **kwargs: Any):
         # Pass graph_dict to the parent class
         super().__init__(graph_dict=graph_dict, **kwargs)
@@ -100,7 +99,6 @@ class Graph(BaseGraph):
                     if len(left) == 0:
                         return True
         if len(left):
-
             return False
         return True
 
@@ -123,14 +121,29 @@ class Graph(BaseGraph):
             theme = node.get("theme")
             label = node.get("label")
             if type(node["utterances"]) is list:
-                self.graph.add_node(cur_node_id, theme=theme, label=label, utterances=node["utterances"])
+                self.graph.add_node(
+                    cur_node_id, theme=theme, label=label, utterances=node["utterances"]
+                )
             else:
-                self.graph.add_node(cur_node_id, theme=theme, label=label, utterances=[node["utterances"]])
+                self.graph.add_node(
+                    cur_node_id,
+                    theme=theme,
+                    label=label,
+                    utterances=[node["utterances"]],
+                )
 
         for link in self.graph_dict["edges"]:
             source = self.node_mapping.get(link["source"], link["source"])
             target = self.node_mapping.get(link["target"], link["target"])
-            self.graph.add_edges_from([(source, target, {"theme": link.get("theme"), "utterances": link["utterances"]})])
+            self.graph.add_edges_from(
+                [
+                    (
+                        source,
+                        target,
+                        {"theme": link.get("theme"), "utterances": link["utterances"]},
+                    )
+                ]
+            )
 
     def visualise(self, *args, **kwargs):
         plt.figure(figsize=(17, 11))  # Make the plot bigger
@@ -138,11 +151,23 @@ class Graph(BaseGraph):
             pos = nx.nx_agraph.pygraphviz_layout(self.graph)
         except ImportError as e:
             pos = nx.kamada_kawai_layout(self.graph)
-            logger.warning(f"{e}.\nInstall pygraphviz from http://pygraphviz.github.io/ .\nFalling back to default layout.")
-        nx.draw(self.graph, pos, with_labels=False, node_color="lightblue", node_size=500, font_size=8, arrows=True)
+            logger.warning(
+                f"{e}.\nInstall pygraphviz from http://pygraphviz.github.io/ .\nFalling back to default layout."
+            )
+        nx.draw(
+            self.graph,
+            pos,
+            with_labels=False,
+            node_color="lightblue",
+            node_size=500,
+            font_size=8,
+            arrows=True,
+        )
         edge_labels = nx.get_edge_attributes(self.graph, "utterances")
         node_labels = nx.get_node_attributes(self.graph, "utterances")
-        nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels, font_size=12)
+        nx.draw_networkx_edge_labels(
+            self.graph, pos, edge_labels=edge_labels, font_size=12
+        )
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels, font_size=10)
 
         plt.title(__name__)
@@ -154,15 +179,33 @@ class Graph(BaseGraph):
             pos = nx.nx_agraph.pygraphviz_layout(self.graph)
         except ImportError as e:
             pos = nx.kamada_kawai_layout(self.graph)
-            logger.warning(f"{e}.\nInstall pygraphviz from http://pygraphviz.github.io/ .\nFalling back to default layout.")
-        nx.draw(self.graph, pos, with_labels=False, node_color="lightblue", node_size=500, font_size=8, arrows=True)
-        edge_attrs = {(e["source"], e["target"]): len(e["utterances"]) for e in self.graph_dict["edges"]}
-        node_attrs = {n["id"]: f"{n['id']}:{len(n['utterances'])}" for n in self.graph_dict["nodes"]}
+            logger.warning(
+                f"{e}.\nInstall pygraphviz from http://pygraphviz.github.io/ .\nFalling back to default layout."
+            )
+        nx.draw(
+            self.graph,
+            pos,
+            with_labels=False,
+            node_color="lightblue",
+            node_size=500,
+            font_size=8,
+            arrows=True,
+        )
+        edge_attrs = {
+            (e["source"], e["target"]): len(e["utterances"])
+            for e in self.graph_dict["edges"]
+        }
+        node_attrs = {
+            n["id"]: f"{n['id']}:{len(n['utterances'])}"
+            for n in self.graph_dict["nodes"]
+        }
         nx.set_edge_attributes(self.graph, edge_attrs, "attrs")
         nx.set_node_attributes(self.graph, node_attrs, "attrs")
         edge_labels = nx.get_edge_attributes(self.graph, "attrs")
         node_labels = nx.get_node_attributes(self.graph, "attrs")
-        nx.draw_networkx_edge_labels(self.graph, pos, edge_labels=edge_labels, font_size=12)
+        nx.draw_networkx_edge_labels(
+            self.graph, pos, edge_labels=edge_labels, font_size=12
+        )
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels, font_size=10)
 
         plt.title(name)
@@ -205,7 +248,9 @@ class Graph(BaseGraph):
         node_non_starts = set([n["id"] for n in graph["nodes"] if not n["is_start"]])
         edge_targets = set([e["target"] for e in graph["edges"]])
         edge_sources = set([e["source"] for e in graph["edges"]])
-        return node_ids == edge_targets.union(edge_sources) and node_non_starts.issubset(edge_targets)
+        return node_ids == edge_targets.union(
+            edge_sources
+        ) and node_non_starts.issubset(edge_targets)
 
     def remove_duplicated_edges(self):
         graph = self.graph_dict
@@ -221,7 +266,11 @@ class Graph(BaseGraph):
                 new_edge["utterances"].extend(e["utterances"])
             new_edge["utterances"] = list(set(new_edge["utterances"]))
             new_edges.append(new_edge)
-        self.graph_dict = {"edges": [e for e in edges if (e["source"], e["target"]) not in duplicates] + new_edges, "nodes": graph["nodes"]}
+        self.graph_dict = {
+            "edges": [e for e in edges if (e["source"], e["target"]) not in duplicates]
+            + new_edges,
+            "nodes": graph["nodes"],
+        }
         return Graph(self.graph_dict)
 
     def remove_duplicated_nodes(self):
@@ -248,7 +297,10 @@ class Graph(BaseGraph):
                         edges[idx]["source"] = doubled
                     if e["target"] == n["id"]:
                         edges[idx]["target"] = doubled
-        self.graph_dict = {"edges": edges, "nodes": [n for n in nodes if n["id"] not in to_remove]}
+        self.graph_dict = {
+            "edges": edges,
+            "nodes": [n for n in nodes if n["id"] not in to_remove],
+        }
         return self.remove_duplicated_edges()
 
     def get_all_paths(self, start_node_id: int, visited_nodes: list[int], repeats_limit: int):

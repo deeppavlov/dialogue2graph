@@ -16,8 +16,15 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
-from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
-from .prompts import graph_example_1, grouping_prompt_1, grouping_prompt_2
+from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
+        add_edge_prompt_1,
+        add_edge_prompt_2
+)
+from dialogue2graph.pipelines.d2g_llm.prompts import (
+        graph_example_1,
+        grouping_prompt_1,
+        grouping_prompt_2
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -73,7 +80,9 @@ class LLMGraphGenerator(GraphGenerator):
             end_evals=end_evals,
         )
 
-    def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
+    def invoke(
+            self, pipeline_data: PipelineDataType, enable_evals: bool = False
+            ) -> tuple[BaseGraph, metrics.DGReportType]:
 
         partial_variables = {}
         prompt_extra = grouping_prompt_2
@@ -87,21 +96,34 @@ class LLMGraphGenerator(GraphGenerator):
         )
 
         fixed_output_parser = OutputFixingParser.from_llm(
-            parser=PydanticOutputParser(pydantic_object=DialogueNodes), llm=self.model_storage.storage[self.formatting_llm].model
+            parser=PydanticOutputParser(pydantic_object=DialogueNodes),
+            llm=self.model_storage.storage[self.formatting_llm].model,
         )
-        chain = self.model_storage.storage[self.grouping_llm].model | fixed_output_parser
+        chain = (
+            self.model_storage.storage[self.grouping_llm].model | fixed_output_parser
+        )
 
-        messages = [HumanMessage(content=prompt.format(graph_example_1=graph_example_1))]
+        messages = [
+            HumanMessage(content=prompt.format(graph_example_1=graph_example_1))
+        ]
         nodes = chain.invoke(messages).model_dump()
 
         _, _, last_user = get_helpers(pipeline_data.dialogs)
 
         try:
-            graph_dict = connect_nodes(nodes["nodes"], pipeline_data.dialogs, self.model_storage.storage[self.sim_model].model)
+            graph_dict = connect_nodes(
+                nodes["nodes"],
+                pipeline_data.dialogs,
+                self.model_storage.storage[self.sim_model].model,
+            )
         except Exception as e:
-            logger.error("Error in connecting nodes: %s", e)
-            return Graph({}), {}
-        graph_dict = {"nodes": graph_dict["nodes"], "edges": graph_dict["edges"], "reason": ""}
+            print(e)
+            return Graph({})
+        graph_dict = {
+            "nodes": graph_dict["nodes"],
+            "edges": graph_dict["edges"],
+            "reason": "",
+        }
 
         try:
             result_graph = Graph(graph_dict=graph_dict)
@@ -118,13 +140,18 @@ class LLMGraphGenerator(GraphGenerator):
                 partial_variables[f"var_{idx}"] = dial.to_list()
                 prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
             prompt = PromptTemplate(
-                template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + prompt_extra,
+                template=add_edge_prompt_1
+                + "{graph_dict}. "
+                + add_edge_prompt_2
+                + prompt_extra,
                 input_variables=["graph_dict"],
                 partial_variables=partial_variables,
             )
 
             fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=ReasonGraph), llm=self.model_storage.storage[self.formatting_llm].model
+                parser=PydanticOutputParser(
+                    pydantic_object=ReasonGraph),
+                    llm=self.model_storage.storage[self.formatting_llm].model
             )
             chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
 

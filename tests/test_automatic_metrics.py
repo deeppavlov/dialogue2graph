@@ -90,7 +90,9 @@ def test_is_same_structure_positive(graph_positive_1, graph_positive_2):
     """
     Check that the two positive graphs are isomorphic (is_same_structure).
     """
-    assert is_same_structure(graph_positive_1, graph_positive_2) is True, "Expected the graphs to have the same structure."
+    assert is_same_structure(graph_positive_1, graph_positive_2) is True, (
+        "Expected the graphs to have the same structure."
+    )
 
 
 def test_match_dg_triplets_positive(graph_positive_1, dialogues_positive):
@@ -119,7 +121,9 @@ def test_match_roles_positive(dialogues_positive):
 
     d1 = dialogues_positive[0]
     d2 = dialogues_positive[1]
-    assert match_roles(d1, d2) is True, "Expected the roles to match completely between dialogues."
+    assert match_roles(d1, d2) is True, (
+        "Expected the roles to match completely between dialogues."
+    )
 
 
 def test_is_correct_length_positive(dialogues_positive):
@@ -131,7 +135,9 @@ def test_is_correct_length_positive(dialogues_positive):
 
     d1 = dialogues_positive[0]
     d2 = dialogues_positive[1]
-    assert is_correct_length(d1, d2) is True, "Expected the dialogues to have the same length."
+    assert is_correct_length(d1, d2) is True, (
+        "Expected the dialogues to have the same length."
+    )
 
 
 def test_triplet_match_accuracy_positive(graph_positive_1, graph_positive_2):
@@ -174,14 +180,18 @@ def test_all_utterances_present_negative(graph_negative, dialogues_negative):
     We expect the function to return NOT True but a set of missing phrases.
     """
     result = all_utterances_present(graph_negative, dialogues_negative)
-    assert isinstance(result, set) and len(result) > 0, "Expected some utterances to be missing in the dialogues."
+    assert isinstance(result, set) and len(result) > 0, (
+        "Expected some utterances to be missing in the dialogues."
+    )
 
 
 def test_is_same_structure_negative(graph_positive_1, graph_negative):
     """
     Check that the positive and negative graphs are not isomorphic.
     """
-    assert is_same_structure(graph_positive_1, graph_negative) is False, "Expected the graphs to have different structures."
+    assert is_same_structure(graph_positive_1, graph_negative) is False, (
+        "Expected the graphs to have different structures."
+    )
 
 
 def test_match_dg_triplets_negative(graph_negative, dialogues_negative):
@@ -199,7 +209,9 @@ def test_are_paths_valid_negative(graph_negative, dialogues_negative):
     In the negative example, the paths might still be valid or partially invalid.
     """
     result = are_paths_valid(graph_negative, dialogues_negative)
-    assert result["value"] is True, "Expected value=True in negative data; adjust checks if needed."
+    assert result["value"] is True, (
+        "Expected value=True in negative data; adjust checks if needed."
+    )
 
 
 def test_is_correct_length_negative(dialogues_negative):
@@ -211,7 +223,9 @@ def test_is_correct_length_negative(dialogues_negative):
 
     d1 = dialogues_negative[0]
     d2 = dialogues_negative[1]
-    assert is_correct_length(d1, d2) is False, "Expected the dialogues to have different lengths, so is_correct_length should be False."
+    assert is_correct_length(d1, d2) is False, (
+        "Expected the dialogues to have different lengths, so is_correct_length should be False."
+    )
 
 
 def test_triplet_match_accuracy_negative(graph_positive_1, graph_negative):
@@ -221,5 +235,9 @@ def test_triplet_match_accuracy_negative(graph_positive_1, graph_negative):
     """
     acc = triplet_match_accuracy(graph_positive_1, graph_negative)
     # According to data: node_accuracy = 0.875, edge_accuracy = 0.9
-    assert acc["node_accuracy"] < 1.0, "Expected node_accuracy to be less than 1.0 in the negative scenario"
-    assert acc["edge_accuracy"] < 1.0, "Expected edge_accuracy to be less than 1.0 in the negative scenario"
+    assert acc["node_accuracy"] < 1.0, (
+        "Expected node_accuracy to be less than 1.0 in the negative scenario"
+    )
+    assert acc["edge_accuracy"] < 1.0, (
+        "Expected edge_accuracy to be less than 1.0 in the negative scenario"
+    )
