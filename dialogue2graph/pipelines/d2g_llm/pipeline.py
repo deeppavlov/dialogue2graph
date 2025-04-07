@@ -18,23 +18,45 @@ class Pipeline(BasePipeline):
         formatting_llm: str = "d2g_llm_formatting_llm:v1",
         sim_model: str = "d2g_llm_sim_model:v1",
     ):
-
         # check if models are in model storage
         # if model is not in model storage put the default model there
         if grouping_llm not in model_storage.storage:
-            model_storage.add(key=grouping_llm, config={"name": "gpt-4o-latest", "temperature": 0}, model_type="llm")
+            model_storage.add(
+                key=grouping_llm,
+                config={"name": "gpt-4o-latest", "temperature": 0},
+                model_type="llm",
+            )
             # grouping_llm = model_storage.storage["d2g_llm_grouping_llm:v1"].model
 
         if filling_llm not in model_storage.storage:
-            model_storage.add(key=filling_llm, config={"name": "o3-mini", "temperature": 1}, model_type="llm")
+            model_storage.add(
+                key=filling_llm,
+                config={"name": "o3-mini", "temperature": 1},
+                model_type="llm",
+            )
 
         if formatting_llm not in model_storage.storage:
-            model_storage.add(key=formatting_llm, config={"name": "gpt-4o-mini", "temperature": 0}, model_type="llm")
+            model_storage.add(
+                key=formatting_llm,
+                config={"name": "gpt-4o-mini", "temperature": 0},
+                model_type="llm",
+            )
 
         if sim_model not in model_storage.storage:
-            model_storage.add(key=sim_model, config={"model_name": "cointegrated/LaBSE-en-ru", "device": "cpu"}, model_type="emb")
+            model_storage.add(
+                key=sim_model,
+                config={"model_name": "cointegrated/LaBSE-en-ru", "device": "cpu"},
+                model_type="emb",
+            )
 
-        super().__init__(steps=[DataParser(), LLMGenerator(model_storage, grouping_llm, filling_llm, formatting_llm, sim_model)])
+        super().__init__(
+            steps=[
+                DataParser(),
+                LLMGenerator(
+                    model_storage, grouping_llm, filling_llm, formatting_llm, sim_model
+                ),
+            ]
+        )
 
     def _validate_pipeline(self):
         pass

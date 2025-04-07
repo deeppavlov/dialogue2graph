@@ -3,7 +3,6 @@ from dialogue2graph.pipelines.core.dialogue import Dialogue
 
 
 def _get_cross(search, list2):
-
     sublist = [p for p in list2 if search in p]
     to_add = []
     for s in sublist:
@@ -57,7 +56,6 @@ def _get_indices(lst, element):
 
 
 def _get_tails(dialogue: Dialogue, assistant: list, node: str):
-
     ids = _get_indices(assistant, node)
     tails = []
     for id in ids:
@@ -92,8 +90,9 @@ def group_nodes(dialogues: list[Dialogue], nodes_list: list[str]) -> list[list[s
 
     for ind1, node1 in enumerate(nodes_list):
         cur_nodes_list = nodes_list[ind1 + 1 :]
-        for ind2, node2 in zip(range(ind1 + 1, ind1 + 1 + len(cur_nodes_list)), cur_nodes_list):
-
+        for ind2, node2 in zip(
+            range(ind1 + 1, ind1 + 1 + len(cur_nodes_list)), cur_nodes_list
+        ):
             tail_cond = _compare_tails(dialogues, node1, node2)
             if tail_cond:
                 pairs.append((ind1, ind2))

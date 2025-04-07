@@ -340,50 +340,115 @@ Return ONLY the complete fixed graph JSON with the same structure.
 )
 graph_example = {
     "edges": [
-        {"source": 1, "target": 2, "utterances": ["I'm looking for an Indian restaurant, preferably in the centre of town."]},
+        {
+            "source": 1,
+            "target": 2,
+            "utterances": [
+                "I'm looking for an Indian restaurant, preferably in the centre of town."
+            ],
+        },
         {"source": 2, "target": 5, "utterances": ["I would prefer cheap restaurants."]},
-        {"source": 5, "target": 7, "utterances": ["Sure please book a table there fore 7 people at 12:15 on saturday"]},
+        {
+            "source": 5,
+            "target": 7,
+            "utterances": [
+                "Sure please book a table there fore 7 people at 12:15 on saturday"
+            ],
+        },
         {
             "source": 1,
             "target": 5,
-            "utterances": ["I am looking for a restaurant. The restaurant should be in the moderate price range and should be in the east"],
+            "utterances": [
+                "I am looking for a restaurant. The restaurant should be in the moderate price range and should be in the east"
+            ],
         },
-        {"source": 5, "target": 10, "utterances": ["The restaurant should serve italian food."]},
-        {"source": 6, "target": 7, "utterances": ["I will have 5 people and we would like 12:15 if possible. Thanks."]},
+        {
+            "source": 5,
+            "target": 10,
+            "utterances": ["The restaurant should serve italian food."],
+        },
+        {
+            "source": 6,
+            "target": 7,
+            "utterances": [
+                "I will have 5 people and we would like 12:15 if possible. Thanks."
+            ],
+        },
         {
             "source": 7,
             "target": 9,
-            "utterances": ["No that's all I needed. Thank you!", "Thanks for you help. I only need the restaurant reservation. Goodbye."],
+            "utterances": [
+                "No that's all I needed. Thank you!",
+                "Thanks for you help. I only need the restaurant reservation. Goodbye.",
+            ],
         },
-        {"source": 10, "target": 11, "utterances": ["What other restaurants in that area serve Italian food?"]},
-        {"source": 11, "target": 6, "utterances": ["No, that will do. Can I book a table for monday?"]},
+        {
+            "source": 10,
+            "target": 11,
+            "utterances": ["What other restaurants in that area serve Italian food?"],
+        },
+        {
+            "source": 11,
+            "target": 6,
+            "utterances": ["No, that will do. Can I book a table for monday?"],
+        },
         {
             "source": 1,
             "target": 3,
-            "utterances": ["I'm looking for a place to dine on the south side of town. Please find a place that's in the expensive price range."],
+            "utterances": [
+                "I'm looking for a place to dine on the south side of town. Please find a place that's in the expensive price range."
+            ],
         },
         {
             "source": 3,
             "target": 8,
-            "utterances": ["Do you have a favorite you could recommend? I will need the phone and postcode and food type also please."],
+            "utterances": [
+                "Do you have a favorite you could recommend? I will need the phone and postcode and food type also please."
+            ],
         },
-        {"source": 1, "target": 4, "utterances": ["I am looking for a cheap restaurant in the centre."]},
-        {"source": 4, "target": 8, "utterances": ["Yes, may I have the address, postcode, and phone number for Golden House? I'll book it myself."]},
-        {"source": 8, "target": 9, "utterances": ["No, that will be it. Thank you for your help.", "Thanks, that's all I need. Have a nice day."]},
+        {
+            "source": 1,
+            "target": 4,
+            "utterances": ["I am looking for a cheap restaurant in the centre."],
+        },
+        {
+            "source": 4,
+            "target": 8,
+            "utterances": [
+                "Yes, may I have the address, postcode, and phone number for Golden House? I'll book it myself."
+            ],
+        },
+        {
+            "source": 8,
+            "target": 9,
+            "utterances": [
+                "No, that will be it. Thank you for your help.",
+                "Thanks, that's all I need. Have a nice day.",
+            ],
+        },
     ],
     "nodes": [
-        {"id": 1, "label": "start", "is_start": True, "utterances": ["Hello! How can I help you?"]},
+        {
+            "id": 1,
+            "label": "start",
+            "is_start": True,
+            "utterances": ["Hello! How can I help you?"],
+        },
         {
             "id": 2,
             "label": "ask_price_range",
             "is_start": False,
-            "utterances": ["There are a number of options for Indian restaurants in the centre of town. What price range would you like?"],
+            "utterances": [
+                "There are a number of options for Indian restaurants in the centre of town. What price range would you like?"
+            ],
         },
         {
             "id": 3,
             "label": "ask_cuisine_preference",
             "is_start": False,
-            "utterances": ["I found five expensive restaurants on the south side of town. Would you prefer Chinese, Indian, Italian or Mexican?"],
+            "utterances": [
+                "I found five expensive restaurants on the south side of town. Would you prefer Chinese, Indian, Italian or Mexican?"
+            ],
         },
         {
             "id": 4,
@@ -406,7 +471,9 @@ graph_example = {
             "id": 6,
             "label": "ask_reservation_details",
             "is_start": False,
-            "utterances": ["Absolutely, how many people will you have and what time are you wanting the reservation?"],
+            "utterances": [
+                "Absolutely, how many people will you have and what time are you wanting the reservation?"
+            ],
         },
         {
             "id": 7,
@@ -441,7 +508,9 @@ graph_example = {
             "id": 10,
             "label": "offer_reservation",
             "is_start": False,
-            "utterances": ["Pizza hut fen ditton serves italian food in the east, would you like a reservation?"],
+            "utterances": [
+                "Pizza hut fen ditton serves italian food in the east, would you like a reservation?"
+            ],
         },
         {
             "id": 11,
