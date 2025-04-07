@@ -65,12 +65,16 @@ optional = true
 
 [tool.poetry.group.tests.dependencies]
 pytest = "*"
+pytest-cov = "*"
+coverage = { version = "!=7.3.3,!=7.6.6", extras = ["toml"] }
+
 
 [tool.poe]
 default_task_type = "script"
 
 [tool.poe.tasks]
 test = "scripts.test:quick_test"
+coverage = "scripts.test:coverage"
 lint = "scripts.codestyle:_check"
 format = "scripts.codestyle:_format"
 
