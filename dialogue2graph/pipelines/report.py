@@ -36,9 +36,7 @@ class PipelineReport(BaseModel):
         properties_df = pd.DataFrame.from_dict(self.properties, orient="index")
         properties_df.columns = ["Value"]
         properties_df.index.name = "Property"
-        subreports_df = pd.DataFrame(
-            [subreport for subreport in self.subreports]
-        )
+        subreports_df = pd.DataFrame([subreport for subreport in self.subreports])
         subreports_df.index.name = "Subreport"
         # Concatenate the properties and subreports DataFrames
         report_df = pd.concat([properties_df, subreports_df], axis=1)
@@ -64,7 +62,9 @@ class PipelineReport(BaseModel):
                 markdown_str += f"- **{key}**:\n"
                 for sub_key, sub_value in value.items():
                     if isinstance(sub_value, bool):
-                        markdown_str += f"  - **{sub_key}**: {'✅' if sub_value else '❌'}\n"
+                        markdown_str += (
+                            f"  - **{sub_key}**: {'✅' if sub_value else '❌'}\n"
+                        )
                     else:
                         markdown_str += f"  - **{sub_key}**: {sub_value}\n"
             else:
@@ -72,7 +72,7 @@ class PipelineReport(BaseModel):
         markdown_str += "\n## Subreports\n"
         for subreport in self.subreports:
             markdown_str += f"- **{subreport}**\n"
-        
+
         # Save the Markdown string to a file
         with open(path, "w") as f:
             f.write(markdown_str)
@@ -87,7 +87,9 @@ class PipelineReport(BaseModel):
         properties = f"{Fore.YELLOW}Metrics:{Style.RESET_ALL}"
         for key, value in self.properties.items():
             if key == "time":
-                properties += f"\n  {key}: {Fore.GREEN}{value:.2f} seconds{Style.RESET_ALL}"
+                properties += (
+                    f"\n  {key}: {Fore.GREEN}{value:.2f} seconds{Style.RESET_ALL}"
+                )
             elif isinstance(value, bool):
                 color = Fore.GREEN if value else Fore.RED
                 properties += f"\n  {key}: {color}{value}{Style.RESET_ALL}"
@@ -105,6 +107,3 @@ class PipelineReport(BaseModel):
         for subreport in self.subreports:
             subreports += f"\n  {subreport}"
         return f"{header}\n{properties}\n{subreports}"
-    
-    # def __repr__(self):
-    #     return f"PipelineReport(service={self.service}, properties={self.properties}, subreports={self.subreports})"
