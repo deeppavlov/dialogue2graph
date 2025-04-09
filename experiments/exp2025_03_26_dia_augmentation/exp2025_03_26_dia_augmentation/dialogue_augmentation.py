@@ -29,7 +29,7 @@ def augment_dialogue(dialogue, topic, prompt, generation_model, temp=0.7):
         try:
             augmented_dialogue = chain.invoke({"topic": topic, "dialogue": dialogue})
             return augmented_dialogue
-        except Exception:
+        except Exception as e:
             tries += 1
 
     return f"Generation error: {e}"

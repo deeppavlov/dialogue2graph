@@ -1,6 +1,9 @@
 from sentence_transformers import SentenceTransformer
 import numpy as np
 
+def to_set(x):
+    return set(x)
+
 
 def check_no_duplicates_all_dialogues(dialogues):
     all_utterances = []
@@ -8,7 +11,6 @@ def check_no_duplicates_all_dialogues(dialogues):
         utterances = [uttr["text"] for uttr in dia]
         all_utterances.append(utterances)
 
-    to_set = lambda x: set(x)
     sets = map(to_set, all_utterances)
 
     all_common_elements = []

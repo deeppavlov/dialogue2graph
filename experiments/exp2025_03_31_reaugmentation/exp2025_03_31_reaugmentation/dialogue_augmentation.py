@@ -35,7 +35,7 @@ def augment_dialogue(dialogue, topic, prompt, generation_model, temp=0.7):
             length_comparison = is_correct_length_modified(dialogue, augmented_dialogue)
             roles_comparison = match_roles_modified(dialogue, augmented_dialogue)
 
-            if length_comparison == True and roles_comparison == True:
+            if length_comparison and roles_comparison:
                 return augmented_dialogue
             else:
                 tries += 1
