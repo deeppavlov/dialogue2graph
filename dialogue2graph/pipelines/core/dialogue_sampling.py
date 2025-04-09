@@ -1,78 +1,54 @@
-import os
 import itertools
 import logging
 from typing import Literal
 import pandas as pd
-from typing import Optional
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
 from dialogue2graph.metrics.no_llm_metrics import match_dg_triplets, match_dialogue_triplets
 from dialogue2graph.datasets.complex_dialogues.find_cycle_ends import find_cycle_ends
-from langchain_openai import ChatOpenAI
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
+from langchain_core.language_models.chat_models import BaseChatModel
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class _DialoguePathsCounter:
+class _DialogPathsCounter:
     counter: int = 0
 
 
-path_counter = _DialoguePathsCounter()
-
-
-class EnvSettings(BaseSettings, case_sensitive=True):
-    """Pydantic settings to get env variables"""
-
-    model_config = SettingsConfigDict(
-        env_file=os.environ.get("PATH_TO_ENV", ".env"),
-        env_file_encoding="utf-8",
-        env_file_exists_ok=False,  # Makes .env file optional
-    )
-    OPENAI_API_KEY: Optional[str] = None
-    OPENAI_BASE_URL: Optional[str] = None
-    HUGGINGFACE_TOKEN: Optional[str] = None
-    SAMPLING_MAX: Optional[int] = 1000000  # Default value
-    DEVICE: Optional[str] = "cpu"  # Default value
-
-
-# Try to load settings, fall back to defaults if fails
-try:
-    env_settings = EnvSettings()
-except Exception:
-    env_settings = EnvSettings(_env_file=None)  # Initialize without env file
-
+path_counter = _DialogPathsCounter()
 
 class RecursiveDialogueSampler(DialogueGenerator):
-    """Recursive dialogue sampler for the graph"""
+    """Recursive dialog sampler for the graph"""
 
     def invoke(
-        self, graph: BaseGraph, upper_limit: int, model_name: str = "o1-mini", temp=1
+        self, graph: BaseGraph, cycle_ends_model: BaseChatModel, upper_limit: int, sampling_max: int = 1000000,
     ) -> list[Dialogue]:
-        """Finds all the dialogues in the graph
-        upper_limit is used to limit repeats used in graph.get_all_paths method
-        model_name is LLM to find cycling nodes when list of finishing nodes is empty
-        Returns list fo dialogues"""
+        
+        """Extracts all the dialogues from the graph
+        Args:
+          graph: used to extract dialogues from it
+          cycle_ends_model: LLM(BaseChatModel) to find cycling ends of the graph
+          upper_limit: limits from above repeats_limit used in recursive get_dialogues method
+          sampling_max: maximum number of found dialogues
+        Returns:
+          list of dialogues
+        Raises:
+          ValueError: "Not all utterances present" if match_dg_triplets returns False
+        """
 
         # TODO: how to add caching?
         repeats = 1
         cycle_ends = []
-        finished_nodes = graph.get_ends()
-        if not finished_nodes:
+        finish_nodes = graph.get_ends()
+        if not finish_nodes:
             cycle_ends = find_cycle_ends(
                 graph,
-                model=ChatOpenAI(
-                    model=model_name,
-                    api_key=env_settings.OPENAI_API_KEY,
-                    base_url=env_settings.OPENAI_BASE_URL,
-                    temperature=temp,
-                ),
+                cycle_ends_model
             )["value"]
-        finished_nodes = mix_ends(graph, finished_nodes, cycle_ends)
+        finish_nodes = mix_ends(graph, finish_nodes, cycle_ends)
         while repeats <= upper_limit:
-            dialogues = get_dialogues(graph, repeats, finished_nodes)
+            dialogues = get_dialogues(graph, repeats, finish_nodes, sampling_max)
             if dialogues:
                 if match_dg_triplets(graph, dialogues)["value"]:
                     break
@@ -106,8 +82,14 @@ class RecursiveDialogueSampler(DialogueGenerator):
 
 
 def mix_ends(graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]) -> list[int]:
-    """Find ids from cycle_ends_ids from where there are no paths to any node id in end_ids.
-    So adds more ends to ends when necessary and returns altogether"""
+    """Find ids from cycle_ends_ids which do not have paths to any node id from end_ids.
+    Args:
+      graph: graph to work with
+      end_ids: finishing graph node ids
+      cycle_ends_ids: ids of graph nodes looping cycles in the graph
+    Returns:
+      Adds found ids to end_ids and returns as a result
+    """
     end_paths = []
     for c in cycle_ends_ids:
         for e in end_ids:
@@ -117,23 +99,42 @@ def mix_ends(graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]) ->
     return [e for e in cycle_ends_ids if e not in end_paths] + end_ids
 
 
-def get_all_sequences(path: list, last_message: dict, start_idx: int, visited_messages: list):
+def get_all_sequences(
+        path: list[dict],
+        last_message: dict,
+        start_idx: int,
+        visited_messages: list,
+        sampling_max: int
+        ) -> list[list[dict]]:
     """Recursion to find all dialogue suquences in the path of nodes and edges with miltiple utterances
-    which start from element of full_path with start_idx index number
-    visited_messages is path traveled so far
-    last_message is last visited message so far
-    path_counter counts number of sequences
-    If counter is too big, an error raised"""
+    Args:
+      path: dialogue path with multiple utterances
+      start_idx: index in path to start from
+      visited_messages: path traveled so far
+      last_message: last visited message so far
+      sampling_max: maximum number of found sequences
+    Returns:
+      All found sequences
+    Raises:
+      path_counter counts number of sequences
+      If counter exceeds sampling_max, ValueError raised
+    """
 
     visited_messages.append(last_message)
     dialogues = [[]]
 
     if start_idx < len(path):
         for utt in path[start_idx]["text"]:
-            dialogues += get_all_sequences(path, {"participant": path[start_idx]["participant"], "text": utt}, start_idx + 1, visited_messages.copy())
+            dialogues += get_all_sequences(
+                path,
+                {"participant": path[start_idx]["participant"], "text": utt},
+                start_idx + 1,
+                visited_messages.copy(),
+                sampling_max
+                )
     else:
         path_counter.counter += 1
-        if path_counter.counter == env_settings.SAMPLING_MAX:
+        if path_counter.counter == sampling_max:
             raise ValueError("Too many combinations in the graph")
         if path_counter.counter % 10000000 == 0:
             logger.warning("Number of found combinations: ", path_counter.counter)
@@ -141,34 +142,55 @@ def get_all_sequences(path: list, last_message: dict, start_idx: int, visited_me
     return dialogues
 
 
-def get_edges(dialogues: list[list[int]]) -> set[tuple[int]]:
-    """Find all pairs of adjacent nodes in dialogues"""
+def get_edges(node_paths: list[list[int]]) -> set[tuple[int]]:
+    """Find all pairs of adjacent nodes in node_paths
+    Args:
+      node_paths: list of dialog graph paths in a form of node ids
+    Returns:
+      set of adjacent pairs (n1,n2)
+    """
     pairs = []
-    for dialogue in dialogues:
-        for idx, n in enumerate(dialogue[:-1]):
-            pairs.append((n, dialogue[idx + 1]))
+    for node_path in node_paths:
+        for idx, n in enumerate(node_path[:-1]):
+            pairs.append((n, node_path[idx + 1]))
     return set(pairs)
 
 
-def are_edges_in(dialogue: list[int], dialogues: list[list[int]]) -> bool:
-    """Checks whether all the pairs of nodes from dialogue are included in dialogues"""
-    return get_edges([dialogue]).issubset(get_edges(dialogues))
+def are_edges_in(node_path: list[int], node_paths: list[list[int]]) -> bool:
+    """Checks whether all the pairs of nodes from node_path are included in node_paths
+    Args:
+      node_paths: dialog graph path in a form of node ids
+      node_paths: list of dialog graph paths in a form of node ids
+    Returns:
+      True or False
+    """
+    return get_edges([node_path]).issubset(get_edges(node_paths))
 
 
-def remove_duplicates(dialogues: list[list[int]]) -> list[list[int]]:
-    """Remove dialogues with duplicated paths from dialogues"""
-    ds_copy = dialogues.copy()
+def remove_duplicates(node_paths: list[list[int]]) -> list[list[int]]:
+    """Remove duplicating paths from node_paths
+    Args:
+      node_paths: list of dialog graph paths in a form of node ids
+    Returns:
+      List of node paths without duplications
+    """
+    node_paths_copy = node_paths.copy()
     idx = 0
-    for dialogue in dialogues:
-        if are_edges_in(dialogue, ds_copy[:idx] + ds_copy[idx + 1 :]):
-            ds_copy = ds_copy[:idx] + ds_copy[idx + 1 :]
+    for path in node_paths:
+        if are_edges_in(path, node_paths_copy[:idx] + node_paths_copy[idx + 1 :]):
+            node_paths_copy = node_paths_copy[:idx] + node_paths_copy[idx + 1 :]
         else:
             idx += 1
-    return ds_copy
+    return node_paths_copy
 
 
 def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
-    """Find all dialogue doublets with (edge, target) utterances"""
+    """Find all dialogue doublets with (edge, target) utterances
+    Args:
+      seq: sequence of dialogs
+    Returns:
+      Set of (user_utterance, assistant_utterance)
+    """
     res = []
     for dialogue in seq:
         user_texts = [d["text"] for d in dialogue if d["participant"] == "user"]
@@ -180,7 +202,12 @@ def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
 
 
 def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
-    """Find all dialogue triplets with (source, edge, target) utterances"""
+    """Find all dialogue triplets with (source, edge, target) utterances
+    Args:
+      seq: sequence of dialogs
+    Returns:
+      Set of (assistant_utterance, user_utterance, assistant_utterance)
+    """
 
     res = []
     for dialogue in seq:
@@ -200,22 +227,39 @@ def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
 
 
 def remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]:
-    """Removes duplicated dialogues from list of dialogues seq"""
+    """Removes duplicated dialogues from list of dialogs seq
+    Args:
+      seq: sequence of dialogs
+    Returns:
+      List of dialogs without duplications
+    """
     non_empty_seq = [s for s in seq if s]
     if not non_empty_seq:
         return []
-    single_seq = [non_empty_seq[0]]
+    uniq_seq = [non_empty_seq[0]]
     for s in non_empty_seq[1:]:
-        if not get_dialogue_doublets([s]).issubset(get_dialogue_doublets(single_seq)) or not get_dialogue_triplets([s]).issubset(
-            get_dialogue_triplets(single_seq)
+        if not get_dialogue_doublets([s]).issubset(get_dialogue_doublets(uniq_seq)) or not get_dialogue_triplets([s]).issubset(
+            get_dialogue_triplets(uniq_seq)
         ):
-            single_seq.append(s)
-    return single_seq
+            uniq_seq.append(s)
+    return uniq_seq
 
 
-def get_dialogues(graph: BaseGraph, repeats_limit: int, end_nodes_ids: list[int]) -> list[Dialogue]:
+def get_dialogues(
+        graph: BaseGraph,
+        repeats_limit: int,
+        end_nodes_ids: list[int],
+        sampling_max: int
+        ) -> list[Dialogue]:
     """Find all the dialogues in the graph finishing with end_nodes_ids
-    repeats_limit is used for graph.all_paths method to limit set of sampled dialogues"""
+    Args:
+      graph: graph to work with
+      repeats_limit: used for graph.all_paths method to limit set of sampled dialogues
+      end_nodes_ids: ids of nodes finishing dialogs to find
+      sampling_max: maximum number of found sequences
+    Returns:
+      list of dialogs
+    """
 
     node_paths = []
     start_nodes = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
@@ -243,7 +287,7 @@ def get_dialogues(graph: BaseGraph, repeats_limit: int, end_nodes_ids: list[int]
     dialogues = []
     for path in dialogue_paths:
         path_counter.counter = 0
-        single_path = get_all_sequences(path, {}, 0, [])
+        single_path = get_all_sequences(path, {}, 0, [], sampling_max)
         dialogue = [el[1:] for el in single_path if len(el) == len(path) + 1]
         dialogues.extend(dialogue)
     dialogues = list(k for k, _ in itertools.groupby(dialogues))

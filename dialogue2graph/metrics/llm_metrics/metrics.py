@@ -225,7 +225,12 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
     """Helper that compares number of utterances in each pair of edges of two nodes.
     Mapping of edges is defined by max parameter, which is argmax of embeddings of nodes utterances.
     See compare_graphs.
-    Returns True if numbers match, else False.
+
+    Args:
+      G1, G2: graphs to compare
+      max: mapping of edges
+      
+    Returns: True if numbers match, else False.
     """
     nodes_map = {}
     graph1 = G1.graph_dict
@@ -254,14 +259,23 @@ def compare_graphs(
     G2: BaseGraph,
     embedder: str = "BAAI/bge-m3",
     sim_th: float = 0.93,
-    llm_comparer: str = "gpt-4o",
+    llm_comparer: str = "o3-mini",
     formatter: str = "gpt-3.5-turbo",
     device="cuda:0",
 ) -> CompareResponse:
     """
     Compares two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
     LLM formatter is used to keep LLM answer in a required format.
-    Returns dict with True or False value and a description.
+
+    Args:
+      G1, G2: graphs to compare
+      embedder: name of embedding model on HuggingFace
+      sim_th: similarity threshold to use LLM
+      llm_comparer: name of LLM to compare graphs
+      formatter: name of LLm modle to format llm_comparer output
+
+    Returns:
+      dict with True or False value and a description.
     """
 
     g1 = G1.graph_dict

@@ -12,7 +12,7 @@ from dialogue2graph.pipelines.core.schemas import ReasonGraph
 from dialogue2graph import Graph
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.model_storage import ModelStorage
-from .group_nodes import group_nodes
+from dialogue2graph.pipelines.d2g_light.group_nodes import group_nodes
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import add_edge_prompt_1, add_edge_prompt_2
@@ -24,22 +24,22 @@ class LightGraphGenerator(GraphGenerator):
     """Graph generator from list of dialogues. Based on algorithm with embedding similarity usage.
 
     Attributes:
-        model_config: It's a parameter for internal use of Pydantic
         model_storage: Model storage
         filling_llm: Name of LLM for adding missing edges
         formatting_llm: Name of LLM for formatting other LLMs output
         sim_model: HuggingFace name for similarity model
         step2_evals: Evaluation metrics called after stage 2 with connecting nodes by edges
-        end_evals: Evaluation metrics called at the end of generation process")
+        end_evals: Evaluation metrics called at the end of generation process
+        model_config: It's a parameter for internal use of Pydantic
     """
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
     model_storage: ModelStorage = Field(description="Model storage")
     filling_llm: str = Field(description="LLM for adding missing edges")
     formatting_llm: str = Field(description="LLM for formatting output")
     sim_model: str = Field(description="Similarity model")
     step2_evals: list[Callable] = Field(default_factory=list, description="Metrics after stage 2")
     end_evals: list[Callable] = Field(default_factory=list, description="Metrics at the end")
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     def __init__(
         self,
@@ -63,7 +63,11 @@ class LightGraphGenerator(GraphGenerator):
             end_evals=end_evals,
         )
 
-    def invoke(self, pipeline_data: PipelineDataType, enable_evals: bool = False) -> tuple[BaseGraph, metrics.DGReportType]:
+    def invoke(
+            self,
+            pipeline_data: PipelineDataType,
+            enable_evals: bool = False
+            ) -> tuple[BaseGraph, metrics.DGReportType]:
         """Primary method of the three stages generation algorithm:
         1. Algorithmic grouping assistant utterances into nodes: group_nodes.
         2. Algorithmic connecting nodes by edges: connect_nodes.
@@ -74,20 +78,19 @@ class LightGraphGenerator(GraphGenerator):
             data for generation and evaluation:
               dialogs for generation, of List[Dialogue] type
               true_graph for evaluation, of Graph type
+          enable_evals: when true, evaluate method is called
         Returns:
           tuple of resulted graph of Graph type and report dictionary like in example below:
           {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
-        Raises:
-
         """
 
-        nodes, starts, last_user = get_helpers(pipeline_data.dialogs)
+        node_utts, start_utts, user_end = get_helpers(pipeline_data.dialogs)
 
-        groups = group_nodes(pipeline_data.dialogs, nodes)
+        groups = group_nodes(pipeline_data.dialogs, node_utts)
 
         nodes = []
         for idx, group in enumerate(groups):
-            if any([gr in starts for gr in group]):
+            if any([gr in start_utts for gr in group]):
                 start = True
             else:
                 start = False
@@ -102,7 +105,7 @@ class LightGraphGenerator(GraphGenerator):
         else:
             report = {}
 
-        if not last_user:
+        if not user_end:
             return result_graph, report
 
         partial_variables = {}
@@ -137,9 +140,15 @@ class LightGraphGenerator(GraphGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    def evaluate(self, graph, gt_graph, eval_stage: str) -> metrics.DGReportType:
-
+    def evaluate(self, graph, true_graph, eval_stage: str) -> metrics.DGReportType:
+        """Calls metrics and returns report
+        Args:
+          graph: generated graph
+          true_graph: expected graph
+          eval_stage: string defining eval stage, like step2 or end
+        Returns: dictionary with report like {"metric_name": result}
+        """
         report = {}
         for metric in getattr(self, eval_stage + "_evals"):
-            report[metric.__name__ + ":" + eval_stage] = metric(graph, gt_graph)
+            report[metric.__name__ + ":" + eval_stage] = metric(graph, true_graph)
         return report

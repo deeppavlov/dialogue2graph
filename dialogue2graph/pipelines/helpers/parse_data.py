@@ -6,13 +6,12 @@ from pathlib import PosixPath
 import logging
 from pydantic import TypeAdapter, ValidationError
 from dialogue2graph.pipelines.core.dialogue import Dialogue, DialogueMessage
-from dialogue2graph.pipelines.core.algorithms import InputParser
+from dialogue2graph.pipelines.core.algorithms import RawDataParser
 from dialogue2graph.pipelines.core import schemas
 from dialogue2graph.pipelines.core import graph
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-# RawDialogsType = Dialogue | list[Dialogue] | dict | list[list] | list[dict] | str
 RawDialogsType = dict | list[list] | list[dict] | Dialogue | list[Dialogue] | PosixPath
 ValidatedDialogType = List[DialogueMessage] | List[List[DialogueMessage]] | Dialogue | List[Dialogue]
 RawGraphType = schemas.DialogueGraph | dict | PosixPath
@@ -31,9 +30,17 @@ class PipelineDataType(BaseModel):
     true_graph: Optional[graph.Graph] | None = None
 
 
-class RawDGParser(InputParser):
+class RawDGParser(RawDataParser):
+    """Parser of raw user data with dialogues and graphs
+    """
 
     def _validate_raw_graph(self, raw_graph: RawGraphType) -> ValidatedGraphType | PosixPath:
+        """Validates raw graph data
+        Args:
+          raw_graph: graph in a form of either schemas.DialogueGraph or file path
+        Returns: schemas.DialogueGraph or PosixPath when raw_graph is file_path
+                 None when validation error
+        """
         if raw_graph is not None:
             try:
                 graph_validation = TypeAdapter(schemas.DialogueGraph | PosixPath).validate_python(raw_graph)
@@ -45,6 +52,12 @@ class RawDGParser(InputParser):
             return None
 
     def _validate_raw_dialogs(self, raw_dialogs: RawDialogsType) -> ValidatedDialogType | PosixPath:
+        """Validates raw dialogs data
+        Args:
+          raw_dialogs: dialogs in a form of RawDialogsType
+        Returns: ValidatedDialogType or PosixPath when raw_dialogs is file_path
+                 Empty list when validation error
+        """
         try:
             dialog_validation = TypeAdapter(ValidatedDialogType | PosixPath).validate_python(raw_dialogs)
         except ValidationError as e:
@@ -52,7 +65,13 @@ class RawDGParser(InputParser):
             return []
         return dialog_validation
 
-    def _get_dialogues_from_file(self, file_path: PosixPath) -> ValidatedDialogType:
+    def _get_dialogs_from_file(self, file_path: PosixPath) -> ValidatedDialogType:
+        """Extracts dialogs from file_path
+        Args:
+          file_path: file to work with
+        Returns:
+          validated dialogs or empty list if any error
+        """
         if file_path.suffix == ".json":
             try:
                 with open(file_path) as f:
@@ -74,7 +93,14 @@ class RawDGParser(InputParser):
             logger.error("File extension is not json: %s", file_path)
             return []
 
-    def _get_graph_from_file(self, file_path: PosixPath, key_name: str) -> ValidatedGraphType:
+    def _get_graph_from_file(self, file_path: PosixPath, key: str) -> ValidatedGraphType:
+        """Extracts graph from file_path
+        Args:
+          file_path: file to work with
+          key: key to search graph data in a dict from file
+        Returns:
+          validated graph or None if validation unsuccessful
+        """
         if file_path.suffix == ".json":
             try:
                 with open(file_path) as f:
@@ -85,10 +111,10 @@ class RawDGParser(InputParser):
             if not isinstance(raw_graph, dict):
                 logger.error("Data is not dict in json file: %s", file_path)
                 return None
-            if key_name not in raw_graph:
-                logger.error("No %s key in json file: %s", key_name, file_path)
+            if key not in raw_graph:
+                logger.error("No %s key in json file: %s", key, file_path)
                 return None
-            raw_graph = raw_graph[key_name]
+            raw_graph = raw_graph[key]
             if isinstance(raw_graph, list) and raw_graph:
                 raw_graph = raw_graph[0]
             return self._validate_raw_graph(raw_graph)
@@ -97,19 +123,23 @@ class RawDGParser(InputParser):
             return None
 
     def invoke(self, raw_data: PipelineRawDataType) -> PipelineDataType:
-        """Validate and convert user's data into list of Dialogue
-        Input data can be as follows:
-        [{'participant': user or assistant, 'text': text}]
-        {'messages': [{'participant': user or assistant, 'text': text}]}
-        [[{'participant': user or assistant, 'text': text}]]
-        [{'messages': [{'participant': user or assistant, 'text': text}]}]
-        or same in json file presented by file path
-        return list, or empty list when error
+        """Validate and convert user's data into list of Dialogues
+        Args:
+          raw_data: data to parse
+            raw_data.dialogues can be as follows:
+              [{'participant': user or assistant, 'text': text}]
+              {'messages': [{'participant': user or assistant, 'text': text}]}
+              [[{'participant': user or assistant, 'text': text}]]
+              [{'messages': [{'participant': user or assistant, 'text': text}]}]
+              or same in json file presented by file path
+            raw_data.supported_graph and raw_data.true_graph:
+              either schemas.DialogueGraph or file path
+        Returns: PipelineDataType with dialogues and graphs
         """
 
         dialog_validation = self._validate_raw_dialogs(raw_data.dialogs)
         if isinstance(dialog_validation, PosixPath):
-            dialog_validation = self._get_dialogues_from_file(raw_data.dialogs)
+            dialog_validation = self._get_dialogs_from_file(raw_data.dialogs)
 
         if isinstance(dialog_validation, Dialogue):
             dialogues = [dialog_validation]

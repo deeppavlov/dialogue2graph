@@ -34,19 +34,27 @@ class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
-
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
 
 class LLMGraphGenerator(GraphGenerator):
-    """Graph generator based on list of dialogues.
+    """Graph generator from list of dialogues. Based on LLM.
     Three stages:
     1. LLM grouping assistant utterances into nodes.
     2. Algorithmic connecting nodes by edges.
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
+
+    Attributes:
+      model_storage: Model storage
+      grouping_llm: Name of LLM for grouping assistant utterances into nodes
+      filling_llm: Name of LLM for adding missing edges
+      formatting_llm: Name of LLM for formatting other LLMs output
+      sim_model: HuggingFace name for similarity model
+      step2_evals: Evaluation metrics called after stage 2 with connecting nodes by edges
+      end_evals: Evaluation metrics called at the end of generation process
+      model_config: It's a parameter for internal use of Pydantic
     """
 
-    model_config = ConfigDict(arbitrary_types_allowed=True)
     model_storage: ModelStorage = Field(description="Model storage")
     grouping_llm: str = Field(description="LLM for grouping assistant utterances into nodes")
     filling_llm: str = Field(description="LLM for adding missing edges")
@@ -54,6 +62,7 @@ class LLMGraphGenerator(GraphGenerator):
     sim_model: str = Field(description="Similarity model")
     step2_evals: list[Callable] = Field(default_factory=list, description="Metrics after stage 2")
     end_evals: list[Callable] = Field(default_factory=list, description="Metrics at the end")
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
     def __init__(
         self,
@@ -83,7 +92,22 @@ class LLMGraphGenerator(GraphGenerator):
     def invoke(
             self, pipeline_data: PipelineDataType, enable_evals: bool = False
             ) -> tuple[BaseGraph, metrics.DGReportType]:
+        
+        """Primary method of the three stages generation algorithm:
+        1. Grouping assistant utterances into nodes with LLM.
+        2. Algorithmic connecting nodes by edges: connect_nodes.
+        3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
 
+        Args:
+          pipeline_data:
+            data for generation and evaluation:
+              dialogs for generation, of List[Dialogue] type
+              true_graph for evaluation, of Graph type
+          enable_evals: when true, evaluate method is called
+        Returns:
+          tuple of resulted graph of Graph type and report dictionary like in example below:
+          {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
+        """
         partial_variables = {}
         prompt_extra = grouping_prompt_2
         for idx, dial in enumerate(pipeline_data.dialogs):
@@ -108,7 +132,7 @@ class LLMGraphGenerator(GraphGenerator):
         ]
         nodes = chain.invoke(messages).model_dump()
 
-        _, _, last_user = get_helpers(pipeline_data.dialogs)
+        _, _, user_end = get_helpers(pipeline_data.dialogs)
 
         try:
             graph_dict = connect_nodes(
@@ -118,7 +142,7 @@ class LLMGraphGenerator(GraphGenerator):
             )
         except Exception as e:
             print(e)
-            return Graph({})
+            return Graph({}), {}
         graph_dict = {
             "nodes": graph_dict["nodes"],
             "edges": graph_dict["edges"],
@@ -131,7 +155,7 @@ class LLMGraphGenerator(GraphGenerator):
                 report = self.evaluate(result_graph, pipeline_data.true_graph, "step2")
             else:
                 report = {}
-            if not last_user:
+            if not user_end:
                 return result_graph, report
 
             partial_variables = {}
