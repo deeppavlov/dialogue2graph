@@ -25,14 +25,13 @@ def augment_dialogue(dialogue, topic, prompt, generation_model, temp=0.7):
     chain = augmentation_prompt | model | parser
 
     tries = 0
-    while tries < 3:
-        try:
-            augmented_dialogue = chain.invoke({"topic": topic, "dialogue": dialogue})
-            return augmented_dialogue
-        except Exception as e:
-            tries += 1
-
-    return f"Generation error: {e}"
+    try:
+        augmented_dialogue = chain.invoke({"topic": topic, "dialogue": dialogue})
+        return augmented_dialogue
+    except Exception as e:
+        tries += 1
+        if tries == 3:
+            return f"Generation error: {e}"
 
 
 def augment_dialogue_data(data, prompt, generation_model, path_to_save, temp=0.7):
