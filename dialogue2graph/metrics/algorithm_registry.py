@@ -14,7 +14,11 @@ class AlgorithmRegistry:
     def register(cls, name=None, input_type=None, output_type=None):
         def decorator(func):
             algorithm_name = name or func.__name__
-            cls._algorithms[algorithm_name] = {"type": func, "input_type": input_type, "output_type": output_type}
+            cls._algorithms[algorithm_name] = {
+                "type": func,
+                "input_type": input_type,
+                "output_type": output_type,
+            }
             return func
 
         return decorator
@@ -25,4 +29,8 @@ class AlgorithmRegistry:
 
     @classmethod
     def get_by_category(cls, category):
-        return {name: data for name, data in cls._algorithms.items() if data["category"] == category}
+        return {
+            name: data
+            for name, data in cls._algorithms.items()
+            if data["category"] == category
+        }

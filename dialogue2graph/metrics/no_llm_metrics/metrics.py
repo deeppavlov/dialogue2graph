@@ -31,7 +31,9 @@ def _collapse_multiedges(edges):
     return collapsed_edges
 
 
-def _get_jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, return_matrix=False):
+def _get_jaccard_edges(
+    true_graph_edges, generated_graph_edges, verbose=False, return_matrix=False
+):
     """
     Calculates Jaccard similarity between edges of the original graph and the generated graph.
 
@@ -63,7 +65,9 @@ def _get_jaccard_edges(true_graph_edges, generated_graph_edges, verbose=False, r
         for idx2, (k2, v2) in enumerate(generated_graph_edges.items()):
             intersect_set = set(v1).intersection(set(v2))
             union_set = set(v1).union(set(v2))
-            jaccard_values[idx1][idx2] = len(intersect_set) / len(union_set) if len(union_set) > 0 else 0.0
+            jaccard_values[idx1][idx2] = (
+                len(intersect_set) / len(union_set) if len(union_set) > 0 else 0.0
+            )
 
             if verbose:
                 print(k1, v1)
@@ -104,7 +108,9 @@ def _collapse_multinodes(nodes):
     return collapsed_nodes
 
 
-def _get_jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, return_matrix=False):
+def _get_jaccard_nodes(
+    true_graph_nodes, generated_graph_nodes, verbose=False, return_matrix=False
+):
     """
     Calculates Jaccard similarity between nodes of the original graph and the generated graph.
 
@@ -130,7 +136,9 @@ def _get_jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, r
     true_graph_nodes = _collapse_multinodes(list(true_graph_nodes))
     generated_graph_nodes = _collapse_multinodes(list(generated_graph_nodes))
 
-    jaccard_values = np.zeros((len(true_graph_nodes) + 1, len(generated_graph_nodes) + 1))
+    jaccard_values = np.zeros(
+        (len(true_graph_nodes) + 1, len(generated_graph_nodes) + 1)
+    )
     print(true_graph_nodes)
     for node1_id, node1_utterances in true_graph_nodes.items():
         for node2_id, node2_utterances in generated_graph_nodes.items():
@@ -140,7 +148,11 @@ def _get_jaccard_nodes(true_graph_nodes, generated_graph_nodes, verbose=False, r
             jaccard_nominator = node1_utterances.intersection(node2_utterances)
             jaccard_denominator = node1_utterances.union(node2_utterances)
 
-            jaccard_values[node1_id][node2_id] = len(jaccard_nominator) / len(jaccard_denominator) if len(jaccard_denominator) > 0 else 0.0
+            jaccard_values[node1_id][node2_id] = (
+                len(jaccard_nominator) / len(jaccard_denominator)
+                if len(jaccard_denominator) > 0
+                else 0.0
+            )
 
             if verbose:
                 print(node1_utterances)
@@ -199,10 +211,19 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
     node_mapping = {node: None for node in g1.nodes}
     node_mapping.update({node: None for node in g2.nodes})
     if isinstance(g1, nx.DiGraph):
-        GM = nx.isomorphism.DiGraphMatcher(g1, g2, edge_match=lambda x, y: set(x["utterances"]).intersection(set(y["utterances"])) is not None)
+        GM = nx.isomorphism.DiGraphMatcher(
+            g1,
+            g2,
+            edge_match=lambda x, y: set(x["utterances"]).intersection(
+                set(y["utterances"])
+            )
+            is not None,
+        )
         are_isomorphic = GM.is_isomorphic()
     else:
-        GM = nx.isomorphism.MultiDiGraphMatcher(g1, g2, edge_match=_match_edge_for_multigraph)
+        GM = nx.isomorphism.MultiDiGraphMatcher(
+            g1, g2, edge_match=_match_edge_for_multigraph
+        )
         are_isomorphic = GM.is_isomorphic()
     if are_isomorphic:
         print("Graphs are isomorphic")
@@ -214,8 +235,12 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
     edges1 = list(_collapse_multiedges(g1.edges(data=True)).keys())
     edges2 = list(_collapse_multiedges(g2.edges(data=True)).keys())
 
-    _, _, matrix_edges = _get_jaccard_edges(g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True)
-    _, _, matrix_nodes = _get_jaccard_nodes(g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True)
+    _, _, matrix_edges = _get_jaccard_edges(
+        g1.edges(data=True), g2.edges(data=True), verbose=False, return_matrix=True
+    )
+    _, _, matrix_nodes = _get_jaccard_nodes(
+        g1.nodes(data=True), g2.nodes(data=True), verbose=False, return_matrix=True
+    )
 
     for i, edge1 in enumerate(edges1):
         edge_mapping[edge1] = None
@@ -224,9 +249,15 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
             if matrix_edges[i][j] > 0:
                 node1_src, node1_trg = _parse_edge(edge1)
                 node2_src, node2_trg = _parse_edge(edge2)
-                if matrix_nodes[node1_src][node2_src] == 0.0 and matrix_nodes[node1_trg][node2_trg] == 0.0:
+                if (
+                    matrix_nodes[node1_src][node2_src] == 0.0
+                    and matrix_nodes[node1_trg][node2_trg] == 0.0
+                ):
                     continue
-                elif matrix_nodes[node1_src][node2_src] > 0 and matrix_nodes[node1_trg][node2_trg] > 0:
+                elif (
+                    matrix_nodes[node1_src][node2_src] > 0
+                    and matrix_nodes[node1_trg][node2_trg] > 0
+                ):
                     if matrix_edges[i][j] > mapping_jaccard_values[edge1]:
                         mapping_jaccard_values[edge1] = matrix_edges[i][j]
                         edge_mapping[edge1] = edge2
@@ -243,12 +274,18 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
                     if node1_trg_nx == node2_trg_nx:
                         node_mapping[node1_trg + 1] = node2_trg + 1
                     print(
-                        f"""The nodes of edges {edges1[i]} and {edges2[j]} has something in common, but not complete match: Sources: {
-                            node1_src_nx["utterances"]}, {node2_src_nx["utterances"]}"""
+                        f"""The nodes of edges {edges1[i]} and {
+                            edges2[j]
+                        } has something in common, but not complete match: Sources: {
+                            node1_src_nx["utterances"]
+                        }, {node2_src_nx["utterances"]}"""
                     )
                     print(
-                        f"""The nodes of edges {edges1[i]} and {edges2[j]} has something in common, but not complete match: Targets: {
-                            node1_trg_nx["utterances"]}, {node2_trg_nx["utterances"]}"""
+                        f"""The nodes of edges {edges1[i]} and {
+                            edges2[j]
+                        } has something in common, but not complete match: Targets: {
+                            node1_trg_nx["utterances"]
+                        }, {node2_trg_nx["utterances"]}"""
                     )
 
     if G1.node_mapping != {} and change_to_original_ids:
@@ -266,7 +303,9 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
 
         for edge1, edge2 in edge_mapping.items():
             src1, trg1 = edge1.split("->")
-            new_edge_mapping[f"{inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"] = edge2
+            new_edge_mapping[
+                f"{inverse_mapping[int(src1)]}->{inverse_mapping[int(trg1)]}"
+            ] = edge2
         return new_node_mapping, new_edge_mapping
 
     return node_mapping, edge_mapping
@@ -286,9 +325,22 @@ def _get_dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     """Find all dialogue triplets with (source, edge, target) utterances"""
     result = []
     for dialogue in seq:
-        assist_texts = [d.text.lower() for d in dialogue.messages if d.participant == "assistant"]
-        user_texts = [d.text.lower() for d in dialogue.messages if d.participant == "user"]
-        result.extend([(a1, u, a2) for a1, u, a2 in zip(assist_texts[:-1], user_texts[: len(assist_texts) - 1], assist_texts[1:])])
+        assist_texts = [
+            d.text.lower() for d in dialogue.messages if d.participant == "assistant"
+        ]
+        user_texts = [
+            d.text.lower() for d in dialogue.messages if d.participant == "user"
+        ]
+        result.extend(
+            [
+                (a1, u, a2)
+                for a1, u, a2 in zip(
+                    assist_texts[:-1],
+                    user_texts[: len(assist_texts) - 1],
+                    assist_texts[1:],
+                )
+            ]
+        )
     return set(result)
 
 
@@ -302,7 +354,9 @@ def _get_graph_triplets(G: BaseGraph):
         for edge in [e for e in edges if e["source"] == node["id"]]:
             for utt in edge["utterances"]:
                 for utt1 in node["utterances"]:
-                    for utt2 in [n for n in nodes if n["id"] == edge["target"]][0]["utterances"]:
+                    for utt2 in [n for n in nodes if n["id"] == edge["target"]][0][
+                        "utterances"
+                    ]:
                         result.append((utt1.lower(), utt.lower(), utt2.lower()))
     return set(result)
 
@@ -348,13 +402,17 @@ def match_triplets_dg(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
         return {
             "value": False,
             "description": "Triplets missing in dialogues",
-            "absent_triplets": [AbsentTriplet.from_tuple(triplet) for triplet in dialogue_absent],
+            "absent_triplets": [
+                AbsentTriplet.from_tuple(triplet) for triplet in dialogue_absent
+            ],
         }
     else:
         return {
             "value": False,
             "description": "Triplets missing in graph",
-            "absent_triplets": [AbsentTriplet.from_tuple(triplet) for triplet in graph_absent],
+            "absent_triplets": [
+                AbsentTriplet.from_tuple(triplet) for triplet in graph_absent
+            ],
         }
 
 
@@ -431,7 +489,9 @@ class DialogueValidationResult(TypedDict):
     invalid_transitions: Optional[List[InvalidDialogueTransition]]
 
 
-def are_paths_valid(G: BaseGraph, dialogues: list[Dialogue]) -> DialogueValidationResult:
+def are_paths_valid(
+    G: BaseGraph, dialogues: list[Dialogue]
+) -> DialogueValidationResult:
     """
     Check if all dialogues are valid paths in the graph.
 
@@ -520,7 +580,9 @@ def all_utterances_present(G: BaseGraph, dialogues: List[Dialogue]):
         return graph_utterances.difference(dialogue_utterances)
 
 
-def triplet_match_accuracy(G1: BaseGraph, G2: BaseGraph, change_to_original_ids: bool = False) -> dict:
+def triplet_match_accuracy(
+    G1: BaseGraph, G2: BaseGraph, change_to_original_ids: bool = False
+) -> dict:
     """
     Calculates a simple accuracy metric for node and edge matching based on 'match_graph_triplets'.
 
@@ -530,7 +592,9 @@ def triplet_match_accuracy(G1: BaseGraph, G2: BaseGraph, change_to_original_ids:
             "edge_accuracy": fraction_of_matched_edges_in_G1
         }
     """
-    node_mapping, edge_mapping = match_graph_triplets(G1, G2, change_to_original_ids=change_to_original_ids)
+    node_mapping, edge_mapping = match_graph_triplets(
+        G1, G2, change_to_original_ids=change_to_original_ids
+    )
 
     # Count matching nodes
     g1_nodes = set(G1.graph.nodes())
@@ -540,7 +604,9 @@ def triplet_match_accuracy(G1: BaseGraph, G2: BaseGraph, change_to_original_ids:
 
     # Count matching edges
     g1_edges = list(G1.graph.edges())
-    matched_edges = sum(1 for edge_str in edge_mapping if edge_mapping[edge_str] is not None)
+    matched_edges = sum(
+        1 for edge_str in edge_mapping if edge_mapping[edge_str] is not None
+    )
     total_edges = len(g1_edges)
     edge_accuracy = matched_edges / total_edges if total_edges > 0 else 0.0
 
@@ -596,7 +662,9 @@ def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
 
     average_edges_amount = total_edges / total_graphs if total_graphs > 0 else 0.0
     average_nodes_amount = total_nodes / total_graphs if total_graphs > 0 else 0.0
-    percentage_with_cycles = (with_cycles / total_graphs * 100) if total_graphs > 0 else 0.0
+    percentage_with_cycles = (
+        (with_cycles / total_graphs * 100) if total_graphs > 0 else 0.0
+    )
 
     return {
         "with_cycles": with_cycles,

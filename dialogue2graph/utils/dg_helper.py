@@ -6,7 +6,9 @@ from dialogue2graph.metrics.similarity import compare_strings
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
-def connect_nodes(nodes: list, dialogues: list[Dialogue], utt_sim: HuggingFaceEmbeddings) -> dict:
+def connect_nodes(
+    nodes: list, dialogues: list[Dialogue], utt_sim: HuggingFaceEmbeddings
+) -> dict:
     """Connecting dialogue graph nodes with edges via searching dialogue utterances in list of nodes based on utt_sim similarity model
     Input: nodes and list of dialogues
     """
@@ -21,14 +23,43 @@ def connect_nodes(nodes: list, dialogues: list[Dialogue], utt_sim: HuggingFaceEm
                 if ids:
                     for id, s in zip(ids, store.get_user(ids=ids)):
                         if len(texts) > 2 * (int(id) + 1):
-                            target = node_store.find_node(texts[2 * (int(id) + 1)]["text"])
-                            existing = [e for e in edges if e["source"] == n["id"] and e["target"] == target]
+                            target = node_store.find_node(
+                                texts[2 * (int(id) + 1)]["text"]
+                            )
+                            existing = [
+                                e
+                                for e in edges
+                                if e["source"] == n["id"] and e["target"] == target
+                            ]
                             if existing:
-                                if not any([compare_strings(e, s, utt_sim) for e in existing[0]["utterances"]]):
-                                    edges = [e for e in edges if e["source"] != n["id"] or e["target"] != target]
-                                    edges.append({"source": n["id"], "target": target, "utterances": existing[0]["utterances"] + [s]})
+                                if not any(
+                                    [
+                                        compare_strings(e, s, utt_sim)
+                                        for e in existing[0]["utterances"]
+                                    ]
+                                ):
+                                    edges = [
+                                        e
+                                        for e in edges
+                                        if e["source"] != n["id"]
+                                        or e["target"] != target
+                                    ]
+                                    edges.append(
+                                        {
+                                            "source": n["id"],
+                                            "target": target,
+                                            "utterances": existing[0]["utterances"]
+                                            + [s],
+                                        }
+                                    )
                             else:
-                                edges.append({"source": n["id"], "target": target, "utterances": [s]})
+                                edges.append(
+                                    {
+                                        "source": n["id"],
+                                        "target": target,
+                                        "utterances": [s],
+                                    }
+                                )
     return {"edges": edges, "nodes": nodes}
 
 

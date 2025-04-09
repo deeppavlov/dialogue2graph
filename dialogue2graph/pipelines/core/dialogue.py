@@ -24,9 +24,13 @@ class Dialogue(BaseModel):
     """
 
     messages: List[DialogueMessage] = Field(default_factory=list)
-    id: str = Field(default=str(uuid.uuid1()), description="Unique identifier for the dialogue")
+    id: str = Field(
+        default=str(uuid.uuid1()), description="Unique identifier for the dialogue"
+    )
     topic: str = ""
-    validate: bool = Field(default=True, description="Whether to validate messages upon initialization")
+    validate: bool = Field(
+        default=True, description="Whether to validate messages upon initialization"
+    )
 
     model_config = ConfigDict(
         arbitrary_types_allowed=True,
@@ -49,12 +53,15 @@ class Dialogue(BaseModel):
             Dialogue object with parsed messages
         """
         messages: List[DialogueMessage] = [
-            DialogueMessage(participant=line.split("\t")[0], text=line.split("\t")[1]) for line in string.strip().split("\n")
+            DialogueMessage(participant=line.split("\t")[0], text=line.split("\t")[1])
+            for line in string.strip().split("\n")
         ]
         return cls(messages=messages)
 
     @classmethod
-    def from_list(cls, messages: List[Dict[str, str]], id: str = "", validate: bool = True) -> "Dialogue":
+    def from_list(
+        cls, messages: List[Dict[str, str]], id: str = "", validate: bool = True
+    ) -> "Dialogue":
         """Create a Dialogue from a list of dictionaries."""
         dialogue_messages = [DialogueMessage(**m) for m in messages]
         return cls(messages=dialogue_messages, id=id, validate=validate)
@@ -65,13 +72,32 @@ class Dialogue(BaseModel):
         nodes_attributes = nx.get_node_attributes(graph.graph, "utterances")
         edges_attributes = nx.get_edge_attributes(graph.graph, "utterances")
         for node in range(len(node_list)):
-            utts.append({"participant": "assistant", "text": nodes_attributes[node_list[node]][0]})
+            utts.append(
+                {
+                    "participant": "assistant",
+                    "text": nodes_attributes[node_list[node]][0],
+                }
+            )
             if node == len(node_list) - 1:
                 if graph.graph.has_edge(node_list[node], node_list[0]):
-                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[0])][0]})
+                    utts.append(
+                        {
+                            "participant": "user",
+                            "text": edges_attributes[(node_list[node], node_list[0])][
+                                0
+                            ],
+                        }
+                    )
             else:
                 if graph.graph.has_edge(node_list[node], node_list[node + 1]):
-                    utts.append({"participant": "user", "text": edges_attributes[(node_list[node], node_list[node + 1])][0]})
+                    utts.append(
+                        {
+                            "participant": "user",
+                            "text": edges_attributes[
+                                (node_list[node], node_list[node + 1])
+                            ][0],
+                        }
+                    )
 
         return cls(messages=utts, validate=validate)
 
@@ -81,7 +107,9 @@ class Dialogue(BaseModel):
 
     def __str__(self) -> str:
         """Returns a readable string representation of the dialogue."""
-        return "\n".join(f"{msg.participant}: {msg.text}" for msg in self.messages).strip()
+        return "\n".join(
+            f"{msg.participant}: {msg.text}" for msg in self.messages
+        ).strip()
 
     def append(self, text: str, participant: str) -> None:
         """Adds a new message to the dialogue.
@@ -98,7 +126,10 @@ class Dialogue(BaseModel):
         Args:
             messages: List of DialogueMessage objects or dicts to add
         """
-        new_messages = [msg if isinstance(msg, DialogueMessage) else DialogueMessage(**msg) for msg in messages]
+        new_messages = [
+            msg if isinstance(msg, DialogueMessage) else DialogueMessage(**msg)
+            for msg in messages
+        ]
         self.__validate(new_messages)
         self.messages.extend(new_messages)
 
@@ -109,9 +140,13 @@ class Dialogue(BaseModel):
 
         # Check if first message is from assistant
         if messages[0].participant != "assistant":
-            raise ValueError(f"First message must be from assistant, got: {messages[0]}")
+            raise ValueError(
+                f"First message must be from assistant, got: {messages[0]}"
+            )
 
         # Check for consecutive messages from same participant
         for i in range(len(messages) - 1):
             if messages[i].participant == messages[i + 1].participant:
-                raise ValueError(f"Cannot have consecutive messages from the same participant. Messages: {messages[i]}, {messages[i + 1]}")
+                raise ValueError(
+                    f"Cannot have consecutive messages from the same participant. Messages: {messages[i]}, {messages[i + 1]}"
+                )
