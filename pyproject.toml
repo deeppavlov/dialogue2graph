@@ -23,18 +23,23 @@ psycopg2-binary = "^2.9.10"
 scipy = "^1.15.2"
 sentence-transformers = "^3.4.1"
 datasets = "*"
+click = "^8.1.8"
+pyyaml = "^6.0.2"
+langchain-chroma = "^0.2.2"
+langchain-huggingface = "^0.1.2"
+accelerate = "^1.6.0"
 
 [tool.poetry.group.docs]
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-sphinx = "*"
+sphinx = "^8.1.3"
 nbsphinx = "*"
 sphinx-favicon = "*"
 sphinx-gallery = "*"
-sphinx-copybutton = "*"
+sphinx-copybutton = "^0.5.2"
 sphinxcontrib-katex = "*"
-pydata-sphinx-theme = "*"
+pydata-sphinx-theme = "^0.16.1"
 sphinxcontrib-apidoc = "*"
 sphinxcontrib-httpdomain = "*"
 sphinx-autodoc-typehints = "*"
@@ -50,14 +55,12 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
+
 [tool.poetry.group.lint]
 optional = true
 
 [tool.poetry.group.lint.dependencies]
-flake8 = "*"
-isort = "*"
-black = "*"
-mypy = "*"
+ruff = "*"
 
 
 [tool.poetry.group.tests]
@@ -65,14 +68,18 @@ optional = true
 
 [tool.poetry.group.tests.dependencies]
 pytest = "*"
+pytest-cov = "*"
+coverage = { version = "!=7.3.3,!=7.6.6", extras = ["toml"] }
+
 
 [tool.poe]
 default_task_type = "script"
 
 [tool.poe.tasks]
-flake = "scripts.codestyle:_run_flake"
-black = "scripts.codestyle:_run_black(modify=False)"
-format = "scripts.codestyle:_run_black(modify=True)"
-test = "scripts.test:_test"
-metrics = "scripts.metrics:_run_check"
-lint.sequence = ["flake", "black"]
+test = "scripts.test:quick_test"
+coverage = "scripts.test:coverage"
+lint = "scripts.codestyle:_check"
+format = "scripts.codestyle:_format"
+
+[tool.poetry.scripts]
+dialogue2graph = "dialogue2graph.cli.main:cli"

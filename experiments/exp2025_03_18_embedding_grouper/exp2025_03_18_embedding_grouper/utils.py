@@ -12,7 +12,10 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 env_settings = EnvSettings()
 # evaluator = HuggingFaceCrossEncoder(model_name=env_settings.RERANKER_MODEL, model_kwargs={"device": env_settings.EMBEDDER_DEVICE})
 
-def call_llm_api(query: str, llm, client=None, temp: float = 0.05, langchain_model=True) -> str | None:
+
+def call_llm_api(
+    query: str, llm, client=None, temp: float = 0.05, langchain_model=True
+) -> str | None:
     tries = 0
     while tries < 3:
         try:
@@ -30,7 +33,9 @@ def call_llm_api(query: str, llm, client=None, temp: float = 0.05, langchain_mod
                     temperature=temp,
                     n=1,
                     max_tokens=3000,  # максимальное число ВЫХОДНЫХ токенов. Для большинства моделей не должно превышать 4096
-                    extra_headers={"X-Title": "My App"},  # опционально - передача информация об источнике API-вызова
+                    extra_headers={
+                        "X-Title": "My App"
+                    },  # опционально - передача информация об источнике API-вызова
                 )
                 return response_big.choices[0].message.content
 
@@ -41,8 +46,10 @@ def call_llm_api(query: str, llm, client=None, temp: float = 0.05, langchain_mod
     return None
 
 
-def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceEmbeddings):
-    """  Connecting nodes with edges for searching dialogue utterances in list of nodes based on embedding similarity
+def nodes2graph(
+    nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceEmbeddings
+):
+    """Connecting nodes with edges for searching dialogue utterances in list of nodes based on embedding similarity
     Input: nodes and list of dialogues
     """
     edges = []
@@ -54,33 +61,62 @@ def nodes2graph(nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceE
         store = DialogueStore(texts, embeddings)
         for n in nodes:
             # print("NODE: ", n)
-            for u in n['utterances']:
+            for u in n["utterances"]:
                 # print("UTT: ", u)
                 ids = store.search_assistant(u)
                 # print("IDS: ", ids)
                 if ids:
-                    for id,s in zip(ids, store.get_user(ids=ids)):
+                    for id, s in zip(ids, store.get_user(ids=ids)):
                         # print("USER: ", s)
-                        if len(texts) > 2*(int(id)+1):
-                            target = node_store.find_node(texts[2*(int(id)+1)]['text'])
+                        if len(texts) > 2 * (int(id) + 1):
+                            target = node_store.find_node(
+                                texts[2 * (int(id) + 1)]["text"]
+                            )
                             # print("find_node: ", "target: ", target, texts[2*(int(id)+1)]['text'], n['id'], id, s)
-                            existing = [e for e in edges if e['source']==n['id'] and e['target']==target]
+                            existing = [
+                                e
+                                for e in edges
+                                if e["source"] == n["id"] and e["target"] == target
+                            ]
                             if existing:
                                 # print("EXISTING: ", existing[0]['utterances'])
-                                if not any([compare_strings(e,s,embeddings) for e in existing[0]['utterances']]):
-                                    edges = [e for e in edges if e['source']!=n['id'] or e['target']!=target]
-                                    edges.append({'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
+                                if not any(
+                                    [
+                                        compare_strings(e, s, embeddings)
+                                        for e in existing[0]["utterances"]
+                                    ]
+                                ):
+                                    edges = [
+                                        e
+                                        for e in edges
+                                        if e["source"] != n["id"]
+                                        or e["target"] != target
+                                    ]
+                                    edges.append(
+                                        {
+                                            "source": n["id"],
+                                            "target": target,
+                                            "utterances": existing[0]["utterances"]
+                                            + [s],
+                                        }
+                                    )
                                     # print("EXIST: ", {'source': n['id'], 'target':target, 'utterances': existing[0]['utterances']+[s]})
                                 # else:
-                                    # print("NOOO")
+                                # print("NOOO")
                             else:
-                                edges.append({'source': n['id'], 'target':target, 'utterances': [s]})
+                                edges.append(
+                                    {
+                                        "source": n["id"],
+                                        "target": target,
+                                        "utterances": [s],
+                                    }
+                                )
                                 # print("ADDED: ", {'source': n['id'], 'target':target, 'utterances': [s]})
     return {"edges": edges, "nodes": nodes}
 
 
 def dialogues2list(dialogues: list[Dialogue]):
-    """ Helper pre-pocessing list of dialogues for grouping.
+    """Helper pre-pocessing list of dialogues for grouping.
     Returns:
     nodes - list of assistant utterances
     nexts - list of following user's utterances
@@ -88,7 +124,7 @@ def dialogues2list(dialogues: list[Dialogue]):
     neigbhours - dictionary of adjacent assistants utterances
     last_user - sign of that dialogue finishes with user's utterance
     """
-    
+
     nodes = []
     nexts = []
     starts = []
@@ -97,30 +133,30 @@ def dialogues2list(dialogues: list[Dialogue]):
     for d in dialogues:
         start = 1
         texts = d.to_list()
-        for idx,t in enumerate(texts):
-            cur = t['text']
-            next = ''
-            if t['participant'] == 'assistant':
+        for idx, t in enumerate(texts):
+            cur = t["text"]
+            next = ""
+            if t["participant"] == "assistant":
                 if start:
-                    starts.append(t['text'])
+                    starts.append(t["text"])
                     start = 0
                 neigh_nodes = []
                 if idx > 1:
-                    neigh_nodes.append(texts[idx-2]['text'])
+                    neigh_nodes.append(texts[idx - 2]["text"])
                 if idx < len(texts) - 2:
-                    neigh_nodes.append(texts[idx+2]['text'])
+                    neigh_nodes.append(texts[idx + 2]["text"])
                 if cur in neighbours:
                     neighbours[cur] = neighbours[cur].union(set(neigh_nodes))
                 else:
                     neighbours[cur] = set(neigh_nodes)
-                if idx < len(texts)-1:
-                    next = texts[idx+1]['text']
+                if idx < len(texts) - 1:
+                    next = texts[idx + 1]["text"]
                 if cur in nodes:
                     if next and next not in nexts[nodes.index(cur)]:
                         nexts[nodes.index(cur)].append(next)
                 else:
                     nexts.append([next])
-                    nodes.append(t['text'])
-        if t['participant'] == 'user':
+                    nodes.append(t["text"])
+        if t["participant"] == "user":
             last_user = True
     return nexts, nodes, list(set(starts)), neighbours, last_user

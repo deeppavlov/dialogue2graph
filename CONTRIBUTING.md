@@ -1,6 +1,6 @@
-# Contributing to chatsky-llm-integration
+# Contributing to Dialogue2Graph
 
-Thank you for your interest in contributing to the chatsky-llm-integration project! We welcome contributions from the community to help improve and expand Chatsky LLM-Autoconfig tool.
+Thank you for your interest in contributing to the Dialogue2Graph project! We welcome contributions from the community to help improve and expand Dialogue2Graph tool.
 
 ## Getting Started
 
@@ -33,7 +33,7 @@ poetry update
 
 ## How to Contribute
 
-1. Experiment with the graphs (see the following section for a detail) or add new features to Chatsky LLM-Autoconfig tool
+1. Experiment with the graphs (see the following section for a detail) or add new features to Dialogue2Graph tool
 
 2. Check linting and try to reformat your code running
 
@@ -45,6 +45,7 @@ poetry update
 3. Create a pull request
 
 **Tips:**
+
 - choose a proper name for your pull request,
 - add clear description of new features and fixes
 

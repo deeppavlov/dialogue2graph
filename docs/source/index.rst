@@ -1,12 +1,12 @@
-.. Chatsky LLM-Autoconfig master file, created by
+.. Dialogue2Graph master file, created by
    sphinx-quickstart on Tue Oct  8 17:01:38 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Chatsky LLM-Autoconfiguration Documentation
+Dialogue2Graph Documentation
 ===========================================
 
-**Chatsky LLM-Autoconfiguration** project extends the `Chatsky project <https://github.com/deeppavlov/chatsky>`_ by enhancing `chatsky flows` and `scripts` creation 
+**Dialogue2Graph** project extends the `Chatsky project <https://github.com/deeppavlov/chatsky>`_ by enhancing `chatsky flows` and `scripts` creation 
 with the help of Large Language Models (LLMs). This project is based on the dialogue2graph approach which helps to transform conversational data into structured, 
 graph-based representations.
 
@@ -26,13 +26,13 @@ The ``Research`` section contains an overview of conducted research on dialogue2
 This section contains a series of usage examples, including graph generation and visualisation.
 
 :doc:`API Reference <reference/modules>`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The API reference contains documentation for classes and abstractions used in the library which can be used to determine the exact 
 typing and behavior of all the functions involved.
 
 :doc:`Development <development>`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``Development`` section shows the library's current development status and specifies the contribution rules.
 
