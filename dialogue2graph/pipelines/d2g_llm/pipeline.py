@@ -8,7 +8,6 @@ from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
 
 load_dotenv()
 
-
 class Pipeline(BasePipeline):
     """LLM graph generator pipeline"""
 

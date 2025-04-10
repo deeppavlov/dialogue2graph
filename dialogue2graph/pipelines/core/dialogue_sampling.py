@@ -16,8 +16,6 @@ class _DialogPathsCounter:
     counter: int = 0
 
 
-path_counter = _DialogPathsCounter()
-
 class RecursiveDialogueSampler(DialogueGenerator):
     """Recursive dialog sampler for the graph"""
 
@@ -48,7 +46,10 @@ class RecursiveDialogueSampler(DialogueGenerator):
             )["value"]
         finish_nodes = mix_ends(graph, finish_nodes, cycle_ends)
         while repeats <= upper_limit:
-            dialogues = get_dialogues(graph, repeats, finish_nodes, sampling_max)
+            try:
+                dialogues = get_dialogues(graph, repeats, finish_nodes, sampling_max, _DialogPathsCounter())
+            except ValueError:
+                dialogues = []
             if dialogues:
                 if match_dg_triplets(graph, dialogues)["value"]:
                     break
@@ -104,7 +105,8 @@ def get_all_sequences(
         last_message: dict,
         start_idx: int,
         visited_messages: list,
-        sampling_max: int
+        sampling_max: int,
+        path_counter: _DialogPathsCounter
         ) -> list[list[dict]]:
     """Recursion to find all dialogue suquences in the path of nodes and edges with miltiple utterances
     Args:
@@ -130,58 +132,34 @@ def get_all_sequences(
                 {"participant": path[start_idx]["participant"], "text": utt},
                 start_idx + 1,
                 visited_messages.copy(),
-                sampling_max
+                sampling_max,
+                path_counter
                 )
     else:
         path_counter.counter += 1
         if path_counter.counter == sampling_max:
-            raise ValueError("Too many combinations in the graph")
+            raise ValueError("Sampling Max exceeded")
         if path_counter.counter % 10000000 == 0:
             logger.warning("Number of found combinations: ", path_counter.counter)
     dialogues.append(visited_messages)
     return dialogues
 
 
-def get_edges(node_paths: list[list[int]]) -> set[tuple[int]]:
-    """Find all pairs of adjacent nodes in node_paths
-    Args:
-      node_paths: list of dialog graph paths in a form of node ids
-    Returns:
-      set of adjacent pairs (n1,n2)
-    """
-    pairs = []
-    for node_path in node_paths:
-        for idx, n in enumerate(node_path[:-1]):
-            pairs.append((n, node_path[idx + 1]))
-    return set(pairs)
-
-
-def are_edges_in(node_path: list[int], node_paths: list[list[int]]) -> bool:
-    """Checks whether all the pairs of nodes from node_path are included in node_paths
-    Args:
-      node_paths: dialog graph path in a form of node ids
-      node_paths: list of dialog graph paths in a form of node ids
-    Returns:
-      True or False
-    """
-    return get_edges([node_path]).issubset(get_edges(node_paths))
-
-
-def remove_duplicates(node_paths: list[list[int]]) -> list[list[int]]:
+def remove_duplicated_paths(node_paths: list[list[int]]) -> list[list[int]]:
     """Remove duplicating paths from node_paths
     Args:
       node_paths: list of dialog graph paths in a form of node ids
     Returns:
       List of node paths without duplications
     """
-    node_paths_copy = node_paths.copy()
-    idx = 0
+    edges = set()
+    res = []
     for path in node_paths:
-        if are_edges_in(path, node_paths_copy[:idx] + node_paths_copy[idx + 1 :]):
-            node_paths_copy = node_paths_copy[:idx] + node_paths_copy[idx + 1 :]
-        else:
-            idx += 1
-    return node_paths_copy
+        path_edges = set((path[i], path[i + 1]) for i in range(len(path) - 1))
+        if not path_edges.issubset(edges):
+            edges.update(path_edges)
+            res.append(path)
+    return res
 
 
 def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
@@ -249,7 +227,8 @@ def get_dialogues(
         graph: BaseGraph,
         repeats_limit: int,
         end_nodes_ids: list[int],
-        sampling_max: int
+        sampling_max: int,
+        path_counter: _DialogPathsCounter
         ) -> list[Dialogue]:
     """Find all the dialogues in the graph finishing with end_nodes_ids
     Args:
@@ -271,8 +250,8 @@ def get_dialogues(
 
     node_paths = [f for f in node_paths if f[-1] in end_nodes_ids]
     if not graph.check_edges(node_paths):
-        return False
-    node_paths = remove_duplicates(node_paths)
+        return []
+    node_paths = remove_duplicated_paths(node_paths)
     dialogue_paths = []
     for path in node_paths:
         dialogue = []
@@ -287,7 +266,7 @@ def get_dialogues(
     dialogues = []
     for path in dialogue_paths:
         path_counter.counter = 0
-        single_path = get_all_sequences(path, {}, 0, [], sampling_max)
+        single_path = get_all_sequences(path, {}, 0, [], sampling_max, path_counter)
         dialogue = [el[1:] for el in single_path if len(el) == len(path) + 1]
         dialogues.extend(dialogue)
     dialogues = list(k for k, _ in itertools.groupby(dialogues))

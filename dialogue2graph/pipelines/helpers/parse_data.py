@@ -20,8 +20,8 @@ ValidatedGraphType = schemas.DialogueGraph | None
 
 class PipelineRawDataType(BaseModel):
     dialogs: RawDialogsType
-    supported_graph: Optional[schemas.DialogueGraph] | None = None
-    true_graph: Optional[schemas.DialogueGraph] | None = None
+    supported_graph: Optional[RawGraphType] | None = None
+    true_graph: Optional[RawGraphType] | None = None
 
 
 class PipelineDataType(BaseModel):

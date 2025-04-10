@@ -109,7 +109,7 @@ class ModelStorage(BaseModel):
                 
                 for key, config in loaded_storage.items():
                     self.add(
-                        key=key, config=config, model_type=config.pop("model_type")
+                        key=key, config=config.pop("config"), model_type=config.pop("model_type")
                     )
                     logger.debug(f"Loaded model configuration for '{key}'")
             logger.info(f"Successfully loaded {len(loaded_storage)} models from {path}")
