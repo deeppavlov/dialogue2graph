@@ -529,12 +529,37 @@ def match_roles(D1: Dialogue, D2: Dialogue) -> bool:
     return True
 
 
+def match_roles_multi_utterance(D1: dict, D2: dict) -> bool:
+    """
+    Checks if two dialogues have identical participant roles in each turn.
+    Returns True if they match in every turn, otherwise False.
+
+    The metric differs from "match_roles" metric in that it is applicable to augmented dialogues, 
+    in which the "text" key in each message contains a list of augmented phrases.
+    """
+    for phrase_1, phrase_2 in zip(D1['messages'], D2['messages']):
+        if phrase_1["participant"] != phrase_2["participant"]:
+            return False
+    return True
+
+
 def is_correct_length(D1: Dialogue, D2: Dialogue) -> bool:
     """
     Checks if two dialogues have the same number of messages.
     Returns True if lengths are equal, False otherwise.
     """
     return len(D1.messages) == len(D2.messages)
+
+
+def is_correct_length_multi_utterance(D1: dict, D2: dict) -> bool:
+    """
+    Checks if two dialogues have the same number of messages.
+    Returns True if lengths are equal, False otherwise.
+
+    The metric differs from "is_correct_length" metric in that it is applicable to augmented dialogues, 
+    in which the "text" key in each message contains a list of augmented phrases.
+    """
+    return len(D1['messages']) == len(D2['messages'])
 
 
 def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> bool:
