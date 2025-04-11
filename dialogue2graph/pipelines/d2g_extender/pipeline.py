@@ -7,7 +7,7 @@ from dialogue2graph.pipelines.d2g_extender.three_stages_extender import LLMGraph
 load_dotenv()
 
 
-class Pipeline(BasePipeline):
+class D2GExtenderPipeline(BasePipeline):
     """LLM graph extender pipeline"""
 
     def __init__(

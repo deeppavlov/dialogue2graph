@@ -92,17 +92,13 @@ class Graph(BaseGraph):
         has all the edges of the graph
         """
         graph_dict = self.graph_dict
-        edge_seq = {(e["source"], e["target"]) for e in graph_dict["edges"]}
-        left = edge_seq.copy()
-        for pair in edge_seq:
-            for s in seq:
-                if self._is_seq_in(list(pair), s):
-                    left -= set([pair])
-                    if len(left) == 0:
-                        return True
-        if len(left):
-            return False
-        return True
+        edge_set = set((e["source"], e["target"]) for e in graph_dict["edges"])
+        seen = set()
+        for pair in seq:
+            for s, t in zip(pair, pair[1:]):
+                if (s, t) in edge_set:
+                    seen.add((s, t))
+        return seen == edge_set
 
     def load_graph(self):
         self.graph = nx.DiGraph()
@@ -237,24 +233,15 @@ class Graph(BaseGraph):
         """
         graph = self.graph_dict
 
-        for n in graph["nodes"]:
-            if not n["utterances"]:
-                return False
-            src = [e for e in graph["edges"] if e["source"] == n]
-            tgt = [e for e in graph["edges"] if e["target"] == n]
-            if len(src) == 1 and src == tgt:
-                return False
+        nodes_set = set(n["id"] for n in graph["nodes"])
+        edges_set = set()
         for e in graph["edges"]:
             if not e["utterances"]:
                 return False
+            edges_set.add(e["source"])
+            edges_set.add(e["target"])
 
-        node_ids = set([n["id"] for n in graph["nodes"]])
-        node_non_starts = set([n["id"] for n in graph["nodes"] if not n["is_start"]])
-        edge_targets = set([e["target"] for e in graph["edges"]])
-        edge_sources = set([e["source"] for e in graph["edges"]])
-        return node_ids == edge_targets.union(
-            edge_sources
-        ) and node_non_starts.issubset(edge_targets)
+        return nodes_set == edges_set
 
     def remove_duplicated_edges(self) -> BaseGraph:
         graph = self.graph_dict
@@ -325,19 +312,25 @@ class Graph(BaseGraph):
         Returns: list of found paths
         """
 
-        visited_paths = [[]]
-        if len(visited_nodes) < repeats_limit or not self._is_seq_in(
+        if len(visited_nodes) >= repeats_limit and self._is_seq_in(
             visited_nodes[-repeats_limit:] + [start_node_id],
             visited_nodes
             ):
-            visited_nodes.append(start_node_id)
-            for edge in self.get_edges_by_source(start_node_id):
-                visited_paths += self.get_all_paths(
+            return []
+
+        visited_nodes.append(start_node_id)
+        visited_paths = [visited_nodes.copy()]
+
+        for edge in self.get_edges_by_source(start_node_id):
+            visited_paths.extend(
+                self.get_all_paths(
                     edge["target"],
-                    visited_nodes.copy(),
+                    visited_nodes,
                     repeats_limit
-                    )
-        visited_paths.append(visited_nodes)
+                )
+            )
+
+        visited_nodes.pop()
         return visited_paths
 
     def find_paths(
@@ -414,14 +407,10 @@ class Graph(BaseGraph):
         n_edges = 0
 
         for node in graph["nodes"]:
-            edges = self.get_edges_by_source(node["id"])
-            utts = ""
-            for node_utt in node["utterances"]:
-                utts += node_utt + " "
-            for edge in edges:
-                for edge_utt in edge["utterances"]:
-                    utts += edge_utt + " "
-                    n_edges += 1
+            utts = " ".join(node["utterances"])
+            for edge in self.get_edges_by_source(node["id"]):
+                utts += " ".join(edge["utterances"])
+                n_edges += len(edge["utterances"])
             res_list.append(utts)
         return res_list, n_edges
 

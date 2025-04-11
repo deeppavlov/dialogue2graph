@@ -3,7 +3,7 @@ import pytest
 import dotenv
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
-from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
+from dialogue2graph.pipelines.d2g_extender.pipeline import D2GExtenderPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
@@ -88,7 +88,7 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GExtenderPipeline(
         name="d2g_ext",
         model_storage=ms,
         extending_llm="extending_llm",
@@ -141,7 +141,7 @@ def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GExtenderPipeline(
         name="d2g_ext",
         model_storage=ms,
         extending_llm="extending_llm",

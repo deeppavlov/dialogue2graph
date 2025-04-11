@@ -4,7 +4,7 @@ import datetime
 
 
 from dialogue2graph import metrics
-from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
+from dialogue2graph.pipelines.d2g_extender.pipeline import D2GExtenderPipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
@@ -27,7 +27,7 @@ def generate_extender(
     if config != {}:
         ms.load(config)
 
-    pipeline = Pipeline(
+    pipeline = D2GExtenderPipeline(
         "d2g_ext",
         ms,
         step1_evals=metrics.PreDGEvalBase,

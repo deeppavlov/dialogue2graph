@@ -3,7 +3,7 @@ from pathlib import Path
 import datetime
 
 from dialogue2graph import metrics
-from dialogue2graph.pipelines.d2g_llm.pipeline import Pipeline
+from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
@@ -24,7 +24,7 @@ def generate_llm(
     if config != {}:
         ms.load(config)
 
-    pipeline = Pipeline(
+    pipeline = D2GLLMPipeline(
         "d2g_llm",
         ms,
         step2_evals=metrics.DGEvalBase,

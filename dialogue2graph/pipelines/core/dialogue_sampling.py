@@ -47,7 +47,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
         finish_nodes = mix_ends(graph, finish_nodes, cycle_ends)
         while repeats <= upper_limit:
             try:
-                dialogues = get_dialogues(graph, repeats, finish_nodes, sampling_max, _DialogPathsCounter())
+                dialogues = get_dialogues(graph, repeats, finish_nodes, sampling_max)
             except ValueError:
                 dialogues = []
             if dialogues:
@@ -169,14 +169,14 @@ def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
     Returns:
       Set of (user_utterance, assistant_utterance)
     """
-    res = []
+    doublets = set()
     for dialogue in seq:
         user_texts = [d["text"] for d in dialogue if d["participant"] == "user"]
         assist_texts = [d["text"] for d in dialogue if d["participant"] == "assistant"]
         if len(assist_texts) > len(user_texts):
             user_texts += [""]
-        res.extend([(a, u) for u, a in zip(user_texts, assist_texts)])
-    return set(res)
+        doublets.update(zip(user_texts, assist_texts))
+    return doublets
 
 
 def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
@@ -186,22 +186,13 @@ def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
     Returns:
       Set of (assistant_utterance, user_utterance, assistant_utterance)
     """
-
-    res = []
+    triplets = set()
     for dialogue in seq:
         assist_texts = [d["text"] for d in dialogue if d["participant"] == "assistant"]
         user_texts = [d["text"] for d in dialogue if d["participant"] == "user"]
-        res.extend(
-            [
-                (a1, u, a2)
-                for a1, u, a2 in zip(
-                    assist_texts[:-1],
-                    user_texts[: len(assist_texts) - 1],
-                    assist_texts[1:],
-                )
-            ]
-        )
-    return set(res)
+        for i in range(len(assist_texts) - 1):
+            triplets.add((assist_texts[i], user_texts[i], assist_texts[i + 1]))
+    return triplets
 
 
 def remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]:
@@ -228,7 +219,6 @@ def get_dialogues(
         repeats_limit: int,
         end_nodes_ids: list[int],
         sampling_max: int,
-        path_counter: _DialogPathsCounter
         ) -> list[Dialogue]:
     """Find all the dialogues in the graph finishing with end_nodes_ids
     Args:
@@ -241,9 +231,9 @@ def get_dialogues(
     """
 
     node_paths = []
-    start_nodes = [n for n in graph.graph_dict.get("nodes") if n["is_start"]]
+    start_nodes = {n["id"] for n in graph.graph_dict.get("nodes") if n["is_start"]}
     for s in start_nodes:
-        node_paths.extend(graph.get_all_paths(s["id"], [], repeats_limit))
+        node_paths.extend(graph.get_all_paths(s, [], repeats_limit))
     node_paths.sort()
     node_paths = list(k for k, _ in itertools.groupby(node_paths))[1:]
     node_paths.sort(key=len, reverse=True)
@@ -259,17 +249,14 @@ def get_dialogues(
             dialogue.append({"text": graph.get_nodes_by_id(s)["utterances"], "participant": "assistant"})
             sources = graph.get_edges_by_source(s)
             targets = graph.get_edges_by_target(path[idx + 1])
-            edge = [e for e in sources if e in targets][0]
-            dialogue.append(({"text": edge["utterances"], "participant": "user"}))
+            edge = next((e for e in sources if e in targets), None)
+            dialogue.append({"text": edge["utterances"], "participant": "user"})
         dialogue.append({"text": graph.get_nodes_by_id(path[-1])["utterances"], "participant": "assistant"})
         dialogue_paths.append(dialogue)
     dialogues = []
     for path in dialogue_paths:
-        path_counter.counter = 0
-        single_path = get_all_sequences(path, {}, 0, [], sampling_max, path_counter)
+        single_path = get_all_sequences(path, {}, 0, [], sampling_max, _DialogPathsCounter())
         dialogue = [el[1:] for el in single_path if len(el) == len(path) + 1]
         dialogues.extend(dialogue)
-    dialogues = list(k for k, _ in itertools.groupby(dialogues))
     dialogues = remove_duplicated_dialogues(dialogues)
-    result = [Dialogue().from_list(seq) for seq in dialogues]
-    return result
+    return [Dialogue().from_list(seq) for seq in dialogues]

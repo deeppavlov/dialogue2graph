@@ -3,7 +3,7 @@ import pytest
 import dotenv
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
-from dialogue2graph.pipelines.d2g_light.pipeline import Pipeline
+from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
@@ -59,7 +59,7 @@ def dialogues_negative(test_data):
     return [Dialogue(**dlg) for dlg in raw_dialogues]
 
 
-def test_d2g_algo_positive(dialogues_positive, graph_positive_1):
+def test_d2g_light_positive(dialogues_positive, graph_positive_1):
     """Test that d2g_algo pipeline returns True for GT=graph_positive_1
     and input=dialogues_positive"""
 
@@ -79,7 +79,7 @@ def test_d2g_algo_positive(dialogues_positive, graph_positive_1):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GLightPipeline(
         name="d2g_light",
         model_storage=ms,
         filling_llm="filling_llm",
@@ -97,7 +97,7 @@ def test_d2g_algo_positive(dialogues_positive, graph_positive_1):
     ), f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
 
 
-def test_d2g_algo_negative(dialogues_negative, graph_negative):
+def test_d2g_light_negative(dialogues_negative, graph_negative):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
@@ -117,7 +117,7 @@ def test_d2g_algo_negative(dialogues_negative, graph_negative):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GLightPipeline(
         name="d2g_light",
         model_storage=ms,
         filling_llm="filling_llm",

@@ -4,6 +4,7 @@ from .commands.generate_data import generate_data
 from .commands.generate_graph_light import generate_light
 from .commands.generate_graph_llm import generate_llm
 from .commands.generate_graph_extender import generate_extender
+from dialogue2graph.cli.commands.cli_dg_pipeline import test_dg_generation
 
 
 @click.group()
@@ -112,3 +113,31 @@ def gen_graph_extender(
         report_path=report
         )
 
+
+@cli.command()
+@click.option("--env", "-e", help="Path to .env file", default=".env")
+@click.option("--cfg", "-c", help="Path to cfg.yml file", default="cfg.yml")
+@click.option("--dialogs", "-d", help="Input dialogs file", required=True)
+@click.option("--tgraph", "-t", help="Input true graph file", required=False)
+@click.option("--output", "-o", help="Output graph file", required=False)
+@click.option("--report", "-r", help="Output report file", required=False)
+@click.option("--eval", "-ev", is_flag=True, help="Call pipeline evals", required=False)
+def test_dg_gen(
+    env: str,
+    cfg: str,
+    dialogs: str,
+    tgraph: str,
+    output: str,
+    report: str,
+    eval: bool
+    ):
+    """Generate graph from dialogs data via d2g_algo pipeline"""
+    load_dotenv(env)
+    test_dg_generation(
+        dialogs=dialogs,
+        tgraph=tgraph,
+        enable_evals=eval,
+        config=cfg,
+        graph_path=output,
+        report_path=report
+        )

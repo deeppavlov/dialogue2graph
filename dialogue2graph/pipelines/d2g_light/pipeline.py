@@ -7,7 +7,7 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 load_dotenv()
 
 
-class Pipeline(BasePipeline):
+class D2GLightPipeline(BasePipeline):
     """Light graph generator pipeline"""
 
     def __init__(

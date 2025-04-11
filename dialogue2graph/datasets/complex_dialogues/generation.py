@@ -259,7 +259,7 @@ class GenerationPipeline(BaseModel):
                 seed=self.seed,
             )
             logger.info(f"Graph generated is {graph.graph_dict}")
-            if not graph.edges_match_nodes():
+            if not graph.match_edges_nodes():
                 return GenerationError(
                     error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
                     message="Generated graph is wrong: edges don't match nodes",
@@ -314,7 +314,7 @@ class GenerationPipeline(BaseModel):
 
             graph = transition_validation["graph"]
             if transition_validation["validation_details"]["attempts_made"]:
-                if not graph.edges_match_nodes():
+                if not graph.match_edges_nodes():
                     return GenerationError(
                         error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
                         message="Generated graph is wrong: edges don't match nodes",
@@ -361,6 +361,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
     model_storage: ModelStorage = Field(description="Model storage")
     generation_llm: str = Field(description="LLM for graph generation")
     validation_llm: str = Field(description="LLM for validation")
+    cycle_ends_llm: str = Field(description="LLM for dialog sampler to find cycle ends")
     theme_validation_llm: str = Field(description="LLM for theme validation")
     pipeline: GenerationPipeline
 
@@ -369,16 +370,19 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         model_storage: ModelStorage,
         generation_llm: str,
         validation_llm: str,
+        cycle_ends_llm: str,
         theme_validation_llm: str,
     ):
         super().__init__(
             model_storage=model_storage,
             generation_llm=generation_llm,
             validation_llm=validation_llm,
+            cycle_ends_llm=cycle_ends_llm,
             theme_validation_llm=theme_validation_llm,
             pipeline=GenerationPipeline(
                 generation_model=model_storage.storage[generation_llm].model,
                 validation_model=model_storage.storage[validation_llm].model,
+                cycle_ends_model=model_storage.storage[cycle_ends_llm].model,
                 theme_validation_model=model_storage.storage[
                     theme_validation_llm
                 ].model,

@@ -3,7 +3,7 @@ import pytest
 import dotenv
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
-from dialogue2graph.pipelines.d2g_llm.pipeline import Pipeline
+from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
@@ -83,7 +83,7 @@ def test_d2g_llm_positive(dialogues_positive, graph_positive_1):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GLLMPipeline(
         name="d2g_llm",
         model_storage=ms,
         grouping_llm="grouping_llm",
@@ -127,7 +127,7 @@ def test_d2g_llm_negative(dialogues_negative, graph_negative):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GLLMPipeline(
         name="d2g_llm",
         model_storage=ms,
         grouping_llm="grouping_llm",
