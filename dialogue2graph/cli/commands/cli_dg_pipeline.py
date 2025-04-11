@@ -17,36 +17,41 @@ logger = logging.getLogger(__name__)
 
 ms = ModelStorage()
 
+
 def parse_json(json_path):
     try:
         with open(str(json_path)) as f:
             return json.load(f)
     except ValueError as e:
         logger.error(f"Failed to load json file: {e}")
-        return None # or: raise
+        return None  # or: raise
+
 
 def parse_csv(csv_path):
     try:
         with open(str(csv_path)) as f:
             return csv.DictReader(f)
-    except ValueError as e:
-        return None # or: raise
+    except ValueError:
+        return None  # or: raise
+
 
 def parse_txt(txt_path):
     try:
-        if mimetypes.guess_type(str(txt_path))[0] == 'text/plain':
+        if mimetypes.guess_type(str(txt_path))[0] == "text/plain":
             return True
         else:
             return None
-    except ValueError as e:
-        return None # or: raise
+    except ValueError:
+        return None  # or: raise
+
 
 def parse_html(html_path):
     try:
         with open(str(html_path)) as f:
             return pd.read_html(f)[0]
-    except ValueError as e:
-        return None # or: raise
+    except ValueError:
+        return None  # or: raise
+
 
 def parse_md(md_path):
     try:
@@ -56,32 +61,33 @@ def parse_md(md_path):
                 return True
             else:
                 return None
-    except ValueError as e:
-        return None # or: raise
+    except ValueError:
+        return None  # or: raise
+
 
 def test_dg_generation(
-        dialogs: str,
-        tgraph: str,
-        enable_evals: bool,
-        config: dict,
-        graph_path: str,
-        report_path: str
-        ):
+    dialogs: str,
+    tgraph: str,
+    enable_evals: bool,
+    config: dict,
+    graph_path: str,
+    report_path: str,
+):
     """Generates graph from dialogs via d2g_light pipeline using parameters from config
     and saves graph dictionary to output_path"""
 
     if config != {}:
         ms.load(config)
     pipeline = D2GLightPipeline(
-        "d2g_light",
-        ms,
-        step2_evals=metrics.DGEvalBase,
-        end_evals=metrics.DGEvalBase
+        "d2g_light", ms, step2_evals=metrics.DGEvalBase, end_evals=metrics.DGEvalBase
     )
 
     raw_data = PipelineRawDataType(dialogs=dialogs, true_graph=tgraph)
     result, report = pipeline.invoke(raw_data, enable_evals=enable_evals)
-    result_graph = {"nodes": result.graph_dict["nodes"], "edges": result.graph_dict["edges"]}
+    result_graph = {
+        "nodes": result.graph_dict["nodes"],
+        "edges": result.graph_dict["edges"],
+    }
 
     if graph_path is not None:
         Path(graph_path).parent.mkdir(parents=True, exist_ok=True)
@@ -92,7 +98,9 @@ def test_dg_generation(
     if report_path is None:
         print(str(report))
         now = datetime.datetime.now()
-        report_path = f"./report_{pipeline.name}_{now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+        report_path = (
+            f"./report_{pipeline.name}_{now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+        )
     report_path = Path(report_path)
     report_path.parent.mkdir(parents=True, exist_ok=True)
     if report_path.suffix == ".json":

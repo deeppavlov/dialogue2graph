@@ -211,10 +211,14 @@ class Graph(BaseGraph):
         plt.show()
 
     def find_nodes_by_utterance(self, utterance: str) -> list[dict]:
-        return [node for node in self.graph_dict["nodes"] if utterance in node["utterances"]]
+        return [
+            node for node in self.graph_dict["nodes"] if utterance in node["utterances"]
+        ]
 
     def find_edges_by_utterance(self, utterance: str) -> list[dict]:
-        return [edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]]
+        return [
+            edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]
+        ]
 
     def get_nodes_by_id(self, id: int):
         for node in self.graph_dict["nodes"]:
@@ -295,11 +299,8 @@ class Graph(BaseGraph):
         return self.remove_duplicated_edges()
 
     def get_all_paths(
-            self,
-            start_node_id: int,
-            visited_nodes: list[int],
-            repeats_limit: int
-            ) -> list[list[int]]:
+        self, start_node_id: int, visited_nodes: list[int], repeats_limit: int
+    ) -> list[list[int]]:
         """Recursion to find all the graph paths consisting of nodes ids
         which start from node with id=start_node_id
         and do not repeat last repeats_limit elements of the visited_nodes
@@ -313,9 +314,8 @@ class Graph(BaseGraph):
         """
 
         if len(visited_nodes) >= repeats_limit and self._is_seq_in(
-            visited_nodes[-repeats_limit:] + [start_node_id],
-            visited_nodes
-            ):
+            visited_nodes[-repeats_limit:] + [start_node_id], visited_nodes
+        ):
             return []
 
         visited_nodes.append(start_node_id)
@@ -323,22 +323,15 @@ class Graph(BaseGraph):
 
         for edge in self.get_edges_by_source(start_node_id):
             visited_paths.extend(
-                self.get_all_paths(
-                    edge["target"],
-                    visited_nodes,
-                    repeats_limit
-                )
+                self.get_all_paths(edge["target"], visited_nodes, repeats_limit)
             )
 
         visited_nodes.pop()
         return visited_paths
 
     def find_paths(
-            self,
-            start_node_id: int,
-            end_node_id: int,
-            visited_nodes: list[int]
-            ) -> list[list[int]]:
+        self, start_node_id: int, end_node_id: int, visited_nodes: list[int]
+    ) -> list[list[int]]:
         """Recursion to find paths from start_node_id
         where end_node_id on the path stops recursion
         Args:
@@ -348,11 +341,16 @@ class Graph(BaseGraph):
         visited_paths = [[]]
 
         graph = self.graph_dict
-        if len(visited_nodes) <= len(graph["edges"]) and end_node_id not in visited_paths[-1]:
+        if (
+            len(visited_nodes) <= len(graph["edges"])
+            and end_node_id not in visited_paths[-1]
+        ):
             visited_nodes.append(start_node_id)
             if end_node_id not in visited_nodes:
                 for edge in self.get_edges_by_source(start_node_id):
-                    visited_paths += self.find_paths(edge["target"], end_node_id, visited_nodes)
+                    visited_paths += self.find_paths(
+                        edge["target"], end_node_id, visited_nodes
+                    )
         else:
             visited_nodes.append(start_node_id)
         visited_paths.append(visited_nodes)
@@ -413,4 +411,3 @@ class Graph(BaseGraph):
                 n_edges += len(edge["utterances"])
             res_list.append(utts)
         return res_list, n_edges
-

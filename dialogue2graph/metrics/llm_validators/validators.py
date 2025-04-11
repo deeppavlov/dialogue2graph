@@ -55,9 +55,10 @@ END_THRESHOLD = 0.2
 
 
 def _message_has_greeting_llm(model: BaseChatModel, text: str) -> bool:
-
     class OpeningValidation(BaseModel):
-        isOpening: bool = Field(description="Whether the given utterance is considered greeting or not")
+        isOpening: bool = Field(
+            description="Whether the given utterance is considered greeting or not"
+        )
 
     start_prompt = PromptTemplate(
         input_variables=["text"],
@@ -78,9 +79,10 @@ def _message_has_greeting_llm(model: BaseChatModel, text: str) -> bool:
 
 
 def _message_has_closing_llm(model: BaseChatModel, text: str) -> bool:
-
     class ClosingValidation(BaseModel):
-        isClosing: bool = Field(description="Whether the given utterance is considered closing or not")
+        isClosing: bool = Field(
+            description="Whether the given utterance is considered closing or not"
+        )
 
     close_prompt = PromptTemplate(
         input_variables=["text"],
@@ -101,7 +103,11 @@ def _message_has_closing_llm(model: BaseChatModel, text: str) -> bool:
 
 
 def is_greeting_repeated_emb_llm(
-    dialogs: List[Dialogue], model_storage: ModelStorage, embedder_name: str, llm_name: str, starts: list = None
+    dialogs: List[Dialogue],
+    model_storage: ModelStorage,
+    embedder_name: str,
+    llm_name: str,
+    starts: list = None,
 ) -> bool:
     """
     Checks if greeting is repeated within dialogues using pairwise distance and LLM assessment.
@@ -122,7 +128,9 @@ def is_greeting_repeated_emb_llm(
             raise TypeError(f"The {embedder_name} model is not an embedder")
         embedder_model = model_storage.storage[embedder_name].model
     else:
-        raise KeyError(f"The embedder {embedder_name} not found in the given ModelStorage")
+        raise KeyError(
+            f"The embedder {embedder_name} not found in the given ModelStorage"
+        )
 
     if model_storage.storage.get(llm_name):
         if not model_storage.storage.get(llm_name).model_type == "llm":
@@ -134,7 +142,15 @@ def is_greeting_repeated_emb_llm(
     for dialog in dialogs:
         for i, message in enumerate(dialog.messages):
             if i != 0 and message.participant == "assistant":
-                message_is_start = [compare_strings(start, message.text, embedder=embedder_model, embedder_th=START_THRESHOLD) for start in starts]
+                message_is_start = [
+                    compare_strings(
+                        start,
+                        message.text,
+                        embedder=embedder_model,
+                        embedder_th=START_THRESHOLD,
+                    )
+                    for start in starts
+                ]
                 if any(message_is_start):
                     llm_eval = _message_has_greeting_llm(llm_model, message.text)
                     if llm_eval:
@@ -144,7 +160,11 @@ def is_greeting_repeated_emb_llm(
 
 
 def is_dialog_closed_too_early_emb_llm(
-    dialogs: List[Dialogue], model_storage: ModelStorage, embedder_name: str, llm_name: str, ends: list = None
+    dialogs: List[Dialogue],
+    model_storage: ModelStorage,
+    embedder_name: str,
+    llm_name: str,
+    ends: list = None,
 ) -> bool:
     """
     Checks if assistant tried to close dialogue in the middle using pairwise distance and LLM assessment.
@@ -165,7 +185,9 @@ def is_dialog_closed_too_early_emb_llm(
             raise TypeError(f"The {embedder_name} model is not an embedder")
         embedder_model = model_storage.storage[embedder_name].model
     else:
-        raise KeyError(f"The embedder {embedder_name} not found in the given ModelStorage")
+        raise KeyError(
+            f"The embedder {embedder_name} not found in the given ModelStorage"
+        )
 
     if model_storage.storage.get(llm_name):
         if not model_storage.storage.get(llm_name).model_type == "llm":
@@ -178,7 +200,15 @@ def is_dialog_closed_too_early_emb_llm(
         last_turn_idx = len(dialog.messages) - 1
         for i, message in enumerate(dialog.messages):
             if i != last_turn_idx and message.participant == "assistant":
-                message_is_end = [compare_strings(end, message.text, embedder=embedder_model, embedder_th=END_THRESHOLD) for end in ends]
+                message_is_end = [
+                    compare_strings(
+                        end,
+                        message.text,
+                        embedder=embedder_model,
+                        embedder_th=END_THRESHOLD,
+                    )
+                    for end in ends
+                ]
                 if any(message_is_end):
                     llm_eval = _message_has_closing_llm(llm_model, message.text)
                     if llm_eval:

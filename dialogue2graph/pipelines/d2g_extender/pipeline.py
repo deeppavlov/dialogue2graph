@@ -31,36 +31,36 @@ class D2GExtenderPipeline(BasePipeline):
             model_storage.add(
                 key=extending_llm,
                 config={"model": "chatgpt-4o-latest", "temperature": 0},
-                model_type="llm"
-                )
+                model_type="llm",
+            )
 
         if filling_llm not in model_storage.storage:
             model_storage.add(
                 key=filling_llm,
                 config={"model": "o3-mini", "temperature": 1},
-                model_type="llm"
-                )
+                model_type="llm",
+            )
 
         if formatting_llm not in model_storage.storage:
             model_storage.add(
                 key=formatting_llm,
                 config={"model": "gpt-4o-mini", "temperature": 0},
-                model_type="llm"
-                )
-            
+                model_type="llm",
+            )
+
         if dialog_llm not in model_storage.storage:
             model_storage.add(
                 key=dialog_llm,
                 config={"model": "o3-mini", "temperature": 1},
-                model_type="llm"
-                )
+                model_type="llm",
+            )
 
         if sim_model not in model_storage.storage:
             model_storage.add(
                 key=sim_model,
-                config={"model_name": "BAAI/bge-m3", "device": "cpu"}, 
-                model_type="emb"
-                )
+                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+                model_type="emb",
+            )
 
         super().__init__(
             name=name,
@@ -76,7 +76,7 @@ class D2GExtenderPipeline(BasePipeline):
                     extender_evals,
                     step2_evals,
                     end_evals,
-                    step
+                    step,
                 ),
             ],
         )

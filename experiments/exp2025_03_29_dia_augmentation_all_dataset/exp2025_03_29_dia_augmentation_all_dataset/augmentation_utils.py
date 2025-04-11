@@ -2,6 +2,7 @@ from sentence_transformers import SentenceTransformer
 import numpy as np
 from collections import Counter
 
+
 def to_set(x):
     return set(x)
 

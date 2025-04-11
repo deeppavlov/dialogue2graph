@@ -23,14 +23,38 @@ class D2GLightPipeline(BasePipeline):
         # check if models are in model storage
         # if model is not in model storage put the default model there
         if filling_llm not in model_storage.storage:
-            model_storage.add(key=filling_llm, config={"model": "chatgpt-4o-latest", "temperature": 0}, model_type="llm")
+            model_storage.add(
+                key=filling_llm,
+                config={"model": "chatgpt-4o-latest", "temperature": 0},
+                model_type="llm",
+            )
 
         if formatting_llm not in model_storage.storage:
-            model_storage.add(key=formatting_llm, config={"model": "gpt-4o-mini", "temperature": 0}, model_type="llm")
+            model_storage.add(
+                key=formatting_llm,
+                config={"model": "gpt-4o-mini", "temperature": 0},
+                model_type="llm",
+            )
 
         if sim_model not in model_storage.storage:
-            model_storage.add(key=sim_model, config={"model_name": "BAAI/bge-m3", "device": "cpu"}, model_type="emb")
-        super().__init__(name=name, steps=[LightGraphGenerator(model_storage, filling_llm, formatting_llm, sim_model, step2_evals, end_evals)])
+            model_storage.add(
+                key=sim_model,
+                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+                model_type="emb",
+            )
+        super().__init__(
+            name=name,
+            steps=[
+                LightGraphGenerator(
+                    model_storage,
+                    filling_llm,
+                    formatting_llm,
+                    sim_model,
+                    step2_evals,
+                    end_evals,
+                )
+            ],
+        )
 
     def _validate_pipeline(self):
         pass

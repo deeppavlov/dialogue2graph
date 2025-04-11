@@ -13,14 +13,14 @@ ms = ModelStorage()
 
 
 def generate_extender(
-        dialogs: str,
-        graph: str,
-        tgraph: str,
-        enable_evals: bool,
-        config: dict,
-        graph_path: str,
-        report_path: str
-        ):
+    dialogs: str,
+    graph: str,
+    tgraph: str,
+    enable_evals: bool,
+    config: dict,
+    graph_path: str,
+    report_path: str,
+):
     """Generates graph from dialogs via d2g_extender pipeline using parameters from config
     and saves graph dictionary to output_path"""
 
@@ -34,12 +34,17 @@ def generate_extender(
         extender_evals=metrics.PreDGEvalBase,
         step2_evals=metrics.DGEvalBase,
         end_evals=metrics.DGEvalBase,
-        step=1
-        )
+        step=1,
+    )
 
-    raw_data = PipelineRawDataType(dialogs=dialogs, supported_graph=graph, true_graph=tgraph)
+    raw_data = PipelineRawDataType(
+        dialogs=dialogs, supported_graph=graph, true_graph=tgraph
+    )
     result, report = pipeline.invoke(raw_data, enable_evals=enable_evals)
-    result_graph = {"nodes": result.graph_dict["nodes"], "edges": result.graph_dict["edges"]}
+    result_graph = {
+        "nodes": result.graph_dict["nodes"],
+        "edges": result.graph_dict["edges"],
+    }
 
     if graph_path is not None:
         Path(graph_path).parent.mkdir(parents=True, exist_ok=True)
@@ -50,7 +55,9 @@ def generate_extender(
     if report_path is None:
         print(str(report))
         now = datetime.datetime.now()
-        report_path = f"./report_{pipeline.name}_{now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+        report_path = (
+            f"./report_{pipeline.name}_{now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+        )
     report_path = Path(report_path)
     report_path.parent.mkdir(parents=True, exist_ok=True)
     if report_path.suffix == ".json":

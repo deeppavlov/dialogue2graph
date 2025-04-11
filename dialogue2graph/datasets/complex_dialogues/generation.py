@@ -12,7 +12,10 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.metrics.no_llm_metrics import match_dg_triplets
 from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
-from dialogue2graph.metrics.no_llm_validators import is_greeting_repeated_regex, is_dialog_closed_too_early_regex
+from dialogue2graph.metrics.no_llm_validators import (
+    is_greeting_repeated_regex,
+    is_dialog_closed_too_early_regex,
+)
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
@@ -102,7 +105,7 @@ class GenerationPipeline(BaseModel):
     min_cycles: int = 2
     max_fix_attempts: int = 3
     dialogue_sampler: RecursiveDialogueSampler = Field(
-        default_factory=RecursiveDialogueSampler 
+        default_factory=RecursiveDialogueSampler
     )
     seed: Optional[int] = None
 
@@ -288,7 +291,9 @@ class GenerationPipeline(BaseModel):
                 )
 
             logger.info("Sampling dialogues...")
-            sampled_dialogues = self.dialogue_sampler.invoke(graph, self.cycle_ends_model, 15)
+            sampled_dialogues = self.dialogue_sampler.invoke(
+                graph, self.cycle_ends_model, 15
+            )
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
             if not match_dg_triplets(graph, sampled_dialogues)["value"]:
                 return GenerationError(
@@ -297,7 +302,8 @@ class GenerationPipeline(BaseModel):
                 )
             if is_greeting_repeated_regex(sampled_dialogues):
                 return GenerationError(
-                    error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Opening phrases are repeated"
+                    error_type=ErrorType.SAMPLING_FAILED,
+                    message="Failed to sample valid dialogues - Opening phrases are repeated",
                 )
             if is_dialog_closed_too_early_regex(sampled_dialogues):
                 return GenerationError(
@@ -342,7 +348,9 @@ class GenerationPipeline(BaseModel):
                         message="Generated graph is wrong: utterances in nodes doubled",
                     )
                 logger.info("Sampling dialogues...")
-                sampled_dialogues = self.dialogue_sampler.invoke(graph, self.cycle_ends_model, 15)
+                sampled_dialogues = self.dialogue_sampler.invoke(
+                    graph, self.cycle_ends_model, 15
+                )
                 logger.info("Sampled %d dialogues", len(sampled_dialogues))
                 if not match_dg_triplets(graph, sampled_dialogues)["value"]:
                     return GenerationError(

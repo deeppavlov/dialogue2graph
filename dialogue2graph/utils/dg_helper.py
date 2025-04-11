@@ -7,7 +7,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 
 def connect_nodes(
     nodes: list[dict], dialogues: list[Dialogue], utt_sim: HuggingFaceEmbeddings
-) -> dict[str,list[dict]]:
+) -> dict[str, list[dict]]:
     """Connecting dialog graph nodes with edges via searching dialogue utterances
     in list of nodes based on utt_sim similarity model
     Args:
@@ -53,7 +53,9 @@ def connect_nodes(
                                         {
                                             "source": node["id"],
                                             "target": target,
-                                            "utterances": existing_edges[0]["utterances"]
+                                            "utterances": existing_edges[0][
+                                                "utterances"
+                                            ]
                                             + [user_utt],
                                         }
                                     )

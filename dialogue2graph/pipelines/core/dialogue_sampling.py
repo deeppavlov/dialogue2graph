@@ -5,9 +5,13 @@ import pandas as pd
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.core.algorithms import DialogueGenerator
-from dialogue2graph.metrics.no_llm_metrics import match_dg_triplets, match_dialogue_triplets
+from dialogue2graph.metrics.no_llm_metrics import (
+    match_dg_triplets,
+    match_dialogue_triplets,
+)
 from dialogue2graph.datasets.complex_dialogues.find_cycle_ends import find_cycle_ends
 from langchain_core.language_models.chat_models import BaseChatModel
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -20,9 +24,12 @@ class RecursiveDialogueSampler(DialogueGenerator):
     """Recursive dialog sampler for the graph"""
 
     def invoke(
-        self, graph: BaseGraph, cycle_ends_model: BaseChatModel, upper_limit: int, sampling_max: int = 1000000,
+        self,
+        graph: BaseGraph,
+        cycle_ends_model: BaseChatModel,
+        upper_limit: int,
+        sampling_max: int = 1000000,
     ) -> list[Dialogue]:
-        
         """Extracts all the dialogues from the graph
         Args:
           graph: used to extract dialogues from it
@@ -40,10 +47,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
         cycle_ends = []
         finish_nodes = graph.get_ends()
         if not finish_nodes:
-            cycle_ends = find_cycle_ends(
-                graph,
-                cycle_ends_model
-            )["value"]
+            cycle_ends = find_cycle_ends(graph, cycle_ends_model)["value"]
         finish_nodes = mix_ends(graph, finish_nodes, cycle_ends)
         while repeats <= upper_limit:
             try:
@@ -70,7 +74,9 @@ class RecursiveDialogueSampler(DialogueGenerator):
     ):
         dialogues = self.invoke(graph, upper_limit)
         report = {
-            "dialogues_match": [match_dialogue_triplets(dialogues, target_dialogues)["value"]],
+            "dialogues_match": [
+                match_dialogue_triplets(dialogues, target_dialogues)["value"]
+            ],
             # "all_roles_correct": all(all_roles_correct(dialogues, target_dialogues)),
         }
         if report_type == "dataframe":
@@ -82,7 +88,9 @@ class RecursiveDialogueSampler(DialogueGenerator):
             raise ValueError(f"Invalid report_type: {report_type}")
 
 
-def mix_ends(graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]) -> list[int]:
+def mix_ends(
+    graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]
+) -> list[int]:
     """Find ids from cycle_ends_ids which do not have paths to any node id from end_ids.
     Args:
       graph: graph to work with
@@ -101,13 +109,13 @@ def mix_ends(graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]) ->
 
 
 def get_all_sequences(
-        path: list[dict],
-        last_message: dict,
-        start_idx: int,
-        visited_messages: list,
-        sampling_max: int,
-        path_counter: _DialogPathsCounter
-        ) -> list[list[dict]]:
+    path: list[dict],
+    last_message: dict,
+    start_idx: int,
+    visited_messages: list,
+    sampling_max: int,
+    path_counter: _DialogPathsCounter,
+) -> list[list[dict]]:
     """Recursion to find all dialogue suquences in the path of nodes and edges with miltiple utterances
     Args:
       path: dialogue path with multiple utterances
@@ -133,8 +141,8 @@ def get_all_sequences(
                 start_idx + 1,
                 visited_messages.copy(),
                 sampling_max,
-                path_counter
-                )
+                path_counter,
+            )
     else:
         path_counter.counter += 1
         if path_counter.counter == sampling_max:
@@ -207,19 +215,19 @@ def remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]:
         return []
     uniq_seq = [non_empty_seq[0]]
     for s in non_empty_seq[1:]:
-        if not get_dialogue_doublets([s]).issubset(get_dialogue_doublets(uniq_seq)) or not get_dialogue_triplets([s]).issubset(
-            get_dialogue_triplets(uniq_seq)
-        ):
+        if not get_dialogue_doublets([s]).issubset(
+            get_dialogue_doublets(uniq_seq)
+        ) or not get_dialogue_triplets([s]).issubset(get_dialogue_triplets(uniq_seq)):
             uniq_seq.append(s)
     return uniq_seq
 
 
 def get_dialogues(
-        graph: BaseGraph,
-        repeats_limit: int,
-        end_nodes_ids: list[int],
-        sampling_max: int,
-        ) -> list[Dialogue]:
+    graph: BaseGraph,
+    repeats_limit: int,
+    end_nodes_ids: list[int],
+    sampling_max: int,
+) -> list[Dialogue]:
     """Find all the dialogues in the graph finishing with end_nodes_ids
     Args:
       graph: graph to work with
@@ -246,16 +254,28 @@ def get_dialogues(
     for path in node_paths:
         dialogue = []
         for idx, s in enumerate(path[:-1]):
-            dialogue.append({"text": graph.get_nodes_by_id(s)["utterances"], "participant": "assistant"})
+            dialogue.append(
+                {
+                    "text": graph.get_nodes_by_id(s)["utterances"],
+                    "participant": "assistant",
+                }
+            )
             sources = graph.get_edges_by_source(s)
             targets = graph.get_edges_by_target(path[idx + 1])
             edge = next((e for e in sources if e in targets), None)
             dialogue.append({"text": edge["utterances"], "participant": "user"})
-        dialogue.append({"text": graph.get_nodes_by_id(path[-1])["utterances"], "participant": "assistant"})
+        dialogue.append(
+            {
+                "text": graph.get_nodes_by_id(path[-1])["utterances"],
+                "participant": "assistant",
+            }
+        )
         dialogue_paths.append(dialogue)
     dialogues = []
     for path in dialogue_paths:
-        single_path = get_all_sequences(path, {}, 0, [], sampling_max, _DialogPathsCounter())
+        single_path = get_all_sequences(
+            path, {}, 0, [], sampling_max, _DialogPathsCounter()
+        )
         dialogue = [el[1:] for el in single_path if len(el) == len(path) + 1]
         dialogues.extend(dialogue)
     dialogues = remove_duplicated_dialogues(dialogues)

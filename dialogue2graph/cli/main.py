@@ -33,14 +33,8 @@ def gen_data(env: str, cfg: str, topic: str, output: str):
 @click.option("--report", "-r", help="Output report file", required=False)
 @click.option("--eval", "-ev", is_flag=True, help="Call pipeline evals", required=False)
 def gen_graph_light(
-    env: str,
-    cfg: str,
-    dialogs: str,
-    tgraph: str,
-    output: str,
-    report: str,
-    eval: bool
-    ):
+    env: str, cfg: str, dialogs: str, tgraph: str, output: str, report: str, eval: bool
+):
     """Generate graph from dialogs data via d2g_algo pipeline"""
     load_dotenv(env)
     generate_light(
@@ -49,8 +43,8 @@ def gen_graph_light(
         enable_evals=eval,
         config=cfg,
         graph_path=output,
-        report_path=report
-        )
+        report_path=report,
+    )
 
 
 @cli.command()
@@ -62,14 +56,8 @@ def gen_graph_light(
 @click.option("--report", "-r", help="Output report file", required=False)
 @click.option("--eval", "-ev", is_flag=True, help="Call pipeline evals", required=False)
 def gen_graph_llm(
-    env: str,
-    cfg: str, 
-    dialogs: str,
-    tgraph: str,
-    output: str,
-    report: str,
-    eval: bool
-    ):
+    env: str, cfg: str, dialogs: str, tgraph: str, output: str, report: str, eval: bool
+):
     """Generate graph from dialogs data via d2g_llm pipeline"""
     load_dotenv(env)
     generate_llm(
@@ -78,8 +66,8 @@ def gen_graph_llm(
         enable_evals=eval,
         config=cfg,
         graph_path=output,
-        report_path=report
-        )
+        report_path=report,
+    )
 
 
 @cli.command()
@@ -99,8 +87,8 @@ def gen_graph_extender(
     tgraph: str,
     output: str,
     report: str,
-    eval: bool
-    ):
+    eval: bool,
+):
     """Generate graph from dialogs data via d2g_llm pipeline"""
     load_dotenv(env)
     generate_extender(
@@ -110,8 +98,8 @@ def gen_graph_extender(
         enable_evals=eval,
         config=cfg,
         graph_path=output,
-        report_path=report
-        )
+        report_path=report,
+    )
 
 
 @cli.command()
@@ -123,14 +111,8 @@ def gen_graph_extender(
 @click.option("--report", "-r", help="Output report file", required=False)
 @click.option("--eval", "-ev", is_flag=True, help="Call pipeline evals", required=False)
 def test_dg_gen(
-    env: str,
-    cfg: str,
-    dialogs: str,
-    tgraph: str,
-    output: str,
-    report: str,
-    eval: bool
-    ):
+    env: str, cfg: str, dialogs: str, tgraph: str, output: str, report: str, eval: bool
+):
     """Generate graph from dialogs data via d2g_algo pipeline"""
     load_dotenv(env)
     test_dg_generation(
@@ -139,5 +121,5 @@ def test_dg_gen(
         enable_evals=eval,
         config=cfg,
         graph_path=output,
-        report_path=report
-        )
+        report_path=report,
+    )

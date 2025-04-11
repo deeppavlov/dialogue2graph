@@ -23,7 +23,7 @@ def _unite_pairs(index_pairs: list[tuple[int, int]]) -> list[tuple[int]]:
     return groups
 
 
-def _get_tails(dialog: Dialogue, utt: str) -> list[list[dict[str,str]]]:
+def _get_tails(dialog: Dialogue, utt: str) -> list[list[dict[str, str]]]:
     """Get dialog messages 2 assistant utterances
     before and after utterance utt in dialog
     Args:
@@ -32,18 +32,22 @@ def _get_tails(dialog: Dialogue, utt: str) -> list[list[dict[str,str]]]:
     Returns:
       list of lists of dicts in a form {"participant": "user" or "assistant", "text": text}
     """
-    assistant_list = [(i, m.text) for i, m in enumerate(dialog.messages) if m.participant == "assistant"]
+    assistant_list = [
+        (i, m.text)
+        for i, m in enumerate(dialog.messages)
+        if m.participant == "assistant"
+    ]
     ids = [i for i, text in assistant_list if text == utt]
     tails = []
     for id in ids:
-        tail = dialog.messages[max(0, id-2):id]
-        tail += dialog.messages[id+1:min(len(dialog.messages), id+3)]
+        tail = dialog.messages[max(0, id - 2) : id]
+        tail += dialog.messages[id + 1 : min(len(dialog.messages), id + 3)]
         tails.append(tail)
     return tails
 
 
 def _compare_tails(dialogs: list[Dialogue], utt1: str, utt2: str) -> bool:
-    """ Compares tails of two utterances in a list of dialogues
+    """Compares tails of two utterances in a list of dialogues
     Args:
       dialogs: list of dialogs to get tails from
       utt1, utt2: utterances to get tails
