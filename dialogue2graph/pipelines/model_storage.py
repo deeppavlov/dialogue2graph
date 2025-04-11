@@ -174,6 +174,7 @@ class ModelStorage(BaseModel):
                     storage_dump[model_key]["model_type"] = self.storage[
                         model_key
                     ].model_type
+                    storage_dump[model_key]["config"].remove("api_key")
                 yaml.dump(storage_dump, f)
             logger.info(f"Saved {len(self.storage)} models to {path}")
         except Exception as e:

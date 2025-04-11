@@ -15,6 +15,8 @@ __all__ = [
     "DialogueValidationResult",
     "match_graph_triplets",
     "match_triplets_dg",
+    "match_dg_triplets",
+    "match_dialogue_triplets",
     "DGTripletsMatchResult",
     "match_roles",
     "is_correct_length",
