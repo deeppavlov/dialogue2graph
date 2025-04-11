@@ -49,7 +49,7 @@ class DialogueAugmenter(DialogAugmentation):
             
         try:
             # Convert Dialogue to message dicts for processing
-            message_dicts = [msg.dict() for msg in dialogue.messages]
+            message_dicts = [msg.model_dump() for msg in dialogue.messages]
             
             # Setup augmentation chain
             augmentation_prompt = PromptTemplate.from_template(prompt)
@@ -66,7 +66,8 @@ class DialogueAugmenter(DialogAugmentation):
             for attempt in range(3):
                 try:
                     result = chain.invoke({"topic": topic, "dialogue": message_dicts})
-                    return self._create_dialogue(result.result)
+                    # return self._create_dialogue(result.result)
+                    return result
                 except ValidationError as ve:
                     logging.warning(f"Validation error attempt {attempt+1}: {ve}")
                 except Exception as e:
@@ -98,8 +99,8 @@ class DialogueAugmenter(DialogAugmentation):
         if isinstance(result, str):
             return {"error": result} if report_type == "dict" else pd.DataFrame([{"error": result}])
             
-        original_messages = [msg.dict() for msg in dialogue.messages]
-        augmented_messages = [msg.dict() for msg in result.messages]
+        original_messages = dialogue.model_dump()
+        augmented_messages = {'messages' : result}
         
         report = {
             "match_roles": match_roles_multi_utterance(original_messages, augmented_messages),
@@ -114,6 +115,6 @@ class DialogueAugmenter(DialogAugmentation):
             raise ValueError(f"LLM key '{llm_key}' not found in model storage")
         return self.model_storage.storage[llm_key].model
 
-    def _create_dialogue(self, messages: list[DialogueMessage]) -> Dialogue:
-        """Convert message list to Dialogue object"""
-        return Dialogue(messages=[msg for msg in messages if isinstance(msg, DialogueMessage)])
+    # def _create_dialogue(self, messages: list[DialogueMessage]) -> Dialogue:
+    #     """Convert message list to Dialogue object"""
+    #     return Dialogue(messages=[msg for msg in messages if isinstance(msg, DialogueMessage)])
