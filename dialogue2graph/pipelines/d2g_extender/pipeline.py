@@ -1,3 +1,4 @@
+from typing import Callable
 from dotenv import load_dotenv
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
@@ -16,11 +17,12 @@ class Pipeline(BasePipeline):
         extending_llm: str = "d2g_extender_extending_llm:v1",
         filling_llm: str = "d2g_extender_filling_llm:v1",
         formatting_llm: str = "d2g_extender_formatting_llm:v1",
+        dialog_llm: str = "d2g_extender_dialog_llm:v1",
         sim_model: str = "d2g_extender_sim_model:v1",
-        step1_evals: list[callable] = None,
-        extender_evals: list[callable] = None,
-        step2_evals: list[callable] = None,
-        end_evals: list[callable] = None,
+        step1_evals: list[Callable] = None,
+        extender_evals: list[Callable] = None,
+        step2_evals: list[Callable] = None,
+        end_evals: list[Callable] = None,
         step: int = 2,
     ):
         # check if models are in model storage
@@ -43,8 +45,15 @@ class Pipeline(BasePipeline):
             model_storage.add(
                 key=formatting_llm,
                 config={"model": "gpt-4o-mini", "temperature": 0},
-                model_type="llm",
-            )
+                model_type="llm"
+                )
+            
+        if dialog_llm not in model_storage.storage:
+            model_storage.add(
+                key=dialog_llm,
+                config={"model": "o3-mini", "temperature": 1},
+                model_type="llm"
+                )
 
         if sim_model not in model_storage.storage:
             model_storage.add(
@@ -61,6 +70,7 @@ class Pipeline(BasePipeline):
                     extending_llm,
                     filling_llm,
                     formatting_llm,
+                    dialog_llm,
                     sim_model,
                     step1_evals,
                     extender_evals,

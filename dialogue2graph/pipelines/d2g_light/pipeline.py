@@ -1,3 +1,4 @@
+from typing import Callable
 from dotenv import load_dotenv
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
@@ -7,17 +8,17 @@ load_dotenv()
 
 
 class Pipeline(BasePipeline):
-    """Algorithmic graph generator pipeline"""
+    """Light graph generator pipeline"""
 
     def __init__(
         self,
         name: str,
         model_storage: ModelStorage,
-        filling_llm: str = "d2g_algo_filling_llm:v1",
-        formatting_llm: str = "d2g_algo_formatting_llm:v1",
-        sim_model: str = "d2g_algo_sim_model:v1",
-        step2_evals: list[callable] = None,
-        end_evals: list[callable] = None,
+        filling_llm: str = "d2g_light_filling_llm:v1",
+        formatting_llm: str = "d2g_light_formatting_llm:v1",
+        sim_model: str = "d2g_light_sim_model:v1",
+        step2_evals: list[Callable] = None,
+        end_evals: list[Callable] = None,
     ):
         # check if models are in model storage
         # if model is not in model storage put the default model there

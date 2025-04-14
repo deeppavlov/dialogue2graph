@@ -2,17 +2,17 @@ import json
 from pydantic import BaseModel, Field
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
-from langchain_core.language_models.chat_models import BaseChatModel
 from dialogue2graph.pipelines.core.graph import Graph
+from langchain_core.language_models.chat_models import BaseChatModel
 
 
-def find_cycle_ends(G: Graph, model: BaseChatModel) -> dict[str]:
+def find_cycle_ends(G: Graph, cycle_ends_model: BaseChatModel) -> dict[str]:
     """
     To find nodes in dialogue graph G by condition in graph_ends_prompt_template with help of model.
 
     Parameters:
         G (BaseGraph): The dialogue graph
-        model (BaseChatModel): The LLM model to be used
+        cycle_ends_model (BaseChatModel): The LLM model to be used
 
     Returns:
         dict: {'value': bool, 'description': str}
@@ -52,7 +52,7 @@ def find_cycle_ends(G: Graph, model: BaseChatModel) -> dict[str]:
         "json_graph": graph_json,
     }
 
-    find_ends_chain = graph_ends_prompt | model | parser
+    find_ends_chain = graph_ends_prompt | cycle_ends_model | parser
     response = find_ends_chain.invoke(input_data)
     result = {"value": response.ends, "description": response.description}
 

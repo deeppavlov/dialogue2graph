@@ -14,7 +14,6 @@ __all__ = [
     "are_paths_valid",
     "DialogueValidationResult",
     "match_graph_triplets",
-    "match_triplets_dg",
     "match_dg_triplets",
     "match_dialogue_triplets",
     "DGTripletsMatchResult",

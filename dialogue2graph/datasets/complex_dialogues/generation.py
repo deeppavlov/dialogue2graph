@@ -90,6 +90,7 @@ class GenerationPipeline(BaseModel):
     generation_model: BaseChatModel
     theme_validation_model: BaseChatModel
     validation_model: BaseChatModel
+    cycle_ends_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
     generation_prompt: Optional[PromptTemplate] = Field(
         default_factory=lambda: cycle_graph_generation_prompt_informal
@@ -100,7 +101,7 @@ class GenerationPipeline(BaseModel):
     min_cycles: int = 2
     max_fix_attempts: int = 3
     dialogue_sampler: RecursiveDialogueSampler = Field(
-        default_factory=RecursiveDialogueSampler
+        default_factory=RecursiveDialogueSampler 
     )
     seed: Optional[int] = None
 
@@ -113,6 +114,7 @@ class GenerationPipeline(BaseModel):
         generation_model: BaseChatModel,
         theme_validation_model: BaseChatModel,
         validation_model: BaseChatModel,
+        cycle_ends_model: BaseChatModel,
         generation_prompt: Optional[PromptTemplate],
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 2,
@@ -123,6 +125,7 @@ class GenerationPipeline(BaseModel):
             generation_model=generation_model,
             theme_validation_model=theme_validation_model,
             validation_model=validation_model,
+            cycle_ends_model=cycle_ends_model,
             generation_prompt=generation_prompt,
             repair_prompt=repair_prompt,
             min_cycles=min_cycles,
@@ -278,7 +281,7 @@ class GenerationPipeline(BaseModel):
                 )
 
             logger.info("Sampling dialogues...")
-            sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
+            sampled_dialogues = self.dialogue_sampler.invoke(graph, self.cycle_ends_model, 15)
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
             if not match_dg_triplets(graph, sampled_dialogues)["value"]:
                 return GenerationError(
@@ -322,9 +325,9 @@ class GenerationPipeline(BaseModel):
                         error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
                         message="Generated graph is wrong: utterances in nodes doubled",
                     )
-                print("Sampling dialogues...")
-                sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
-                print(f"Sampled {len(sampled_dialogues)} dialogues")
+                logger.info("Sampling dialogues...")
+                sampled_dialogues = self.dialogue_sampler.invoke(graph, self.cycle_ends_model, 15)
+                logger.info("Sampled %d dialogues", len(sampled_dialogues))
                 if not match_dg_triplets(graph, sampled_dialogues)["value"]:
                     return GenerationError(
                         error_type=ErrorType.SAMPLING_FAILED,
@@ -385,9 +388,9 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         )
 
     def invoke(self, topic, seed=42) -> list[dict]:
-        print(f"\n{'=' * 50}")
-        print(f"Generating graph for topic: {topic}")
-        print(f"{'=' * 50}")
+        logger.info(f"\n{'=' * 50}")
+        logger.info("Generating graph for topic: %s", topic)
+        logger.info(f"{'=' * 50}")
         successful_generations = []
         try:
             self.pipeline.seed = seed

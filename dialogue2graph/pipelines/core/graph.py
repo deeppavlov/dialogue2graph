@@ -88,7 +88,9 @@ class Graph(BaseGraph):
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def check_edges(self, seq: list[list[int]]) -> bool:
-        """Checks whether seq (sequence of pairs (source, target)) has all the edges of the graph"""
+        """Checks whether seq (sequence of pairs (source, target))
+        has all the edges of the graph
+        """
         graph_dict = self.graph_dict
         edge_seq = {(e["source"], e["target"]) for e in graph_dict["edges"]}
         left = edge_seq.copy()
@@ -234,7 +236,9 @@ class Graph(BaseGraph):
         return [edge for edge in self.graph_dict["edges"] if edge["target"] == id]
 
     def match_edges_nodes(self) -> bool:
-        """Checks whether source and target of all the edges correspond to nodes"""
+        """Checks whether source and target
+        of all the edges correspond to nodes
+        """
         graph = self.graph_dict
 
         for n in graph["nodes"]:
@@ -256,11 +260,11 @@ class Graph(BaseGraph):
             edge_sources
         ) and node_non_starts.issubset(edge_targets)
 
-    def remove_duplicated_edges(self):
+    def remove_duplicated_edges(self) -> BaseGraph:
         graph = self.graph_dict
         edges = graph["edges"]
-        couples = [(e["source"], e["target"]) for e in edges]
-        duplicates = [i for i in set(couples) if couples.count(i) > 1]
+        node_couples = [(e["source"], e["target"]) for e in edges]
+        duplicates = [i for i in set(node_couples) if node_couples.count(i) > 1]
         new_edges = []
         for d in duplicates:
             found = [c for c in edges if c["source"] == d[0] and c["target"] == d[1]]
@@ -277,7 +281,7 @@ class Graph(BaseGraph):
         }
         return Graph(self.graph_dict)
 
-    def remove_duplicated_nodes(self):
+    def remove_duplicated_nodes(self) -> BaseGraph | None:
         graph = self.graph_dict
         nodes = graph["nodes"].copy()
         edges = graph["edges"].copy()
@@ -285,8 +289,8 @@ class Graph(BaseGraph):
         map(lambda x: x.sort(), nodes_utterances)
         seen = []
         to_remove = []
-        for n in nodes:
-            utts = n["utterances"]
+        for node in nodes:
+            utts = node["utterances"]
             utts.sort()
             if utts not in seen:
                 seen_utts = list(set([s for xs in seen for s in xs]))
@@ -295,11 +299,11 @@ class Graph(BaseGraph):
                 seen.append(utts)
             else:
                 doubled = nodes[nodes_utterances.index(utts)]["id"]
-                to_remove.append(n["id"])
-                for idx, e in enumerate(edges):
-                    if e["source"] == n["id"]:
+                to_remove.append(node["id"])
+                for idx, edge in enumerate(edges):
+                    if edge["source"] == node["id"]:
                         edges[idx]["source"] = doubled
-                    if e["target"] == n["id"]:
+                    if edge["target"] == node["id"]:
                         edges[idx]["target"] = doubled
         self.graph_dict = {
             "edges": edges,
@@ -308,27 +312,50 @@ class Graph(BaseGraph):
         return self.remove_duplicated_edges()
 
     def get_all_paths(
-        self, start_node_id: int, visited_nodes: list[int], repeats_limit: int
-    ):
+            self,
+            start_node_id: int,
+            visited_nodes: list[int],
+            repeats_limit: int
+            ) -> list[list[int]]:
         """Recursion to find all the graph paths consisting of nodes ids
         which start from node with id=start_node_id
-        and do not repeat last repeats_limit elements of the visited_nodes"""
+        and do not repeat last repeats_limit elements of the visited_nodes
+
+        Args:
+          visited_nodes: a path traveled so far
+          repeats_limit: recursion stopper with maximum length
+          of finishing sequence not to repeat on the path
+
+        Returns: list of found paths
+        """
 
         visited_paths = [[]]
         if len(visited_nodes) < repeats_limit or not self._is_seq_in(
-            visited_nodes[-repeats_limit:] + [start_node_id], visited_nodes
-        ):
+            visited_nodes[-repeats_limit:] + [start_node_id],
+            visited_nodes
+            ):
             visited_nodes.append(start_node_id)
             for edge in self.get_edges_by_source(start_node_id):
                 visited_paths += self.get_all_paths(
-                    edge["target"], visited_nodes.copy(), repeats_limit
-                )
+                    edge["target"],
+                    visited_nodes.copy(),
+                    repeats_limit
+                    )
         visited_paths.append(visited_nodes)
         return visited_paths
 
-    def find_paths(self, start_node_id: int, end_node_id: int, visited_nodes: list):
-        """Recursion to find path from start_node_id to end_node_id
-        visited_nodes is path traveled so far"""
+    def find_paths(
+            self,
+            start_node_id: int,
+            end_node_id: int,
+            visited_nodes: list[int]
+            ) -> list[list[int]]:
+        """Recursion to find paths from start_node_id
+        where end_node_id on the path stops recursion
+        Args:
+          visited_nodes: a path traveled so far
+        Returns: list of all paths from start_node_id which probably could be finishing by end_node_id
+        """
         visited_paths = [[]]
 
         graph = self.graph_dict
@@ -347,8 +374,11 @@ class Graph(BaseGraph):
         visited_paths.append(visited_nodes)
         return visited_paths
 
-    def get_ends(self):
-        """Find finishing nodes which have no outgoing edges"""
+    def get_ends(self) -> list[int]:
+        """Find finishing nodes which have no outgoing edges
+        Returns:
+          list of finishing nodes ids
+        """
 
         graph = self.graph_dict
         sources = list(set([g["source"] for g in graph["edges"]]))
@@ -366,36 +396,41 @@ class Graph(BaseGraph):
             finishes += [v["id"] for v in graph["nodes"] if v["id"] not in visited]
         return finishes
 
-    def get_list_from_nodes(self) -> list:
-        """Returns list of concatenations of all nodes utterances"""
+    def get_list_from_nodes(self) -> list[str]:
+        """Method to form auxiliary list from the graph nodes
+        Returns:
+          list of concatenations of all nodes utterances
+        """
         graph = self.graph_dict
-        res = []
+        result = []
 
         for node in graph["nodes"]:
-            utt = ""
-            for n_utt in node["utterances"]:
-                utt += n_utt + " "
-            res.append(utt)
+            utts = ""
+            for node_utt in node["utterances"]:
+                utts += node_utt + " "
+            result.append(utts)
 
-        return res
+        return result
 
     def get_list_from_graph(self) -> tuple[list[str], int]:
-        """Returns:
-        res_list - concatenation of utterances of every node and its outgoing edges
-        n_edges - total number of utterances in all edges
+        """Method to form auxiliary data from the graph
+        Returns:
+          res_list: concatenation of utterances of every node and its outgoing edges
+          n_edges: total number of utterances in all edges
         """
         graph = self.graph_dict
         res_list = []
         n_edges = 0
 
         for node in graph["nodes"]:
-            edges = [e for e in graph["edges"] if e["source"] == node["id"]]
-            utt = ""
-            for n_utt in node["utterances"]:
-                utt += n_utt + " "
+            edges = self.get_edges_by_source(node["id"])
+            utts = ""
+            for node_utt in node["utterances"]:
+                utts += node_utt + " "
             for edge in edges:
-                for e_utt in edge["utterances"]:
-                    utt += e_utt + " "
+                for edge_utt in edge["utterances"]:
+                    utts += edge_utt + " "
                     n_edges += 1
-            res_list.append(utt)
+            res_list.append(utts)
         return res_list, n_edges
+
