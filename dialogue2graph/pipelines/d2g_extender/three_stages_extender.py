@@ -23,6 +23,7 @@ from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
 from dialogue2graph.pipelines.d2g_extender.prompts import (
     extending_prompt_part_1,
     extending_prompt_part_2,
+    dg_examples
 )
 
 
@@ -35,6 +36,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 dialogue_sampler = RecursiveDialogueSampler()
+
 
 class LLMGraphExtender(GraphExtender):
     """Graph generator which iteratively takes step dialogues and adds them to graph
@@ -79,7 +81,6 @@ class LLMGraphExtender(GraphExtender):
     end_evals: list[Callable]
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-
     def __init__(
         self,
         model_storage: ModelStorage,
@@ -122,9 +123,10 @@ class LLMGraphExtender(GraphExtender):
         for idx, dial in enumerate(dialogues):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
+
         prompt = PromptTemplate(
             template=extending_prompt_part_1 + "{graph}. " + prompt_extra,
-            input_variables=["graph"],
+            input_variables=["graph", "examples"],
             partial_variables=partial_variables,
         )
 
@@ -136,7 +138,7 @@ class LLMGraphExtender(GraphExtender):
             self.model_storage.storage[self.extending_llm].model | fixed_output_parser
         )
 
-        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict))]
+        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict, examples=dg_examples))]
         nodes = chain.invoke(messages).model_dump()
 
         for idx in range(len(nodes["nodes"])):
@@ -147,9 +149,13 @@ class LLMGraphExtender(GraphExtender):
             sampled_dialogues = dialogue_sampler.invoke(
                 graph,
                 cycle_ends_model=self.model_storage.storage[self.dialog_llm].model,
-                upper_limit=15
-                )
-            graph_dict = connect_nodes(nodes["nodes"], sampled_dialogues + dialogues, self.model_storage.storage[self.sim_model].model)
+                upper_limit=15,
+            )
+            graph_dict = connect_nodes(
+                nodes["nodes"],
+                sampled_dialogues + dialogues,
+                self.model_storage.storage[self.sim_model].model,
+            )
         except Exception as e:
             logger.error("Error in dialog sampler: %s", e)
             return Graph({})
@@ -157,9 +163,21 @@ class LLMGraphExtender(GraphExtender):
         return Graph(graph_dict)
 
     def invoke(
-            self, pipeline_data: PipelineDataType, enable_evals: bool = False
-            ) -> tuple[BaseGraph, metrics.DGReportType]:
+        self, pipeline_data: PipelineDataType, enable_evals: bool = False
+    ) -> tuple[BaseGraph, metrics.DGReportType]:
+        """Primary method of the three stages generation algorithm:
 
+        Args:
+          pipeline_data:
+            data for generation and evaluation:
+              dialogs for generation, of List[Dialogue] type
+              supported_graph to extend, of Graph type
+              true_graph for evaluation, of Graph type
+          enable_evals: when true, evaluate method is called
+        Returns:
+          tuple of resulted graph of Graph type and report dictionary like in example below:
+          {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
+        """
         if pipeline_data.supported_graph is not None:
             cur_graph = pipeline_data.supported_graph
             start_point = 0
@@ -174,7 +192,7 @@ class LLMGraphExtender(GraphExtender):
             start_point = self.step
         if enable_evals and pipeline_data.true_graph is not None:
             report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step1"))
-        for point in range(start_point, len(pipeline_data.dialogs) - 1, self.step):
+        for point in range(start_point, len(pipeline_data.dialogs), self.step):
             cur_graph = self._add_step(
                 pipeline_data.dialogs[point : point + self.step], cur_graph
             )

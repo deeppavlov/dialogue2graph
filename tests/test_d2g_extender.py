@@ -3,7 +3,7 @@ import pytest
 import dotenv
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
-from dialogue2graph.pipelines.d2g_extender.pipeline import Pipeline
+from dialogue2graph.pipelines.d2g_extender.pipeline import D2GExtenderPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
@@ -88,7 +88,7 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GExtenderPipeline(
         name="d2g_ext",
         model_storage=ms,
         extending_llm="extending_llm",
@@ -103,12 +103,14 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
         step=1,
     )
 
-    raw_data = PipelineRawDataType(dialogs=dialogues_positive, true_graph=graph_positive_1)
+    raw_data = PipelineRawDataType(
+        dialogs=dialogues_positive, true_graph=graph_positive_1
+    )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert (
-        report.properties["complex_graph_comparison"]["value"] is True
-    ), f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
+    assert report.properties["complex_graph_comparison"]["value"] is True, (
+        f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
+    )
 
 
 def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
@@ -141,7 +143,7 @@ def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
         model_type="emb",
     )
 
-    pipeline = Pipeline(
+    pipeline = D2GExtenderPipeline(
         name="d2g_ext",
         model_storage=ms,
         extending_llm="extending_llm",
@@ -156,7 +158,11 @@ def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
         step=1,
     )
 
-    raw_data = PipelineRawDataType(dialogs=dialogues_negative, true_graph=graph_positive_1)
+    raw_data = PipelineRawDataType(
+        dialogs=dialogues_negative, true_graph=graph_positive_1
+    )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert report.properties["complex_graph_comparison"]["value"] is False, "Expected value=False in the negative scenario."
+    assert report.properties["complex_graph_comparison"]["value"] is False, (
+        "Expected value=False in the negative scenario."
+    )

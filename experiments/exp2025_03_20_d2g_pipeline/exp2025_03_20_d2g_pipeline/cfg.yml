@@ -1,22 +1,26 @@
-models:
-  generation-model:
-    name: chatgpt-4o-latest
+extending_llm:
+  config:
+    model_name: chatgpt-4o-latest
     temperature: 0
-  validation-model:
-    name: o3-mini
+  model_type: llm
+filling_llm:
+  config:
+    model_name: o3-mini
     temperature: 1
-  sim-model:
-    name: "BAAI/bge-m3"
-    device: "cuda:0"
-  filler-model:
-    name: o3-mini
-    temperature: 1
-  grouper-model:
-    name: chatgpt-4o-latest
+  model_type: llm
+formatting_llm:
+  config:
+    model_name: gpt-4o-mini
     temperature: 0
-  extender-model:
-    name: chatgpt-4o-latest
+  model_type: llm
+grouping_llm:
+  config:
+    model_name: chatgpt-4o-latest
     temperature: 0
-  formatter-model:
-    name: gpt-4o-mini
-    temperature: 0
+  model_type: llm
+sim_model:
+  config:
+    model_kwargs:
+      device: cuda:0
+    model_name: BAAI/bge-m3
+  model_type: emb

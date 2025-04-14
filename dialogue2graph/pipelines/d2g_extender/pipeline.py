@@ -7,7 +7,7 @@ from dialogue2graph.pipelines.d2g_extender.three_stages_extender import LLMGraph
 load_dotenv()
 
 
-class Pipeline(BasePipeline):
+class D2GExtenderPipeline(BasePipeline):
     """LLM graph extender pipeline"""
 
     def __init__(
@@ -45,15 +45,15 @@ class Pipeline(BasePipeline):
             model_storage.add(
                 key=formatting_llm,
                 config={"model": "gpt-4o-mini", "temperature": 0},
-                model_type="llm"
-                )
-            
+                model_type="llm",
+            )
+
         if dialog_llm not in model_storage.storage:
             model_storage.add(
                 key=dialog_llm,
                 config={"model": "o3-mini", "temperature": 1},
-                model_type="llm"
-                )
+                model_type="llm",
+            )
 
         if sim_model not in model_storage.storage:
             model_storage.add(

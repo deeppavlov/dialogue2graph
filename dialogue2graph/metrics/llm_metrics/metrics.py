@@ -229,7 +229,7 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
     Args:
       G1, G2: graphs to compare
       max: mapping of edges
-      
+
     Returns: True if numbers match, else False.
     """
     nodes_map = {}

@@ -40,8 +40,12 @@ class LightGraphGenerator(GraphGenerator):
     filling_llm: str = Field(description="LLM for adding missing edges")
     formatting_llm: str = Field(description="LLM for formatting output")
     sim_model: str = Field(description="Similarity model")
-    step2_evals: list[Callable] = Field(default_factory=list, description="Metrics after stage 2")
-    end_evals: list[Callable] = Field(default_factory=list, description="Metrics at the end")
+    step2_evals: list[Callable] = Field(
+        default_factory=list, description="Metrics after stage 2"
+    )
+    end_evals: list[Callable] = Field(
+        default_factory=list, description="Metrics at the end"
+    )
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     def __init__(
@@ -67,10 +71,8 @@ class LightGraphGenerator(GraphGenerator):
         )
 
     def invoke(
-            self,
-            pipeline_data: PipelineDataType,
-            enable_evals: bool = False
-            ) -> tuple[BaseGraph, metrics.DGReportType]:
+        self, pipeline_data: PipelineDataType, enable_evals: bool = False
+    ) -> tuple[BaseGraph, metrics.DGReportType]:
         """Primary method of the three stages generation algorithm:
         1. Algorithmic grouping assistant utterances into nodes: group_nodes.
         2. Algorithmic connecting nodes by edges: connect_nodes.

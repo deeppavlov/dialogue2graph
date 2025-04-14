@@ -34,6 +34,7 @@ class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
+
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
 
@@ -62,8 +63,12 @@ class LLMGraphGenerator(GraphGenerator):
     filling_llm: str = Field(description="LLM for adding missing edges")
     formatting_llm: str = Field(description="LLM for formatting output")
     sim_model: str = Field(description="Similarity model")
-    step2_evals: list[Callable] = Field(default_factory=list, description="Metrics after stage 2")
-    end_evals: list[Callable] = Field(default_factory=list, description="Metrics at the end")
+    step2_evals: list[Callable] = Field(
+        default_factory=list, description="Metrics after stage 2"
+    )
+    end_evals: list[Callable] = Field(
+        default_factory=list, description="Metrics at the end"
+    )
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     def __init__(
@@ -92,9 +97,8 @@ class LLMGraphGenerator(GraphGenerator):
         )
 
     def invoke(
-            self, pipeline_data: PipelineDataType, enable_evals: bool = False
-            ) -> tuple[BaseGraph, metrics.DGReportType]:
-        
+        self, pipeline_data: PipelineDataType, enable_evals: bool = False
+    ) -> tuple[BaseGraph, metrics.DGReportType]:
         """Primary method of the three stages generation algorithm:
         1. Grouping assistant utterances into nodes with LLM.
         2. Algorithmic connecting nodes by edges: connect_nodes.

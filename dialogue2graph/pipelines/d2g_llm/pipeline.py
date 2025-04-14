@@ -9,7 +9,7 @@ from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
 load_dotenv()
 
 
-class Pipeline(BasePipeline):
+class D2GLLMPipeline(BasePipeline):
     """LLM graph generator pipeline"""
 
     def __init__(

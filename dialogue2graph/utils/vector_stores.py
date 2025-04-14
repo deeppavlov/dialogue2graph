@@ -24,7 +24,7 @@ class DialogueStore:
         """Auxiliary method to initialize instance
         Args:
           dialogue: list of dicts in a form {"participant": "user" or "assistant", "text": text}
-          embedder: embedding function for vector sore        
+          embedder: embedding function for vector sore
         """
         self._assistant_store = Chroma(
             collection_name=str(uuid.uuid4()), embedding_function=embedder
@@ -47,7 +47,10 @@ class DialogueStore:
         self._user_store.add_documents(documents=user_docs)
 
     def __init__(
-        self, dialogue: list[dict[str,str]], embedder: HuggingFaceEmbeddings, score_threshold=0.995
+        self,
+        dialogue: list[dict[str, str]],
+        embedder: HuggingFaceEmbeddings,
+        score_threshold=0.995,
     ):
         """Initializes instance for dialogue based on embedder
         Args:
@@ -91,7 +94,7 @@ class NodeStore:
     """Vector store for graph nodes
     Attributes:
       _nodes_store: store for assistant utterances
-      _utterances: list of (node_utterance, node_id)    
+      _utterances: list of (node_utterance, node_id)
     """
 
     _nodes_store: Chroma
@@ -101,12 +104,14 @@ class NodeStore:
         """Auxiliary method to initialize instance
         Args:
           nodes: list of dicts in a form {"id": id, "label": label, "is_start": bool, "utterances": list}
-          embedder: embedding function for vector sore       
+          embedder: embedding function for vector sore
         """
         self._nodes_store = Chroma(
             collection_name=str(uuid.uuid4()), embedding_function=embedder
         )
-        self._utterances = [(utt.lower(), n["id"]) for n in nodes for utt in n["utterances"]]
+        self._utterances = [
+            (utt.lower(), n["id"]) for n in nodes for utt in n["utterances"]
+        ]
         docs = [
             Document(page_content=utt[0], id=id, metadata={"id": id})
             for id, utt in enumerate(self._utterances)
@@ -125,7 +130,7 @@ class NodeStore:
     def find_node(self, utterance: str) -> int:
         """Search for node by utterance
         Args:
-          utterance: uttetance to search by        
+          utterance: uttetance to search by
         Returns:
           Found node id or None if not found
         """
