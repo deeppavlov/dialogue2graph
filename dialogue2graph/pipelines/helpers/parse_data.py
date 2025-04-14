@@ -63,10 +63,7 @@ class RawDGParser(RawDataParser):
         """
         if raw_dialogs is None:
             raise ValueError("Raw dialogs data is None")
-        return TypeAdapter(ValidatedDialogType | PosixPath).validate_python(
-                raw_dialogs
-            )
-
+        return TypeAdapter(ValidatedDialogType | PosixPath).validate_python(raw_dialogs)
 
     def _get_dialogs_from_file(self, file_path: PosixPath) -> ValidatedDialogType:
         """Extracts dialogs from file_path
@@ -107,7 +104,9 @@ class RawDGParser(RawDataParser):
             raw_graph = json.load(f)
 
         if not isinstance(raw_graph, dict) or key not in raw_graph:
-                raise ValueError("Invalid data structure or missing key '%s' in file: %s", key, file_path)
+            raise ValueError(
+                "Invalid data structure or missing key '%s' in file: %s", key, file_path
+            )
         raw_graph_data = raw_graph[key]
         if isinstance(raw_graph_data, list) and raw_graph_data:
             raw_graph_data = raw_graph_data[0]

@@ -5,6 +5,7 @@ from .commands.generate_graph_light import generate_light
 from .commands.generate_graph_llm import generate_llm
 from .commands.generate_graph_extender import generate_extender
 
+
 @click.group()
 def cli():
     """Dialogue2Graph CLI tool for generating dialogue graphs and data"""
@@ -98,4 +99,3 @@ def gen_graph_extender(
         graph_path=output,
         report_path=report,
     )
-

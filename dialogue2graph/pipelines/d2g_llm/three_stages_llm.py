@@ -3,7 +3,6 @@ from typing import List, Callable
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
-from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 
 from dialogue2graph import metrics
@@ -114,92 +113,66 @@ class LLMGraphGenerator(GraphGenerator):
           tuple of resulted graph of Graph type and report dictionary like in example below:
           {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
         """
-        partial_variables = {}
-        prompt_extra = grouping_prompt_2
-        for idx, dial in enumerate(pipeline_data.dialogs):
-            partial_variables[f"var_{idx}"] = dial.to_list()
-            prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-        prompt = PromptTemplate(
-            template=grouping_prompt_1 + "{graph_example_1}. " + prompt_extra,
-            input_variables=["graph_example_1"],
-            partial_variables=partial_variables,
-        )
-
-        fixed_output_parser = OutputFixingParser.from_llm(
-            parser=PydanticOutputParser(pydantic_object=DialogueNodes),
-            llm=self.model_storage.storage[self.formatting_llm].model,
-        )
-        chain = (
-            self.model_storage.storage[self.grouping_llm].model | fixed_output_parser
-        )
-
-        messages = [
-            HumanMessage(content=prompt.format(graph_example_1=graph_example_1))
-        ]
-        nodes = chain.invoke(messages).model_dump()
-
-        _, _, user_end = get_helpers(pipeline_data.dialogs)
-
         try:
-            graph_dict = connect_nodes(
-                nodes["nodes"],
-                pipeline_data.dialogs,
-                self.model_storage.storage[self.sim_model].model,
-            )
-        except Exception as e:
-            print(e)
-            return Graph({}), {}
-        graph_dict = {
-            "nodes": graph_dict["nodes"],
-            "edges": graph_dict["edges"],
-            "reason": "",
-        }
-
-        try:
-            result_graph = Graph(graph_dict=graph_dict)
-            if enable_evals and pipeline_data.true_graph is not None:
-                report = self.evaluate(result_graph, pipeline_data.true_graph, "step2")
-            else:
-                report = {}
-            if not user_end:
-                return result_graph, report
-
-            partial_variables = {}
-            prompt_extra = ""
-            for idx, dial in enumerate(pipeline_data.dialogs):
-                partial_variables[f"var_{idx}"] = dial.to_list()
-                prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
+            # Prepare prompt
+            partial_variables = {
+                f"var_{idx}": dial.to_list()
+                for idx, dial in enumerate(pipeline_data.dialogs)
+            }
             prompt = PromptTemplate(
-                template=add_edge_prompt_1
-                + "{graph_dict}. "
-                + add_edge_prompt_2
-                + prompt_extra,
-                input_variables=["graph_dict"],
+                template=grouping_prompt_1 + "{graph_example_1}. " + grouping_prompt_2,
+                input_variables=["graph_example_1"],
                 partial_variables=partial_variables,
             )
 
-            fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=ReasonGraph),
-                llm=self.model_storage.storage[self.formatting_llm].model,
+            # Use LLM to group nodes
+            llm_output = self.model_storage.storage[self.grouping_llm].model.invoke(
+                [HumanMessage(content=prompt.format(graph_example_1=graph_example_1))]
             )
-            chain = (
-                self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+            nodes = DialogueNodes.model_validate(llm_output)
+
+            # Connect nodes
+            graph_dict = connect_nodes(
+                nodes.nodes,
+                pipeline_data.dialogs,
+                self.model_storage.storage[self.sim_model].model,
             )
+            graph_dict["reason"] = ""
 
-            messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
-
-            result = chain.invoke(messages)
-            if result is None:
-                return Graph(graph_dict={}), report
-            result.reason = "Fixes: " + result.reason
-            graph_dict = result.model_dump()
-            if not all([e["target"] for e in graph_dict["edges"]]):
-                return Graph(graph_dict={}), report
+            # Evaluate if needed
             result_graph = Graph(graph_dict=graph_dict)
-            if enable_evals and pipeline_data.true_graph is not None:
-                report.update(
-                    self.evaluate(result_graph, pipeline_data.true_graph, "end")
+            report = (
+                self.evaluate(result_graph, pipeline_data.true_graph, "step2")
+                if enable_evals and pipeline_data.true_graph
+                else {}
+            )
+
+            # Handle user end dialogues
+            if get_helpers(pipeline_data.dialogs)[2]:
+                prompt = PromptTemplate(
+                    template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2,
+                    input_variables=["graph_dict"],
+                    partial_variables={},
                 )
+
+                llm_output = self.model_storage.storage[self.filling_llm].model.invoke(
+                    [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
+                )
+                result = ReasonGraph.model_validate(llm_output)
+
+                result.reason = "Fixes: " + result.reason
+                graph_dict = result.model_dump()
+
+                # Validate edges
+                if not all(e.get("target") for e in graph_dict["edges"]):
+                    return Graph(graph_dict={}), report
+
+                result_graph = Graph(graph_dict=graph_dict)
+                if enable_evals and pipeline_data.true_graph:
+                    report.update(
+                        self.evaluate(result_graph, pipeline_data.true_graph, "end")
+                    )
+
             return result_graph, report
         except Exception as e:
             logger.error("Error in step3: %s", e)

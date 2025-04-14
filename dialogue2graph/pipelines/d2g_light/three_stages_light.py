@@ -73,87 +73,71 @@ class LightGraphGenerator(GraphGenerator):
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
     ) -> tuple[BaseGraph, metrics.DGReportType]:
-        """Primary method of the three stages generation algorithm:
-        1. Algorithmic grouping assistant utterances into nodes: group_nodes.
-        2. Algorithmic connecting nodes by edges: connect_nodes.
-        3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
-
-        Args:
-          pipeline_data:
-            data for generation and evaluation:
-              dialogs for generation, of List[Dialogue] type
-              true_graph for evaluation, of Graph type
-          enable_evals: when true, evaluate method is called
-        Returns:
-          tuple of resulted graph of Graph type and report dictionary like in example below:
-          {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
-        """
+        """Efficient implementation of the three stages generation algorithm."""
 
         node_utts, start_utts, user_end = get_helpers(pipeline_data.dialogs)
-
         groups = group_nodes(pipeline_data.dialogs, node_utts)
 
-        nodes = []
-        for idx, group in enumerate(groups):
-            if any([gr in start_utts for gr in group]):
-                start = True
-            else:
-                start = False
-            nodes.append(
-                {"id": idx + 1, "label": "", "is_start": start, "utterances": group}
-            )
+        nodes = [
+            {
+                "id": idx + 1,
+                "label": "",
+                "is_start": any(gr in start_utts for gr in group),
+                "utterances": group,
+            }
+            for idx, group in enumerate(groups)
+        ]
 
         graph_dict = connect_nodes(
             nodes,
             pipeline_data.dialogs,
             self.model_storage.storage[self.sim_model].model,
         )
-        graph_dict = {
-            "nodes": graph_dict["nodes"],
-            "edges": graph_dict["edges"],
-            "reason": "",
-        }
+        graph_dict.update(reason="")
 
         result_graph = Graph(graph_dict=graph_dict)
-        if enable_evals and pipeline_data.true_graph is not None:
+        report = {}
+
+        if enable_evals and pipeline_data.true_graph:
             report = self.evaluate(result_graph, pipeline_data.true_graph, "step2")
-        else:
-            report = {}
 
-        if not user_end:
-            return result_graph, report
+        if user_end:
+            partial_variables = {
+                f"var_{idx}": dial.to_list()
+                for idx, dial in enumerate(pipeline_data.dialogs)
+            }
+            prompt_extra = " ".join(
+                f"Dialogue_{idx}: {{var_{idx}}}"
+                for idx in range(len(pipeline_data.dialogs))
+            )
+            prompt = PromptTemplate(
+                template=f"{add_edge_prompt_1}{{graph_dict}}. {add_edge_prompt_2}{prompt_extra}",
+                input_variables=["graph_dict"],
+                partial_variables=partial_variables,
+            )
 
-        partial_variables = {}
-        prompt_extra = ""
-        for idx, dial in enumerate(pipeline_data.dialogs):
-            partial_variables[f"var_{idx}"] = dial.to_list()
-            prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-        prompt = PromptTemplate(
-            template=add_edge_prompt_1
-            + "{graph_dict}. "
-            + add_edge_prompt_2
-            + prompt_extra,
-            input_variables=["graph_dict"],
-            partial_variables=partial_variables,
-        )
+            fixed_output_parser = OutputFixingParser.from_llm(
+                parser=PydanticOutputParser(pydantic_object=ReasonGraph),
+                llm=self.model_storage.storage[self.formatting_llm].model,
+            )
+            chain = (
+                self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+            )
 
-        fixed_output_parser = OutputFixingParser.from_llm(
-            parser=PydanticOutputParser(pydantic_object=ReasonGraph),
-            llm=self.model_storage.storage[self.formatting_llm].model,
-        )
-        chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+            messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
+            result = chain.invoke(messages)
+            if result:
+                result.reason = "Fixes: " + result.reason
+                graph_dict = result.model_dump()
+                if all(e["target"] for e in graph_dict["edges"]):
+                    result_graph = Graph(graph_dict=graph_dict)
+                    if enable_evals and pipeline_data.true_graph:
+                        report.update(
+                            self.evaluate(result_graph, pipeline_data.true_graph, "end")
+                        )
+            else:
+                return Graph(graph_dict={}), report
 
-        messages = [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
-        result = chain.invoke(messages)
-        if result is None:
-            return Graph(graph_dict={}), report
-        result.reason = "Fixes: " + result.reason
-        graph_dict = result.model_dump()
-        if not all([e["target"] for e in graph_dict["edges"]]):
-            return Graph(graph_dict={}), report
-        result_graph = Graph(graph_dict=graph_dict)
-        if enable_evals and pipeline_data.true_graph is not None:
-            report.update(self.evaluate(result_graph, pipeline_data.true_graph, "end"))
         return result_graph, report
 
     async def ainvoke(self, *args, **kwargs):

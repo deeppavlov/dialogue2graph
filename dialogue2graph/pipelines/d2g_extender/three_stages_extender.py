@@ -23,7 +23,7 @@ from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
 from dialogue2graph.pipelines.d2g_extender.prompts import (
     extending_prompt_part_1,
     extending_prompt_part_2,
-    dg_examples
+    dg_examples,
 )
 
 
@@ -138,13 +138,20 @@ class LLMGraphExtender(GraphExtender):
             self.model_storage.storage[self.extending_llm].model | fixed_output_parser
         )
 
-        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict, examples=dg_examples))]
+        messages = [
+            HumanMessage(
+                content=prompt.format(graph=graph.graph_dict, examples=dg_examples)
+            )
+        ]
         nodes = chain.invoke(messages).model_dump()
 
-        for idx in range(len(nodes["nodes"])):
-            nodes["nodes"][idx]["utterances"] = list(
-                set(nodes["nodes"][idx]["utterances"])
-            )
+        new_nodes = []
+        for idx, node in enumerate(nodes["nodes"]):
+            node["utterances"] = list(set(node["utterances"]))
+            if node["utterances"]:
+                new_nodes.append(node)
+        nodes["nodes"] = new_nodes
+
         try:
             sampled_dialogues = dialogue_sampler.invoke(
                 graph,
@@ -159,99 +166,103 @@ class LLMGraphExtender(GraphExtender):
         except Exception as e:
             logger.error("Error in dialog sampler: %s", e)
             return Graph({})
-        graph_dict = {"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]}
-        return Graph(graph_dict)
+
+        return Graph({"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]})
 
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
     ) -> tuple[BaseGraph, metrics.DGReportType]:
-        """Primary method of the three stages generation algorithm:
+        """Primary method of the three stages generation algorithm.
 
         Args:
-          pipeline_data:
-            data for generation and evaluation:
-              dialogs for generation, of List[Dialogue] type
-              supported_graph to extend, of Graph type
-              true_graph for evaluation, of Graph type
-          enable_evals: when true, evaluate method is called
+            pipeline_data: data for generation and evaluation.
+            enable_evals: when true, evaluate method is called.
+
         Returns:
-          tuple of resulted graph of Graph type and report dictionary like in example below:
-          {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
+            A tuple containing the resulting graph and report dictionary.
         """
-        if pipeline_data.supported_graph is not None:
-            cur_graph = pipeline_data.supported_graph
-            start_point = 0
-            report = {}
-        else:
-            raw_data = PipelineDataType(
-                dialogs=pipeline_data.dialogs[: self.step],
-                true_graph=pipeline_data.true_graph,
-            )
-            cur_graph, report = self.graph_generator.invoke(raw_data, enable_evals)
-            report = {f"d2g_light:{k}": v for k, v in report.items()}
-            start_point = self.step
-        if enable_evals and pipeline_data.true_graph is not None:
+        report = {}
+        cur_graph = pipeline_data.supported_graph or self._initial_graph(
+            pipeline_data, enable_evals, report
+        )
+
+        if enable_evals and pipeline_data.true_graph:
             report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step1"))
-        for point in range(start_point, len(pipeline_data.dialogs), self.step):
+
+        for start in range(
+            self.step if not pipeline_data.supported_graph else 0,
+            len(pipeline_data.dialogs),
+            self.step,
+        ):
             cur_graph = self._add_step(
-                pipeline_data.dialogs[point : point + self.step], cur_graph
+                pipeline_data.dialogs[start : start + self.step], cur_graph
             )
-            if enable_evals and pipeline_data.true_graph is not None:
+            if enable_evals and pipeline_data.true_graph:
                 report.update(
                     self.evaluate(cur_graph, pipeline_data.true_graph, "extender")
                 )
 
-        _, _, last_user = get_helpers(pipeline_data.dialogs)
         try:
-            if enable_evals and pipeline_data.true_graph is not None:
+            if enable_evals and pipeline_data.true_graph:
                 report.update(
                     self.evaluate(cur_graph, pipeline_data.true_graph, "step2")
                 )
-            if not last_user:
+
+            if not get_helpers(pipeline_data.dialogs)[-1]:
                 return cur_graph, report
 
-            partial_variables = {}
-            prompt_extra = ""
-            for idx, dial in enumerate(pipeline_data.dialogs):
-                partial_variables[f"var_{idx}"] = dial.to_list()
-                prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
-            prompt = PromptTemplate(
-                template=add_edge_prompt_1
-                + "{graph_dict}. "
-                + add_edge_prompt_2
-                + prompt_extra,
-                input_variables=["graph_dict"],
-                partial_variables=partial_variables,
+            result_graph = self._finalize_graph(
+                pipeline_data, cur_graph, enable_evals, report
             )
-            messages = [
-                HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))
-            ]
-
-            fixed_output_parser = OutputFixingParser.from_llm(
-                parser=PydanticOutputParser(pydantic_object=ReasonGraph),
-                llm=self.model_storage.storage[self.formatting_llm].model,
-            )
-            chain = (
-                self.model_storage.storage[self.filling_llm].model | fixed_output_parser
-            )
-
-            result = chain.invoke(messages)
-
-            if result is None:
-                return Graph(graph_dict={}), report
-            result.reason = "Fixes: " + result.reason
-            graph_dict = result.model_dump()
-            if not all([e["target"] for e in graph_dict["edges"]]):
-                return Graph(graph_dict={}), report
-            result_graph = Graph(graph_dict=graph_dict)
-            if enable_evals and pipeline_data.true_graph is not None:
-                report.update(
-                    self.evaluate(result_graph, pipeline_data.true_graph, "end")
-                )
             return result_graph, report
         except Exception as e:
             logger.error("Error in step3: %s", e)
             return Graph({}), report
+
+    def _initial_graph(self, pipeline_data, enable_evals, report):
+        raw_data = PipelineDataType(
+            dialogs=pipeline_data.dialogs[: self.step],
+            true_graph=pipeline_data.true_graph,
+        )
+        cur_graph, initial_report = self.graph_generator.invoke(raw_data, enable_evals)
+        report.update({f"d2g_light:{k}": v for k, v in initial_report.items()})
+        return cur_graph
+
+    def _finalize_graph(self, pipeline_data, cur_graph, enable_evals, report):
+        partial_variables = {
+            f"var_{idx}": dial.to_list()
+            for idx, dial in enumerate(pipeline_data.dialogs)
+        }
+        prompt_extra = " ".join(
+            f"Dialogue_{idx}: {{var_{idx}}}"
+            for idx in range(len(pipeline_data.dialogs))
+        )
+        prompt = PromptTemplate(
+            template=f"{add_edge_prompt_1}{{graph_dict}}. {add_edge_prompt_2}{prompt_extra}",
+            input_variables=["graph_dict"],
+            partial_variables=partial_variables,
+        )
+        messages = [
+            HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))
+        ]
+
+        fixed_output_parser = OutputFixingParser.from_llm(
+            parser=PydanticOutputParser(pydantic_object=ReasonGraph),
+            llm=self.model_storage.storage[self.formatting_llm].model,
+        )
+        chain = self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+        result = chain.invoke(messages)
+
+        if result and all(e["target"] for e in result.model_dump()["edges"]):
+            result_graph = Graph(graph_dict=result.model_dump())
+            # result_graph.graph_dict["reason"] = "Fixes: " + result.graph_dict["reason"]
+            if enable_evals and pipeline_data.true_graph:
+                report.update(
+                    self.evaluate(result_graph, pipeline_data.true_graph, "end")
+                )
+            return result_graph
+
+        return Graph({})
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)

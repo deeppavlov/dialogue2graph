@@ -113,7 +113,7 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
     )
 
 
-def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
+def test_d2g_extender_negative(dialogues_negative, graph_negative):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
@@ -159,7 +159,7 @@ def test_d2g_extender_negative(dialogues_negative, graph_positive_1):
     )
 
     raw_data = PipelineRawDataType(
-        dialogs=dialogues_negative, true_graph=graph_positive_1
+        dialogs=dialogues_negative, true_graph=graph_negative
     )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
