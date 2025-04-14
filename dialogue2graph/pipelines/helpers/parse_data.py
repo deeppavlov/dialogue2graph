@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from pathlib import PosixPath
 import logging
-from pydantic import TypeAdapter, ValidationError
+from pydantic import TypeAdapter
 from dialogue2graph.pipelines.core.dialogue import Dialogue, DialogueMessage
 from dialogue2graph.pipelines.core.algorithms import RawDataParser
 from dialogue2graph.pipelines.core import schemas
@@ -50,11 +50,7 @@ class RawDGParser(RawDataParser):
             return raw_graph
         if isinstance(raw_graph, PosixPath):
             return raw_graph
-        try:
-            return schemas.DialogueGraph.model_validate(raw_graph)
-        except ValidationError as e:
-            logger.error(f"Input data validation error: {e}")
-            return None
+        return schemas.DialogueGraph.model_validate(raw_graph)
 
     def _validate_raw_dialogs(
         self, raw_dialogs: RawDialogsType
@@ -66,15 +62,11 @@ class RawDGParser(RawDataParser):
                  Empty list when validation error
         """
         if raw_dialogs is None:
-            logger.error("Raw dialogs data is None")
-            return []
-        try:
-            return TypeAdapter(ValidatedDialogType | PosixPath).validate_python(
+            raise ValueError("Raw dialogs data is None")
+        return TypeAdapter(ValidatedDialogType | PosixPath).validate_python(
                 raw_dialogs
             )
-        except ValidationError as e:
-            logger.error(f"Input data validation error: {e}")
-            return []
+
 
     def _get_dialogs_from_file(self, file_path: PosixPath) -> ValidatedDialogType:
         """Extracts dialogs from file_path
@@ -84,26 +76,19 @@ class RawDGParser(RawDataParser):
           validated dialogs or empty list if any error
         """
         if file_path.suffix == ".json":
-            try:
-                with open(file_path) as f:
-                    raw_dialogs = json.load(f)
-            except (OSError, json.JSONDecodeError) as e:
-                logger.error("Error %s reading/parsing file: %s", e, file_path)
-                return []
+            with open(file_path) as f:
+                raw_dialogs = json.load(f)
             if isinstance(raw_dialogs, dict) and "dialogs" in raw_dialogs:
                 raw_dialogs = raw_dialogs["dialogs"]
             elif isinstance(raw_dialogs, list):
                 pass
             else:
-                logger.error(
-                    "Data is not list or dict with 'dialogs' key in json file: %s",
-                    file_path,
+                raise ValueError(
+                    "Data is not list or dict with 'dialogs' key in json file: %s"
                 )
-                return []
             return self._validate_raw_dialogs(raw_dialogs)
         else:
-            logger.error("File extension is not json: %s", file_path)
-            return []
+            raise ValueError("File extension must be json: %s", file_path)
 
     def _get_graph_from_file(
         self, file_path: PosixPath, key: str
@@ -116,22 +101,13 @@ class RawDGParser(RawDataParser):
           validated graph or None if validation unsuccessful
         """
         if file_path.suffix != ".json":
-            logger.error("File extension is not json: %s", file_path)
-            return None
+            raise ValueError("File extension must be json: %s", file_path)
 
-        try:
-            with open(file_path) as f:
-                raw_graph = json.load(f)
-        except (OSError, json.JSONDecodeError) as e:
-            logger.error("Error %s reading/parsing file: %s", e, file_path)
-            return None
+        with open(file_path) as f:
+            raw_graph = json.load(f)
 
         if not isinstance(raw_graph, dict) or key not in raw_graph:
-            logger.error(
-                "Invalid data structure or missing key '%s' in file: %s", key, file_path
-            )
-            return None
-
+                raise ValueError("Invalid data structure or missing key '%s' in file: %s", key, file_path)
         raw_graph_data = raw_graph[key]
         if isinstance(raw_graph_data, list) and raw_graph_data:
             raw_graph_data = raw_graph_data[0]

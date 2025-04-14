@@ -23,6 +23,7 @@ from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
 from dialogue2graph.pipelines.d2g_extender.prompts import (
     extending_prompt_part_1,
     extending_prompt_part_2,
+    dg_examples
 )
 
 
@@ -117,14 +118,16 @@ class LLMGraphExtender(GraphExtender):
         )
 
     def _add_step(self, dialogues: list[Dialogue], graph: Graph) -> Graph:
+
         partial_variables = {}
         prompt_extra = extending_prompt_part_2
         for idx, dial in enumerate(dialogues):
             partial_variables[f"var_{idx}"] = dial.to_list()
             prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
+
         prompt = PromptTemplate(
             template=extending_prompt_part_1 + "{graph}. " + prompt_extra,
-            input_variables=["graph"],
+            input_variables=["graph", "examples"],
             partial_variables=partial_variables,
         )
 
@@ -136,7 +139,7 @@ class LLMGraphExtender(GraphExtender):
             self.model_storage.storage[self.extending_llm].model | fixed_output_parser
         )
 
-        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict))]
+        messages = [HumanMessage(content=prompt.format(graph=graph.graph_dict, examples=dg_examples))]
         nodes = chain.invoke(messages).model_dump()
 
         for idx in range(len(nodes["nodes"])):
@@ -190,7 +193,7 @@ class LLMGraphExtender(GraphExtender):
             start_point = self.step
         if enable_evals and pipeline_data.true_graph is not None:
             report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step1"))
-        for point in range(start_point, len(pipeline_data.dialogs) - 1, self.step):
+        for point in range(start_point, len(pipeline_data.dialogs), self.step):
             cur_graph = self._add_step(
                 pipeline_data.dialogs[point : point + self.step], cur_graph
             )
