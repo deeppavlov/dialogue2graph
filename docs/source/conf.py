@@ -33,17 +33,17 @@ if on_github:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    'sphinx.ext.autodoc',
+    "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
-    'sphinx.ext.viewcode', 
-    'sphinx.ext.napoleon',
+    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
     "sphinx_autodoc_typehints",
-    "sphinxcontrib.apidoc",
+    "autoapi.extension",
 ]
 
 templates_path = ["_templates"]
@@ -59,9 +59,18 @@ autodoc_default_options = {
 
 autodoc_typehints = "both"
 
-apidoc_module_dir = '../../dialogue2graph'
-apidoc_output_dir = 'reference'
-apidoc_separate_modules = True
+autoapi_dirs = ["../../dialogue2graph"]
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "special-members",
+    "imported-members",
+]
+autoapi_own_page_level = "function"
+suppress_warnings = ["autoapi.python_import_resolution"]
+autoapi_ignore = ["*/cli/*.py"]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -99,6 +108,14 @@ html_theme_options = {
     "show_toc_level": 2,
     # Add this to fix static file paths
     "static_page_path": "/dialogue2graph/dev/_static/",
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/deeppavlov/dialogue2graph",
+            "icon": "fa-brands fa-github",
+            "type": "fontawesome",
+        },
+    ],
 }
 
 # Fix relative URLs for GitHub Pages deployment
@@ -107,3 +124,13 @@ html_use_relative_paths = True
 # Ensure all static paths are properly prefixed for GitHub Pages
 if os.environ.get("GITHUB_ACTIONS") == "true":
     html_static_path_suffix = "/dialogue2graph/dev"
+
+
+def skip_submodules(app, what, name, obj, skip, options):
+    if what == "module" and "." not in name:
+        skip = True
+    return skip
+
+
+def setup(sphinx):
+    sphinx.connect("autoapi-skip-member", skip_submodules)

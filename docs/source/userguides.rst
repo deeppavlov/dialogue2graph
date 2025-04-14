@@ -1,10 +1,13 @@
 User guides
 ===========
 
-:doc:`Generate synthetic graph on certain topic <./userguides/generate_synthetic>`
-
 :doc:`Basic usage <./userguides/basic_usage>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+This generation guide demonstrated base usage of dialogue2graph package.
+
+
+:doc:`Generate synthetic graph on certain topic <./userguides/generate_synthetic>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This generation guide demonstrated how we can generate a dialogue graph to a certain topic.
