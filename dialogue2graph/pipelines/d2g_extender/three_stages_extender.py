@@ -118,7 +118,6 @@ class LLMGraphExtender(GraphExtender):
         )
 
     def _add_step(self, dialogues: list[Dialogue], graph: Graph) -> Graph:
-
         partial_variables = {}
         prompt_extra = extending_prompt_part_2
         for idx, dial in enumerate(dialogues):
