@@ -130,6 +130,8 @@ class ModelStorage(BaseModel):
             model_type (Union[Literal["llm"], Literal["emb"]]): The type of the model to be added.
                 - "llm": Large Language Model, initialized using `ChatOpenAI`.
                 - "emb": Embedding model, initialized using `HuggingFaceEmbeddings`.
+        Raises:
+            KeyError: If configuration keys are invalid for the specified model_type.
         """
         logger.debug("Current storage keys: %s", list(self.storage.keys()))
         if key in self.storage:
@@ -139,6 +141,10 @@ class ModelStorage(BaseModel):
                 logger.debug(
                     f"Initializing LLM model for key '{key}' with config: {config}"
                 )
+                if not all(p in ChatOpenAI.model_fields.keys() for p in config):
+                    raise KeyError(
+                        f"Invalid parameter names for model '{key}': {[p for p in config if p not in ChatOpenAI.model_fields.keys()]}"
+                    )
                 model_instance = ChatOpenAI(**config)
             elif model_type == "emb":
                 device = config.pop("device", None)
@@ -147,6 +153,10 @@ class ModelStorage(BaseModel):
                 logger.debug(
                     f"Initializing embedding model for key '{key}' with config: {config}"
                 )
+                if not all(p in HuggingFaceEmbeddings.model_fields.keys() for p in config):
+                    raise KeyError(
+                        f"Invalid parameter names for model '{key}': {[p for p in config if p not in HuggingFaceEmbeddings.model_fields.keys()]}"
+                    )
                 model_instance = HuggingFaceEmbeddings(**config)
 
             logger.debug("Created model instance of type: %s", type(model_instance))
@@ -158,6 +168,7 @@ class ModelStorage(BaseModel):
         except Exception as e:
             logger.error(f"Failed to add model '{key}' to storage: {e}", exc_info=True)
             raise
+        
 
     def save(self, path: str):
         """
