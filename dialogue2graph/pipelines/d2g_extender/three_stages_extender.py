@@ -118,17 +118,12 @@ class LLMGraphExtender(GraphExtender):
         )
 
     def _add_step(self, dialogues: list[Dialogue], graph: Graph) -> Graph:
-        partial_variables = {}
-        prompt_extra = extending_prompt_part_2
-        for idx, dial in enumerate(dialogues):
-            partial_variables[f"var_{idx}"] = dial.to_list()
-            prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
 
-        prompt = PromptTemplate(
-            template=extending_prompt_part_1 + "{graph}. " + prompt_extra,
-            input_variables=["graph", "examples"],
-            partial_variables=partial_variables,
-        )
+        dialogs = ""
+        for idx, dial in enumerate(dialogues):
+            dialogs += f"\nDialogue_{idx}: {dial}"
+
+        prompt = PromptTemplate.from_template(extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs)
 
         fixed_output_parser = OutputFixingParser.from_llm(
             parser=PydanticOutputParser(pydantic_object=DialogueNodes),
@@ -229,19 +224,13 @@ class LLMGraphExtender(GraphExtender):
         return cur_graph
 
     def _finalize_graph(self, pipeline_data, cur_graph, enable_evals, report):
-        partial_variables = {
-            f"var_{idx}": dial.to_list()
-            for idx, dial in enumerate(pipeline_data.dialogs)
-        }
-        prompt_extra = " ".join(
-            f"Dialogue_{idx}: {{var_{idx}}}"
-            for idx in range(len(pipeline_data.dialogs))
-        )
-        prompt = PromptTemplate(
-            template=f"{add_edge_prompt_1}{{graph_dict}}. {add_edge_prompt_2}{prompt_extra}",
-            input_variables=["graph_dict"],
-            partial_variables=partial_variables,
-        )
+
+        dialogs = ""
+        for idx, dial in enumerate(pipeline_data.dialogs):
+            dialogs += f"\nDialogue_{idx}: {dial}"
+
+        prompt = PromptTemplate.from_template(add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + dialogs)
+
         messages = [
             HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))
         ]
@@ -255,7 +244,6 @@ class LLMGraphExtender(GraphExtender):
 
         if result and all(e["target"] for e in result.model_dump()["edges"]):
             result_graph = Graph(graph_dict=result.model_dump())
-            # result_graph.graph_dict["reason"] = "Fixes: " + result.graph_dict["reason"]
             if enable_evals and pipeline_data.true_graph:
                 report.update(
                     self.evaluate(result_graph, pipeline_data.true_graph, "end")

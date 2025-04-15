@@ -3,6 +3,7 @@ from typing import List, Callable
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
+from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 
 from dialogue2graph import metrics
@@ -114,26 +115,27 @@ class LLMGraphGenerator(GraphGenerator):
           {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
         """
         try:
-            # Prepare prompt
-            partial_variables = {
-                f"var_{idx}": dial.to_list()
-                for idx, dial in enumerate(pipeline_data.dialogs)
-            }
-            prompt = PromptTemplate(
-                template=grouping_prompt_1 + "{graph_example_1}. " + grouping_prompt_2,
-                input_variables=["graph_example_1"],
-                partial_variables=partial_variables,
-            )
 
+            dialogs = ""
+            for idx, dial in enumerate(pipeline_data.dialogs):
+                dialogs += f" Dialogue_{idx}: {dial}"
+
+            prompt = PromptTemplate.from_template(grouping_prompt_1 + "{graph_example_1}. " + grouping_prompt_2 + dialogs)
+            fixed_output_parser = OutputFixingParser.from_llm(
+                parser=PydanticOutputParser(pydantic_object=DialogueNodes),
+                llm=self.model_storage.storage[self.formatting_llm].model,
+            )
+            chain = (
+                self.model_storage.storage[self.grouping_llm].model | fixed_output_parser
+            )
             # Use LLM to group nodes
-            llm_output = self.model_storage.storage[self.grouping_llm].model.invoke(
+            llm_output = chain.invoke(
                 [HumanMessage(content=prompt.format(graph_example_1=graph_example_1))]
             )
-            nodes = DialogueNodes.model_validate(llm_output)
-
+            nodes = [node.model_dump() for node in llm_output.nodes]
             # Connect nodes
             graph_dict = connect_nodes(
-                nodes.nodes,
+                nodes,
                 pipeline_data.dialogs,
                 self.model_storage.storage[self.sim_model].model,
             )
@@ -149,16 +151,18 @@ class LLMGraphGenerator(GraphGenerator):
 
             # Handle user end dialogues
             if get_helpers(pipeline_data.dialogs)[2]:
-                prompt = PromptTemplate(
-                    template=add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2,
-                    input_variables=["graph_dict"],
-                    partial_variables={},
-                )
+                prompt = PromptTemplate.from_template(add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2)
 
-                llm_output = self.model_storage.storage[self.filling_llm].model.invoke(
+                fixed_output_parser = OutputFixingParser.from_llm(
+                    parser=PydanticOutputParser(pydantic_object=ReasonGraph),
+                    llm=self.model_storage.storage[self.formatting_llm].model,
+                )
+                chain = (
+                    self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+                )
+                result = chain.invoke(
                     [HumanMessage(content=prompt.format(graph_dict=graph_dict))]
                 )
-                result = ReasonGraph.model_validate(llm_output)
 
                 result.reason = "Fixes: " + result.reason
                 graph_dict = result.model_dump()

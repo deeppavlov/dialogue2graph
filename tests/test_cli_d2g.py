@@ -1,5 +1,7 @@
 import os
 import json
+import pytest
+import dotenv
 import pathlib
 import logging
 import mimetypes
@@ -7,7 +9,9 @@ import csv
 import pandas as pd
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
 
-
+if not dotenv.find_dotenv():
+    pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
+    
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__file__)
 
@@ -118,7 +122,7 @@ def check_txt_subreports(report_path):
 def test_gen_light_json_positive():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
     )
     assert exit_status == 0, "dialogue2graph failed to generate report"
     assert parse_json(report_path) is not None, "saved report is not valid json"
@@ -130,7 +134,7 @@ def test_gen_light_json_positive():
 def test_gen_light_json_no_eval():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
     )
     assert not check_json_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
@@ -140,7 +144,7 @@ def test_gen_light_json_no_eval():
 def test_gen_light_md_positive():
     report_path = filepath.joinpath("d2g_light_test_report.md")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
     )
     assert exit_status == 0, "dialogue2graph failed to generate report"
     assert parse_md(report_path) is not None, "saved report is not valid markdown"
@@ -152,7 +156,7 @@ def test_gen_light_md_positive():
 def test_gen_light_md_no_eval():
     report_path = filepath.joinpath("d2g_light_test_report.md")
     os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
     )
     assert not check_md_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
@@ -162,7 +166,7 @@ def test_gen_light_md_no_eval():
 def test_gen_light_csv_positive():
     report_path = filepath.joinpath("d2g_light_test_report.csv")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
     )
     assert exit_status == 0, "dialogue2graph failed to generate report"
     assert parse_csv(report_path) is not None, "saved report is not valid csv"
@@ -174,7 +178,7 @@ def test_gen_light_csv_positive():
 def test_gen_light_csv_no_eval():
     report_path = filepath.joinpath("d2g_light_test_report.csv")
     os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
     )
     assert not check_csv_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
@@ -184,7 +188,7 @@ def test_gen_light_csv_no_eval():
 def test_gen_light_txt_positive():
     report_path = filepath.joinpath("d2g_light_test_report.txt")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path} -ev"
     )
     assert exit_status == 0, "dialogue2graph failed to generate report"
     assert parse_txt(report_path) is not None, "saved report is not valid csv"
@@ -196,7 +200,7 @@ def test_gen_light_txt_positive():
 def test_gen_light_txt_no_eval():
     report_path = filepath.joinpath("d2g_light_test_report.txt")
     os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -t {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_graph.json')} -tg {filepath.joinpath('test_cli_no_dialogs.json')} -r {report_path}"
     )
     assert not check_txt_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
@@ -206,7 +210,7 @@ def test_gen_light_txt_no_eval():
 def test_gen_light_nocfg():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg1.yml')} -d {filepath.joinpath('test_cli.json')} -t {filepath.joinpath('test_cli.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg1.yml')} -d {filepath.joinpath('test_cli.json')} -tg {filepath.joinpath('test_cli.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail without config file"
 
@@ -222,7 +226,7 @@ def test_gen_light_nocfg():
 def test_gen_light_no_dialog_file():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg1.yml')} -d {filepath.joinpath('test_cli1.json')} -t {filepath.joinpath('test_cli.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg1.yml')} -d {filepath.joinpath('test_cli1.json')} -tg {filepath.joinpath('test_cli.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail without dialog file"
 
@@ -230,7 +234,7 @@ def test_gen_light_no_dialog_file():
 def test_gen_light_no_dialogs():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_dialogs.json')} -t {filepath.joinpath('test_cli.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_no_dialogs.json')} -tg {filepath.joinpath('test_cli.json')} -r {report_path}"
     )
     assert exit_status != 0, (
         "dialogue2graph should fail with input file without dialogs"
@@ -240,7 +244,7 @@ def test_gen_light_no_dialogs():
 def test_gen_light_no_graph_file():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli.json')} -t {filepath.joinpath('test_cli_no_graph.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli.json')} -tg {filepath.joinpath('test_cli_no_graph.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail with input file without graph"
 
@@ -248,7 +252,7 @@ def test_gen_light_no_graph_file():
 def test_gen_light_empty_dialogs():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_empty_dialogs.json')} -t {filepath.joinpath('test_cli_no_graph.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_empty_dialogs.json')} -tg {filepath.joinpath('test_cli_no_graph.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail with empty dialogs"
 
@@ -256,6 +260,6 @@ def test_gen_light_empty_dialogs():
 def test_gen_light_empty_graph():
     report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
-        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli.json')} -t {filepath.joinpath('test_cli_empty_graph.json')} -r {report_path}"
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli.json')} -tg {filepath.joinpath('test_cli_empty_graph.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail with empty graph"

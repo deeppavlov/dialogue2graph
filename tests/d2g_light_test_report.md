@@ -1,7 +1,7 @@
 # Report for d2g_light
 
 ## Metrics
-- **time**: 0.96 seconds
+- **time**: 0.93 seconds
 - **simple_graph_comparison**: ❌
 
 ## Subreports
