@@ -5,7 +5,6 @@ LLM Metrics.
 This module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
 """
 
-import logging
 import json
 from typing import List, TypedDict, Union
 from pydantic import BaseModel, Field
@@ -22,8 +21,9 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class InvalidTransition(TypedDict):

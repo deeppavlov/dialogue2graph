@@ -3,15 +3,15 @@ import json
 from typing import List, Optional
 from pydantic import BaseModel
 from pathlib import PosixPath
-import logging
 from pydantic import TypeAdapter
 from dialogue2graph.pipelines.core.dialogue import Dialogue, DialogueMessage
 from dialogue2graph.pipelines.core.algorithms import RawDataParser
 from dialogue2graph.pipelines.core import schemas
 from dialogue2graph.pipelines.core import graph
+from dialogue2graph.utils.logger import Logger
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = Logger(__file__)
+
 RawDialogsType = dict | list[list] | list[dict] | Dialogue | list[Dialogue] | PosixPath
 ValidatedDialogType = (
     List[DialogueMessage] | List[List[DialogueMessage]] | Dialogue | List[Dialogue]

@@ -1,5 +1,4 @@
 import yaml
-import logging
 import dotenv
 from typing import Literal, Union, Dict
 from pathlib import Path
@@ -9,14 +8,11 @@ from langchain_openai import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
 from langchain_huggingface import HuggingFaceEmbeddings
 
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 dotenv.load_dotenv()
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
-
 
 class StoredData(BaseModel):
     """

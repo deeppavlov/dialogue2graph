@@ -1,5 +1,4 @@
 import itertools
-import logging
 from typing import Literal
 import pandas as pd
 from dialogue2graph.pipelines.core.graph import BaseGraph
@@ -12,8 +11,9 @@ from dialogue2graph.metrics.no_llm_metrics import (
 from dialogue2graph.datasets.complex_dialogues.find_cycle_ends import find_cycle_ends
 from langchain_core.language_models.chat_models import BaseChatModel
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class _DialogPathsCounter:

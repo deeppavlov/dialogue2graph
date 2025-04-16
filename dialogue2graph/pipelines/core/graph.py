@@ -3,9 +3,10 @@ from pydantic import BaseModel
 from typing import Optional, Any
 import matplotlib.pyplot as plt
 import abc
-import logging
 
-logger = logging.getLogger(__name__)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class BaseGraph(BaseModel, abc.ABC):

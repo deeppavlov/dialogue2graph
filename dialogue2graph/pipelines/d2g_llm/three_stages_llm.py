@@ -12,8 +12,7 @@ from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.model_storage import ModelStorage
-
-
+from dialogue2graph.utils.logger import Logger
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
@@ -26,9 +25,6 @@ from dialogue2graph.pipelines.d2g_llm.prompts import (
     grouping_prompt_2,
 )
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 class DialogueNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
@@ -36,7 +32,7 @@ class DialogueNodes(BaseModel):
 
 
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
-
+logger = Logger(__file__)
 
 class LLMGraphGenerator(GraphGenerator):
     """Graph generator from list of dialogues. Based on LLM.

@@ -1,4 +1,3 @@
-import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
 
@@ -29,8 +28,9 @@ from .prompts import (
 )
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class ErrorType(str, Enum):
