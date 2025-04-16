@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>dialogue2graph.datasets.complex_dialogues.find_graph_ends &#8212; Dialogue2Graph  documentation</title>
+    <title>dialogue2graph.datasets.complex_dialogues.find_cycle_ends &#8212; Dialogue2Graph  documentation</title>
   
   
   
@@ -40,11 +40,11 @@
     <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
     <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/dialogue2graph/datasets/complex_dialogues/find_graph_ends';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/dialogue2graph/datasets/complex_dialogues/find_cycle_ends';</script>
     <script src="../../../../_static/scripts/pydata-sphinx-theme.js?v=a1eb5d9f"></script>
     <script src="../../../../_static/scripts/bootstrap.js?v=7583a70d"></script>
     <script src="../../../../_static/scripts/fontawesome.js?v=9b125980"></script>
-    <link rel="canonical" href="/dialogue2graph/dev/_modules/dialogue2graph/datasets/complex_dialogues/find_graph_ends.html" />
+    <link rel="canonical" href="/dialogue2graph/dev/_modules/dialogue2graph/datasets/complex_dialogues/find_cycle_ends.html" />
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -348,7 +348,7 @@
     
     <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">dialogue2graph.datasets.complex_dialogues.find_graph_ends</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">dialogue2graph.datasets.complex_dialogues.find_cycle_ends</span></li>
   </ul>
 </nav>
 </div>
@@ -365,24 +365,24 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for dialogue2graph.datasets.complex_dialogues.find_graph_ends</h1><div class="highlight"><pre>
+  <h1>Source code for dialogue2graph.datasets.complex_dialogues.find_cycle_ends</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">PydanticOutputParser</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseChatModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Graph</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseChatModel</span>
 
 
-<div class="viewcode-block" id="find_graph_ends">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.find_graph_ends.find_graph_ends">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">find_graph_ends</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="find_cycle_ends">
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.find_cycle_ends.find_cycle_ends">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_cycle_ends</span><span class="p">(</span><span class="n">G</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">cycle_ends_model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    To find nodes in dialogue graph G by condition in graph_ends_prompt_template with help of model.</span>
 
 <span class="sd">    Parameters:</span>
 <span class="sd">        G (BaseGraph): The dialogue graph</span>
-<span class="sd">        model (BaseChatModel): The LLM model to be used</span>
+<span class="sd">        cycle_ends_model (BaseChatModel): The LLM model to be used</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        dict: {&#39;value&#39;: bool, &#39;description&#39;: str}</span>
@@ -422,7 +422,7 @@
         <span class="s2">&quot;json_graph&quot;</span><span class="p">:</span> <span class="n">graph_json</span><span class="p">,</span>
     <span class="p">}</span>
 
-    <span class="n">find_ends_chain</span> <span class="o">=</span> <span class="n">graph_ends_prompt</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span>
+    <span class="n">find_ends_chain</span> <span class="o">=</span> <span class="n">graph_ends_prompt</span> <span class="o">|</span> <span class="n">cycle_ends_model</span> <span class="o">|</span> <span class="n">parser</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">find_ends_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">input_data</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">ends</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="n">response</span><span class="o">.</span><span class="n">description</span><span class="p">}</span>
 

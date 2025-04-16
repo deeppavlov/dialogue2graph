@@ -18,7 +18,7 @@ Each ``Pipeline`` has it's own default models, but you can override them by pass
 .. code-block:: python
 
     ms = ModelStorage()
-    
+
     ms.add(
         "my_formatting_model",
         config={
@@ -37,6 +37,7 @@ Each ``Pipeline`` has it's own default models, but you can override them by pass
 
 
     pipe = D2GLLMPipeline(
+        name="d2g_pipeline" # name to save reports for (useful if multiple pipelines are used)
         ms,
         formatting_llm="my_formatting_model",
         sim_model="my_embedding_model"
@@ -64,10 +65,12 @@ Note, that the adding of the models to the ``ModelStorage`` is not necessary if 
     {'text': "You're welcome! Have a fantastic trip!",
         'participant': 'assistant'}]
 
-    # Invoke the pipeline
-    graph = pipe.invoke(data)
+    # Invoke the pipeline to get the graph and report objects
+    graph, report = pipe.invoke(data)
+    report.to_markdown("report.md")
 
 That's it! Now, you have a ``Graph`` object that you can use for further processing.
+And you have a ``Report`` object that contains some metrics regarding your data. It can be exported to various formats using built in functions.
 
 If needed you can both save your ``ModelStorage`` and load it later.
 

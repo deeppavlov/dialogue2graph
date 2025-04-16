@@ -1,0 +1,1027 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>dialogue2graph.metrics.no_llm_metrics package &#8212; Dialogue2Graph  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'reference/dialogue2graph.metrics.no_llm_metrics';</script>
+    <script src="../_static/scripts/pydata-sphinx-theme.js?v=a1eb5d9f"></script>
+    <script src="../_static/scripts/bootstrap.js?v=7583a70d"></script>
+    <script src="../_static/scripts/fontawesome.js?v=9b125980"></script>
+    <link rel="canonical" href="/dialogue2graph/dev/reference/dialogue2graph.metrics.no_llm_metrics.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="dialogue2graph.metrics.no_llm_validators package" href="dialogue2graph.metrics.no_llm_validators.html" />
+    <link rel="prev" title="dialogue2graph.metrics.llm_validators package" href="dialogue2graph.metrics.llm_validators.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Dialogue2Graph  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../research.html">
+    Research
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../userguides.html">
+    User guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    dialogue2graph
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../development.html">
+    Development
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../about_us.html">
+    About us
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../research.html">
+    Research
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../userguides.html">
+    User guides
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    dialogue2graph
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../development.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about_us.html">
+    About us
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="dialogue2graph.html">dialogue2graph package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="dialogue2graph.cli.html">dialogue2graph.cli package</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="dialogue2graph.datasets.html">dialogue2graph.datasets package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html">dialogue2graph.datasets.complex_dialogues package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.core.html">dialogue2graph.datasets.core package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="dialogue2graph.metrics.html">dialogue2graph.metrics package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.metrics.llm_metrics.html">dialogue2graph.metrics.llm_metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.metrics.llm_validators.html">dialogue2graph.metrics.llm_validators package</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">dialogue2graph.metrics.no_llm_metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.metrics.no_llm_validators.html">dialogue2graph.metrics.no_llm_validators package</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">dialogue2graph</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="dialogue2graph.html" class="nav-link">dialogue2graph package</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="dialogue2graph.metrics.html" class="nav-link">dialogue2graph.metrics package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">dialogue2graph.metrics.no_llm_metrics package</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="dialogue2graph-metrics-no-llm-metrics-package">
+<h1>dialogue2graph.metrics.no_llm_metrics package<a class="headerlink" href="#dialogue2graph-metrics-no-llm-metrics-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-dialogue2graph.metrics.no_llm_metrics.metrics">
+<span id="dialogue2graph-metrics-no-llm-metrics-metrics-module"></span><h2>dialogue2graph.metrics.no_llm_metrics.metrics module<a class="headerlink" href="#module-dialogue2graph.metrics.no_llm_metrics.metrics" title="Link to this heading">#</a></h2>
+<section id="automatic-metrics">
+<h3>Automatic Metrics.<a class="headerlink" href="#automatic-metrics" title="Link to this heading">#</a></h3>
+<p>This module contains functions that automatically (without using LLMs) checks Graphs and Dialogues
+for various metrics.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.match_graph_triplets">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">match_graph_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">change_to_original_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_graph_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_graph_triplets" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Attempts to match two graphs (G1 and G2) by:</dt><dd><ol class="arabic simple">
+<li><p>Checking isomorphism using NetworkX matchers (depending on whether it’s DiGraph or MultiDiGraph).</p></li>
+<li><p>Building Jaccard similarity matrices for nodes and edges to refine the mapping.</p></li>
+<li><p>Potentially reverting mapped IDs to G1’s original numbering if change_to_original_ids=True.</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>node_mapping: which node in G1 corresponds to which node in G2</p></li>
+<li><p>edge_mapping: which edge in G1 corresponds to which edge in G2</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>node_mapping, edge_mapping (dict, dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.is_same_structure">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">is_same_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#is_same_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.is_same_structure" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.all_paths_sampled">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">all_paths_sampled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#all_paths_sampled"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.all_paths_sampled" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.match_dialogue_triplets">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">match_dialogue_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_dialogue_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_dialogue_triplets" title="Link to this definition">#</a></dt>
+<dd><p>Match triplets of two dialogue sequences</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">AbsentTriplet</span></span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#AbsentTriplet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>To return absent triplets in DGTripletsMatchResult</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.source">
+<span class="sig-name descname"><span class="pre">source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.source" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.edge">
+<span class="sig-name descname"><span class="pre">edge</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.edge" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.target">
+<span class="sig-name descname"><span class="pre">target</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.target" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.from_tuple">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">triplet</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#AbsentTriplet.from_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.from_tuple" title="Link to this definition">#</a></dt>
+<dd><p>Create AbsentTriplet from a tuple</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet" title="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbsentTriplet</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">DGTripletsMatchResult</span></span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#DGTripletsMatchResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>To return result of matching triplets between graph and dialogues</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.description" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.absent_triplets">
+<span class="sig-name descname"><span class="pre">absent_triplets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><a class="reference internal" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet" title="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbsentTriplet</span></code></a><span class="pre">]]</span></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.absent_triplets" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.match_dg_triplets">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">match_dg_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogues</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_dg_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_dg_triplets" title="Link to this definition">#</a></dt>
+<dd><p>Check if all graph triplets match triplets in set of dialogues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>G</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></span>) – BaseGraph object containing the dialogue graph</p></li>
+<li><p><strong>dialogues</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="dialogue2graph.html#dialogue2graph.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a>]</span>) – List of Dialogue objects to check against</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult" title="dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">DGTripletsMatchResult</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">InvalidDialogueTransition</span></span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#InvalidDialogueTransition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>To return invalid dialogue transition in DialogueValidationResult</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.from_message">
+<span class="sig-name descname"><span class="pre">from_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.from_message" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.to_message">
+<span class="sig-name descname"><span class="pre">to_message</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.to_message" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.dialogue_id">
+<span class="sig-name descname"><span class="pre">dialogue_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.dialogue_id" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">DialogueValidationResult</span></span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#DialogueValidationResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>To return result of dialogues_are_valid_paths</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult.value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult.invalid_transitions">
+<span class="sig-name descname"><span class="pre">invalid_transitions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><a class="reference internal" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition" title="dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition"><code class="xref py py-class docutils literal notranslate"><span class="pre">InvalidDialogueTransition</span></code></a><span class="pre">]]</span></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult.invalid_transitions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.are_paths_valid">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">are_paths_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogues</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#are_paths_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.are_paths_valid" title="Link to this definition">#</a></dt>
+<dd><p>Check if all dialogues are valid paths in the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>G</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></span>) – BaseGraph object containing the dialogue graph</p></li>
+<li><p><strong>dialogues</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="dialogue2graph.html#dialogue2graph.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a>]</span>) – List of Dialogue objects to check against</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>for every dialogue {“value”: bool, “description”: “description with dialogue_id and list of pairs when there is no connection from one message to another”}</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.match_roles">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">match_roles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_roles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_roles" title="Link to this definition">#</a></dt>
+<dd><p>Checks if two dialogues have identical participant roles in each turn.
+Returns True if they match in every turn, otherwise False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.is_correct_length">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">is_correct_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#is_correct_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.is_correct_length" title="Link to this definition">#</a></dt>
+<dd><p>Checks if two dialogues have the same number of messages.
+Returns True if lengths are equal, False otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.are_answers_similar">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">are_answers_similar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#are_answers_similar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.are_answers_similar" title="Link to this definition">#</a></dt>
+<dd><p>Placeholder for any advanced similarity check between the dialogues’ answers.
+Not implemented.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.all_utterances_present">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">all_utterances_present</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogues</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#all_utterances_present"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.all_utterances_present" title="Link to this definition">#</a></dt>
+<dd><p>Checks whether every utterance in the graph (both from nodes and edges)
+appears at least once in the provided dialogues.</p>
+<p>Returns True if all graph utterances are found within the dialogues,
+otherwise returns the set of missing utterances.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.triplet_match_accuracy">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">triplet_match_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">change_to_original_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#triplet_match_accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.triplet_match_accuracy" title="Link to this definition">#</a></dt>
+<dd><p>Calculates a simple accuracy metric for node and edge matching based on ‘match_graph_triplets’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>{</dt><dd><p>“node_accuracy”: fraction_of_matched_nodes_in_G1,
+“edge_accuracy”: fraction_of_matched_edges_in_G1</p>
+</dd>
+</dl>
+<p>}</p>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.metrics.compute_graph_metrics">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.metrics.</span></span><span class="sig-name descname"><span class="pre">compute_graph_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#compute_graph_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.metrics.compute_graph_metrics" title="Link to this definition">#</a></dt>
+<dd><p>Computes various statistics across a list of Graph objects,
+where each Graph has a ‘graph_dict’ containing ‘edges’ and ‘nodes’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+<dl>
+<dt>Expects each element in ‘graph_list’ to be something like:</dt><dd><dl>
+<dt>Graph(</dt><dd><dl class="simple">
+<dt>graph_dict={</dt><dd><p>“edges”: […],
+“nodes”: […]</p>
+</dd>
+</dl>
+<p>},
+graph=&lt;networkx graph object&gt;,
+node_mapping={}</p>
+</dd>
+</dl>
+<p>)</p>
+</dd>
+<dt>Returns a dictionary with the following keys:</dt><dd><ul class="simple">
+<li><p>“with_cycles” (int): How many of the graphs contain at least one cycle.</p></li>
+<li><p>“percentage_with_cycles” (float): Percentage of graphs that have a cycle, out of all.</p></li>
+<li><p>“average_edges_amount” (float): Average number of edges per graph.</p></li>
+<li><p>“average_nodes_amount” (float): Average number of nodes per graph.</p></li>
+<li><p>“total_graphs” (int): Total number of graphs processed.</p></li>
+<li><p>“total_edges” (int): Sum of edges across all graphs.</p></li>
+<li><p>“total_nodes” (int): Sum of nodes across all graphs.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-dialogue2graph.metrics.no_llm_metrics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dialogue2graph.metrics.no_llm_metrics" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.are_paths_valid">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">are_paths_valid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogues</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#are_paths_valid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.are_paths_valid" title="Link to this definition">#</a></dt>
+<dd><p>Check if all dialogues are valid paths in the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>G</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></span>) – BaseGraph object containing the dialogue graph</p></li>
+<li><p><strong>dialogues</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="dialogue2graph.html#dialogue2graph.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a>]</span>) – List of Dialogue objects to check against</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>for every dialogue {“value”: bool, “description”: “description with dialogue_id and list of pairs when there is no connection from one message to another”}</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">DialogueValidationResult</span></span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#DialogueValidationResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>To return result of dialogues_are_valid_paths</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult.value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult.invalid_transitions">
+<span class="sig-name descname"><span class="pre">invalid_transitions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><a class="reference internal" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition" title="dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition"><code class="xref py py-class docutils literal notranslate"><span class="pre">InvalidDialogueTransition</span></code></a><span class="pre">]]</span></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult.invalid_transitions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.match_graph_triplets">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">match_graph_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">change_to_original_ids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_graph_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.match_graph_triplets" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Attempts to match two graphs (G1 and G2) by:</dt><dd><ol class="arabic simple">
+<li><p>Checking isomorphism using NetworkX matchers (depending on whether it’s DiGraph or MultiDiGraph).</p></li>
+<li><p>Building Jaccard similarity matrices for nodes and edges to refine the mapping.</p></li>
+<li><p>Potentially reverting mapped IDs to G1’s original numbering if change_to_original_ids=True.</p></li>
+</ol>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>node_mapping: which node in G1 corresponds to which node in G2</p></li>
+<li><p>edge_mapping: which edge in G1 corresponds to which edge in G2</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>node_mapping, edge_mapping (dict, dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.match_dg_triplets">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">match_dg_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dialogues</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_dg_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.match_dg_triplets" title="Link to this definition">#</a></dt>
+<dd><p>Check if all graph triplets match triplets in set of dialogues.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>G</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></span>) – BaseGraph object containing the dialogue graph</p></li>
+<li><p><strong>dialogues</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<a class="reference internal" href="dialogue2graph.html#dialogue2graph.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a>]</span>) – List of Dialogue objects to check against</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult" title="dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">DGTripletsMatchResult</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.match_dialogue_triplets">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">match_dialogue_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_dialogue_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.match_dialogue_triplets" title="Link to this definition">#</a></dt>
+<dd><p>Match triplets of two dialogue sequences</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">DGTripletsMatchResult</span></span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#DGTripletsMatchResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TypedDict</span></code></p>
+<p>To return result of matching triplets between graph and dialogues</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.value">
+<span class="sig-name descname"><span class="pre">value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.value" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.description" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.absent_triplets">
+<span class="sig-name descname"><span class="pre">absent_triplets</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code><span class="pre">[</span><a class="reference internal" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet" title="dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbsentTriplet</span></code></a><span class="pre">]]</span></em><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.absent_triplets" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.match_roles">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">match_roles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#match_roles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.match_roles" title="Link to this definition">#</a></dt>
+<dd><p>Checks if two dialogues have identical participant roles in each turn.
+Returns True if they match in every turn, otherwise False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.is_correct_length">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">is_correct_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">D1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#is_correct_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.is_correct_length" title="Link to this definition">#</a></dt>
+<dd><p>Checks if two dialogues have the same number of messages.
+Returns True if lengths are equal, False otherwise.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dialogue2graph.metrics.no_llm_metrics.is_same_structure">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.metrics.no_llm_metrics.</span></span><span class="sig-name descname"><span class="pre">is_same_structure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/metrics/no_llm_metrics/metrics.html#is_same_structure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.metrics.no_llm_metrics.is_same_structure" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="dialogue2graph.metrics.llm_validators.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">dialogue2graph.metrics.llm_validators package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="dialogue2graph.metrics.no_llm_validators.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">dialogue2graph.metrics.no_llm_validators package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.metrics.no_llm_metrics.metrics">dialogue2graph.metrics.no_llm_metrics.metrics module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#automatic-metrics">Automatic Metrics.</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_graph_triplets"><code class="docutils literal notranslate"><span class="pre">match_graph_triplets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.is_same_structure"><code class="docutils literal notranslate"><span class="pre">is_same_structure()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.all_paths_sampled"><code class="docutils literal notranslate"><span class="pre">all_paths_sampled()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_dialogue_triplets"><code class="docutils literal notranslate"><span class="pre">match_dialogue_triplets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet"><code class="docutils literal notranslate"><span class="pre">AbsentTriplet</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.source"><code class="docutils literal notranslate"><span class="pre">AbsentTriplet.source</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.edge"><code class="docutils literal notranslate"><span class="pre">AbsentTriplet.edge</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.target"><code class="docutils literal notranslate"><span class="pre">AbsentTriplet.target</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.AbsentTriplet.from_tuple"><code class="docutils literal notranslate"><span class="pre">AbsentTriplet.from_tuple()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.value"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult.value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.description"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult.description</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult.absent_triplets"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult.absent_triplets</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_dg_triplets"><code class="docutils literal notranslate"><span class="pre">match_dg_triplets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition"><code class="docutils literal notranslate"><span class="pre">InvalidDialogueTransition</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.from_message"><code class="docutils literal notranslate"><span class="pre">InvalidDialogueTransition.from_message</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.to_message"><code class="docutils literal notranslate"><span class="pre">InvalidDialogueTransition.to_message</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.InvalidDialogueTransition.dialogue_id"><code class="docutils literal notranslate"><span class="pre">InvalidDialogueTransition.dialogue_id</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult"><code class="docutils literal notranslate"><span class="pre">DialogueValidationResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult.value"><code class="docutils literal notranslate"><span class="pre">DialogueValidationResult.value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.DialogueValidationResult.invalid_transitions"><code class="docutils literal notranslate"><span class="pre">DialogueValidationResult.invalid_transitions</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.are_paths_valid"><code class="docutils literal notranslate"><span class="pre">are_paths_valid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.match_roles"><code class="docutils literal notranslate"><span class="pre">match_roles()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.is_correct_length"><code class="docutils literal notranslate"><span class="pre">is_correct_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.are_answers_similar"><code class="docutils literal notranslate"><span class="pre">are_answers_similar()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.all_utterances_present"><code class="docutils literal notranslate"><span class="pre">all_utterances_present()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.triplet_match_accuracy"><code class="docutils literal notranslate"><span class="pre">triplet_match_accuracy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.metrics.compute_graph_metrics"><code class="docutils literal notranslate"><span class="pre">compute_graph_metrics()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.metrics.no_llm_metrics">Module contents</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.are_paths_valid"><code class="docutils literal notranslate"><span class="pre">are_paths_valid()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult"><code class="docutils literal notranslate"><span class="pre">DialogueValidationResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult.value"><code class="docutils literal notranslate"><span class="pre">DialogueValidationResult.value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult.invalid_transitions"><code class="docutils literal notranslate"><span class="pre">DialogueValidationResult.invalid_transitions</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.match_graph_triplets"><code class="docutils literal notranslate"><span class="pre">match_graph_triplets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.match_dg_triplets"><code class="docutils literal notranslate"><span class="pre">match_dg_triplets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.match_dialogue_triplets"><code class="docutils literal notranslate"><span class="pre">match_dialogue_triplets()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.value"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult.value</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.description"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult.description</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult.absent_triplets"><code class="docutils literal notranslate"><span class="pre">DGTripletsMatchResult.absent_triplets</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.match_roles"><code class="docutils literal notranslate"><span class="pre">match_roles()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.is_correct_length"><code class="docutils literal notranslate"><span class="pre">is_correct_length()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.metrics.no_llm_metrics.is_same_structure"><code class="docutils literal notranslate"><span class="pre">is_same_structure()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/reference/dialogue2graph.metrics.no_llm_metrics.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

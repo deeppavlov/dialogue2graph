@@ -378,9 +378,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseChatModel</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.dialogue_sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveDialogueSampler</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">match_triplets_dg</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">match_dg_triplets</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.llm_metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">are_triplets_valid</span><span class="p">,</span> <span class="n">is_theme_valid</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_validators</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_greeting_repeated_regex</span><span class="p">,</span> <span class="n">is_dialog_closed_too_early_regex</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_validators</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">is_greeting_repeated_regex</span><span class="p">,</span>
+    <span class="n">is_dialog_closed_too_early_regex</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">Graph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.algorithms</span><span class="w"> </span><span class="kn">import</span> <span class="n">TopicGraphGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">GraphGenerationResult</span><span class="p">,</span> <span class="n">DialogueGraph</span>
@@ -482,6 +485,7 @@
     <span class="n">generation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
     <span class="n">theme_validation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
     <span class="n">validation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
+    <span class="n">cycle_ends_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
     <span class="n">graph_generator</span><span class="p">:</span> <span class="n">CycleGraphGenerator</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">CycleGraphGenerator</span><span class="p">)</span>
     <span class="n">generation_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cycle_graph_generation_prompt_informal</span>
@@ -508,6 +512,7 @@
         <span class="n">generation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span>
         <span class="n">theme_validation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span>
         <span class="n">validation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span>
+        <span class="n">cycle_ends_model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span>
         <span class="n">generation_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">],</span>
         <span class="n">repair_prompt</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PromptTemplate</span><span class="p">],</span>
         <span class="n">min_cycles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
@@ -518,6 +523,7 @@
             <span class="n">generation_model</span><span class="o">=</span><span class="n">generation_model</span><span class="p">,</span>
             <span class="n">theme_validation_model</span><span class="o">=</span><span class="n">theme_validation_model</span><span class="p">,</span>
             <span class="n">validation_model</span><span class="o">=</span><span class="n">validation_model</span><span class="p">,</span>
+            <span class="n">cycle_ends_model</span><span class="o">=</span><span class="n">cycle_ends_model</span><span class="p">,</span>
             <span class="n">generation_prompt</span><span class="o">=</span><span class="n">generation_prompt</span><span class="p">,</span>
             <span class="n">repair_prompt</span><span class="o">=</span><span class="n">repair_prompt</span><span class="p">,</span>
             <span class="n">min_cycles</span><span class="o">=</span><span class="n">min_cycles</span><span class="p">,</span>
@@ -665,7 +671,7 @@
                 <span class="n">seed</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Graph generated is </span><span class="si">{</span><span class="n">graph</span><span class="o">.</span><span class="n">graph_dict</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges_match_nodes</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">match_edges_nodes</span><span class="p">():</span>
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
                     <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: edges don&#39;t match nodes&quot;</span><span class="p">,</span>
@@ -687,16 +693,19 @@
                 <span class="p">)</span>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sampling dialogues...&quot;</span><span class="p">)</span>
-            <span class="n">sampled_dialogues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialogue_sampler</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+            <span class="n">sampled_dialogues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialogue_sampler</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+                <span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle_ends_model</span><span class="p">,</span> <span class="mi">15</span>
+            <span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sampled </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">)</span><span class="si">}</span><span class="s2"> dialogues&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">match_triplets_dg</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sampled_dialogues</span><span class="p">)[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">match_dg_triplets</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sampled_dialogues</span><span class="p">)[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
                     <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span>
                     <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - not all utterances are present&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">is_greeting_repeated_regex</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
-                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - Opening phrases are repeated&quot;</span>
+                    <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span>
+                    <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - Opening phrases are repeated&quot;</span><span class="p">,</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">is_dialog_closed_too_early_regex</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">):</span>
                 <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
@@ -729,7 +738,7 @@
 
             <span class="n">graph</span> <span class="o">=</span> <span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;graph&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">transition_validation</span><span class="p">[</span><span class="s2">&quot;validation_details&quot;</span><span class="p">][</span><span class="s2">&quot;attempts_made&quot;</span><span class="p">]:</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">edges_match_nodes</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">graph</span><span class="o">.</span><span class="n">match_edges_nodes</span><span class="p">():</span>
                     <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
                         <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
                         <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: edges don&#39;t match nodes&quot;</span><span class="p">,</span>
@@ -740,10 +749,12 @@
                         <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">INVALID_GRAPH_STRUCTURE</span><span class="p">,</span>
                         <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Generated graph is wrong: utterances in nodes doubled&quot;</span><span class="p">,</span>
                     <span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sampling dialogues...&quot;</span><span class="p">)</span>
-                <span class="n">sampled_dialogues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialogue_sampler</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sampled </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">)</span><span class="si">}</span><span class="s2"> dialogues&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">match_triplets_dg</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sampled_dialogues</span><span class="p">)[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sampling dialogues...&quot;</span><span class="p">)</span>
+                <span class="n">sampled_dialogues</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dialogue_sampler</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+                    <span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cycle_ends_model</span><span class="p">,</span> <span class="mi">15</span>
+                <span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sampled </span><span class="si">%d</span><span class="s2"> dialogues&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">sampled_dialogues</span><span class="p">))</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">match_dg_triplets</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">sampled_dialogues</span><span class="p">)[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
                     <span class="k">return</span> <span class="n">GenerationError</span><span class="p">(</span>
                         <span class="n">error_type</span><span class="o">=</span><span class="n">ErrorType</span><span class="o">.</span><span class="n">SAMPLING_FAILED</span><span class="p">,</span>
                         <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Failed to sample valid dialogues - not all utterances are present&quot;</span><span class="p">,</span>
@@ -783,6 +794,7 @@
     <span class="n">model_storage</span><span class="p">:</span> <span class="n">ModelStorage</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model storage&quot;</span><span class="p">)</span>
     <span class="n">generation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for graph generation&quot;</span><span class="p">)</span>
     <span class="n">validation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for validation&quot;</span><span class="p">)</span>
+    <span class="n">cycle_ends_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for dialog sampler to find cycle ends&quot;</span><span class="p">)</span>
     <span class="n">theme_validation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for theme validation&quot;</span><span class="p">)</span>
     <span class="n">pipeline</span><span class="p">:</span> <span class="n">GenerationPipeline</span>
 
@@ -791,16 +803,19 @@
         <span class="n">model_storage</span><span class="p">:</span> <span class="n">ModelStorage</span><span class="p">,</span>
         <span class="n">generation_llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">validation_llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">cycle_ends_llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">theme_validation_llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
             <span class="n">generation_llm</span><span class="o">=</span><span class="n">generation_llm</span><span class="p">,</span>
             <span class="n">validation_llm</span><span class="o">=</span><span class="n">validation_llm</span><span class="p">,</span>
+            <span class="n">cycle_ends_llm</span><span class="o">=</span><span class="n">cycle_ends_llm</span><span class="p">,</span>
             <span class="n">theme_validation_llm</span><span class="o">=</span><span class="n">theme_validation_llm</span><span class="p">,</span>
             <span class="n">pipeline</span><span class="o">=</span><span class="n">GenerationPipeline</span><span class="p">(</span>
                 <span class="n">generation_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">generation_llm</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
                 <span class="n">validation_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">validation_llm</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                <span class="n">cycle_ends_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">cycle_ends_llm</span><span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
                 <span class="n">theme_validation_model</span><span class="o">=</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span>
                     <span class="n">theme_validation_llm</span>
                 <span class="p">]</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
@@ -812,9 +827,9 @@
 <div class="viewcode-block" id="LoopedGraphGenerator.invoke">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating graph for topic: </span><span class="si">{</span><span class="n">topic</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating graph for topic: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">successful_generations</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>

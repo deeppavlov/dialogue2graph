@@ -328,6 +328,13 @@
 <li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.core.html">dialogue2graph.datasets.core package</a></li>
 </ul>
 </details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="dialogue2graph.metrics.html">dialogue2graph.metrics package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.metrics.llm_metrics.html">dialogue2graph.metrics.llm_metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.metrics.llm_validators.html">dialogue2graph.metrics.llm_validators package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.metrics.no_llm_metrics.html">dialogue2graph.metrics.no_llm_metrics package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.metrics.no_llm_validators.html">dialogue2graph.metrics.no_llm_validators package</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 </ul>
@@ -401,17 +408,17 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
-<section id="module-dialogue2graph.datasets.complex_dialogues.find_graph_ends">
-<span id="dialogue2graph-datasets-complex-dialogues-find-graph-ends-module"></span><h2>dialogue2graph.datasets.complex_dialogues.find_graph_ends module<a class="headerlink" href="#module-dialogue2graph.datasets.complex_dialogues.find_graph_ends" title="Link to this heading">#</a></h2>
+<section id="module-dialogue2graph.datasets.complex_dialogues.find_cycle_ends">
+<span id="dialogue2graph-datasets-complex-dialogues-find-cycle-ends-module"></span><h2>dialogue2graph.datasets.complex_dialogues.find_cycle_ends module<a class="headerlink" href="#module-dialogue2graph.datasets.complex_dialogues.find_cycle_ends" title="Link to this heading">#</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.find_graph_ends.find_graph_ends">
-<span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.find_graph_ends.</span></span><span class="sig-name descname"><span class="pre">find_graph_ends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/find_graph_ends.html#find_graph_ends"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.find_graph_ends.find_graph_ends" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.find_cycle_ends.find_cycle_ends">
+<span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.find_cycle_ends.</span></span><span class="sig-name descname"><span class="pre">find_cycle_ends</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle_ends_model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/find_cycle_ends.html#find_cycle_ends"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.find_cycle_ends.find_cycle_ends" title="Link to this definition">#</a></dt>
 <dd><p>To find nodes in dialogue graph G by condition in graph_ends_prompt_template with help of model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>G</strong> (<em>BaseGraph</em>) – The dialogue graph</p></li>
-<li><p><strong>model</strong> (<em>BaseChatModel</em>) – The LLM model to be used</p></li>
+<li><p><strong>cycle_ends_model</strong> (<em>BaseChatModel</em>) – The LLM model to be used</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -526,7 +533,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">GenerationPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repair_prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fix_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">GenerationPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">generation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle_ends_model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repair_prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_cycles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_fix_attempts</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#GenerationPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_model">
@@ -541,6 +548,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validation_model">
 <span class="sig-name descname"><span class="pre">validation_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChatModel</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validation_model" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.cycle_ends_model">
+<span class="sig-name descname"><span class="pre">cycle_ends_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseChatModel</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.cycle_ends_model" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -647,7 +659,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">LoopedGraphGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_llm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#LoopedGraphGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.complex_dialogues.generation.</span></span><span class="sig-name descname"><span class="pre">LoopedGraphGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle_ends_llm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_llm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#LoopedGraphGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TopicGraphGenerator</span></code></p>
 <p>Graph generator for topic-based dialogue generation with model storage support</p>
 <dl class="py attribute">
@@ -663,6 +675,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.validation_llm">
 <span class="sig-name descname"><span class="pre">validation_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.validation_llm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.cycle_ends_llm">
+<span class="sig-name descname"><span class="pre">cycle_ends_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></em><a class="headerlink" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.cycle_ends_llm" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -749,8 +766,8 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.datasets.complex_dialogues.find_graph_ends">dialogue2graph.datasets.complex_dialogues.find_graph_ends module</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.find_graph_ends.find_graph_ends"><code class="docutils literal notranslate"><span class="pre">find_graph_ends()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.datasets.complex_dialogues.find_cycle_ends">dialogue2graph.datasets.complex_dialogues.find_cycle_ends module</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.find_cycle_ends.find_cycle_ends"><code class="docutils literal notranslate"><span class="pre">find_cycle_ends()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.datasets.complex_dialogues.generation">dialogue2graph.datasets.complex_dialogues.generation module</a><ul class="visible nav section-nav flex-column">
@@ -783,6 +800,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_model"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.generation_model</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.theme_validation_model"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.theme_validation_model</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validation_model"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.validation_model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.cycle_ends_model"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.cycle_ends_model</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.graph_generator"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.graph_generator</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generation_prompt"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.generation_prompt</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.repair_prompt"><code class="docutils literal notranslate"><span class="pre">GenerationPipeline.repair_prompt</span></code></a></li>
@@ -806,6 +824,7 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.model_storage"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.model_storage</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.generation_llm"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.generation_llm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.validation_llm"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.validation_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.cycle_ends_llm"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.cycle_ends_llm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.theme_validation_llm"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.theme_validation_llm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.pipeline"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.pipeline</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke"><code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator.invoke()</span></code></a></li>
