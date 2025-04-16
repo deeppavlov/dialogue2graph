@@ -225,7 +225,12 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
     """Helper that compares number of utterances in each pair of edges of two nodes.
     Mapping of edges is defined by max parameter, which is argmax of embeddings of nodes utterances.
     See compare_graphs.
-    Returns True if numbers match, else False.
+
+    Args:
+      G1, G2: graphs to compare
+      max: mapping of edges
+
+    Returns: True if numbers match, else False.
     """
     nodes_map = {}
     graph1 = G1.graph_dict
@@ -236,8 +241,8 @@ def _compare_edge_lens(G1: BaseGraph, G2: BaseGraph, max: list) -> bool:
         nodes_map[n] = nodes2[max[idx]]
 
     for node1, node2 in zip(nodes1, [nodes_map[n] for n in nodes1]):
-        edges1 = G1.edge_by_source(node1)
-        edges2 = G2.edge_by_source(node2)
+        edges1 = G1.get_edges_by_source(node1)
+        edges2 = G2.get_edges_by_source(node2)
         if len(edges1) != len(edges2):
             return False
         for edge1 in edges1:
@@ -254,22 +259,31 @@ def compare_graphs(
     G2: BaseGraph,
     embedder: str = "BAAI/bge-m3",
     sim_th: float = 0.93,
-    llm_comparer: str = "gpt-4o",
+    llm_comparer: str = "o3-mini",
     formatter: str = "gpt-3.5-turbo",
     device="cuda:0",
 ) -> CompareResponse:
     """
     Compares two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
     LLM formatter is used to keep LLM answer in a required format.
-    Returns dict with True or False value and a description.
+
+    Args:
+      G1, G2: graphs to compare
+      embedder: name of embedding model on HuggingFace
+      sim_th: similarity threshold to use LLM
+      llm_comparer: name of LLM to compare graphs
+      formatter: name of LLm modle to format llm_comparer output
+
+    Returns:
+      dict with True or False value and a description.
     """
 
     g1 = G1.graph_dict
     g2 = G2.graph_dict
 
     # list of concatenations of all nodes utterances:
-    nodes1_list = G1.nodes2list()
-    nodes2_list = G2.nodes2list()
+    nodes1_list = G1.get_list_from_nodes()
+    nodes2_list = G2.get_list_from_nodes()
 
     if len(nodes1_list) != len(nodes2_list):
         return {
@@ -278,8 +292,8 @@ def compare_graphs(
         }
 
     # g1_list, g2_list - concatenations of utterances of every node and its outgoing edges
-    g1_list, n_edge_utts1 = G1.graph2list()
-    g2_list, n_edge_utts2 = G2.graph2list()
+    g1_list, n_edge_utts1 = G1.get_list_from_graph()
+    g2_list, n_edge_utts2 = G2.get_list_from_graph()
 
     nodes_matrix = get_similarity(
         nodes1_list, nodes2_list, embedder, device=device

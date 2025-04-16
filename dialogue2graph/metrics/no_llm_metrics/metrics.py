@@ -6,12 +6,17 @@ This module contains functions that automatically (without using LLMs) checks Gr
 for various metrics.
 """
 
+import logging
 from typing import List, TypedDict, Optional
 import numpy as np
 import networkx as nx
 
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def _collapse_multiedges(edges):
@@ -344,6 +349,11 @@ def _get_dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:
     return set(result)
 
 
+def match_dialogue_triplets(s1: list[Dialogue], s2: list[Dialogue]):
+    """Match triplets of two dialogue sequences"""
+    return {"value": _get_dialogue_triplets(s1) == _get_dialogue_triplets(s2)}
+
+
 def _get_graph_triplets(G: BaseGraph):
     """Find all graph triplets with (source, edge, target) utterances"""
     graph = G.graph_dict
@@ -382,7 +392,7 @@ class DGTripletsMatchResult(TypedDict):
     absent_triplets: Optional[List[AbsentTriplet]]
 
 
-def match_triplets_dg(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatchResult:
+def match_dg_triplets(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatchResult:
     """
     Check if all graph triplets match triplets in set of dialogues.
 
@@ -394,8 +404,9 @@ def match_triplets_dg(G: BaseGraph, dialogues: list[Dialogue]) -> DGTripletsMatc
     graph_set = _get_graph_triplets(G)
     graph_absent = dialogue_set - graph_set
     dialogue_absent = graph_set - dialogue_set
+
     if dialogue_set.issubset(graph_set):
-        print("Graph has all the dialogues")
+        logger.info("Graph has all the dialogues")
     if not len(graph_absent) and not len(dialogue_absent):
         return {"value": True}
     if len(dialogue_absent):
@@ -427,9 +438,9 @@ def _match_ua(G: BaseGraph, user: str, assistant: str) -> bool:
     Returns:
         True if there is connection, False otherwise
     """
-    nodes = G.nodes_by_utterance(assistant)
+    nodes = G.find_nodes_by_utterance(assistant)
     for node in nodes:
-        edges = G.edges_by_utterance(user)
+        edges = G.find_edges_by_utterance(user)
         for edge in edges:
             if edge["target"] == node["id"]:
                 return True
@@ -447,9 +458,9 @@ def _match_au(G: BaseGraph, assistant: str, user: str) -> bool:
     Returns:
         True if there is connection, False otherwise
     """
-    nodes = G.nodes_by_utterance(assistant)
+    nodes = G.find_nodes_by_utterance(assistant)
     for node in nodes:
-        edges = G.edges_by_utterance(user)
+        edges = G.find_edges_by_utterance(user)
         for edge in edges:
             if edge["source"] == node["id"]:
                 return True

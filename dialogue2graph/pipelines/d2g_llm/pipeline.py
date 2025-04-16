@@ -1,61 +1,71 @@
+# from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
+from typing import Callable
 from dotenv import load_dotenv
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
-from dialogue2graph.pipelines.helpers.parse_data import DataParser
 from dialogue2graph.pipelines.model_storage import ModelStorage
-from .three_stages_llm import ThreeStagesGraphGenerator as LLMGenerator
+
+from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
 
 load_dotenv()
 
 
-class Pipeline(BasePipeline):
+class D2GLLMPipeline(BasePipeline):
     """LLM graph generator pipeline"""
 
     def __init__(
         self,
+        name: str,
         model_storage: ModelStorage,
         grouping_llm: str = "d2g_llm_grouping_llm:v1",
         filling_llm: str = "d2g_llm_filling_llm:v1",
         formatting_llm: str = "d2g_llm_formatting_llm:v1",
         sim_model: str = "d2g_llm_sim_model:v1",
+        step2_evals: list[Callable] = None,
+        end_evals: list[Callable] = None,
     ):
         # check if models are in model storage
         # if model is not in model storage put the default model there
         if grouping_llm not in model_storage.storage:
             model_storage.add(
                 key=grouping_llm,
-                config={"name": "gpt-4o-latest", "temperature": 0},
+                config={"model": "chatgpt-4o-latest", "temperature": 0},
                 model_type="llm",
             )
-            # grouping_llm = model_storage.storage["d2g_llm_grouping_llm:v1"].model
 
         if filling_llm not in model_storage.storage:
             model_storage.add(
                 key=filling_llm,
-                config={"name": "o3-mini", "temperature": 1},
+                config={"model": "o3-mini", "temperature": 1},
                 model_type="llm",
             )
 
         if formatting_llm not in model_storage.storage:
             model_storage.add(
                 key=formatting_llm,
-                config={"name": "gpt-4o-mini", "temperature": 0},
+                config={"model": "gpt-4o-mini", "temperature": 0},
                 model_type="llm",
             )
 
         if sim_model not in model_storage.storage:
             model_storage.add(
                 key=sim_model,
-                config={"model_name": "cointegrated/LaBSE-en-ru", "device": "cpu"},
+                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
                 model_type="emb",
             )
 
         super().__init__(
+            name=name,
             steps=[
-                DataParser(),
-                LLMGenerator(
-                    model_storage, grouping_llm, filling_llm, formatting_llm, sim_model
-                ),
-            ]
+                LLMGraphGenerator(
+                    model_storage,
+                    grouping_llm,
+                    filling_llm,
+                    formatting_llm,
+                    sim_model,
+                    step2_evals,
+                    end_evals,
+                )
+            ],
         )
 
     def _validate_pipeline(self):
