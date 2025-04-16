@@ -6,6 +6,7 @@ This module contains functions that automatically (without using LLMs) checks Gr
 for various metrics.
 """
 
+import logging
 from typing import List, TypedDict, Optional
 import numpy as np
 import networkx as nx
@@ -15,6 +16,10 @@ from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.utils.logger import Logger
 
 logger = Logger(__file__)
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def _collapse_multiedges(edges):

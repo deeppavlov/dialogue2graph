@@ -33,6 +33,8 @@ class DialogueNodes(BaseModel):
     # reason: str = Field(description="explanation")
 
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 logger = Logger(__file__)
 
