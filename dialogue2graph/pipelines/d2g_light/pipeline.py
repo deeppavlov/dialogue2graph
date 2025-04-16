@@ -25,14 +25,14 @@ class D2GLightPipeline(BasePipeline):
         if filling_llm not in model_storage.storage:
             model_storage.add(
                 key=filling_llm,
-                config={"model": "chatgpt-4o-latest", "temperature": 0},
+                config={"model_name": "chatgpt-4o-latest", "temperature": 0},
                 model_type="llm",
             )
 
         if formatting_llm not in model_storage.storage:
             model_storage.add(
                 key=formatting_llm,
-                config={"model": "gpt-4o-mini", "temperature": 0},
+                config={"model_name": "gpt-4o-mini", "temperature": 0},
                 model_type="llm",
             )
 

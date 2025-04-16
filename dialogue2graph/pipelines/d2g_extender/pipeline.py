@@ -30,28 +30,28 @@ class D2GExtenderPipeline(BasePipeline):
         if extending_llm not in model_storage.storage:
             model_storage.add(
                 key=extending_llm,
-                config={"model": "chatgpt-4o-latest", "temperature": 0},
+                config={"model_name": "chatgpt-4o-latest", "temperature": 0},
                 model_type="llm",
             )
 
         if filling_llm not in model_storage.storage:
             model_storage.add(
                 key=filling_llm,
-                config={"model": "o3-mini", "temperature": 1},
+                config={"mode_name": "o3-mini", "temperature": 1},
                 model_type="llm",
             )
 
         if formatting_llm not in model_storage.storage:
             model_storage.add(
                 key=formatting_llm,
-                config={"model": "gpt-4o-mini", "temperature": 0},
+                config={"model_name": "gpt-4o-mini", "temperature": 0},
                 model_type="llm",
             )
 
         if dialog_llm not in model_storage.storage:
             model_storage.add(
                 key=dialog_llm,
-                config={"model": "o3-mini", "temperature": 1},
+                config={"model_name": "o3-mini", "temperature": 1},
                 model_type="llm",
             )
 
