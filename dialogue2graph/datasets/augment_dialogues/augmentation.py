@@ -1,111 +1,152 @@
 import logging
 import pandas as pd
-from typing import List, Optional, Union
-from pydantic import BaseModel, Field
+from typing import Optional, Union
+from pydantic import BaseModel, Field, ValidationError
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.output_parsers import OutputFixingParser
 
 from dialogue2graph.pipelines.core.algorithms import DialogAugmentation
-from dialogue2graph.pipelines.core.dialogue import DialogueMessage, Dialogue
+from dialogue2graph.pipelines.core.dialogue import Dialogue, DialogueMessage
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.metrics.no_llm_metrics.metrics import (
-    is_correct_length_multi_utterance,
-    match_roles_multi_utterance)
-
-
-class DialogueSequence(BaseModel):
-    result: List[DialogueMessage] = Field(description="Sequence of Dialogue Messages")
-
+    is_correct_length, match_roles
+    )
 
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
+class AugmentedTurn(BaseModel):
+    participant: str
+    text: list[str] = Field(..., description="List of utterance variations for this turn")
+
+class DialogueSequence(BaseModel):
+    result: list[AugmentedTurn] = Field(..., description="Sequence of augmented turns")
+
 
 class DialogueAugmenter(DialogAugmentation):
-    """Dialogue augmenter that rephrases the original dialogue lines
-    based on the lines themselves and the topic of the original dialogue.
-    """
+    """Augments dialogues while preserving structure and conversation flow by rephrasing original dialogue lines."""
     
     model_storage: ModelStorage = Field(..., description="Model storage instance")
     generation_llm: str = Field(..., description="Key for generation LLM in storage")
     formatting_llm: str = Field(..., description="Key for formatting LLM in storage")
 
-    def __init__(
-        self,
-        model_storage: ModelStorage,
-        generation_llm: str,
-        formatting_llm: str,
-    ):
-
-        super().__init__(
-            model_storage=model_storage,
-            generation_llm=generation_llm,
-            formatting_llm=formatting_llm
-        )
-
     def invoke(
         self,
-        dialogue: list = None,
-        topic: str = None,
-        prompt: str = None
-    ) -> Union[DialogueSequence, str]:
+        dialogue: Dialogue,
+        prompt: str,
+        topic: str = "",
+    ) -> Union[list[Dialogue], str]:
         """Augments dialogue while preserving conversation structure.
         
         Args:
-            dialogue: list of messages to augment, each message is a dictionary 
-                with 'participant' and 'text' keys
-            topic: topic of the original dialogue
-            prompt: prompt template for the LLM chain
-            
+            dialogue: Input Dialogue object to augment
+            prompt: Required augmentation prompt template
+            topic: Contextual topic for augmentation (default: empty)
+                 
         Returns:
-            augmented dialogue: list of messages, each message is a dictionary 
-                with 'participant' and 'text' keys, value of the 'text' key is 
-                a list of augmented utterance variations
+            List of augmented Dialogue objects or error message
         """
-        try:                   
+            
+        try:
+            # Convert Dialogue to message dicts for processing
+            message_dicts = [msg.model_dump() for msg in dialogue.messages]
+            
+            # Setup augmentation chain
             augmentation_prompt = PromptTemplate.from_template(prompt)
             parser = JsonOutputParser(pydantic_object=DialogueSequence)
             
             fixed_parser = OutputFixingParser.from_llm(
                 parser=parser,
-                llm=self.model_storage.storage[self.formatting_llm].model
+                llm=self._get_llm(self.formatting_llm)
             )
 
-            chain = (
-                augmentation_prompt
-                | self.model_storage.storage[self.generation_llm].model
-                | fixed_parser
-            )
-
+            chain = augmentation_prompt | self._get_llm(self.generation_llm) | fixed_parser
+            
+            # Attempt processing with retries
             for attempt in range(3):
                 try:
-                    return chain.invoke({"topic": topic, "dialogue": dialogue})
+                    result = chain.invoke({"topic": topic, "dialogue": message_dicts})
+                    try:
+                        augmented_dialogues = self._create_dialogues(result)
+                        return augmented_dialogues
+                    except Exception as e:
+                        logging.error(f"Error while creating new dialogues: {str(e)}")
+                
+                except ValidationError as ve:
+                    logging.warning(f"Validation error attempt {attempt+1}: {ve}")
+
                 except Exception as e:
+                    logging.error(f"Unexpected error: {str(e)}")
                     if attempt == 2:
-                        return f"Generation failed after 3 attempts: {str(e)}"
-                    
+                        return f"Augmentation failed: {str(e)}"
+                        
+            return "Augmentation failed after 3 attempts"
+            
         except Exception as e:
+            logging.exception("Critical error in augmentation pipeline")
             return f"Critical error: {str(e)}"
-        
+
     async def ainvoke(self, *args, **kwargs):
+        """Async version of invoke"""
         return self.invoke(*args, **kwargs)
     
-    async def evaluate(self, dialogue, topic, prompt, report_type="dict"):
-        augmented_dialogue = self.invoke(dialogue, topic, prompt)
+    async def evaluate(
+        self,
+        dialogue: Dialogue,
+        prompt: str,
+        topic: str = ""
+    ) -> dict:
+        """Evaluates augmentation quality with dictionary report format."""
+        result = self.invoke(dialogue, prompt, topic)
+        
+        if isinstance(result, str):
+            return {"error": result}
+        
+        report = {}        
+        for i, augmented_dialogue in enumerate(result):
+            try:        
+                report[f'augmented_dialogue_{i}'] = {
+                    "match_roles": match_roles(dialogue, augmented_dialogue),
+                    "correct_length": is_correct_length(dialogue, augmented_dialogue)
+                }
+            except Exception as e:
+                logging.error(f"Error while calculating metrics: {str(e)}")        
+        return report
 
-        if isinstance(augmented_dialogue, str):
-            return {
-                "error": augmented_dialogue
-                } if report_type == "dict" else pd.DataFrame([{"error": augmented_dialogue}])
+    def _get_llm(self, llm_key: str):
+        """Safe LLM retrieval with error handling"""
+        if llm_key not in self.model_storage.storage:
+            raise ValueError(f"LLM key '{llm_key}' not found in model storage")
+        return self.model_storage.storage[llm_key].model
+    
+    def _combine_one_dialogue(self, augmented_dialogue: dict, i: int) -> dict:
+        """Combining new augmented dialogues from utterance variations"""
+        new_augmented_dialogue = {}
+        new_augmented_dialogue['messages'] = []
+        roles_to_add = [turn["participant"] for turn in augmented_dialogue]
+        utterances_to_add = [turn["text"][i] for turn in augmented_dialogue]
 
-        report = {
-            "match_roles": match_roles_multi_utterance(dialogue, augmented_dialogue),
-            "is_correct_length": is_correct_length_multi_utterance(dialogue, augmented_dialogue)
-        }
+        for role, uttr in zip(roles_to_add, utterances_to_add):
+            dict_messages = {}
+            dict_messages["participant"] = role
+            dict_messages["text"] = uttr
+            new_augmented_dialogue["messages"].append(dict_messages)
 
-        if report_type == "dataframe":
-            report = pd.DataFrame(report, index=[0])
-        elif report_type == "dict":
-            return report
+        return new_augmented_dialogue
+
+    def _create_dialogues(self, result: DialogueSequence) -> list[Dialogue]:        
+        """Creating a list of Dialogue objects"""
+        utterances_lists = [turn["text"] for turn in result]
+        lens = [len(uttr_list) for uttr_list in utterances_lists]
+
+        augmented_dialogues = []
+        if len(set(lens)) == 1:
+            for i in range(lens[0]):
+                new_augmented_dialogue = self._combine_one_dialogue(result, i)
+                augmented_dialogues.append(new_augmented_dialogue)
         else:
-            raise ValueError(f"Invalid report_type: {report_type}")
+            for i in range(min(lens)):
+                new_augmented_dialogue = self._combine_one_dialogue(result, i)
+                augmented_dialogues.append(new_augmented_dialogue)
+        
+        return [Dialogue.from_list(new_augmented_dialogue['messages']) for new_augmented_dialogue in augmented_dialogues]
