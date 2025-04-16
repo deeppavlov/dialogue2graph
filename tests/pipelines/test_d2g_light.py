@@ -65,12 +65,12 @@ def test_d2g_light_positive(dialogues_positive, graph_positive_1):
 
     ms.add(
         key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1},
+        config={"model_name": "o3-mini", "temperature": 1},
         model_type="llm",
     )
     ms.add(
         key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0},
+        config={"model_name": "gpt-4o-mini", "temperature": 0},
         model_type="llm",
     )
     ms.add(
@@ -105,12 +105,12 @@ def test_d2g_light_negative(dialogues_negative, graph_negative):
 
     ms.add(
         key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1},
+        config={"model_name": "o3-mini", "temperature": 1},
         model_type="llm",
     )
     ms.add(
         key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0},
+        config={"model_name": "gpt-4o-mini", "temperature": 0},
         model_type="llm",
     )
     ms.add(
