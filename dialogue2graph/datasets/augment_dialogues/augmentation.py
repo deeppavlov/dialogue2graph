@@ -1,13 +1,12 @@
 import logging
-import pandas as pd
-from typing import Optional, Union
+from typing import Union
 from pydantic import BaseModel, Field, ValidationError
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from langchain.output_parsers import OutputFixingParser
 
 from dialogue2graph.pipelines.core.algorithms import DialogAugmentation
-from dialogue2graph.pipelines.core.dialogue import Dialogue, DialogueMessage
+from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.metrics.no_llm_metrics.metrics import (
     is_correct_length, match_roles
@@ -46,12 +45,14 @@ class DialogueAugmenter(DialogAugmentation):
         Returns:
             List of augmented Dialogue objects or error message
         """
+        if prompt == '':
+            return 'Preprocessing failed: prompt should be a valid instruction for LLM'
             
         try:
-            # Convert Dialogue to message dicts for processing
             message_dicts = [msg.model_dump() for msg in dialogue.messages]
-            
-            # Setup augmentation chain
+            if message_dicts == []:
+                return 'Preprocessing failed: no messages found in the dialogue'
+                        
             augmentation_prompt = PromptTemplate.from_template(prompt)
             parser = JsonOutputParser(pydantic_object=DialogueSequence)
             
@@ -62,7 +63,6 @@ class DialogueAugmenter(DialogAugmentation):
 
             chain = augmentation_prompt | self._get_llm(self.generation_llm) | fixed_parser
             
-            # Attempt processing with retries
             for attempt in range(3):
                 try:
                     result = chain.invoke({"topic": topic, "dialogue": message_dicts})
@@ -70,7 +70,8 @@ class DialogueAugmenter(DialogAugmentation):
                         augmented_dialogues = self._create_dialogues(result)
                         return augmented_dialogues
                     except Exception as e:
-                        logging.error(f"Error while creating new dialogues: {str(e)}")
+                        logging.error(f"Error creating dialogues: {str(e)}")
+                        return f"Post-processing failed: {str(e)}"
                 
                 except ValidationError as ve:
                     logging.warning(f"Validation error attempt {attempt+1}: {ve}")
@@ -119,12 +120,12 @@ class DialogueAugmenter(DialogAugmentation):
             raise ValueError(f"LLM key '{llm_key}' not found in model storage")
         return self.model_storage.storage[llm_key].model
     
-    def _combine_one_dialogue(self, augmented_dialogue: dict, i: int) -> dict:
+    def _combine_one_dialogue(self, augmentation_result: DialogueSequence, i: int) -> dict:
         """Combining new augmented dialogues from utterance variations"""
         new_augmented_dialogue = {}
         new_augmented_dialogue['messages'] = []
-        roles_to_add = [turn["participant"] for turn in augmented_dialogue]
-        utterances_to_add = [turn["text"][i] for turn in augmented_dialogue]
+        roles_to_add = [turn.participant for turn in augmentation_result.result]
+        utterances_to_add = [turn.text[i] for turn in augmentation_result.result]
 
         for role, uttr in zip(roles_to_add, utterances_to_add):
             dict_messages = {}
@@ -134,19 +135,20 @@ class DialogueAugmenter(DialogAugmentation):
 
         return new_augmented_dialogue
 
-    def _create_dialogues(self, result: DialogueSequence) -> list[Dialogue]:        
+    def _create_dialogues(self, result: dict) -> list[Dialogue]:        
         """Creating a list of Dialogue objects"""
-        utterances_lists = [turn["text"] for turn in result]
+        try:
+            augmentation_result = DialogueSequence(result=result)
+        except Exception as e:
+            logging.error(f"Wrong type of augmentation result: {str(e)}")
+            return f"Creating a list of Dialogue objects failed: {str(e)}" 
+
+        utterances_lists = [turn.text for turn in augmentation_result.result]
         lens = [len(uttr_list) for uttr_list in utterances_lists]
 
         augmented_dialogues = []
-        if len(set(lens)) == 1:
-            for i in range(lens[0]):
-                new_augmented_dialogue = self._combine_one_dialogue(result, i)
-                augmented_dialogues.append(new_augmented_dialogue)
-        else:
-            for i in range(min(lens)):
-                new_augmented_dialogue = self._combine_one_dialogue(result, i)
-                augmented_dialogues.append(new_augmented_dialogue)
+        for i in range(min(lens)):
+            new_augmented_dialogue = self._combine_one_dialogue(augmentation_result, i)
+            augmented_dialogues.append(new_augmented_dialogue)
         
         return [Dialogue.from_list(new_augmented_dialogue['messages']) for new_augmented_dialogue in augmented_dialogues]
