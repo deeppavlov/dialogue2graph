@@ -36,6 +36,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
+    "autoapi.extension",
     "sphinx.ext.intersphinx",
     "sphinx.ext.todo",
     "sphinx.ext.coverage",
@@ -43,7 +44,6 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
     "sphinx_autodoc_typehints",
-    "autoapi.extension",
 ]
 
 templates_path = ["_templates"]
@@ -51,7 +51,7 @@ templates_path = ["_templates"]
 autodoc_default_options = {
     "members": True,
     "undoc-members": False,
-    "private-members": False,
+    "private-members": True,
     "special-members": "__call__",
     "member-order": "bysource",
     "exclude-members": "_abc_impl, model_fields, model_computed_fields, model_config",
@@ -68,10 +68,22 @@ autoapi_options = [
     "special-members",
     "imported-members",
 ]
-autoapi_own_page_level = "function"
 suppress_warnings = ["autoapi.python_import_resolution"]
 autoapi_ignore = ["*/cli/*.py"]
 
+napoleon_google_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_preprocess_types = False
+napoleon_type_aliases = None
+napoleon_attr_annotations = True
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -95,7 +107,7 @@ extlinks = {
 html_js_files = [
     "scripts/pydata-sphinx-theme.js",
     "scripts/bootstrap.js",
-    "scripts/fontawesome.js",
+    "scripts/fontawesome.js"
 ]
 
 # Fix base URL for GitHub Pages
