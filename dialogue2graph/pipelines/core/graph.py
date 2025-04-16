@@ -25,19 +25,19 @@ class BaseGraph(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def nodes_by_utterance(self):
+    def find_nodes_by_utterance(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def edges_by_utterance(self):
+    def find_edges_by_utterance(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def node_by_id(self):
+    def get_nodes_by_id(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def edges_match_nodes(self):
+    def match_edges_nodes(self):
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -53,19 +53,26 @@ class BaseGraph(BaseModel, abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_path(self):
+    def find_paths(self):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def all_paths(self):
+    def get_all_paths(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def nodes2list(self):
+    def get_edges_by_source(self):
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def graph2list(self):
+    def get_edges_by_target(self):
+        raise NotImplementedError
+
+    def get_nodes_by_source(self):
+        raise NotImplementedError
+
+    def get_list_from_nodes(self):
+        raise NotImplementedError
+
+    def get_list_from_graph(self):
         raise NotImplementedError
 
 
@@ -76,24 +83,22 @@ class Graph(BaseGraph):
         if graph_dict:
             self.load_graph()
 
-    def _list_in(self, a: list, b: list) -> bool:
+    def _is_seq_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
 
     def check_edges(self, seq: list[list[int]]) -> bool:
-        """Checks whether seq (sequence of pairs (source, target)) has all the edges of the graph"""
+        """Checks whether seq (sequence of pairs (source, target))
+        has all the edges of the graph
+        """
         graph_dict = self.graph_dict
-        edge_seq = {(e["source"], e["target"]) for e in graph_dict["edges"]}
-        left = edge_seq.copy()
-        for pair in edge_seq:
-            for s in seq:
-                if self._list_in(list(pair), s):
-                    left -= set([pair])
-                    if len(left) == 0:
-                        return True
-        if len(left):
-            return False
-        return True
+        edge_set = set((e["source"], e["target"]) for e in graph_dict["edges"])
+        seen = set()
+        for pair in seq:
+            for s, t in zip(pair, pair[1:]):
+                if (s, t) in edge_set:
+                    seen.add((s, t))
+        return seen == edge_set
 
     def load_graph(self):
         self.graph = nx.DiGraph()
@@ -205,55 +210,48 @@ class Graph(BaseGraph):
         plt.axis("off")
         plt.show()
 
-    def nodes_by_utterance(self, utterance: str) -> list[dict]:
+    def find_nodes_by_utterance(self, utterance: str) -> list[dict]:
         return [
             node for node in self.graph_dict["nodes"] if utterance in node["utterances"]
         ]
 
-    def edges_by_utterance(self, utterance: str) -> list[dict]:
+    def find_edges_by_utterance(self, utterance: str) -> list[dict]:
         return [
             edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]
         ]
 
-    def node_by_id(self, id: int):
+    def get_nodes_by_id(self, id: int):
         for node in self.graph_dict["nodes"]:
             if node["id"] == id:
                 return node
 
-    def edge_by_source(self, id: int):
+    def get_edges_by_source(self, id: int):
         return [edge for edge in self.graph_dict["edges"] if edge["source"] == id]
 
-    def edge_by_target(self, id: int):
+    def get_edges_by_target(self, id: int):
         return [edge for edge in self.graph_dict["edges"] if edge["target"] == id]
 
-    def edges_match_nodes(self) -> bool:
-        """Checks whether source and target of all the edges correspond to nodes"""
+    def match_edges_nodes(self) -> bool:
+        """Checks whether source and target
+        of all the edges correspond to nodes
+        """
         graph = self.graph_dict
 
-        for n in graph["nodes"]:
-            if not n["utterances"]:
-                return False
-            src = [e for e in graph["edges"] if e["source"] == n]
-            tgt = [e for e in graph["edges"] if e["target"] == n]
-            if len(src) == 1 and src == tgt:
-                return False
+        nodes_set = set(n["id"] for n in graph["nodes"])
+        edges_set = set()
         for e in graph["edges"]:
             if not e["utterances"]:
                 return False
+            edges_set.add(e["source"])
+            edges_set.add(e["target"])
 
-        node_ids = set([n["id"] for n in graph["nodes"]])
-        node_non_starts = set([n["id"] for n in graph["nodes"] if not n["is_start"]])
-        edge_targets = set([e["target"] for e in graph["edges"]])
-        edge_sources = set([e["source"] for e in graph["edges"]])
-        return node_ids == edge_targets.union(
-            edge_sources
-        ) and node_non_starts.issubset(edge_targets)
+        return nodes_set == edges_set
 
-    def remove_duplicated_edges(self):
+    def remove_duplicated_edges(self) -> BaseGraph:
         graph = self.graph_dict
         edges = graph["edges"]
-        couples = [(e["source"], e["target"]) for e in edges]
-        duplicates = [i for i in set(couples) if couples.count(i) > 1]
+        node_couples = [(e["source"], e["target"]) for e in edges]
+        duplicates = [i for i in set(node_couples) if node_couples.count(i) > 1]
         new_edges = []
         for d in duplicates:
             found = [c for c in edges if c["source"] == d[0] and c["target"] == d[1]]
@@ -270,7 +268,7 @@ class Graph(BaseGraph):
         }
         return Graph(self.graph_dict)
 
-    def remove_duplicated_nodes(self):
+    def remove_duplicated_nodes(self) -> BaseGraph | None:
         graph = self.graph_dict
         nodes = graph["nodes"].copy()
         edges = graph["edges"].copy()
@@ -278,8 +276,8 @@ class Graph(BaseGraph):
         map(lambda x: x.sort(), nodes_utterances)
         seen = []
         to_remove = []
-        for n in nodes:
-            utts = n["utterances"]
+        for node in nodes:
+            utts = node["utterances"]
             utts.sort()
             if utts not in seen:
                 seen_utts = list(set([s for xs in seen for s in xs]))
@@ -288,11 +286,11 @@ class Graph(BaseGraph):
                 seen.append(utts)
             else:
                 doubled = nodes[nodes_utterances.index(utts)]["id"]
-                to_remove.append(n["id"])
-                for idx, e in enumerate(edges):
-                    if e["source"] == n["id"]:
+                to_remove.append(node["id"])
+                for idx, edge in enumerate(edges):
+                    if edge["source"] == node["id"]:
                         edges[idx]["source"] = doubled
-                    if e["target"] == n["id"]:
+                    if edge["target"] == node["id"]:
                         edges[idx]["target"] = doubled
         self.graph_dict = {
             "edges": edges,
@@ -300,41 +298,69 @@ class Graph(BaseGraph):
         }
         return self.remove_duplicated_edges()
 
-    def all_paths(self, start: int, visited: list[int], repeats: int):
-        """Recursion to find all the graph paths with ids of graph nodes
-        where node with id=start added to last repeats elements in the visited path do not have any occurance
-        visited_list is global variable to store the result"""
-        global visited_list
-        if len(visited) < repeats or not self._list_in(
-            visited[-repeats:] + [start], visited
-        ):
-            visited.append(start)
-            for edge in self.edge_by_source(start):
-                self.all_paths(edge["target"], visited.copy(), repeats)
-        visited_list.append(visited)
+    def get_all_paths(
+        self, start_node_id: int, visited_nodes: list[int], repeats_limit: int
+    ) -> list[list[int]]:
+        """Recursion to find all the graph paths consisting of nodes ids
+        which start from node with id=start_node_id
+        and do not repeat last repeats_limit elements of the visited_nodes
 
-    def find_path(self, start: int, end: int, visited: list):
-        """Recursion to find path from start node id to end node id
-        visited is path traveled
-        visited_list is global variable to store the result
+        Args:
+          visited_nodes: a path traveled so far
+          repeats_limit: recursion stopper with maximum length
+          of finishing sequence not to repeat on the path
+
+        Returns: list of found paths
         """
 
-        global visited_list
+        if len(visited_nodes) >= repeats_limit and self._is_seq_in(
+            visited_nodes[-repeats_limit:] + [start_node_id], visited_nodes
+        ):
+            return []
+
+        visited_nodes.append(start_node_id)
+        visited_paths = [visited_nodes.copy()]
+
+        for edge in self.get_edges_by_source(start_node_id):
+            visited_paths.extend(
+                self.get_all_paths(edge["target"], visited_nodes, repeats_limit)
+            )
+
+        visited_nodes.pop()
+        return visited_paths
+
+    def find_paths(
+        self, start_node_id: int, end_node_id: int, visited_nodes: list[int]
+    ) -> list[list[int]]:
+        """Recursion to find paths from start_node_id
+        where end_node_id on the path stops recursion
+        Args:
+          visited_nodes: a path traveled so far
+        Returns: list of all paths from start_node_id which probably could be finishing by end_node_id
+        """
+        visited_paths = [[]]
 
         graph = self.graph_dict
-        if len(visited) <= len(graph["edges"]) and end not in visited_list[-1]:
-            visited.append(start)
-            if end not in visited:
-                for edge in self.edge_by_source(start):
-                    self.find_path(edge["target"], end, visited)
+        if (
+            len(visited_nodes) <= len(graph["edges"])
+            and end_node_id not in visited_paths[-1]
+        ):
+            visited_nodes.append(start_node_id)
+            if end_node_id not in visited_nodes:
+                for edge in self.get_edges_by_source(start_node_id):
+                    visited_paths += self.find_paths(
+                        edge["target"], end_node_id, visited_nodes
+                    )
         else:
-            visited.append(start)
-        visited_list.append(visited)
+            visited_nodes.append(start_node_id)
+        visited_paths.append(visited_nodes)
+        return visited_paths
 
-    def get_ends(self):
-        """Find finishing nodes which have no outgoing edges"""
-
-        global visited_list
+    def get_ends(self) -> list[int]:
+        """Find finishing nodes which have no outgoing edges
+        Returns:
+          list of finishing nodes ids
+        """
 
         graph = self.graph_dict
         sources = list(set([g["source"] for g in graph["edges"]]))
@@ -345,44 +371,43 @@ class Graph(BaseGraph):
         for f in finishes:
             for n in graph["nodes"]:
                 if n["id"] != f:
-                    visited_list = [[]]
-                    self.find_path(n["id"], f, [])
-                if any([f in v for v in visited_list]):
+                    visited_paths = self.find_paths(n["id"], f, [])
+                if any([f in v for v in visited_paths]):
                     visited.add(n["id"])
         if len(visited) < len(graph["nodes"]):
             finishes += [v["id"] for v in graph["nodes"] if v["id"] not in visited]
         return finishes
 
-    def nodes2list(self) -> list:
-        """Returns list of concatenations of all nodes utterances"""
+    def get_list_from_nodes(self) -> list[str]:
+        """Method to form auxiliary list from the graph nodes
+        Returns:
+          list of concatenations of all nodes utterances
+        """
         graph = self.graph_dict
-        res = []
+        result = []
 
         for node in graph["nodes"]:
-            utt = ""
-            for n_utt in node["utterances"]:
-                utt += n_utt + " "
-            res.append(utt)
+            utts = ""
+            for node_utt in node["utterances"]:
+                utts += node_utt + " "
+            result.append(utts)
 
-        return res
+        return result
 
-    def graph2list(self) -> tuple[list[str], int]:
-        """Returns:
-        res_list - concatenation of utterances of every node and its outgoing edges
-        n_edges - total number of utterances in all edges
+    def get_list_from_graph(self) -> tuple[list[str], int]:
+        """Method to form auxiliary data from the graph
+        Returns:
+          res_list: concatenation of utterances of every node and its outgoing edges
+          n_edges: total number of utterances in all edges
         """
         graph = self.graph_dict
         res_list = []
         n_edges = 0
 
         for node in graph["nodes"]:
-            edges = [e for e in graph["edges"] if e["source"] == node["id"]]
-            utt = ""
-            for n_utt in node["utterances"]:
-                utt += n_utt + " "
-            for edge in edges:
-                for e_utt in edge["utterances"]:
-                    utt += e_utt + " "
-                    n_edges += 1
-            res_list.append(utt)
+            utts = " ".join(node["utterances"])
+            for edge in self.get_edges_by_source(node["id"]):
+                utts += " ".join(edge["utterances"])
+                n_edges += len(edge["utterances"])
+            res_list.append(utts)
         return res_list, n_edges

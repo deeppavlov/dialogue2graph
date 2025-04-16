@@ -32,12 +32,18 @@ def is_greeting_repeated_regex(dialogs: List[Dialogue], regex: str = None) -> bo
         regex = r"^hello|^hi|^greetings"
     for dialog in dialogs:
         for i, message in enumerate(dialog.messages):
-            if i != 0 and message.participant == "assistant" and _message_has_greeting_re(regex, message.text):
+            if (
+                i != 0
+                and message.participant == "assistant"
+                and _message_has_greeting_re(regex, message.text)
+            ):
                 return True
     return False
 
 
-def is_dialog_closed_too_early_regex(dialogs: List[Dialogue], regex: str = None) -> bool:
+def is_dialog_closed_too_early_regex(
+    dialogs: List[Dialogue], regex: str = None
+) -> bool:
     """
     Checks if assistant tried to close dialogue in the middle using regular expression.
     Args:
@@ -51,6 +57,10 @@ def is_dialog_closed_too_early_regex(dialogs: List[Dialogue], regex: str = None)
     for dialog in dialogs:
         last_turn_idx = len(dialog.messages) - 1
         for i, message in enumerate(dialog.messages):
-            if i != last_turn_idx and message.participant == "assistant" and _message_has_closing_re(regex, message.text):
+            if (
+                i != last_turn_idx
+                and message.participant == "assistant"
+                and _message_has_closing_re(regex, message.text)
+            ):
                 return True
     return False
