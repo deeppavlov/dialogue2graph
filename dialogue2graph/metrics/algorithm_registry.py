@@ -8,6 +8,7 @@ algorithms for automatic metrics gathering.
 
 
 class AlgorithmRegistry:
+    # TODO: add docs
     _algorithms = {}
 
     @classmethod

@@ -1,3 +1,9 @@
+"""
+Algorithms
+-----------
+This module contains base classes for different algorithms.
+"""
+
 import abc
 from typing import List, Literal, Union
 from pydantic import BaseModel
@@ -35,10 +41,11 @@ class DialogueGenerator(BaseAlgorithm):
 
     This class is intended for sampling Dialogues based on a given Graph structure.
 
-    :param graph: The Graph object used for generating the Dialogue.
-    :param start_node: The starting node in the Graph for the generation process (default=1).
-    :param end_node: The ending node in the Graph for the generation process (optional).
-    :param topic: The topic to guide the generation process (optional).
+    Args:
+        graph: The Graph object used for generating the Dialogue.
+        start_node: The starting node in the Graph for the generation process (default=1).
+        end_node: The ending node in the Graph for the generation process (optional).
+        topic: The topic to guide the generation process (optional).
     """
 
     def __init__(self):
@@ -57,8 +64,9 @@ class DialogAugmentation(BaseAlgorithm):
     This class takes a Dialogue as input and returns an augmented Dialogue as output.
     It is designed for data augmentation or other manipulations of Dialogues.
 
-    :param dialogue: The Dialogue object to be augmented.
-    :param topic: The topic to guide the augmentation process (optional).
+    Args:
+        dialogue: The Dialogue object to be augmented.
+        topic: The topic to guide the augmentation process (optional).
     """
 
     def __init__(self) -> None:
@@ -69,7 +77,7 @@ class DialogAugmentation(BaseAlgorithm):
 
 
 class GraphAugmentation(BaseAlgorithm):
-    """Graph generator that works only with topics."""
+    """Graph augmentation"""
 
     def invoke(self, topic: str, graph: BaseGraph) -> BaseGraph:
         raise NotImplementedError
@@ -79,7 +87,7 @@ class GraphAugmentation(BaseAlgorithm):
 
 
 class TopicGraphGenerator(BaseAlgorithm):
-    """Graph generator that works only with topics."""
+    """Graph generator that works only with topics"""
 
     def invoke(self, topic: str, model: BaseChatModel) -> BaseGraph:
         raise NotImplementedError
@@ -89,7 +97,7 @@ class TopicGraphGenerator(BaseAlgorithm):
 
 
 class GraphGenerator(BaseAlgorithm):
-    """Graph generator that works only with topics."""
+    """Usual graph generator"""
 
     def invoke(self, dialogue: Dialogue) -> BaseGraph:
         raise NotImplementedError
@@ -99,7 +107,7 @@ class GraphGenerator(BaseAlgorithm):
 
 
 class GraphExtender(BaseAlgorithm):
-    """Graph generator that works only with topics."""
+    """Usual graph extender"""
 
     def invoke(self, dialogue: Dialogue, graph: BaseGraph) -> BaseGraph:
         raise NotImplementedError

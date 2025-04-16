@@ -1,3 +1,8 @@
+"""
+Dialogue Sampling
+-----------------
+This module contains class for sampling dialogs from a graph.
+"""
 import os
 import itertools
 from typing import Literal
@@ -72,6 +77,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
         return dialogues
 
     async def ainvoke(self, *args, **kwargs):
+        # TODO: add docs
         return self.invoke(*args, **kwargs)
 
     async def evaluate(
@@ -81,6 +87,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
         target_dialogues,
         report_type=Literal["dict", "dataframe"],
     ):
+        # TODO: add docs
         dialogues = self.invoke(graph, upper_limit)
         report = {
             "all_utterances_present": [match_triplets_dg(graph, dialogues)].value,

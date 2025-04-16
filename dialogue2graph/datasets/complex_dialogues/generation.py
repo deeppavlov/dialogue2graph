@@ -1,3 +1,8 @@
+"""
+Generation
+----------
+"""
+
 import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
@@ -12,7 +17,10 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
 from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
-from dialogue2graph.metrics.no_llm_validators import is_greeting_repeated_regex, is_dialog_closed_too_early_regex
+from dialogue2graph.metrics.no_llm_validators import (
+    is_greeting_repeated_regex,
+    is_dialog_closed_too_early_regex,
+)
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
@@ -51,6 +59,7 @@ PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 
 class CycleGraphGenerator(BaseModel):
+    # TODO: add docs
     cache: Optional[Any] = Field(default=None, exclude=True)
 
     class Config:
@@ -87,6 +96,7 @@ class CycleGraphGenerator(BaseModel):
 
 
 class GenerationPipeline(BaseModel):
+    # TODO: add docs
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
     theme_validation_model: BaseChatModel
@@ -294,7 +304,8 @@ class GenerationPipeline(BaseModel):
                 )
             if is_greeting_repeated_regex(sampled_dialogues):
                 return GenerationError(
-                    error_type=ErrorType.SAMPLING_FAILED, message="Failed to sample valid dialogues - Opening phrases are repeated"
+                    error_type=ErrorType.SAMPLING_FAILED,
+                    message="Failed to sample valid dialogues - Opening phrases are repeated",
                 )
             if is_dialog_closed_too_early_regex(sampled_dialogues):
                 return GenerationError(
@@ -401,6 +412,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         )
 
     def invoke(self, topic, seed=42) -> list[dict]:
+        # TODO: add docs
         print(f"\n{'=' * 50}")
         print(f"Generating graph for topic: {topic}")
         print(f"{'=' * 50}")
@@ -432,4 +444,5 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         return successful_generations
 
     def evaluate(self, *args, report_type="dict", **kwargs):
+        # TODO: add docs
         return super().evaluate(*args, report_type=report_type, **kwargs)

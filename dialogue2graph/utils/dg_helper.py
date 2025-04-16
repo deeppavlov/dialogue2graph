@@ -65,10 +65,11 @@ def connect_nodes(
 
 def get_helpers(dialogues: list[Dialogue]) -> tuple[list[str], list[set[str]]]:
     """Helper pre-pocessing list of dialogues for grouping.
+
     Returns:
-    nodes - list of assistant utterances
-    starts - list of starting utterances
-    last_user - sign of that dialogue finishes with user's utterance
+        nodes: list of assistant utterances
+        starts: list of starting utterances
+        last_user: sign of that dialogue finishes with user's utterance
     """
 
     nodes = []

@@ -38,23 +38,14 @@ def _get_jaccard_edges(
     Calculates Jaccard similarity between edges of the original graph and the generated graph.
 
     Parameters:
-    -----------
-    true_graph_edges : Graph.edges
-        Edges of the original graph (e.g. G1.edges(data=True)).
-    generated_graph_edges : nx.Graph.edges
-        Edges of the generated graph.
-    format of edges: (node1, node2, {"utterances": ...})
-    verbose : bool
-        Whether to print debug information.
-    return_matrix : bool
-        If True, returns the entire Jaccard matrix.
+        true_graph_edges (Graph.edges): Edges of the original graph (e.g. G1.edges(data=True)).
+        generated_graph_edges (nx.Graph.edges): Edges of the generated graph. Format of edges: (node1, node2, {"utterances": ...})
+        verbose (bool): Whether to print debug information.
+        return_matrix (bool): If True, returns the entire Jaccard matrix.
 
     Returns:
-    --------
-    If return_matrix is False:
-        (max_jaccard_values, max_jaccard_indices)
-    If return_matrix is True:
-        (max_jaccard_values, max_jaccard_indices, full_jaccard_matrix)
+        If return_matrix is False: returns (max_jaccard_values, max_jaccard_indices)
+        If return_matrix is True: returns (max_jaccard_values, max_jaccard_indices, full_jaccard_matrix)
     """
     true_graph_edges = _collapse_multiedges(list(true_graph_edges))
     generated_graph_edges = _collapse_multiedges(list(generated_graph_edges))
@@ -115,23 +106,14 @@ def _get_jaccard_nodes(
     Calculates Jaccard similarity between nodes of the original graph and the generated graph.
 
     Parameters:
-    -----------
-    true_graph_nodes : Graph.nodes
-        Nodes of the original graph (e.g. G1.nodes(data=True)).
-    generated_graph_nodes : nx.Graph.nodes
-        Nodes of the generated graph.
-    Node format: (node_id, {"utterances": ...})
-    verbose : bool
-        Whether to print debug information.
-    return_matrix : bool
-        If True, returns the entire Jaccard matrix.
+        true_graph_nodes (Graph.nodes): Nodes of the original graph (e.g. G1.nodes(data=True)).
+        generated_graph_nodes (nx.Graph.nodes): Nodes of the generated graph. Node format: (node_id, {"utterances": ...})
+        verbose (bool): Whether to print debug information.
+        return_matrix (bool): If True, returns the entire Jaccard matrix.
 
     Returns:
-    --------
-    If return_matrix is False:
-        (max_jaccard_values, max_jaccard_indices)
-    If return_matrix is True:
-        (max_jaccard_values, max_jaccard_indices, full_jaccard_matrix)
+        If return_matrix is False: returns (max_jaccard_values, max_jaccard_indices)
+        If return_matrix is True: returns (max_jaccard_values, max_jaccard_indices, full_jaccard_matrix)
     """
     true_graph_nodes = _collapse_multinodes(list(true_graph_nodes))
     generated_graph_nodes = _collapse_multinodes(list(generated_graph_nodes))
@@ -312,12 +294,14 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
 
 
 def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
+    # TODO: add docs
     g1 = G1.graph
     g2 = G2.graph
     return nx.is_isomorphic(g1, g2)
 
 
 def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
+    # TODO: implement and add docs
     return True
 
 
@@ -521,7 +505,9 @@ def are_paths_valid(
 def match_roles(D1: Dialogue, D2: Dialogue) -> bool:
     """
     Checks if two dialogues have identical participant roles in each turn.
-    Returns True if they match in every turn, otherwise False.
+
+    Returns:
+        True if they match in every turn, otherwise False.
     """
     for phrase_1, phrase_2 in zip(D1.messages, D2.messages):
         if phrase_1.participant != phrase_2.participant:
@@ -532,7 +518,9 @@ def match_roles(D1: Dialogue, D2: Dialogue) -> bool:
 def is_correct_length(D1: Dialogue, D2: Dialogue) -> bool:
     """
     Checks if two dialogues have the same number of messages.
-    Returns True if lengths are equal, False otherwise.
+
+    Returns:
+        True if lengths are equal, False otherwise.
     """
     return len(D1.messages) == len(D2.messages)
 
@@ -550,8 +538,8 @@ def all_utterances_present(G: BaseGraph, dialogues: List[Dialogue]):
     Checks whether every utterance in the graph (both from nodes and edges)
     appears at least once in the provided dialogues.
 
-    Returns True if all graph utterances are found within the dialogues,
-    otherwise returns the set of missing utterances.
+    Returns:
+        True if all graph utterances are found within the dialogues, otherwise returns the set of missing utterances.
     """
     graph_utterances = set()
 
@@ -628,7 +616,8 @@ def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
             node_mapping={}
         )
 
-    Returns a dictionary with the following keys:
+    Returns:
+        dict: a dictionary with the following keys:
         - "with_cycles" (int): How many of the graphs contain at least one cycle.
         - "percentage_with_cycles" (float): Percentage of graphs that have a cycle, out of all.
         - "average_edges_amount" (float): Average number of edges per graph.

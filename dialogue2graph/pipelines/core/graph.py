@@ -1,3 +1,9 @@
+"""
+Graph
+------
+This module contains base class for graphs.
+"""
+
 import networkx as nx
 from pydantic import BaseModel
 from typing import Optional, Any
@@ -9,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 class BaseGraph(BaseModel, abc.ABC):
+    # TODO: add docs
+    """Abstract graph class"""
     graph_dict: dict
     graph: Optional[nx.Graph] = None
     node_mapping: Optional[dict] = None
@@ -70,6 +78,9 @@ class BaseGraph(BaseModel, abc.ABC):
 
 
 class Graph(BaseGraph):
+    # TODO: add docs
+    """Graph class"""
+
     def __init__(self, graph_dict: dict, **kwargs: Any):
         # Pass graph_dict to the parent class
         super().__init__(graph_dict=graph_dict, **kwargs)
@@ -96,6 +107,7 @@ class Graph(BaseGraph):
         return True
 
     def load_graph(self):
+        # TODO: add docs
         self.graph = nx.DiGraph()
         nodes = sorted([v["id"] for v in self.graph_dict["nodes"]])
         logging.debug(f"Nodes: {nodes}")
@@ -139,6 +151,7 @@ class Graph(BaseGraph):
             )
 
     def visualise(self, *args, **kwargs):
+        # TODO: add docs
         plt.figure(figsize=(17, 11))  # Make the plot bigger
         try:
             pos = nx.nx_agraph.pygraphviz_layout(self.graph)
@@ -168,6 +181,7 @@ class Graph(BaseGraph):
         plt.show()
 
     def visualise_short(self, name, *args, **kwargs):
+        # TODO: add docs
         try:
             pos = nx.nx_agraph.pygraphviz_layout(self.graph)
         except ImportError as e:
@@ -206,24 +220,29 @@ class Graph(BaseGraph):
         plt.show()
 
     def nodes_by_utterance(self, utterance: str) -> list[dict]:
+        # TODO: add docs
         return [
             node for node in self.graph_dict["nodes"] if utterance in node["utterances"]
         ]
 
     def edges_by_utterance(self, utterance: str) -> list[dict]:
+        # TODO: add docs
         return [
             edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]
         ]
 
     def node_by_id(self, id: int):
+        # TODO: add docs
         for node in self.graph_dict["nodes"]:
             if node["id"] == id:
                 return node
 
     def edge_by_source(self, id: int):
+        # TODO: add docs
         return [edge for edge in self.graph_dict["edges"] if edge["source"] == id]
 
     def edge_by_target(self, id: int):
+        # TODO: add docs
         return [edge for edge in self.graph_dict["edges"] if edge["target"] == id]
 
     def edges_match_nodes(self) -> bool:
@@ -250,6 +269,7 @@ class Graph(BaseGraph):
         ) and node_non_starts.issubset(edge_targets)
 
     def remove_duplicated_edges(self):
+        # TODO: add docs
         graph = self.graph_dict
         edges = graph["edges"]
         couples = [(e["source"], e["target"]) for e in edges]
@@ -271,6 +291,7 @@ class Graph(BaseGraph):
         return Graph(self.graph_dict)
 
     def remove_duplicated_nodes(self):
+        # TODO: add docs
         graph = self.graph_dict
         nodes = graph["nodes"].copy()
         edges = graph["edges"].copy()
@@ -367,9 +388,12 @@ class Graph(BaseGraph):
         return res
 
     def graph2list(self) -> tuple[list[str], int]:
-        """Returns:
-        res_list - concatenation of utterances of every node and its outgoing edges
-        n_edges - total number of utterances in all edges
+        """
+        Convert graph to list.
+        
+        Returns:
+            res_list: concatenation of utterances of every node and its outgoing edges
+            n_edges: total number of utterances in all edges
         """
         graph = self.graph_dict
         res_list = []

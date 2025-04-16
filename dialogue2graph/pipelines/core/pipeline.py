@@ -1,3 +1,9 @@
+"""
+Pipeline
+---------
+This module contains base pipeline class.
+"""
+
 from typing import Union
 from pydantic import BaseModel, Field
 from dialogue2graph.pipelines.core.algorithms import (
@@ -10,6 +16,7 @@ from dialogue2graph.pipelines.core.algorithms import (
 
 
 class BasePipeline(BaseModel):
+    # TODO: add docs
     steps: list[
         Union[
             InputParser,

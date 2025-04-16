@@ -27,6 +27,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 class InvalidTransition(TypedDict):
+    # TODO: add docs
     from_: List[str]  # Using from_ because 'from' is reserved
     user: List[str]
     to: List[str]
@@ -34,6 +35,7 @@ class InvalidTransition(TypedDict):
 
 
 class GraphValidationResult(TypedDict):
+    # TODO: add docs
     is_valid: bool
     invalid_transitions: List[InvalidTransition]
 
