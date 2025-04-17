@@ -37,13 +37,10 @@ jobs:
           poetry build
     
       - name: install and test installed package
+        shell: bash
         run: |
           python -m venv test_env
-          if [[ "${{ runner.os }}" == "Windows" ]]; then
-            .\test_env\Scripts\activate
-          else
-            source test_env/bin/activate
-          fi
+          . ${GITHUB_WORKSPACE}/test_env/bin/activate || . ${GITHUB_WORKSPACE}/test_env/Scripts/activate
           pip install ./dist/*.whl
           pip install pytest
           pytest
