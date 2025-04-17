@@ -22,28 +22,22 @@ class D2GLightPipeline(BasePipeline):
         step2_evals: list[Callable] = None,
         end_evals: list[Callable] = None,
     ):
-        # check if models are in model storage
         # if model is not in model storage put the default model there
-        if filling_llm not in model_storage.storage:
-            model_storage.add(
-                key=filling_llm,
-                config={"model_name": "chatgpt-4o-latest", "temperature": 0},
-                model_type=ChatOpenAI,
-            )
-
-        if formatting_llm not in model_storage.storage:
-            model_storage.add(
-                key=formatting_llm,
-                config={"model_name": "gpt-4o-mini", "temperature": 0},
-                model_type=ChatOpenAI,
-            )
-
-        if sim_model not in model_storage.storage:
-            model_storage.add(
-                key=sim_model,
-                config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
-                model_type=HuggingFaceEmbeddings,
-            )
+        model_storage.add(
+            key=filling_llm,
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=formatting_llm,
+            config={"model_name": "gpt-4o-mini", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=sim_model,
+            config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
+            model_type=HuggingFaceEmbeddings,
+        )
         super().__init__(
             name=name,
             steps=[

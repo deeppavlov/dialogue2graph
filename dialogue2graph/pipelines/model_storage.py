@@ -1,7 +1,7 @@
 import yaml
 import dotenv
 from pydantic._internal._model_construction import ModelMetaclass
-from typing import Literal, Union, Dict
+from typing import Union, Dict
 from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
 
@@ -116,7 +116,7 @@ class ModelStorage(BaseModel):
                     self.add(
                         key=key,
                         config=config.pop("config"),
-                        model_type=config.pop("model_type"),
+                        model_type=eval(config.pop("model_type")),
                     )
                     logger.debug(f"Loaded model configuration for '{key}'")
             logger.info(f"Successfully loaded {len(loaded_storage)} models from {path}")
@@ -126,22 +126,26 @@ class ModelStorage(BaseModel):
 
 
     def add(
-        self, key: str, config: dict, model_type:  Union[HuggingFaceEmbeddings, BaseChatModel]
+        self, key: str, config: dict, model_type: ModelMetaclass, overwright: bool = False
     ):
         """
         Add a new model configuration to the storage.
         Args:
             key (str): The unique identifier for the model configuration.
             config (dict): The configuration dictionary for initializing the model.
-            model_type (Union[Literal["llm"], Literal["emb"]]): The type of the model to be added.
-                - "llm": Large Language Model, initialized using `ChatOpenAI`.
-                - "emb": Embedding model, initialized using `HuggingFaceEmbeddings`.
+            model_type (ModelMetaclass): The type name of the model to be added.
+            overwright (bool): Whether to overwright model existing under same key
+.
         Raises:
             KeyError: If configuration keys are invalid for the specified model_type.
+            Exception: When adding model to the storage failed
         """
         logger.debug("Current storage keys: %s", list(self.storage.keys()))
         if key in self.storage:
+            if not overwright:
+                return
             logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
+
         try:
             logger.debug(
                 "Initializing model %s for key '%s' with config: %s" % (model_type, key, config)
