@@ -1,7 +1,8 @@
 """
 Algorithms
 -----------
-This module contains base classes for different algorithms.
+
+The module contains base classes for different algorithms.
 """
 
 import abc
@@ -77,7 +78,11 @@ class DialogAugmentation(BaseAlgorithm):
 
 
 class GraphAugmentation(BaseAlgorithm):
-    """Graph augmentation"""
+    """Base class for augmenting Graphs
+    
+    Args:
+        topic: The topic to guide the augmentation process (optional).
+        graph: The Graph object to be augmented."""
 
     def invoke(self, topic: str, graph: BaseGraph) -> BaseGraph:
         raise NotImplementedError
@@ -87,7 +92,7 @@ class GraphAugmentation(BaseAlgorithm):
 
 
 class TopicGraphGenerator(BaseAlgorithm):
-    """Graph generator that works only with topics"""
+    """Base class for topic-based graph generation"""
 
     def invoke(self, topic: str, model: BaseChatModel) -> BaseGraph:
         raise NotImplementedError
@@ -97,7 +102,7 @@ class TopicGraphGenerator(BaseAlgorithm):
 
 
 class GraphGenerator(BaseAlgorithm):
-    """Usual graph generator"""
+    """Base class for graph generation"""
 
     def invoke(self, dialogue: Dialogue) -> BaseGraph:
         raise NotImplementedError
@@ -107,7 +112,7 @@ class GraphGenerator(BaseAlgorithm):
 
 
 class GraphExtender(BaseAlgorithm):
-    """Usual graph extender"""
+    """Base class for extending graph"""
 
     def invoke(self, dialogue: Dialogue, graph: BaseGraph) -> BaseGraph:
         raise NotImplementedError
@@ -117,7 +122,7 @@ class GraphExtender(BaseAlgorithm):
 
 
 class RawDataParser(BaseAlgorithm):
-    """Parser of user data"""
+    """Base class for user data parsing"""
 
     def invoke(self, data):
         raise NotImplementedError

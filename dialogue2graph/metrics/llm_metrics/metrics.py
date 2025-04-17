@@ -2,7 +2,7 @@
 LLM Metrics.
 ------------
 
-This module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
+The module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
 """
 
 import logging
@@ -44,7 +44,7 @@ def are_triplets_valid(
     G: Graph, model: BaseChatModel, return_type: str = "dict"
 ) -> Union[dict, GraphValidationResult]:
     """
-    Validates dialogue graph structure and logical transitions between nodes.
+    Validate dialogue graph structure and logical transitions between nodes.
 
     Parameters:
         G (BaseGraph): The dialogue graph to validate
@@ -163,7 +163,7 @@ def are_triplets_valid(
 
 def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
     """
-    Validates if the dialog stays on theme/topic throughout the conversation.
+    Validate if the dialog stays on theme/topic throughout the conversation.
 
     Parameters:
         G (BaseGraph): The dialog graph to validate
@@ -266,7 +266,7 @@ def compare_graphs(
     device="cuda:0",
 ) -> CompareResponse:
     """
-    Compares two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
+    Compare two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
     LLM formatter is used to keep LLM answer in a required format.
 
     Args:

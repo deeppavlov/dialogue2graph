@@ -1,7 +1,8 @@
 """
 Graph
 ------
-This module contains base class for graphs.
+
+The module contains base class for graphs.
 """
 
 import networkx as nx
@@ -322,7 +323,7 @@ class Graph(BaseGraph):
     def get_all_paths(
         self, start_node_id: int, visited_nodes: list[int], repeats_limit: int
     ) -> list[list[int]]:
-        """Recursion to find all the graph paths consisting of nodes ids
+        """Recursively find all the graph paths consisting of nodes ids
         which start from node with id=start_node_id
         and do not repeat last repeats_limit elements of the visited_nodes
 
@@ -353,7 +354,7 @@ class Graph(BaseGraph):
     def find_paths(
         self, start_node_id: int, end_node_id: int, visited_nodes: list[int]
     ) -> list[list[int]]:
-        """Recursion to find paths from start_node_id
+        """Recursively find paths from start_node_id
         where end_node_id on the path stops recursion
 
         Args:
@@ -403,7 +404,7 @@ class Graph(BaseGraph):
         return finishes
 
     def get_list_from_nodes(self) -> list[str]:
-        """Method to form auxiliary list from the graph nodes
+        """Form auxiliary list from the graph nodes
 
         Returns:
             list of concatenations of all nodes utterances
@@ -420,7 +421,7 @@ class Graph(BaseGraph):
         return result
 
     def get_list_from_graph(self) -> tuple[list[str], int]:
-        """Method to form auxiliary data from the graph
+        """Form auxiliary data from the graph
         
         Returns:
           res_list: concatenation of utterances of every node and its outgoing edges

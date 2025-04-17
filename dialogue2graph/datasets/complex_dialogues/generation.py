@@ -1,6 +1,8 @@
 """
 Generation
 ----------
+
+The module provides graph generator capable of creating complex validated graphs.
 """
 
 import logging
@@ -43,7 +45,7 @@ logger = logging.getLogger(__name__)
 
 
 class ErrorType(str, Enum):
-    """Types of errors that can occur during generation"""
+    """Error types that can occur during generation"""
 
     INVALID_GRAPH_STRUCTURE = "invalid_graph_structure"
     TOO_MANY_CYCLES = "too_many_cycles"
@@ -154,7 +156,7 @@ class GenerationPipeline(BaseModel):
     def validate_graph_cycle_requirement(
         self, graph: BaseGraph, min_cycles: int = 2
     ) -> Dict[str, Any]:
-        """Checks the graph for cycle requirements"""
+        """Check the graph for cycle requirements"""
         logger.info("🔍 Checking graph requirements...")
         try:
             cycles = list(nx.simple_cycles(graph.graph))
@@ -189,7 +191,7 @@ class GenerationPipeline(BaseModel):
     def check_and_fix_transitions(
         self, graph: BaseGraph, max_attempts: int = 3
     ) -> Dict[str, Any]:
-        """Checks transitions in the graph and attempts to fix invalid ones via LLM"""
+        """Check transitions in the graph and attempts to fix invalid ones via LLM"""
         logger.info("Validating initial graph")
         initial_validation = are_triplets_valid(
             graph, self.validation_model, return_type="detailed"
@@ -269,7 +271,7 @@ class GenerationPipeline(BaseModel):
             }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
-        """Generates and validates a dialogue graph for given topic"""
+        """Generate and validate a dialogue graph for given topic"""
         try:
             logger.info("Generating Graph ...")
             graph = self.graph_generator.invoke(

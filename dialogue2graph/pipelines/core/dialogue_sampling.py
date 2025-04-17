@@ -1,7 +1,8 @@
 """
 Dialogue Sampling
 -----------------
-This module contains class for sampling dialogs from a graph.
+
+The module contains class for sampling dialogs from a graph.
 """
 import os
 import itertools
@@ -36,16 +37,19 @@ class RecursiveDialogueSampler(DialogueGenerator):
         upper_limit: int,
         sampling_max: int = 1000000,
     ) -> list[Dialogue]:
-        """Extracts all the dialogues from the graph
+        """Extract all the dialogues from the graph
+
         Args:
-          graph: used to extract dialogues from it
-          cycle_ends_model: LLM(BaseChatModel) to find cycling ends of the graph
-          upper_limit: limits from above repeats_limit used in recursive get_dialogues method
-          sampling_max: maximum number of found dialogues
+            graph: used to extract dialogues from it
+            cycle_ends_model: LLM(BaseChatModel) to find cycling ends of the graph
+            upper_limit: limits from above repeats_limit used in recursive get_dialogues method
+            sampling_max: maximum number of found dialogues
+
         Returns:
-          list of dialogues
+            list of dialogues
+
         Raises:
-          ValueError: "Not all utterances present" if match_dg_triplets returns False
+            ValueError: "Not all utterances present" if match_dg_triplets returns False
         """
 
         # TODO: how to add caching?
@@ -100,12 +104,14 @@ def mix_ends(
     graph: BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]
 ) -> list[int]:
     """Find ids from cycle_ends_ids which do not have paths to any node id from end_ids.
+
     Args:
-      graph: graph to work with
-      end_ids: finishing graph node ids
-      cycle_ends_ids: ids of graph nodes looping cycles in the graph
+        graph: graph to work with
+        end_ids: finishing graph node ids
+        cycle_ends_ids: ids of graph nodes looping cycles in the graph
+
     Returns:
-      Adds found ids to end_ids and returns as a result
+        Adds found ids to end_ids and returns as a result   
     """
     end_paths = []
     for c in cycle_ends_ids:
@@ -124,18 +130,21 @@ def get_all_sequences(
     sampling_max: int,
     path_counter: _DialogPathsCounter,
 ) -> list[list[dict]]:
-    """Recursion to find all dialogue suquences in the path of nodes and edges with miltiple utterances
+    """Find all dialogue sequences recursively in the path of nodes and edges with miltiple utterances
+
     Args:
-      path: dialogue path with multiple utterances
-      start_idx: index in path to start from
-      visited_messages: path traveled so far
-      last_message: last visited message so far
-      sampling_max: maximum number of found sequences
+        path: dialogue path with multiple utterances
+        start_idx: index in path to start from
+        visited_messages: path traveled so far
+        last_message: last visited message so far
+        sampling_max: maximum number of found sequences
+
     Returns:
-      All found sequences
+        All found sequences
+
     Raises:
-      path_counter counts number of sequences
-      If counter exceeds sampling_max, ValueError raised
+        path_counter counts number of sequences
+        If counter exceeds sampling_max, ValueError raised
     """
 
     visited_messages.append(last_message)
@@ -163,10 +172,12 @@ def get_all_sequences(
 
 def remove_duplicated_paths(node_paths: list[list[int]]) -> list[list[int]]:
     """Remove duplicating paths from node_paths
+
     Args:
-      node_paths: list of dialog graph paths in a form of node ids
+        node_paths: list of dialog graph paths in a form of node ids
+
     Returns:
-      List of node paths without duplications
+        List of node paths without duplications
     """
     edges = set()
     res = []
@@ -180,10 +191,12 @@ def remove_duplicated_paths(node_paths: list[list[int]]) -> list[list[int]]:
 
 def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
     """Find all dialogue doublets with (edge, target) utterances
+
     Args:
-      seq: sequence of dialogs
+        seq: sequence of dialogs
+
     Returns:
-      Set of (user_utterance, assistant_utterance)
+        Set of (user_utterance, assistant_utterance)
     """
     doublets = set()
     for dialogue in seq:
@@ -197,10 +210,11 @@ def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
 
 def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
     """Find all dialogue triplets with (source, edge, target) utterances
+
     Args:
-      seq: sequence of dialogs
+        seq: sequence of dialogs
     Returns:
-      Set of (assistant_utterance, user_utterance, assistant_utterance)
+        Set of (assistant_utterance, user_utterance, assistant_utterance)
     """
     triplets = set()
     for dialogue in seq:
@@ -212,11 +226,13 @@ def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
 
 
 def remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]:
-    """Removes duplicated dialogues from list of dialogs seq
+    """Remove duplicated dialogues from list of dialogs seq
+
     Args:
-      seq: sequence of dialogs
+        seq: sequence of dialogs
+
     Returns:
-      List of dialogs without duplications
+        List of dialogs without duplications
     """
     non_empty_seq = [s for s in seq if s]
     if not non_empty_seq:
@@ -237,13 +253,15 @@ def get_dialogues(
     sampling_max: int,
 ) -> list[Dialogue]:
     """Find all the dialogues in the graph finishing with end_nodes_ids
+
     Args:
-      graph: graph to work with
-      repeats_limit: used for graph.all_paths method to limit set of sampled dialogues
-      end_nodes_ids: ids of nodes finishing dialogs to find
-      sampling_max: maximum number of found sequences
+        graph: graph to work with
+        repeats_limit: used for graph.all_paths method to limit set of sampled dialogues
+        end_nodes_ids: ids of nodes finishing dialogs to find
+        sampling_max: maximum number of found sequences
+
     Returns:
-      list of dialogs
+        list of dialogs
     """
 
     node_paths = []

@@ -1,3 +1,9 @@
+"""
+Prompt Caching
+--------------
+
+The module contains auxilary functions for caching LLM answers.
+"""
 import os
 import logging
 import uuid

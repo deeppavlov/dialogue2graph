@@ -1,8 +1,8 @@
 """
 Validators
 --------------------------
-This module contains validators to evaluate dialogs with regular expressions.
 
+The module contains validators to evaluate dialogs with regular expressions.
 """
 
 from typing import List
@@ -21,7 +21,7 @@ def _message_has_closing_re(regex: str, text: str) -> bool:
 
 def is_greeting_repeated_regex(dialogs: List[Dialogue], regex: str = None) -> bool:
     """
-    Checks if greeting is repeated within dialogues using regular expression.
+    Check if greeting is repeated within dialogues using regular expression.
 
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
@@ -46,7 +46,7 @@ def is_dialog_closed_too_early_regex(
     dialogs: List[Dialogue], regex: str = None
 ) -> bool:
     """
-    Checks if assistant tried to close dialogue in the middle using regular expression.
+    Check if assistant tried to close dialogue in the middle using regular expression.
     
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.

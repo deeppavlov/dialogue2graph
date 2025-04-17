@@ -1,9 +1,9 @@
 """
 Algorithm Registry.
 --------------------------
-This module contains an AlgorithmRegistry class that serves for registering
-algorithms for automatic metrics gathering.
 
+The module contains an AlgorithmRegistry class that serves for registering
+algorithms for automatic metrics gathering.
 """
 
 

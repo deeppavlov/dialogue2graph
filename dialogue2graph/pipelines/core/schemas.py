@@ -2,6 +2,7 @@
 Schemas
 -------
 
+The module contains base classes for graph abstractions.
 """
 from typing import List
 from pydantic import BaseModel, Field

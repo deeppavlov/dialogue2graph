@@ -1,7 +1,8 @@
 """
 Dialogue
 --------
-This module contains class for dialogs.
+
+The module provides Dialogue class that represents complete dialogues with multiple messages.
 """
 import uuid
 import networkx as nx

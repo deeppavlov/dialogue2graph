@@ -2,7 +2,7 @@
 Automatic Metrics.
 ------------------
 
-This module contains functions that automatically (without using LLMs) checks Graphs and Dialogues
+The module contains functions that automatically (without using LLMs) check Graphs and Dialogues
 for various metrics.
 """
 
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 def _collapse_multiedges(edges):
     """
-    Collapses multiedges with the same (u -> v) into a single entry,
+    Collapse multiedges with the same (u -> v) into a single entry,
     accumulating their utterances into a single list.
     """
     collapsed_edges = {}
@@ -40,7 +40,7 @@ def _get_jaccard_edges(
     true_graph_edges, generated_graph_edges, verbose=False, return_matrix=False
 ):
     """
-    Calculates Jaccard similarity between edges of the original graph and the generated graph.
+    Calculate Jaccard similarity between edges of the original graph and the generated graph.
 
     Parameters:
         true_graph_edges (Graph.edges): Edges of the original graph (e.g. G1.edges(data=True)).
@@ -81,7 +81,7 @@ def _get_jaccard_edges(
 
 def _get_list_of_node_utterances(node_utterances):
     """
-    Ensures that node_utterances is always returned as a list of strings.
+    Ensure that node_utterances is always returned as a list of strings.
     """
     if isinstance(node_utterances, str):
         return [node_utterances]
@@ -90,7 +90,7 @@ def _get_list_of_node_utterances(node_utterances):
 
 def _collapse_multinodes(nodes):
     """
-    Collapses node utterances if needed, returning a dict
+    Collapse node utterances if needed, returning a dict
     where key=node_id, value=list_of_utterances.
     """
     collapsed_nodes = {}
@@ -108,7 +108,7 @@ def _get_jaccard_nodes(
     true_graph_nodes, generated_graph_nodes, verbose=False, return_matrix=False
 ):
     """
-    Calculates Jaccard similarity between nodes of the original graph and the generated graph.
+    Calculate Jaccard similarity between nodes of the original graph and the generated graph.
 
     Parameters:
         true_graph_nodes (Graph.nodes): Nodes of the original graph (e.g. G1.nodes(data=True)).
@@ -160,7 +160,7 @@ def _get_jaccard_nodes(
 
 def _match_edge_for_multigraph(x, y):
     """
-    Matches edges for MultiDiGraph, checking if there is any intersection
+    Match edges for MultiDiGraph, checking if there is any intersection
     in the 'utterances' sets.
     """
     if isinstance(x, dict) and isinstance(y, dict):
@@ -174,7 +174,7 @@ def _match_edge_for_multigraph(x, y):
 
 def _parse_edge(edge):
     """
-    Parses an edge string formatted as 'src->trg' into (src_index, trg_index),
+    Parse an edge string formatted as 'src->trg' into (src_index, trg_index),
     adjusting them to be zero-based.
     """
     src, trg = map(int, edge.split("->"))
@@ -183,7 +183,7 @@ def _parse_edge(edge):
 
 def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=False):
     """
-    Attempts to match two graphs (G1 and G2) by:
+    Match two graphs (G1 and G2) by:
       1) Checking isomorphism using NetworkX matchers (depending on whether it's DiGraph or MultiDiGraph).
       2) Building Jaccard similarity matrices for nodes and edges to refine the mapping.
       3) Potentially reverting mapped IDs to G1's original numbering if change_to_original_ids=True.
@@ -515,7 +515,7 @@ def are_paths_valid(
 
 def match_roles(D1: Dialogue, D2: Dialogue) -> bool:
     """
-    Checks if two dialogues have identical participant roles in each turn.
+    Check if two dialogues have identical participant roles in each turn.
 
     Returns:
         True if they match in every turn, otherwise False.
@@ -528,7 +528,7 @@ def match_roles(D1: Dialogue, D2: Dialogue) -> bool:
 
 def is_correct_length(D1: Dialogue, D2: Dialogue) -> bool:
     """
-    Checks if two dialogues have the same number of messages.
+    Check if two dialogues have the same number of messages.
 
     Returns:
         True if lengths are equal, False otherwise.
@@ -546,7 +546,7 @@ def are_answers_similar(D1: Dialogue, D2: Dialogue, model, threshold: float) -> 
 
 def all_utterances_present(G: BaseGraph, dialogues: List[Dialogue]):
     """
-    Checks whether every utterance in the graph (both from nodes and edges)
+    Check whether every utterance in the graph (both from nodes and edges)
     appears at least once in the provided dialogues.
 
     Returns:
@@ -583,7 +583,7 @@ def triplet_match_accuracy(
     G1: BaseGraph, G2: BaseGraph, change_to_original_ids: bool = False
 ) -> dict:
     """
-    Calculates a simple accuracy metric for node and edge matching based on 'match_graph_triplets'.
+    Calculate a simple accuracy metric for node and edge matching based on 'match_graph_triplets'.
 
     Returns:
         {
@@ -614,7 +614,7 @@ def triplet_match_accuracy(
 
 def compute_graph_metrics(graph_list: List[BaseGraph]) -> dict:
     """
-    Computes various statistics across a list of Graph objects,
+    Compute various statistics across a list of Graph objects,
     where each Graph has a 'graph_dict' containing 'edges' and 'nodes'.
 
     Expects each element in 'graph_list' to be something like:

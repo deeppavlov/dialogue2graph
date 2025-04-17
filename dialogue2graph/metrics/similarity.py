@@ -1,7 +1,8 @@
 """
 Similarity
 -----------
-This module contains functions to compare how similar dialog texts are.
+
+The module contains functions to compare how similar dialog texts are.
 """
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings

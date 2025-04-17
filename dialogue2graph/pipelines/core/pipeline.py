@@ -1,7 +1,8 @@
 """
 Pipeline
 ---------
-This module contains base pipeline class.
+
+The module contains base pipeline class.
 """
 import time
 from typing import Union
