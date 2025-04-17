@@ -39,6 +39,7 @@ def test_generation_pipeline_init():
         generation_model=model,
         theme_validation_model=model,
         validation_model=model,
+        cycle_ends_model=model,
         generation_prompt=None,
         repair_prompt=None,
     )

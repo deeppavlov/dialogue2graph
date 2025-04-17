@@ -4,9 +4,11 @@ import dotenv
 from typing import Literal, Union, Dict
 from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
+
 from langchain_openai import ChatOpenAI
-from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_huggingface.embeddings import HuggingFaceEmbeddings
+from langchain_core.language_models import BaseChatModel
+from langchain_huggingface import HuggingFaceEmbeddings
+
 
 dotenv.load_dotenv()
 logger = logging.getLogger(__name__)
@@ -107,7 +109,9 @@ class ModelStorage(BaseModel):
 
                 for key, config in loaded_storage.items():
                     self.add(
-                        key=key, config=config, model_type=config.pop("model_type")
+                        key=key,
+                        config=config.pop("config"),
+                        model_type=config.pop("model_type"),
                     )
                     logger.debug(f"Loaded model configuration for '{key}'")
             logger.info(f"Successfully loaded {len(loaded_storage)} models from {path}")
@@ -172,6 +176,7 @@ class ModelStorage(BaseModel):
                     storage_dump[model_key]["model_type"] = self.storage[
                         model_key
                     ].model_type
+                    storage_dump[model_key]["config"].remove("api_key")
                 yaml.dump(storage_dump, f)
             logger.info(f"Saved {len(self.storage)} models to {path}")
         except Exception as e:

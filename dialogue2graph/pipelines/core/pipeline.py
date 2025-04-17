@@ -3,7 +3,7 @@ Pipeline
 ---------
 This module contains base pipeline class.
 """
-
+import time
 from typing import Union
 from pydantic import BaseModel, Field
 from dialogue2graph.pipelines.core.algorithms import (
@@ -11,27 +11,43 @@ from dialogue2graph.pipelines.core.algorithms import (
     DialogueGenerator,
     GraphGenerator,
     GraphExtender,
-    InputParser,
 )
+from dialogue2graph.pipelines.helpers.parse_data import (
+    RawDGParser,
+    PipelineRawDataType,
+    PipelineDataType,
+)
+from dialogue2graph.pipelines.report import PipelineReport
+from dialogue2graph.metrics import compare_graphs_full, compare_graphs_light
 
 
 class BasePipeline(BaseModel):
     # TODO: add docs
+    """Abstract class for base pipeline"""
+    name: str = Field(description="Name of the pipeline")
     steps: list[
-        Union[
-            InputParser,
-            DialogueGenerator,
-            DialogAugmentation,
-            GraphGenerator,
-            GraphExtender,
-        ]
+        Union[DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]
     ] = Field(default_factory=list)
 
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, data):
+    def invoke(self, raw_data: PipelineRawDataType, enable_evals=False):
+        data: PipelineDataType = RawDGParser().invoke(raw_data)
+        report = PipelineReport(service=self.name)
+        st_time = time.time()
+        output = data
         for step in self.steps:
-            output = step.invoke(data)
-            data = output
-        return output
+            output, subreport = step.invoke(output, enable_evals=enable_evals)
+            report.add_subreport(subreport)
+        end_time = time.time()
+        report.add_property("time", end_time - st_time)
+        report.add_property(
+            "simple_graph_comparison", compare_graphs_light(output, data)
+        )
+        if enable_evals:
+            report.add_property(
+                "complex_graph_comparison", compare_graphs_full(output, data)
+            )
+
+        return output, report

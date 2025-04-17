@@ -15,8 +15,12 @@ from langchain_core.output_parsers.pydantic import PydanticOutputParser
 from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.metrics.no_llm_metrics import match_triplets_dg
+from dialogue2graph.metrics.no_llm_metrics import match_dg_triplets
 from dialogue2graph.metrics.llm_metrics import are_triplets_valid, is_theme_valid
+from dialogue2graph.metrics.no_llm_validators import (
+    is_greeting_repeated_regex,
+    is_dialog_closed_too_early_regex,
+)
 from dialogue2graph.metrics.no_llm_validators import (
     is_greeting_repeated_regex,
     is_dialog_closed_too_early_regex,
@@ -101,6 +105,7 @@ class GenerationPipeline(BaseModel):
     generation_model: BaseChatModel
     theme_validation_model: BaseChatModel
     validation_model: BaseChatModel
+    cycle_ends_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
     generation_prompt: Optional[PromptTemplate] = Field(
         default_factory=lambda: cycle_graph_generation_prompt_informal
@@ -124,6 +129,7 @@ class GenerationPipeline(BaseModel):
         generation_model: BaseChatModel,
         theme_validation_model: BaseChatModel,
         validation_model: BaseChatModel,
+        cycle_ends_model: BaseChatModel,
         generation_prompt: Optional[PromptTemplate],
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 2,
@@ -134,6 +140,7 @@ class GenerationPipeline(BaseModel):
             generation_model=generation_model,
             theme_validation_model=theme_validation_model,
             validation_model=validation_model,
+            cycle_ends_model=cycle_ends_model,
             generation_prompt=generation_prompt,
             repair_prompt=repair_prompt,
             min_cycles=min_cycles,
@@ -273,7 +280,7 @@ class GenerationPipeline(BaseModel):
                 seed=self.seed,
             )
             logger.info(f"Graph generated is {graph.graph_dict}")
-            if not graph.edges_match_nodes():
+            if not graph.match_edges_nodes():
                 return GenerationError(
                     error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
                     message="Generated graph is wrong: edges don't match nodes",
@@ -295,15 +302,19 @@ class GenerationPipeline(BaseModel):
                 )
 
             logger.info("Sampling dialogues...")
-            sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
+            sampled_dialogues = self.dialogue_sampler.invoke(
+                graph, self.cycle_ends_model, 15
+            )
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
-            if not match_triplets_dg(graph, sampled_dialogues)["value"]:
+            if not match_dg_triplets(graph, sampled_dialogues)["value"]:
                 return GenerationError(
                     error_type=ErrorType.SAMPLING_FAILED,
                     message="Failed to sample valid dialogues - not all utterances are present",
                 )
             if is_greeting_repeated_regex(sampled_dialogues):
                 return GenerationError(
+                    error_type=ErrorType.SAMPLING_FAILED,
+                    message="Failed to sample valid dialogues - Opening phrases are repeated",
                     error_type=ErrorType.SAMPLING_FAILED,
                     message="Failed to sample valid dialogues - Opening phrases are repeated",
                 )
@@ -338,7 +349,7 @@ class GenerationPipeline(BaseModel):
 
             graph = transition_validation["graph"]
             if transition_validation["validation_details"]["attempts_made"]:
-                if not graph.edges_match_nodes():
+                if not graph.match_edges_nodes():
                     return GenerationError(
                         error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
                         message="Generated graph is wrong: edges don't match nodes",
@@ -349,10 +360,12 @@ class GenerationPipeline(BaseModel):
                         error_type=ErrorType.INVALID_GRAPH_STRUCTURE,
                         message="Generated graph is wrong: utterances in nodes doubled",
                     )
-                print("Sampling dialogues...")
-                sampled_dialogues = self.dialogue_sampler.invoke(graph, 15)
-                print(f"Sampled {len(sampled_dialogues)} dialogues")
-                if not match_triplets_dg(graph, sampled_dialogues)["value"]:
+                logger.info("Sampling dialogues...")
+                sampled_dialogues = self.dialogue_sampler.invoke(
+                    graph, self.cycle_ends_model, 15
+                )
+                logger.info("Sampled %d dialogues", len(sampled_dialogues))
+                if not match_dg_triplets(graph, sampled_dialogues)["value"]:
                     return GenerationError(
                         error_type=ErrorType.SAMPLING_FAILED,
                         message="Failed to sample valid dialogues - not all utterances are present",
@@ -385,6 +398,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
     model_storage: ModelStorage = Field(description="Model storage")
     generation_llm: str = Field(description="LLM for graph generation")
     validation_llm: str = Field(description="LLM for validation")
+    cycle_ends_llm: str = Field(description="LLM for dialog sampler to find cycle ends")
     theme_validation_llm: str = Field(description="LLM for theme validation")
     pipeline: GenerationPipeline
 
@@ -393,16 +407,19 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         model_storage: ModelStorage,
         generation_llm: str,
         validation_llm: str,
+        cycle_ends_llm: str,
         theme_validation_llm: str,
     ):
         super().__init__(
             model_storage=model_storage,
             generation_llm=generation_llm,
             validation_llm=validation_llm,
+            cycle_ends_llm=cycle_ends_llm,
             theme_validation_llm=theme_validation_llm,
             pipeline=GenerationPipeline(
                 generation_model=model_storage.storage[generation_llm].model,
                 validation_model=model_storage.storage[validation_llm].model,
+                cycle_ends_model=model_storage.storage[cycle_ends_llm].model,
                 theme_validation_model=model_storage.storage[
                     theme_validation_llm
                 ].model,

@@ -116,7 +116,7 @@ class GraphExtender(BaseAlgorithm):
         raise NotImplementedError
 
 
-class InputParser(BaseAlgorithm):
+class RawDataParser(BaseAlgorithm):
     """Parser of user data"""
 
     def invoke(self, data):

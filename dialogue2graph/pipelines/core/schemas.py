@@ -36,6 +36,12 @@ class DialogueGraph(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
 
 
+class ReasonGraph(BaseModel):
+    edges: List[Edge] = Field(description="List of transitions between nodes")
+    nodes: List[Node] = Field(description="List of nodes representing assistant states")
+    reason: str = Field(description="Description of LLM answer")
+
+
 class GraphGenerationResult(BaseModel):
     """Complete result with graph and dialogues"""
 
@@ -46,4 +52,4 @@ class GraphGenerationResult(BaseModel):
 
 class CompareResponse(BaseModel):
     value: bool = Field(default=True, description="compare result")
-    description: str = Field(default=True, description="explanation")
+    description: str = Field(description="explanation")
