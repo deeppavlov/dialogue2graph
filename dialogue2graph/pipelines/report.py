@@ -10,6 +10,17 @@ init(autoreset=True)
 
 
 class PipelineReport(BaseModel):
+    """
+    PipelineReport is a model for generating and managing reports for a service pipeline. 
+    It provides functionality to store properties, subreports, and export the report in 
+    various formats such as JSON, CSV, Markdown, and plain text.
+
+    Attributes:
+        model_config (ConfigDict): Configuration for the model, allowing arbitrary types.
+        service (str): Name of the service for which the report is generated.
+        properties (dict): Dictionary containing essential report data such as time, metrics, etc.
+        subreports (List[metrics.DGReportType]): List of subreports from pipeline steps.
+    """
     model_config = ConfigDict(arbitrary_types_allowed=True)
     service: str = Field(description="Name of the service")
     properties: dict = Field(
@@ -21,12 +32,24 @@ class PipelineReport(BaseModel):
     )
 
     def add_property(self, property_name: str, value):
+        """
+        Add a property to the report.
+        Args:
+            property_name (str): Name of the property to add.
+            value: Value of the property to add.
+        """
         self.properties[property_name] = value
 
     def add_subreport(self, subreport: metrics.DGReportType):
+        """
+        Add a subreport to the report.
+        Args:
+            subreport (metrics.DGReportType): Subreport to add.
+        """
         self.subreports.append(subreport)
 
     def to_json(self, path: Path = "report.json"):
+        """Export the report to a JSON file."""
         with open(path, "w") as f:
             json.dump(self.model_dump(), f, indent=4)
 
@@ -78,6 +101,7 @@ class PipelineReport(BaseModel):
             f.write(markdown_str)
 
     def to_text(self, path: Path = "report.txt"):
+        """Export the report to a plain text file."""
         with open(path, "w") as f:
             f.write(str(self))
 
