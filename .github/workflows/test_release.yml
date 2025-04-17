@@ -36,16 +36,11 @@ jobs:
         run: |
           poetry build
     
-      - name: install release
+      - name: install and test installed package
         shell: bash
-        run: |
-          python -m venv test_env && source test_env/bin/activate
-          pip install ./dist/dialogue2graph-*.whl
-
-      - name: Test installed package
         run: |
           python -m venv test_env
           source test_env/bin/activate
           pip install ./dist/*.whl
-          pip install pytest  # If pytest isn't in your package deps
+          pip install pytest
           pytest
