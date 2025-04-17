@@ -23,10 +23,6 @@ from dialogue2graph.metrics.no_llm_validators import (
     is_greeting_repeated_regex,
     is_dialog_closed_too_early_regex,
 )
-from dialogue2graph.metrics.no_llm_validators import (
-    is_greeting_repeated_regex,
-    is_dialog_closed_too_early_regex,
-)
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
@@ -315,8 +311,6 @@ class GenerationPipeline(BaseModel):
                 )
             if is_greeting_repeated_regex(sampled_dialogues):
                 return GenerationError(
-                    error_type=ErrorType.SAMPLING_FAILED,
-                    message="Failed to sample valid dialogues - Opening phrases are repeated",
                     error_type=ErrorType.SAMPLING_FAILED,
                     message="Failed to sample valid dialogues - Opening phrases are repeated",
                 )

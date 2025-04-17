@@ -4,6 +4,7 @@ Three Stage LightGraphGenerator
 
 The module provides three step algorithm aimed to generate dialog graph.
 """
+
 import logging
 from pydantic import Field
 from typing import Callable
@@ -156,7 +157,7 @@ class LightGraphGenerator(GraphGenerator):
             graph: generated graph
             true_graph: expected graph
             eval_stage: string defining eval stage, like step2 or end
-        Returns: 
+        Returns:
             dictionary with report like {"metric_name": result}
         """
         report = {}

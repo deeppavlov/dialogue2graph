@@ -107,7 +107,7 @@ extlinks = {
 html_js_files = [
     "scripts/pydata-sphinx-theme.js",
     "scripts/bootstrap.js",
-    "scripts/fontawesome.js"
+    "scripts/fontawesome.js",
 ]
 
 # Fix base URL for GitHub Pages

@@ -47,7 +47,7 @@ def is_dialog_closed_too_early_regex(
 ) -> bool:
     """
     Check if assistant tried to close dialogue in the middle using regular expression.
-    
+
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         regex (str): Regular expression to find end turns. Defaults to None, so standard regex is used.

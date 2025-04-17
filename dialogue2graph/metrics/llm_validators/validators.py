@@ -169,7 +169,7 @@ def is_dialog_closed_too_early_emb_llm(
 ) -> bool:
     """
     Check if assistant tried to close dialogue in the middle using pairwise distance and LLM assessment.
-    
+
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         model_storage (ModelStorage): Model storage containing embedder and LLM model for evaluation.

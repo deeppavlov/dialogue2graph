@@ -79,7 +79,7 @@ class DialogAugmentation(BaseAlgorithm):
 
 class GraphAugmentation(BaseAlgorithm):
     """Base class for augmenting Graphs
-    
+
     Args:
         topic: The topic to guide the augmentation process (optional).
         graph: The Graph object to be augmented."""

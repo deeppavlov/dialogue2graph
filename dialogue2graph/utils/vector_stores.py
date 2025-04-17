@@ -4,6 +4,7 @@ Vector Stores
 
 The module contains storage of text vectors for dialog turns.
 """
+
 import uuid
 
 from langchain_core.documents import Document

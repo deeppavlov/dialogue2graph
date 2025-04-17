@@ -4,6 +4,7 @@ Schemas
 
 The module contains base classes for graph abstractions.
 """
+
 from typing import List
 from pydantic import BaseModel, Field
 from dialogue2graph.pipelines.core.dialogue import Dialogue
@@ -32,7 +33,7 @@ class Node(BaseModel):
 
 class DialogueGraph(BaseModel):
     # TODO: add docs
-    
+
     edges: List[Edge] = Field(description="List of transitions between nodes")
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
 

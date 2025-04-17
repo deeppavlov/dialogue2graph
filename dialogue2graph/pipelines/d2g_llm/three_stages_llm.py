@@ -4,6 +4,7 @@ Three Stage LLMGraphGenerator
 
 The module provides three step algorithm aimed to generate dialog graph and based on LLMs.
 """
+
 import logging
 from typing import List, Callable
 from pydantic import ConfigDict
@@ -38,6 +39,7 @@ logger = logging.getLogger(__name__)
 
 class DialogueNodes(BaseModel):
     """Class for dialog nodes"""
+
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
@@ -124,18 +126,20 @@ class LLMGraphGenerator(GraphGenerator):
             {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
         """
         try:
-
             dialogs = ""
             for idx, dial in enumerate(pipeline_data.dialogs):
                 dialogs += f" Dialogue_{idx}: {dial}"
 
-            prompt = PromptTemplate.from_template(grouping_prompt_1 + "{graph_example_1}. " + grouping_prompt_2 + dialogs)
+            prompt = PromptTemplate.from_template(
+                grouping_prompt_1 + "{graph_example_1}. " + grouping_prompt_2 + dialogs
+            )
             fixed_output_parser = OutputFixingParser.from_llm(
                 parser=PydanticOutputParser(pydantic_object=DialogueNodes),
                 llm=self.model_storage.storage[self.formatting_llm].model,
             )
             chain = (
-                self.model_storage.storage[self.grouping_llm].model | fixed_output_parser
+                self.model_storage.storage[self.grouping_llm].model
+                | fixed_output_parser
             )
             # Use LLM to group nodes
             llm_output = chain.invoke(
@@ -160,14 +164,17 @@ class LLMGraphGenerator(GraphGenerator):
 
             # Handle user end dialogues
             if get_helpers(pipeline_data.dialogs)[2]:
-                prompt = PromptTemplate.from_template(add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2)
+                prompt = PromptTemplate.from_template(
+                    add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2
+                )
 
                 fixed_output_parser = OutputFixingParser.from_llm(
                     parser=PydanticOutputParser(pydantic_object=ReasonGraph),
                     llm=self.model_storage.storage[self.formatting_llm].model,
                 )
                 chain = (
-                    self.model_storage.storage[self.filling_llm].model | fixed_output_parser
+                    self.model_storage.storage[self.filling_llm].model
+                    | fixed_output_parser
                 )
                 result = chain.invoke(
                     [HumanMessage(content=prompt.format(graph_dict=graph_dict))]

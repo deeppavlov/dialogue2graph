@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 class BaseGraph(BaseModel, abc.ABC):
     # TODO: add docs
     """Abstract graph class"""
+
     graph_dict: dict
     graph: Optional[nx.Graph] = None
     node_mapping: Optional[dict] = None
@@ -359,7 +360,7 @@ class Graph(BaseGraph):
 
         Args:
             visited_nodes: a path traveled so far
-        Returns: 
+        Returns:
             list of all paths from start_node_id which probably could be finishing by end_node_id
         """
         visited_paths = [[]]
@@ -422,7 +423,7 @@ class Graph(BaseGraph):
 
     def get_list_from_graph(self) -> tuple[list[str], int]:
         """Form auxiliary data from the graph
-        
+
         Returns:
           res_list: concatenation of utterances of every node and its outgoing edges
           n_edges: total number of utterances in all edges

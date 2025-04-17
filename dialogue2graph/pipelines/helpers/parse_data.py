@@ -4,6 +4,7 @@ Helper ParseData
 
 The module contains parser to extract user data containing dialogues and graphs
 """
+
 # from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
 import json
 from typing import List, Optional
@@ -49,7 +50,7 @@ class RawDGParser(RawDataParser):
         Args:
             raw_graph: graph in a form of either schemas.DialogueGraph or file path
 
-        Returns: 
+        Returns:
             schemas.DialogueGraph or PosixPath when raw_graph is file_path
             None when validation error
         """
@@ -69,7 +70,7 @@ class RawDGParser(RawDataParser):
         Args:
             raw_dialogs: dialogs in a form of RawDialogsType
 
-        Returns: 
+        Returns:
             ValidatedDialogType or PosixPath when raw_dialogs is file_path
             Empty list when validation error
         """

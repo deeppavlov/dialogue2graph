@@ -36,6 +36,7 @@ from dialogue2graph.pipelines.d2g_extender.prompts import (
 
 class DialogueNodes(BaseModel):
     """Class for dialog nodes"""
+
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     # reason: str = Field(description="explanation")
 
@@ -52,7 +53,7 @@ class LLMGraphExtender(GraphExtender):
     supported graph
     Generation stages:
 
-    1. 
+    1.
         a. If supported graph is given, it is used as a start. Otherwise, graph is generated with LightGraphGenerator from first step dialogs
         b. Algorithmic connecting nodes by edges.
     2. Iterative steps:
@@ -127,12 +128,13 @@ class LLMGraphExtender(GraphExtender):
         )
 
     def _add_step(self, dialogues: list[Dialogue], graph: Graph) -> Graph:
-
         dialogs = ""
         for idx, dial in enumerate(dialogues):
             dialogs += f"\nDialogue_{idx}: {dial}"
 
-        prompt = PromptTemplate.from_template(extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs)
+        prompt = PromptTemplate.from_template(
+            extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs
+        )
 
         fixed_output_parser = OutputFixingParser.from_llm(
             parser=PydanticOutputParser(pydantic_object=DialogueNodes),
@@ -233,12 +235,13 @@ class LLMGraphExtender(GraphExtender):
         return cur_graph
 
     def _finalize_graph(self, pipeline_data, cur_graph, enable_evals, report):
-
         dialogs = ""
         for idx, dial in enumerate(pipeline_data.dialogs):
             dialogs += f"\nDialogue_{idx}: {dial}"
 
-        prompt = PromptTemplate.from_template(add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + dialogs)
+        prompt = PromptTemplate.from_template(
+            add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + dialogs
+        )
 
         messages = [
             HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))

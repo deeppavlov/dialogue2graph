@@ -4,6 +4,7 @@ D2GLightPipeline
 
 The module contains pipeline for usual graph generation (so called light mode generation)
 """
+
 from typing import Callable
 from dotenv import load_dotenv
 from dialogue2graph.pipelines.core.pipeline import BasePipeline

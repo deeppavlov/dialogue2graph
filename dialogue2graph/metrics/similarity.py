@@ -4,6 +4,7 @@ Similarity
 
 The module contains functions to compare how similar dialog texts are.
 """
+
 from sentence_transformers import SentenceTransformer
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.evaluation import load_evaluator
@@ -15,7 +16,7 @@ def compare_strings(
     first: str, second: str, embedder: HuggingFaceEmbeddings, embedder_th: float = 0.001
 ) -> bool:
     """Calculate pairwise_embedding_distance between two strings based on embedder
-     
+
     Returns:
         True when threshold embedder_th not exceeded, False otherwise"""
 

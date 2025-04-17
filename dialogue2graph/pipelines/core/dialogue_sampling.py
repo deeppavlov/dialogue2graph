@@ -4,7 +4,7 @@ Dialogue Sampling
 
 The module contains class for sampling dialogs from a graph.
 """
-import os
+
 import itertools
 import logging
 from typing import Literal
@@ -111,7 +111,7 @@ def mix_ends(
         cycle_ends_ids: ids of graph nodes looping cycles in the graph
 
     Returns:
-        Adds found ids to end_ids and returns as a result   
+        Adds found ids to end_ids and returns as a result
     """
     end_paths = []
     for c in cycle_ends_ids:

@@ -105,7 +105,7 @@ class ModelStorage(BaseModel):
     ):
         """
         Add a new model configuration to the storage.
-        
+
         Args:
             key (str): The unique identifier for the model configuration.
             config (dict): The configuration dictionary for initializing the model.

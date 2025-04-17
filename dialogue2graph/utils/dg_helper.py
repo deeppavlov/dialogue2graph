@@ -4,6 +4,7 @@ Dialog Graph Helper
 
 The module contains auxilary functions for Graph creation.
 """
+
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.utils.vector_stores import DialogueStore, NodeStore
 from dialogue2graph.metrics.similarity import compare_strings
@@ -23,7 +24,7 @@ def connect_nodes(
         utt_sim: similarity model used to build vector stores
 
     Returns:
-        graph dict in a form {"edges": [edges], "nodes": [nodes]}   
+        graph dict in a form {"edges": [edges], "nodes": [nodes]}
     """
     edges = []
     node_store = NodeStore(nodes, utt_sim)

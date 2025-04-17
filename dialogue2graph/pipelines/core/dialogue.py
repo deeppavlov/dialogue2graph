@@ -4,6 +4,7 @@ Dialogue
 
 The module provides Dialogue class that represents complete dialogues with multiple messages.
 """
+
 import uuid
 import networkx as nx
 from typing import List, Union, Dict

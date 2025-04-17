@@ -2,7 +2,7 @@
 Find cycle ends
 ----------------
 
-The module provides graph auxilary method to find cycle ends. 
+The module provides graph auxilary method to find cycle ends.
 """
 
 import json

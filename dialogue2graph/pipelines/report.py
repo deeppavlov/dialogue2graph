@@ -4,6 +4,7 @@ Report
 
 The module provides creating pipeline reports in various formats.
 """
+
 import json
 import pandas as pd
 from typing import List
