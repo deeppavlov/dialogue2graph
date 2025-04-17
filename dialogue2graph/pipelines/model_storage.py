@@ -1,5 +1,6 @@
 import yaml
 import dotenv
+from pydantic._internal._model_construction import ModelMetaclass
 from typing import Literal, Union, Dict
 from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
@@ -13,6 +14,14 @@ from dialogue2graph.utils.logger import Logger
 logger = Logger(__file__)
 
 dotenv.load_dotenv()
+
+
+class GetModelInstance:
+    config: dict
+    def __init__(self, config: dict):
+        self.config =config
+    def instantiate(self, class_name):
+        return class_name(**self.config)
 
 class StoredData(BaseModel):
     """
@@ -35,7 +44,7 @@ class StoredData(BaseModel):
 
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
-    model_type: Union[Literal["llm"], Literal["emb"]] = Field(
+    model_type: ModelMetaclass = Field(
         description="Type of the stored model"
     )
     model: Union[HuggingFaceEmbeddings, BaseChatModel] = Field(
@@ -44,10 +53,10 @@ class StoredData(BaseModel):
 
     @model_validator(mode="before")
     def validate_model(cls, values):
-        if values.get("model_type") == "llm":
+        if values.get("model_type") == ChatOpenAI:
             if not isinstance(values.get("model"), BaseChatModel):
                 raise ValueError("LLM model must be an instance of BaseChatModel")
-        elif values.get("model_type") == "emb":
+        elif values.get("model_type") == HuggingFaceEmbeddings:
             if not isinstance(values.get("model"), HuggingFaceEmbeddings):
                 raise ValueError(
                     "Embedding model must be an instance of HuggingFaceEmbeddings"
@@ -115,8 +124,9 @@ class ModelStorage(BaseModel):
             logger.error(f"Failed to load model configurations from {path}: {e}")
             raise
 
+
     def add(
-        self, key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]
+        self, key: str, config: dict, model_type:  Union[HuggingFaceEmbeddings, BaseChatModel]
     ):
         """
         Add a new model configuration to the storage.
@@ -133,27 +143,15 @@ class ModelStorage(BaseModel):
         if key in self.storage:
             logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
         try:
-            if model_type == "llm":
-                logger.debug(
-                    f"Initializing LLM model for key '{key}' with config: {config}"
+            logger.debug(
+                "Initializing model %s for key '%s' with config: %s" % (model_type, key, config)
                 )
-                if not all(p in ChatOpenAI.model_fields.keys() for p in config):
-                    raise KeyError(
-                        f"Invalid parameter names for model '{key}': {[p for p in config if p not in ChatOpenAI.model_fields.keys()]}"
-                    )
-                model_instance = ChatOpenAI(**config)
-            elif model_type == "emb":
-                device = config.pop("device", None)
-                if device:
-                    config["model_kwargs"] = {"device": device}
-                logger.debug(
-                    f"Initializing embedding model for key '{key}' with config: {config}"
+            if not all(p in model_type.model_fields.keys() for p in config):
+                raise KeyError(
+                        f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
                 )
-                if not all(p in HuggingFaceEmbeddings.model_fields.keys() for p in config):
-                    raise KeyError(
-                        f"Invalid parameter names for model '{key}': {[p for p in config if p not in HuggingFaceEmbeddings.model_fields.keys()]}"
-                    )
-                model_instance = HuggingFaceEmbeddings(**config)
+            model_getter = GetModelInstance(config)
+            model_instance = model_getter.instantiate(model_type)
 
             logger.debug("Created model instance of type: %s", type(model_instance))
             item = StoredData(
