@@ -6,7 +6,7 @@ Use ``LoopedGraphGenerator`` to create a validated graph from several LLM genera
 .. code-block:: python
 
     from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
-    from langchain_openai import ChatOpenAI
+    from langchain_community.chat_models import ChatOpenAI
 
 1. Choose LLMs for dialogue generation and dialogue validation
 

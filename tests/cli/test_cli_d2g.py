@@ -129,6 +129,7 @@ def test_gen_light_json_positive():
     assert check_json_subreports(report_path), (
         f"report file {report_path} doesn't have subreports"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_json_no_eval():
@@ -139,6 +140,7 @@ def test_gen_light_json_no_eval():
     assert not check_json_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_md_positive():
@@ -151,6 +153,7 @@ def test_gen_light_md_positive():
     assert check_md_subreports(report_path), (
         f"report file {report_path} doesn't have subreports"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_md_no_eval():
@@ -161,6 +164,7 @@ def test_gen_light_md_no_eval():
     assert not check_md_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_csv_positive():
@@ -173,6 +177,7 @@ def test_gen_light_csv_positive():
     assert check_csv_subreports(report_path), (
         f"report file {report_path} doesn't have subreports"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_csv_no_eval():
@@ -183,6 +188,7 @@ def test_gen_light_csv_no_eval():
     assert not check_csv_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_txt_positive():
@@ -194,7 +200,8 @@ def test_gen_light_txt_positive():
     assert parse_txt(report_path) is not None, "saved report is not valid csv"
     assert check_txt_subreports(report_path), (
         f"report file {report_path} doesn't have subreports"
-    )
+ )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_txt_no_eval():
@@ -205,6 +212,7 @@ def test_gen_light_txt_no_eval():
     assert not check_txt_subreports(report_path), (
         f"report file {report_path} shall not have subreports"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_nocfg():
@@ -213,14 +221,16 @@ def test_gen_light_nocfg():
         f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg1.yml')} -d {filepath.joinpath('test_cli.json')} -tg {filepath.joinpath('test_cli.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail without config file"
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
-# def test_gen_light_wrong_cfg():
-#     report_path = filepath.joinpath('d2g_light_test_report.json')
-#     exit_status = os.system(
-#         f"dialogue2graph gen-graph-light -c {filepath.joinpath('wrong_cfg.yml')} -d {filepath.joinpath('test_cli.json')} -t {filepath.joinpath('test_cli.json')} -r {report_path}"
-#     )
-#     assert exit_status != 0, "dialogue2graph should fail with config file where no model_name is specified"
+def test_gen_light_wrong_cfg():
+    report_path = filepath.joinpath('d2g_light_test_report.json')
+    exit_status = os.system(
+        f"dialogue2graph gen-graph-light -c {filepath.joinpath('wrong_cfg.yml')} -d {filepath.joinpath('test_cli.json')} -t {filepath.joinpath('test_cli.json')} -r {report_path}"
+    )
+    assert exit_status != 0, "dialogue2graph should fail with config file where no model_name is specified"
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_no_dialog_file():
@@ -229,6 +239,7 @@ def test_gen_light_no_dialog_file():
         f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg1.yml')} -d {filepath.joinpath('test_cli1.json')} -tg {filepath.joinpath('test_cli.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail without dialog file"
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_no_dialogs():
@@ -239,6 +250,7 @@ def test_gen_light_no_dialogs():
     assert exit_status != 0, (
         "dialogue2graph should fail with input file without dialogs"
     )
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_no_graph_file():
@@ -247,6 +259,7 @@ def test_gen_light_no_graph_file():
         f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli.json')} -tg {filepath.joinpath('test_cli_no_graph.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail with input file without graph"
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_empty_dialogs():
@@ -255,6 +268,7 @@ def test_gen_light_empty_dialogs():
         f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli_empty_dialogs.json')} -tg {filepath.joinpath('test_cli_no_graph.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail with empty dialogs"
+    pathlib.Path(report_path).unlink(missing_ok=True)
 
 
 def test_gen_light_empty_graph():
@@ -263,3 +277,4 @@ def test_gen_light_empty_graph():
         f"dialogue2graph gen-graph-light -c {filepath.joinpath('cfg.yml')} -d {filepath.joinpath('test_cli.json')} -tg {filepath.joinpath('test_cli_empty_graph.json')} -r {report_path}"
     )
     assert exit_status != 0, "dialogue2graph should fail with empty graph"
+    pathlib.Path(report_path).unlink(missing_ok=True)

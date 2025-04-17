@@ -4,7 +4,7 @@ from chatsky_llm_autoconfig.dialogue import Dialogue
 from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
 from chatsky_llm_autoconfig.metrics.llm_metrics import find_graph_ends
 from chatsky_llm_autoconfig.settings import EnvSettings
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 
 env_settings = EnvSettings()
 

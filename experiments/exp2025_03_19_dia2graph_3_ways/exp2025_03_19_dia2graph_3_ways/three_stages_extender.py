@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from typing import List
 from pydantic import BaseModel, Field
 from langchain.output_parsers import PydanticOutputParser

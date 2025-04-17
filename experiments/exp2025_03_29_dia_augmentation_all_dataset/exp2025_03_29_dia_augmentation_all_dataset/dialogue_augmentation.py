@@ -1,7 +1,7 @@
 from dialogue2graph.pipelines.core.dialogue import DialogueMessage
 from typing import List
 from pydantic import BaseModel
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 import os
