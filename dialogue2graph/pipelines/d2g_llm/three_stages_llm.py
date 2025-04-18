@@ -1,3 +1,10 @@
+"""
+Three Stage LLMGraphGenerator
+-------------------------------
+
+The module provides three step algorithm aimed to generate dialog graph and based on LLMs.
+"""
+
 import logging
 from typing import List, Callable
 from pydantic import ConfigDict
@@ -31,6 +38,8 @@ logger = logging.getLogger(__name__)
 
 
 class DialogueNodes(BaseModel):
+    """Class for dialog nodes"""
+
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
@@ -41,19 +50,20 @@ logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 class LLMGraphGenerator(GraphGenerator):
     """Graph generator from list of dialogues. Based on LLM.
     Three stages:
+
     1. LLM grouping assistant utterances into nodes.
     2. Algorithmic connecting nodes by edges.
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
 
     Attributes:
-      model_storage: Model storage
-      grouping_llm: Name of LLM for grouping assistant utterances into nodes
-      filling_llm: Name of LLM for adding missing edges
-      formatting_llm: Name of LLM for formatting other LLMs output
-      sim_model: HuggingFace name for similarity model
-      step2_evals: Evaluation metrics called after stage 2 with connecting nodes by edges
-      end_evals: Evaluation metrics called at the end of generation process
-      model_config: It's a parameter for internal use of Pydantic
+        model_storage: Model storage
+        grouping_llm: Name of LLM for grouping assistant utterances into nodes
+        filling_llm: Name of LLM for adding missing edges
+        formatting_llm: Name of LLM for formatting other LLMs output
+        sim_model: HuggingFace name for similarity model
+        step2_evals: Evaluation metrics called after stage 2 with connecting nodes by edges
+        end_evals: Evaluation metrics called at the end of generation process
+        model_config: It's a parameter for internal use of Pydantic
     """
 
     model_storage: ModelStorage = Field(description="Model storage")
@@ -138,20 +148,21 @@ class LLMGraphGenerator(GraphGenerator):
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
     ) -> tuple[BaseGraph, metrics.DGReportType]:
-        """Primary method of the three stages generation algorithm:
+        """Invoke primary method of the three stages generation algorithm:
+
         1. Grouping assistant utterances into nodes with LLM.
         2. Algorithmic connecting nodes by edges: connect_nodes.
         3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
 
         Args:
-          pipeline_data:
+            pipeline_data:
             data for generation and evaluation:
-              dialogs for generation, of List[Dialogue] type
-              true_graph for evaluation, of Graph type
-          enable_evals: when true, evaluate method is called
+                dialogs for generation, of List[Dialogue] type
+                true_graph for evaluation, of Graph type
+            enable_evals: when true, evaluate method is called
         Returns:
-          tuple of resulted graph of Graph type and report dictionary like in example below:
-          {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
+            tuple of resulted graph of Graph type and report dictionary like in example below:
+            {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
         """
         try:
             dialogs = ""

@@ -1,3 +1,10 @@
+"""
+D2GLLMPipeline
+--------------
+
+The module contains pipeline for graph generation using LLMs.
+"""
+
 # from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
 from typing import Callable
 from dotenv import load_dotenv

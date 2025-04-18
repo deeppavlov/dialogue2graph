@@ -1,3 +1,10 @@
+"""
+Graph
+------
+
+The module contains base class for graphs.
+"""
+
 import networkx as nx
 from pydantic import BaseModel
 from typing import Optional, Any

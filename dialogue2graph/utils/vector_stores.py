@@ -1,3 +1,10 @@
+"""
+Vector Stores
+-------------
+
+The module contains storage of text vectors for dialog turns.
+"""
+
 import uuid
 
 from langchain_core.documents import Document
@@ -8,6 +15,7 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 class DialogueStore:
     """Vector store for dialogues to conduct searching
     User and assistant utterances vectorized separately
+
     Attributes:
       _assistant_store: store for assistant utterances
       _user_store: store for user utterances
@@ -22,9 +30,10 @@ class DialogueStore:
 
     def _load_dialogue(self, dialogue: list, embedder: HuggingFaceEmbeddings):
         """Auxiliary method to initialize instance
+
         Args:
           dialogue: list of dicts in a form {"participant": "user" or "assistant", "text": text}
-          embedder: embedding function for vector sore
+          embedder: embedding function for vector store
         """
         self._assistant_store = Chroma(
             collection_name=str(uuid.uuid4()), embedding_function=embedder
@@ -52,7 +61,8 @@ class DialogueStore:
         embedder: HuggingFaceEmbeddings,
         score_threshold=0.995,
     ):
-        """Initializes instance for dialogue based on embedder
+        """Initialize instance for dialogue based on embedder
+
         Args:
           dialogue: list of dicts in a form {"participant": "user" or "assistant", "text": text}
           embedder: embedding function for vector sore
@@ -63,6 +73,7 @@ class DialogueStore:
 
     def search_assistant(self, utterance) -> list[str]:
         """Search for utterance over assistant store
+
         Args:
           utterance: utterance to search for
         Returns:
@@ -81,6 +92,7 @@ class DialogueStore:
 
     def get_user_by_id(self, ids: list[str]) -> list[str]:
         """Get utterances of user with ids
+
         Args:
           ids: ids of user documents to get
         Returns:
@@ -92,6 +104,7 @@ class DialogueStore:
 
 class NodeStore:
     """Vector store for graph nodes
+
     Attributes:
       _nodes_store: store for assistant utterances
       _utterances: list of (node_utterance, node_id)
@@ -102,6 +115,7 @@ class NodeStore:
 
     def _load_nodes(self, nodes: list, embedder: HuggingFaceEmbeddings):
         """Auxiliary method to initialize instance
+
         Args:
           nodes: list of dicts in a form {"id": id, "label": label, "is_start": bool, "utterances": list}
           embedder: embedding function for vector sore
@@ -120,7 +134,8 @@ class NodeStore:
         self._nodes_store.add_documents(documents=docs)
 
     def __init__(self, nodes: list[dict], embedder: HuggingFaceEmbeddings):
-        """Initializes instance for nodes based on embedder
+        """Initialize instance for nodes based on embedder
+
         Args:
           nodes: list of dicts in a form {"id": id, "label": label, "is_start": bool, "utterances": list}
           embedder: embedding function for vector sore
@@ -129,6 +144,7 @@ class NodeStore:
 
     def find_node(self, utterance: str) -> int:
         """Search for node by utterance
+
         Args:
           utterance: uttetance to search by
         Returns:

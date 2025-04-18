@@ -1,3 +1,10 @@
+"""
+Three Stage LightGraphGenerator
+-------------------------------
+
+The module provides three step algorithm aimed to generate dialog graph.
+"""
+
 import logging
 from pydantic import Field
 from typing import Callable
@@ -100,7 +107,7 @@ class LightGraphGenerator(GraphGenerator):
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
     ) -> tuple[BaseGraph, metrics.DGReportType]:
-        """Efficient implementation of the three stages generation algorithm."""
+        """Invoke efficient implementation of the three stages generation algorithm."""
 
         node_utts, start_utts, user_end = get_helpers(pipeline_data.dialogs)
         groups = group_nodes(pipeline_data.dialogs, node_utts)
@@ -171,12 +178,14 @@ class LightGraphGenerator(GraphGenerator):
         return self.invoke(*args, **kwargs)
 
     def evaluate(self, graph, true_graph, eval_stage: str) -> metrics.DGReportType:
-        """Calls metrics and returns report
+        """Call metrics and return report
+
         Args:
-          graph: generated graph
-          true_graph: expected graph
-          eval_stage: string defining eval stage, like step2 or end
-        Returns: dictionary with report like {"metric_name": result}
+            graph: generated graph
+            true_graph: expected graph
+            eval_stage: string defining eval stage, like step2 or end
+        Returns:
+            dictionary with report like {"metric_name": result}
         """
         report = {}
         for metric in getattr(self, eval_stage + "_evals"):
