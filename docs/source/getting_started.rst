@@ -38,6 +38,8 @@ To install the **Dialogue2Graph** project, please follow the steps below:
 
     Never hardcode your personal tokens and other sensitive credentials. Use the ``.env`` file to store them.
 
+- Explore :doc:`user guides page <userguides>` to start your work.
+
 Key Concepts
 ~~~~~~~~~~~~
 
