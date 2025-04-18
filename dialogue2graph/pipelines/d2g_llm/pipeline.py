@@ -10,7 +10,19 @@ load_dotenv()
 
 
 class D2GLLMPipeline(BasePipeline):
-    """LLM graph generator pipeline"""
+    """
+    D2GLLMPipeline is a pipeline class for generating graphs based on provided dialogues using LLMs.
+
+    Attributes:
+        name (str): The name of the pipeline.
+        model_storage (ModelStorage): An object to manage and store models used in the pipeline.
+        grouping_llm (str): The key for the grouping LLM model in the model storage. Defaults to "d2g_llm_grouping_llm:v1".
+        filling_llm (str): The key for the filling LLM model in the model storage. Defaults to "d2g_llm_filling_llm:v1".
+        formatting_llm (str): The key for the formatting LLM model in the model storage. Defaults to "d2g_llm_formatting_llm:v1".
+        sim_model (str): The key for the similarity embedder model in the model storage. Defaults to "d2g_llm_sim_model:v1".
+        step2_evals (list[Callable], optional): A list of evaluation functions to be applied at step 2 of the pipeline. Defaults to None.
+        end_evals (list[Callable], optional): A list of evaluation functions to be applied at the end of the pipeline. Defaults to None.
+    """
 
     def __init__(
         self,
