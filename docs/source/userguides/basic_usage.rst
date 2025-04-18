@@ -1,83 +1,72 @@
-Using Dialog2Graph pipelines
-============================
+Learn base dialogue2graph classes
+=========================================
 
-This document describes how to use Dialog2Graph pipelines to process your data. The following example shows how to use the pipeline that generates graph based on the dialogues you provide using both LLM and Embedding models. Also we will dive into details of ``ModelStorage`` usage.
+Create dialogue2graph.Graph
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First of all we need to import the ``ModelStorage`` and ``Pipeline`` we will be using.
-
-.. code-block:: python
-
-    from dialogue2graph.pipelines.model_storage import ModelStorage
-    from dialogue2graph.pipelines.d2g_llm.pipeline import Pipeline as D2GLLMPipeline
-
-
-``ModelStorage`` instance is used to store LLM and SentenceTransformer models and use cached variants to avoid multiple instances of the same model being up simultaneously.
-
-Each ``Pipeline`` has it's own default models, but you can override them by passing the key to the model you've added to the ``ModelStorage``.
+:py:class:`~dialogue2graph.pipelines.core.graph.Graph`  is a base class in dialogue2graph package that enables to create a directed dialog graph and work with it. You can visualise it and sample dialogs from it. 
 
 .. code-block:: python
 
-    ms = ModelStorage()
+    from dialogue2graph import Graph
 
-    ms.add(
-        "my_formatting_model",
-        config={
-            "model": "gpt-3.5-turbo"
-        },
-        model_type="llm",
-    )
-
-    ms.add(
-        "my_embedding_model",
-        config={
-            "model_name": "sentence-transformers/all-MiniLM-L6-v2"
-        },
-        model_type="emb",
-    )
-
-
-    pipe = D2GLLMPipeline(
-        name="d2g_pipeline" # name to save reports for (useful if multiple pipelines are used)
-        ms,
-        formatting_llm="my_formatting_model",
-        sim_model="my_embedding_model"
-        )
-
-In this example we are overriding the default "gpt-4o-mini" model with "gpt-3.5-turbo" model for the formatting task in the pipeline and the similarity model to use "all-MiniLM-L6-v2". The rest of the models will be used as default. Don't forget to use correct ``model_type`` when adding the model to the ``ModelStorage``. The available types are ``llm`` for LLMs and ``emb`` for embedders.
-
-Note, that the adding of the models to the ``ModelStorage`` is not necessary if you are using the default models.
+For experimenting with dialog graphs a set with generated data was created. It can be loaded from `HuggingFace <https://huggingface.co/datasets/DeepPavlov/d2g_generated>`_ and contains 402 dialog graphs on various topics concerning custom support and other topics.
 
 .. code-block:: python
 
-    # Define the data, but it can also be a path to the JSON file or a list of Dialogue objects
-    data = [{'text': 'Hey there! How can I help you today?',
-        'participant': 'assistant'},
-    {'text': 'I need to book a ride to the airport.', 'participant': 'user'},
-    {'text': 'Sure! I can help with that. When is your flight, and where are you departing from?',
-        'participant': 'assistant'},
-    {'text': 'Do you have any other options?', 'participant': 'user'},
-    {'text': "If you'd prefer, I can send you options for ride-share services instead. Would you like that?",
-        'participant': 'assistant'},
-    {'text': "No, I'll manage on my own.", 'participant': 'user'},
-    {'text': 'No worries! Feel free to reach out anytime.',
-        'participant': 'assistant'},
-    {'text': 'Alright, thanks anyway.', 'participant': 'user'},
-    {'text': "You're welcome! Have a fantastic trip!",
-        'participant': 'assistant'}]
+    from datasets import load_dataset
 
-    # Invoke the pipeline to get the graph and report objects
-    graph, report = pipe.invoke(data)
-    report.to_markdown("report.md")
+    dataset = load_dataset("DeepPavlov/d2g_generated", token=True)
 
-That's it! Now, you have a ``Graph`` object that you can use for further processing.
-And you have a ``Report`` object that contains some metrics regarding your data. It can be exported to various formats using built in functions.
-
-If needed you can both save your ``ModelStorage`` and load it later.
+First, initialize :py:class:`~dialogue2graph.pipelines.core.graph.Graph` by passing a dictionary with graph edges and nodes (``{"edges": [...], "nodes": [...]}``).
 
 .. code-block:: python
 
-    # Save the ModelStorage to a file
-    ms.save("models_config.yml")
+    graph = Graph(graph_dict=dataset['train'][5]["graph"])
 
-    # Load the ModelStorage from a file
-    ms = ModelStorage.load("models_config.yml")
+Then you can visualise the graph with all the utterances it contains.
+
+.. code-block:: python
+
+    graph.visualise()
+
+Or you can visualise the graph in a more schematic way to see its general structure.
+
+.. code-block:: python
+
+    graph_title = "Schematic graph view"
+    graph.visualise_short(graph_title)
+
+Create dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:py:class:`~dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler` is a class that helps to sample dialogs from existing dialog graphs. It uses recursion to get all possible dialogs from the graph.
+
+.. code-block:: python
+
+    from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
+    from langchain_openai import ChatOpenAI
+
+To sample dialogs from the graph, create :py:class:`~dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler` instance and use invoke method to start sampling process.
+
+.. code-block:: python
+
+    sampler = RecursiveDialogueSampler()
+    model = ChatOpenAI(model="gpt-3.5-turbo")
+    dialogues: list = sampler.invoke(graph=graph, upper_limit=10, cycle_ends_model=model)
+
+The output of :py:class:`~dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler.invoke` method is a list of :py:class:`~dialogue2graph.pipelines.core.dialogue.Dialogue` instances. This class is also helpful when working with dialog graphs.
+
+.. code-block:: python
+    
+    type(dialogues[0])
+
+Use dialogue2graph.Dialogue
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+:py:class:`~dialogue2graph.pipelines.core.dialogue.Dialogue` is a class that represents a complete dialogue and provide method for visualisation and converting. 
+
+.. code-block:: python
+
+    print(dialogues[0])
+    dialogues[0].to_list()
