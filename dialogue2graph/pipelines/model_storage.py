@@ -20,7 +20,7 @@ dotenv.load_dotenv()
 class GetModelInstance:
     config: dict
     def __init__(self, config: dict):
-        self.config =config
+        self.config = config
     def instantiate(self, class_name):
         return class_name(**self.config)
 
