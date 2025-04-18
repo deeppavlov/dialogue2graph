@@ -30,17 +30,18 @@ jobs:
 
       - name: setup poetry and install dependencies
         run: |
-          pipx install poetry==1.8.4
+          python -m pip install --upgrade pip poetry==1.8.4
       
       - name: build release
         run: |
-          poetry build
+          python -m poetry build
     
       - name: install and test installed package
         shell: bash
         run: |
           python -m venv test_env
           . ${GITHUB_WORKSPACE}/test_env/bin/activate || . ${GITHUB_WORKSPACE}/test_env/Scripts/activate
+          pip install --upgrade pip
           pip install ./dist/*.whl
           pip install pytest
-          pytest
+          python -m pytest
