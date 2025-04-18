@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import json
 from pathlib import Path
 from dotenv import load_dotenv
@@ -49,7 +48,6 @@ class TopicGenerationPipeline(BasePipeline):
         validation_llm: str = "topic_generation_val_llm:v1",
         theme_validation_llm: str = "topic_generation_theme_val_llm:v1",
     ):
-        
         super().__init__(
             steps=[
                 LoopedGraphGenerator(
