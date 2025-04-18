@@ -1,0 +1,135 @@
+dialogue2graph.metrics.no_llm_metrics
+=====================================
+
+.. py:module:: dialogue2graph.metrics.no_llm_metrics
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialogue2graph/metrics/no_llm_metrics/metrics/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.no_llm_metrics.DialogueValidationResult
+   dialogue2graph.metrics.no_llm_metrics.DGTripletsMatchResult
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.no_llm_metrics.are_paths_valid
+   dialogue2graph.metrics.no_llm_metrics.match_graph_triplets
+   dialogue2graph.metrics.no_llm_metrics.match_dg_triplets
+   dialogue2graph.metrics.no_llm_metrics.match_dialogue_triplets
+   dialogue2graph.metrics.no_llm_metrics.match_roles
+   dialogue2graph.metrics.no_llm_metrics.is_correct_length
+   dialogue2graph.metrics.no_llm_metrics.is_same_structure
+
+
+Package Contents
+----------------
+
+.. py:function:: are_paths_valid(G: dialogue2graph.pipelines.core.graph.BaseGraph, dialogues: list[dialogue2graph.pipelines.core.dialogue.Dialogue]) -> DialogueValidationResult
+
+   Check if all dialogues are valid paths in the graph.
+
+   :param G: BaseGraph object containing the dialogue graph
+   :param dialogues: List of Dialogue objects to check against
+
+   :returns: for every dialogue {"value": bool, "description": "description with dialogue_id and list of pairs when there is no connection from one message to another"}
+   :rtype: list
+
+
+.. py:class:: DialogueValidationResult
+
+   Bases: :py:obj:`TypedDict`
+
+
+   To return result of dialogues_are_valid_paths
+
+
+   .. py:attribute:: value
+      :type:  bool
+
+
+   .. py:attribute:: invalid_transitions
+      :type:  Optional[List[InvalidDialogueTransition]]
+
+
+.. py:function:: match_graph_triplets(G1: dialogue2graph.pipelines.core.graph.BaseGraph, G2: dialogue2graph.pipelines.core.graph.BaseGraph, change_to_original_ids=False)
+
+   Match two graphs (G1 and G2) by:
+     1) Checking isomorphism using NetworkX matchers (depending on whether it's DiGraph or MultiDiGraph).
+     2) Building Jaccard similarity matrices for nodes and edges to refine the mapping.
+     3) Potentially reverting mapped IDs to G1's original numbering if change_to_original_ids=True.
+
+   :returns:     - node_mapping: which node in G1 corresponds to which node in G2
+                 - edge_mapping: which edge in G1 corresponds to which edge in G2
+   :rtype: node_mapping, edge_mapping (dict, dict)
+
+
+.. py:function:: match_dg_triplets(G: dialogue2graph.pipelines.core.graph.BaseGraph, dialogues: list[dialogue2graph.pipelines.core.dialogue.Dialogue]) -> DGTripletsMatchResult
+
+   Check if all graph triplets match triplets in set of dialogues.
+
+   :param G: BaseGraph object containing the dialogue graph
+   :param dialogues: List of Dialogue objects to check against
+
+
+.. py:function:: match_dialogue_triplets(s1: list[dialogue2graph.pipelines.core.dialogue.Dialogue], s2: list[dialogue2graph.pipelines.core.dialogue.Dialogue])
+
+   Match triplets of two dialogue sequences
+
+
+.. py:class:: DGTripletsMatchResult
+
+   Bases: :py:obj:`TypedDict`
+
+
+   To return result of matching triplets between graph and dialogues
+
+
+   .. py:attribute:: value
+      :type:  bool
+
+
+   .. py:attribute:: description
+      :type:  Optional[str]
+
+
+   .. py:attribute:: absent_triplets
+      :type:  Optional[List[AbsentTriplet]]
+
+
+.. py:function:: match_roles(D1: dialogue2graph.pipelines.core.dialogue.Dialogue, D2: dialogue2graph.pipelines.core.dialogue.Dialogue) -> bool
+
+   Check if two dialogues have identical participant roles in each turn.
+
+   :returns: True if they match in every turn, otherwise False.
+
+
+.. py:function:: is_correct_length(D1: dialogue2graph.pipelines.core.dialogue.Dialogue, D2: dialogue2graph.pipelines.core.dialogue.Dialogue) -> bool
+
+   Check if two dialogues have the same number of messages.
+
+   :returns: True if lengths are equal, False otherwise.
+
+
+.. py:function:: is_same_structure(G1: dialogue2graph.pipelines.core.graph.BaseGraph, G2: dialogue2graph.pipelines.core.graph.BaseGraph) -> bool
+
+   Check if graphs are isomorphic.
+
+   :param G1: BaseGraph object containing the dialogue graph
+   :param G2: BaseGraph object containing the dialogue graph
+
+

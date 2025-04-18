@@ -1,0 +1,51 @@
+dialogue2graph.utils.dg_helper
+==============================
+
+.. py:module:: dialogue2graph.utils.dg_helper
+
+.. autoapi-nested-parse::
+
+   Dialog Graph Helper
+   -------------------
+
+   The module contains auxilary functions for Graph creation.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialogue2graph.utils.dg_helper.connect_nodes
+   dialogue2graph.utils.dg_helper.get_helpers
+
+
+Module Contents
+---------------
+
+.. py:function:: connect_nodes(nodes: list[dict], dialogues: list[dialogue2graph.pipelines.core.dialogue.Dialogue], utt_sim: langchain_community.embeddings.HuggingFaceEmbeddings) -> dict[str, list[dict]]
+
+   Connect dialog graph nodes with edges via searching dialogue utterances
+   in list of nodes based on utt_sim similarity model
+
+   :param nodes: list of dictionaries in a form {"id": id, "label": label, "is_start": bool, "utterances": list}
+   :param dialogues: list of dialogues to build a graph from
+   :param utt_sim: similarity model used to build vector stores
+
+   :returns: [edges], "nodes": [nodes]}
+   :rtype: graph dict in a form {"edges"
+
+
+.. py:function:: get_helpers(dialogues: list[dialogue2graph.pipelines.core.dialogue.Dialogue]) -> tuple[list[str], list[set[str]]]
+
+   Help preprocessing list of dialogues for grouping.
+
+   :param dialogues: list of dialogues
+
+   :returns: list of assistant utterances
+             start_utts: list of starting utterances
+             user_end: sign of that dialogue finishes with user utterance
+   :rtype: node_utts
+
+

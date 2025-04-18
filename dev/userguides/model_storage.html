@@ -1,0 +1,597 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Using Dialog2Graph pipelines &#8212; Dialogue2Graph  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'userguides/model_storage';</script>
+    <script src="../_static/scripts/pydata-sphinx-theme.js?v=a1eb5d9f"></script>
+    <script src="../_static/scripts/bootstrap.js?v=7583a70d"></script>
+    <script src="../_static/scripts/fontawesome.js?v=9b125980"></script>
+    <link rel="canonical" href="/dialogue2graph/dev/userguides/model_storage.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generate synthetic graph on certain topic" href="generate_synthetic.html" />
+    <link rel="prev" title="Learn base dialogue2graph classes" href="basic_usage.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Dialogue2Graph  documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../research.html">
+    Research
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../userguides.html">
+    User guides
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../development.html">
+    Development
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../about_us.html">
+    About us
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../getting_started.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../research.html">
+    Research
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../userguides.html">
+    User guides
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../autoapi/index.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../development.html">
+    Development
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about_us.html">
+    About us
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Learn base dialogue2graph classes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Using Dialog2Graph pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generate_synthetic.html">Generate synthetic graph on certain topic</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../userguides.html" class="nav-link">User guides</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Using Dialog2Graph pipelines</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="using-dialog2graph-pipelines">
+<h1>Using Dialog2Graph pipelines<a class="headerlink" href="#using-dialog2graph-pipelines" title="Link to this heading">#</a></h1>
+<p>This document describes how to use Dialog2Graph pipelines to process your data. The following example shows how to use the pipeline that generates graph based on the dialogues you provide using both LLM and Embedding models. Also we will dive into details of <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> usage.</p>
+<p>First of all we need to import the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> and <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/d2g_llm/pipeline/index.html#dialogue2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline" title="dialogue2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">D2GLLMPipeline</span></code></a> we will be using.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.d2g_llm.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">D2GLLMPipeline</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance is used to store LLM and SentenceTransformer models and use cached variants to avoid multiple instances of the same model being up simultaneously.</p>
+<p>Each <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/d2g_llm/pipeline/index.html#dialogue2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline" title="dialogue2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline"><code class="xref py py-class docutils literal notranslate"><span class="pre">D2GLLMPipeline</span></code></a> has it’s own default models, but you can override them by passing the key to the model you’ve added to the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ms</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
+
+<span class="n">ms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="s2">&quot;my_formatting_model&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span>
+    <span class="p">},</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">ms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="s2">&quot;my_embedding_model&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;sentence-transformers/all-MiniLM-L6-v2&quot;</span>
+    <span class="p">},</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;emb&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">D2GLLMPipeline</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;d2g_pipeline&quot;</span> <span class="c1"># name to save reports for (useful if multiple pipelines are used)</span>
+    <span class="n">ms</span><span class="p">,</span>
+    <span class="n">formatting_llm</span><span class="o">=</span><span class="s2">&quot;my_formatting_model&quot;</span><span class="p">,</span>
+    <span class="n">sim_model</span><span class="o">=</span><span class="s2">&quot;my_embedding_model&quot;</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>In this example we are overriding the default “gpt-4o-mini” model with “gpt-3.5-turbo” model for the formatting task in the pipeline and the similarity model to use “all-MiniLM-L6-v2”. The rest of the models will be used as default. Don’t forget to use correct <code class="docutils literal notranslate"><span class="pre">model_type</span></code> when adding the model to the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a>. The available types are <code class="docutils literal notranslate"><span class="pre">llm</span></code> for LLMs and <code class="docutils literal notranslate"><span class="pre">emb</span></code> for embedders.</p>
+<p>Note, that the adding of the models to the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> is not necessary if you are using the default models.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the data, but it can also be a path to the JSON file or a list of Dialogue objects</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">[{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Hey there! How can I help you today?&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;assistant&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;I need to book a ride to the airport.&#39;</span><span class="p">,</span> <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Sure! I can help with that. When is your flight, and where are you departing from?&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;assistant&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Do you have any other options?&#39;</span><span class="p">,</span> <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s2">&quot;If you&#39;d prefer, I can send you options for ride-share services instead. Would you like that?&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;assistant&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s2">&quot;No, I&#39;ll manage on my own.&quot;</span><span class="p">,</span> <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;No worries! Feel free to reach out anytime.&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;assistant&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s1">&#39;Alright, thanks anyway.&#39;</span><span class="p">,</span> <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;user&#39;</span><span class="p">},</span>
+<span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="s2">&quot;You&#39;re welcome! Have a fantastic trip!&quot;</span><span class="p">,</span>
+    <span class="s1">&#39;participant&#39;</span><span class="p">:</span> <span class="s1">&#39;assistant&#39;</span><span class="p">}]</span>
+
+<span class="c1"># Invoke the pipeline to get the graph and report objects</span>
+<span class="n">graph</span><span class="p">,</span> <span class="n">report</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">report</span><span class="o">.</span><span class="n">to_markdown</span><span class="p">(</span><span class="s2">&quot;report.md&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That’s it! Now, you have a <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.pipelines.core.graph.Graph" title="dialogue2graph.pipelines.core.graph.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a>  object that you can use for further processing.
+And you have a <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/report/index.html#dialogue2graph.pipelines.report.PipelineReport" title="dialogue2graph.pipelines.report.PipelineReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">PipelineReport</span></code></a> object that contains some metrics regarding your data. It can be exported to various formats using built in functions.</p>
+<p>If needed you can both save your <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> and load it later.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the ModelStorage to a file</span>
+<span class="n">ms</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;models_config.yml&quot;</span><span class="p">)</span>
+
+<span class="c1"># Load the ModelStorage from a file</span>
+<span class="n">ms</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;models_config.yml&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="basic_usage.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Learn base dialogue2graph classes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="generate_synthetic.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Generate synthetic graph on certain topic</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/userguides/model_storage.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

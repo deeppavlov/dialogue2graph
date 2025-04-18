@@ -1,0 +1,89 @@
+dialogue2graph.pipelines.core
+=============================
+
+.. py:module:: dialogue2graph.pipelines.core
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialogue2graph/pipelines/core/algorithms/index
+   /autoapi/dialogue2graph/pipelines/core/dialogue/index
+   /autoapi/dialogue2graph/pipelines/core/dialogue_sampling/index
+   /autoapi/dialogue2graph/pipelines/core/graph/index
+   /autoapi/dialogue2graph/pipelines/core/pipeline/index
+   /autoapi/dialogue2graph/pipelines/core/prompt_loader/index
+   /autoapi/dialogue2graph/pipelines/core/schemas/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.core.RecursiveDialogueSampler
+   dialogue2graph.pipelines.core.BasePipeline
+
+
+Package Contents
+----------------
+
+.. py:class:: RecursiveDialogueSampler
+
+   Bases: :py:obj:`dialogue2graph.pipelines.core.algorithms.DialogueGenerator`
+
+
+   Recursive dialog sampler for the graph
+
+
+   .. py:method:: invoke(graph: dialogue2graph.pipelines.core.graph.BaseGraph, cycle_ends_model: langchain_core.language_models.chat_models.BaseChatModel, upper_limit: int, sampling_max: int = 1000000) -> list[dialogue2graph.pipelines.core.dialogue.Dialogue]
+
+      Extract all the dialogues from the graph
+
+      :param graph: used to extract dialogues from it
+      :param cycle_ends_model: LLM(BaseChatModel) to find cycling ends of the graph
+      :param upper_limit: limits from above repeats_limit used in recursive get_dialogues method
+      :param sampling_max: maximum number of found dialogues
+
+      :returns: list of dialogues
+
+      :raises ValueError: "Not all utterances present" if match_dg_triplets returns False
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+
+   .. py:method:: evaluate(graph, upper_limit, target_dialogues, report_type=Literal['dict', 'dataframe'])
+      :async:
+
+
+
+.. py:class:: BasePipeline(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Abstract class for base pipeline
+
+
+   .. py:attribute:: name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: steps
+      :type:  list[Union[dialogue2graph.pipelines.core.algorithms.DialogueGenerator, dialogue2graph.pipelines.core.algorithms.DialogAugmentation, dialogue2graph.pipelines.core.algorithms.GraphGenerator, dialogue2graph.pipelines.core.algorithms.GraphExtender]]
+      :value: None
+
+
+
+   .. py:method:: invoke(raw_data: dialogue2graph.pipelines.helpers.parse_data.PipelineRawDataType, enable_evals=False) -> Tuple[Any, dialogue2graph.pipelines.report.PipelineReport]
+
+

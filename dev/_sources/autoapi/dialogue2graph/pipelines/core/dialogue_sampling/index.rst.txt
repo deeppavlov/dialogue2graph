@@ -1,0 +1,157 @@
+dialogue2graph.pipelines.core.dialogue_sampling
+===============================================
+
+.. py:module:: dialogue2graph.pipelines.core.dialogue_sampling
+
+.. autoapi-nested-parse::
+
+   Dialogue Sampling
+   -----------------
+
+   The module contains class for sampling dialogs from a graph.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.core.dialogue_sampling.logger
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.core.dialogue_sampling.mix_ends
+   dialogue2graph.pipelines.core.dialogue_sampling.get_all_sequences
+   dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_paths
+   dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_doublets
+   dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets
+   dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_dialogues
+   dialogue2graph.pipelines.core.dialogue_sampling.get_dialogues
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: RecursiveDialogueSampler
+
+   Bases: :py:obj:`dialogue2graph.pipelines.core.algorithms.DialogueGenerator`
+
+
+   Recursive dialog sampler for the graph
+
+
+   .. py:method:: invoke(graph: dialogue2graph.pipelines.core.graph.BaseGraph, cycle_ends_model: langchain_core.language_models.chat_models.BaseChatModel, upper_limit: int, sampling_max: int = 1000000) -> list[dialogue2graph.pipelines.core.dialogue.Dialogue]
+
+      Extract all the dialogues from the graph
+
+      :param graph: used to extract dialogues from it
+      :param cycle_ends_model: LLM(BaseChatModel) to find cycling ends of the graph
+      :param upper_limit: limits from above repeats_limit used in recursive get_dialogues method
+      :param sampling_max: maximum number of found dialogues
+
+      :returns: list of dialogues
+
+      :raises ValueError: "Not all utterances present" if match_dg_triplets returns False
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+
+   .. py:method:: evaluate(graph, upper_limit, target_dialogues, report_type=Literal['dict', 'dataframe'])
+      :async:
+
+
+
+.. py:function:: mix_ends(graph: dialogue2graph.pipelines.core.graph.BaseGraph, end_ids: list[int], cycle_ends_ids: list[int]) -> list[int]
+
+   Find ids from cycle_ends_ids which do not have paths to any node id from end_ids.
+
+   :param graph: graph to work with
+   :param end_ids: finishing graph node ids
+   :param cycle_ends_ids: ids of graph nodes looping cycles in the graph
+
+   :returns: Adds found ids to end_ids and returns as a result
+
+
+.. py:function:: get_all_sequences(path: list[dict], last_message: dict, start_idx: int, visited_messages: list, sampling_max: int, path_counter: _DialogPathsCounter) -> list[list[dict]]
+
+   Find all dialogue sequences recursively in the path of nodes and edges with miltiple utterances
+
+   :param path: dialogue path with multiple utterances
+   :param start_idx: index in path to start from
+   :param visited_messages: path traveled so far
+   :param last_message: last visited message so far
+   :param sampling_max: maximum number of found sequences
+
+   :returns: All found sequences
+
+   :raises path_counter counts number of sequences:
+   :raises If counter exceeds sampling_max, ValueError raised:
+
+
+.. py:function:: remove_duplicated_paths(node_paths: list[list[int]]) -> list[list[int]]
+
+   Remove duplicating paths from node_paths
+
+   :param node_paths: list of dialog graph paths in a form of node ids
+
+   :returns: List of node paths without duplications
+
+
+.. py:function:: get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]
+
+   Find all dialogue doublets with (edge, target) utterances
+
+   :param seq: sequence of dialogs
+
+   :returns: Set of (user_utterance, assistant_utterance)
+
+
+.. py:function:: get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]
+
+   Find all dialogue triplets with (source, edge, target) utterances
+
+   :param seq: sequence of dialogs
+
+   :returns: Set of (assistant_utterance, user_utterance, assistant_utterance)
+
+
+.. py:function:: remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]
+
+   Remove duplicated dialogues from list of dialogs seq
+
+   :param seq: sequence of dialogs
+
+   :returns: List of dialogs without duplications
+
+
+.. py:function:: get_dialogues(graph: dialogue2graph.pipelines.core.graph.BaseGraph, repeats_limit: int, end_nodes_ids: list[int], sampling_max: int) -> list[dialogue2graph.pipelines.core.dialogue.Dialogue]
+
+   Find all the dialogues in the graph finishing with end_nodes_ids
+
+   :param graph: graph to work with
+   :param repeats_limit: used for graph.all_paths method to limit set of sampled dialogues
+   :param end_nodes_ids: ids of nodes finishing dialogs to find
+   :param sampling_max: maximum number of found sequences
+
+   :returns: list of dialogs
+
+

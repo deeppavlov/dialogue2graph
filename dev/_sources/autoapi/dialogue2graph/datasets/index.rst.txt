@@ -1,0 +1,71 @@
+dialogue2graph.datasets
+=======================
+
+.. py:module:: dialogue2graph.datasets
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialogue2graph/datasets/augment_dialogues/index
+   /autoapi/dialogue2graph/datasets/complex_dialogues/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.datasets.CycleGraphGenerator
+
+
+Package Contents
+----------------
+
+.. py:class:: CycleGraphGenerator(**data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Class for generating graph with cycles
+
+
+   .. py:attribute:: cache
+      :type:  Optional[Any]
+      :value: None
+
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: extra
+         :value: 'allow'
+
+
+
+
+   .. py:method:: invoke(model: langchain_core.language_models.chat_models.BaseChatModel, prompt: langchain.prompts.PromptTemplate, seed=None, **kwargs) -> dialogue2graph.pipelines.core.graph.BaseGraph
+
+      Generate a cyclic dialogue graph based on the topic input.
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+      Async version of invoke - to be implemented
+
+
+
+   .. py:method:: evaluate(*args, report_type='dict', **kwargs)
+
+

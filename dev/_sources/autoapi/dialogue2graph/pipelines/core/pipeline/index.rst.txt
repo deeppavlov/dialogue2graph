@@ -1,0 +1,48 @@
+dialogue2graph.pipelines.core.pipeline
+======================================
+
+.. py:module:: dialogue2graph.pipelines.core.pipeline
+
+.. autoapi-nested-parse::
+
+   Pipeline
+   ---------
+
+   The module contains base pipeline class.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.core.pipeline.BasePipeline
+
+
+Module Contents
+---------------
+
+.. py:class:: BasePipeline(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Abstract class for base pipeline
+
+
+   .. py:attribute:: name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: steps
+      :type:  list[Union[dialogue2graph.pipelines.core.algorithms.DialogueGenerator, dialogue2graph.pipelines.core.algorithms.DialogAugmentation, dialogue2graph.pipelines.core.algorithms.GraphGenerator, dialogue2graph.pipelines.core.algorithms.GraphExtender]]
+      :value: None
+
+
+
+   .. py:method:: invoke(raw_data: dialogue2graph.pipelines.helpers.parse_data.PipelineRawDataType, enable_evals=False) -> Tuple[Any, dialogue2graph.pipelines.report.PipelineReport]
+
+

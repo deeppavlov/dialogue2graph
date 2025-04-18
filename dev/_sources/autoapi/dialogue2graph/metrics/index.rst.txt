@@ -1,0 +1,369 @@
+dialogue2graph.metrics
+======================
+
+.. py:module:: dialogue2graph.metrics
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialogue2graph/metrics/algorithm_registry/index
+   /autoapi/dialogue2graph/metrics/llm_metrics/index
+   /autoapi/dialogue2graph/metrics/llm_validators/index
+   /autoapi/dialogue2graph/metrics/no_llm_metrics/index
+   /autoapi/dialogue2graph/metrics/no_llm_validators/index
+   /autoapi/dialogue2graph/metrics/similarity/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.PreDGEvalBase
+   dialogue2graph.metrics.DGEvalBase
+   dialogue2graph.metrics.DGReportType
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.Graph
+   dialogue2graph.metrics.CompareResponse
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.compare_graphs_light
+   dialogue2graph.metrics.compare_graphs_full
+
+
+Package Contents
+----------------
+
+.. py:class:: Graph(graph_dict: dict, **kwargs: Any)
+
+   Bases: :py:obj:`BaseGraph`
+
+
+   Implementation of BaseGraph for dialogue graph operations.
+
+   This class provides concrete implementations for graph operations including
+   loading, visualization, path finding, and graph manipulation methods.
+
+   .. attribute:: Inherits all attributes from BaseGraph.
+
+      
+
+
+   .. py:method:: check_edges(seq: list[list[int]]) -> bool
+
+      Checks whether seq (sequence of pairs (source, target))
+      has all the edges of the graph
+
+
+
+   .. py:method:: load_graph()
+
+      Load graph from dictionary representation into NetworkX DiGraph.
+
+      Creates a directed graph from the graph_dict, handling node and edge attributes.
+      Also creates node mapping if node IDs need renumbering.
+
+
+
+   .. py:method:: visualise(*args, **kwargs)
+
+      Visualize the graph using matplotlib and networkx.
+
+      Creates a visualization of the graph with nodes and edges labeled with utterances.
+      Uses pygraphviz layout if available, falls back to kamada_kawai_layout.
+
+
+
+   .. py:method:: visualise_short(name, *args, **kwargs)
+
+      Create a compact visualization of the graph.
+
+      :param name: Title for the visualization.
+      :type name: str
+      :param \*args: Variable length argument list.
+      :param \*\*kwargs: Arbitrary keyword arguments.
+
+      Creates a simplified visualization showing only node IDs and utterance counts.
+
+
+
+   .. py:method:: find_nodes_by_utterance(utterance: str) -> list[dict]
+
+      Find nodes containing a specific utterance.
+
+      :param utterance: The utterance to search for.
+      :type utterance: str
+
+      :returns: List of nodes containing the utterance.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: find_edges_by_utterance(utterance: str) -> list[dict]
+
+      Find edges containing a specific utterance.
+
+      :param utterance: The utterance to search for.
+      :type utterance: str
+
+      :returns: List of edges containing the utterance.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: get_nodes_by_id(id: int)
+
+      Retrieve a node by its ID.
+
+      :param id: The ID of the node to retrieve.
+      :type id: int
+
+      :returns: The node with the specified ID if found, None otherwise.
+      :rtype: dict
+
+
+
+   .. py:method:: get_edges_by_source(id: int)
+
+      Get all edges originating from a specific node.
+
+      :param id: The ID of the source node.
+      :type id: int
+
+      :returns: List of edges with the specified source node.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: get_edges_by_target(id: int)
+
+      Get all edges targeting a specific node.
+
+      :param id: The ID of the target node.
+      :type id: int
+
+      :returns: List of edges with the specified target node.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: match_edges_nodes() -> bool
+
+      Verify that all edge endpoints correspond to existing nodes.
+
+      :returns: True if all edge endpoints match existing nodes, False otherwise.
+      :rtype: bool
+
+
+
+   .. py:method:: remove_duplicated_edges() -> BaseGraph
+
+      Remove duplicate edges between the same node pairs.
+
+      Combines utterances from duplicate edges into a single edge.
+
+      :returns: New graph instance with duplicate edges removed.
+      :rtype: BaseGraph
+
+
+
+   .. py:method:: remove_duplicated_nodes() -> BaseGraph | None
+
+      Remove duplicate nodes based on their utterances.
+
+      :returns:
+
+                New graph instance with duplicate nodes removed,
+                                or None if invalid state is detected.
+      :rtype: BaseGraph | None
+
+
+
+   .. py:method:: get_all_paths(start_node_id: int, visited_nodes: list[int], repeats_limit: int) -> list[list[int]]
+
+      Find all possible paths in the graph from a starting node.
+
+      :param start_node_id: ID of the starting node.
+      :type start_node_id: int
+      :param visited_nodes: List of nodes already visited in the current path.
+      :type visited_nodes: list[int]
+      :param repeats_limit: Maximum number of times a sequence can repeat.
+      :type repeats_limit: int
+
+      :returns: List of all valid paths found.
+      :rtype: list[list[int]]
+
+
+
+   .. py:method:: find_paths(start_node_id: int, end_node_id: int, visited_nodes: list[int]) -> list[list[int]]
+
+      Find all paths between two nodes in the graph.
+
+      :param start_node_id: ID of the starting node.
+      :type start_node_id: int
+      :param end_node_id: ID of the target node.
+      :type end_node_id: int
+      :param visited_nodes: List of nodes already visited.
+      :type visited_nodes: list[int]
+
+      :returns: List of all paths found between start and end nodes.
+      :rtype: list[list[int]]
+
+
+
+   .. py:method:: get_ends() -> list[int]
+
+      Find all terminal nodes in the graph.
+
+      Terminal nodes are those with no outgoing edges.
+
+      :returns: List of IDs of terminal nodes.
+      :rtype: list[int]
+
+
+
+   .. py:method:: get_list_from_nodes() -> list[str]
+
+      Create a list of concatenated utterances from all nodes.
+
+      :returns: List where each element is the concatenated utterances of a node.
+      :rtype: list[str]
+
+
+
+   .. py:method:: get_list_from_graph() -> tuple[list[str], int]
+
+      Create a list of concatenated utterances from nodes and their edges.
+
+      :returns:
+
+                Tuple containing:
+                    - list of concatenated utterances
+                    - total number of utterances in edges
+      :rtype: tuple[list[str], int]
+
+
+
+.. py:class:: CompareResponse(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   !!! abstract "Usage Documentation"
+       [Models](../concepts/models.md)
+
+   A base class for creating Pydantic models.
+
+   .. attribute:: __class_vars__
+
+      The names of the class variables defined on the model.
+
+   .. attribute:: __private_attributes__
+
+      Metadata about the private attributes of the model.
+
+   .. attribute:: __signature__
+
+      The synthesized `__init__` [`Signature`][inspect.Signature] of the model.
+
+   .. attribute:: __pydantic_complete__
+
+      Whether model building is completed, or if there are still undefined fields.
+
+   .. attribute:: __pydantic_core_schema__
+
+      The core schema of the model.
+
+   .. attribute:: __pydantic_custom_init__
+
+      Whether the model has a custom `__init__` function.
+
+   .. attribute:: __pydantic_decorators__
+
+      Metadata containing the decorators defined on the model.
+      This replaces `Model.__validators__` and `Model.__root_validators__` from Pydantic V1.
+
+   .. attribute:: __pydantic_generic_metadata__
+
+      Metadata for generic models; contains data used for a similar purpose to
+      __args__, __origin__, __parameters__ in typing-module generics. May eventually be replaced by these.
+
+   .. attribute:: __pydantic_parent_namespace__
+
+      Parent namespace of the model, used for automatic rebuilding of models.
+
+   .. attribute:: __pydantic_post_init__
+
+      The name of the post-init method for the model, if defined.
+
+   .. attribute:: __pydantic_root_model__
+
+      Whether the model is a [`RootModel`][pydantic.root_model.RootModel].
+
+   .. attribute:: __pydantic_serializer__
+
+      The `pydantic-core` `SchemaSerializer` used to dump instances of the model.
+
+   .. attribute:: __pydantic_validator__
+
+      The `pydantic-core` `SchemaValidator` used to validate instances of the model.
+
+   .. attribute:: __pydantic_fields__
+
+      A dictionary of field names and their corresponding [`FieldInfo`][pydantic.fields.FieldInfo] objects.
+
+   .. attribute:: __pydantic_computed_fields__
+
+      A dictionary of computed field names and their corresponding [`ComputedFieldInfo`][pydantic.fields.ComputedFieldInfo] objects.
+
+   .. attribute:: __pydantic_extra__
+
+      A dictionary containing extra values, if [`extra`][pydantic.config.ConfigDict.extra]
+      is set to `'allow'`.
+
+   .. attribute:: __pydantic_fields_set__
+
+      The names of fields explicitly set during instantiation.
+
+   .. attribute:: __pydantic_private__
+
+      Values of private attributes set on the model instance.
+
+
+   .. py:attribute:: value
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: description
+      :type:  str
+      :value: None
+
+
+
+.. py:data:: PreDGEvalBase
+
+.. py:data:: DGEvalBase
+
+.. py:data:: DGReportType
+
+.. py:function:: compare_graphs_light(graph: dialogue2graph.pipelines.core.graph.Graph, data: dialogue2graph.pipelines.helpers.parse_data.PipelineDataType) -> bool
+
+.. py:function:: compare_graphs_full(graph: dialogue2graph.pipelines.core.graph.Graph, data: dialogue2graph.pipelines.helpers.parse_data.PipelineDataType) -> dialogue2graph.pipelines.core.schemas.CompareResponse
+

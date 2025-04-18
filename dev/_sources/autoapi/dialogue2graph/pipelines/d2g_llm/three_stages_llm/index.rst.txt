@@ -1,0 +1,174 @@
+dialogue2graph.pipelines.d2g_llm.three_stages_llm
+=================================================
+
+.. py:module:: dialogue2graph.pipelines.d2g_llm.three_stages_llm
+
+.. autoapi-nested-parse::
+
+   Three Stage LLMGraphGenerator
+   -------------------------------
+
+   The module provides three step algorithm aimed to generate dialog graph and based on LLMs.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.d2g_llm.three_stages_llm.logger
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.d2g_llm.three_stages_llm.DialogueNodes
+   dialogue2graph.pipelines.d2g_llm.three_stages_llm.LLMGraphGenerator
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: DialogueNodes(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Class for dialog nodes
+
+
+   .. py:attribute:: nodes
+      :type:  List[dialogue2graph.pipelines.core.schemas.Node]
+      :value: None
+
+
+
+   .. py:attribute:: reason
+      :type:  str
+      :value: None
+
+
+
+.. py:class:: LLMGraphGenerator(model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, grouping_llm: str, filling_llm: str, formatting_llm: str, sim_model: str, step2_evals: list[Callable] | None = None, end_evals: list[Callable] | None = None)
+
+   Bases: :py:obj:`dialogue2graph.pipelines.core.algorithms.GraphGenerator`
+
+
+   Graph generator from list of dialogues. Based on LLM.
+   Three stages:
+
+   1. LLM grouping assistant utterances into nodes.
+   2. Algorithmic connecting nodes by edges.
+   3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
+
+   .. attribute:: model_storage
+
+      Model storage
+
+   .. attribute:: grouping_llm
+
+      Name of LLM for grouping assistant utterances into nodes
+
+   .. attribute:: filling_llm
+
+      Name of LLM for adding missing edges
+
+   .. attribute:: formatting_llm
+
+      Name of LLM for formatting other LLMs output
+
+   .. attribute:: sim_model
+
+      HuggingFace name for similarity model
+
+   .. attribute:: step2_evals
+
+      Evaluation metrics called after stage 2 with connecting nodes by edges
+
+   .. attribute:: end_evals
+
+      Evaluation metrics called at the end of generation process
+
+   .. attribute:: model_config
+
+      It's a parameter for internal use of Pydantic
+
+
+   .. py:attribute:: model_storage
+      :type:  dialogue2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: grouping_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: filling_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: formatting_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: sim_model
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: step2_evals
+      :type:  list[Callable]
+      :value: None
+
+
+
+   .. py:attribute:: end_evals
+      :type:  list[Callable]
+      :value: None
+
+
+
+   .. py:attribute:: model_config
+
+      Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
+
+
+   .. py:method:: invoke(pipeline_data: dialogue2graph.pipelines.helpers.parse_data.PipelineDataType, enable_evals: bool = False) -> tuple[dialogue2graph.pipelines.core.graph.BaseGraph, dialogue2graph.metrics.DGReportType]
+
+      Invoke primary method of the three stages generation algorithm:
+
+      1. Grouping assistant utterances into nodes with LLM.
+      2. Algorithmic connecting nodes by edges: connect_nodes.
+      3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
+
+      :param pipeline_data:
+      :param data for generation and evaluation: dialogs for generation, of List[Dialogue] type
+                                                 true_graph for evaluation, of Graph type
+      :param enable_evals: when true, evaluate method is called
+
+      :returns: {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
+      :rtype: tuple of resulted graph of Graph type and report dictionary like in example below
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+
+   .. py:method:: evaluate(graph, gt_graph, eval_stage: str) -> dialogue2graph.metrics.DGReportType
+
+

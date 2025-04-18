@@ -1,0 +1,144 @@
+dialogue2graph.pipelines.core.dialogue
+======================================
+
+.. py:module:: dialogue2graph.pipelines.core.dialogue
+
+.. autoapi-nested-parse::
+
+   Dialogue
+   --------
+
+   The module provides Dialogue class that represents complete dialogues with multiple messages.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.core.dialogue.DialogueMessage
+   dialogue2graph.pipelines.core.dialogue.Dialogue
+
+
+Module Contents
+---------------
+
+.. py:class:: DialogueMessage(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents a single message in a dialogue.
+
+   .. attribute:: text
+
+      The content of the message
+
+   .. attribute:: participant
+
+      The sender of the message (e.g. "user" or "assistant")
+
+
+   .. py:attribute:: text
+      :type:  str
+
+
+   .. py:attribute:: participant
+      :type:  str
+
+
+.. py:class:: Dialogue(**data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents a complete dialogue consisting of multiple messages.
+
+   The class provides methods for creating dialogues from different formats
+   and converting dialogues to various representations.
+
+
+   .. py:attribute:: messages
+      :type:  List[DialogueMessage]
+      :value: None
+
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: topic
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: validate
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: model_config
+
+      Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
+
+
+   .. py:method:: from_string(string: str) -> Dialogue
+      :classmethod:
+
+
+      Creates a Dialogue from a tab-separated string format.
+
+      :param string: Tab-separated string with format: "participant\ttext\n"
+
+      :returns: Dialogue object with parsed messages
+
+
+
+   .. py:method:: from_list(messages: List[Dict[str, str]], id: str = '', validate: bool = True) -> Dialogue
+      :classmethod:
+
+
+      Create a Dialogue from a list of dictionaries.
+
+
+
+   .. py:method:: from_nodes_ids(graph, node_list, validate: bool = True) -> Dialogue
+      :classmethod:
+
+
+
+   .. py:method:: to_list() -> List[Dict[str, str]]
+
+      Converts Dialogue to a list of message dictionaries.
+
+
+
+   .. py:method:: __str__() -> str
+
+      Returns a readable string representation of the dialogue.
+
+
+
+   .. py:method:: append(text: str, participant: str) -> None
+
+      Adds a new message to the dialogue.
+
+      :param text: Content of the message
+      :param participant: Sender of the message
+
+
+
+   .. py:method:: extend(messages: List[Union[DialogueMessage, Dict[str, str]]]) -> None
+
+      Adds multiple messages to the dialogue.
+
+      :param messages: List of DialogueMessage objects or dicts to add
+
+
+

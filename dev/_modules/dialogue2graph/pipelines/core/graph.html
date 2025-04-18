@@ -30,6 +30,7 @@
 <link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +148,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../../../../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -202,6 +203,22 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -269,8 +286,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../../../../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -305,6 +322,22 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
         
       </div>
     
@@ -366,7 +399,14 @@
                 <article class="bd-article">
                   
   <h1>Source code for dialogue2graph.pipelines.core.graph</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Graph</span>
+<span class="sd">------</span>
+
+<span class="sd">The module contains base class for graphs.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
@@ -376,6 +416,8 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="BaseGraph">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseGraph</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base abstract class for graph representations of dialogues.</span>
 
@@ -392,71 +434,123 @@
     <span class="n">graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">node_mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
+<div class="viewcode-block" id="BaseGraph.Config">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.Config">[docs]</a>
     <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
-        <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.load_graph">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.load_graph">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.visualise">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.visualise">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.find_nodes_by_utterance">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.find_nodes_by_utterance">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_nodes_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.find_edges_by_utterance">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.find_edges_by_utterance">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_edges_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.get_nodes_by_id">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_nodes_by_id">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.match_edges_nodes">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.match_edges_nodes">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">match_edges_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.check_edges">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.check_edges">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.remove_duplicated_edges">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.remove_duplicated_edges">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.remove_duplicated_nodes">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.remove_duplicated_nodes">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.find_paths">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.find_paths">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.get_all_paths">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_all_paths">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_all_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.get_edges_by_source">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_edges_by_source">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.get_edges_by_target">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_edges_by_target">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.get_nodes_by_source">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_nodes_by_source">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.get_list_from_nodes">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_list_from_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
+
+<div class="viewcode-block" id="BaseGraph.get_list_from_graph">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_list_from_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+</div>
+
 
 
 <div class="viewcode-block" id="Graph">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Graph</span><span class="p">(</span><span class="n">BaseGraph</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of BaseGraph for dialogue graph operations.</span>
 
@@ -483,7 +577,7 @@
         <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">b</span><span class="p">[</span><span class="n">x</span> <span class="p">:</span> <span class="n">x</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)]</span> <span class="o">==</span> <span class="n">a</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)))</span>
 
 <div class="viewcode-block" id="Graph.check_edges">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.check_edges">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.check_edges">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seq</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether seq (sequence of pairs (source, target))</span>
 <span class="sd">        has all the edges of the graph</span>
@@ -499,7 +593,7 @@
 
 
 <div class="viewcode-block" id="Graph.load_graph">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.load_graph">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.load_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Load graph from dictionary representation into NetworkX DiGraph.</span>
 
@@ -550,7 +644,7 @@
 
 
 <div class="viewcode-block" id="Graph.visualise">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.visualise">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.visualise">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualize the graph using matplotlib and networkx.</span>
 
@@ -587,7 +681,7 @@
 
 
 <div class="viewcode-block" id="Graph.visualise_short">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.visualise_short">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.visualise_short">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualise_short</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a compact visualization of the graph.</span>
 
@@ -637,7 +731,7 @@
 
 
 <div class="viewcode-block" id="Graph.find_nodes_by_utterance">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.find_nodes_by_utterance">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.find_nodes_by_utterance">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_nodes_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utterance</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find nodes containing a specific utterance.</span>
 
@@ -653,7 +747,7 @@
 
 
 <div class="viewcode-block" id="Graph.find_edges_by_utterance">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.find_edges_by_utterance">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.find_edges_by_utterance">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_edges_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utterance</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find edges containing a specific utterance.</span>
 
@@ -669,7 +763,7 @@
 
 
 <div class="viewcode-block" id="Graph.get_nodes_by_id">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_nodes_by_id">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.get_nodes_by_id">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a node by its ID.</span>
 
@@ -685,7 +779,7 @@
 
 
 <div class="viewcode-block" id="Graph.get_edges_by_source">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_edges_by_source">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.get_edges_by_source">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all edges originating from a specific node.</span>
 
@@ -699,7 +793,7 @@
 
 
 <div class="viewcode-block" id="Graph.get_edges_by_target">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_edges_by_target">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.get_edges_by_target">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all edges targeting a specific node.</span>
 
@@ -713,7 +807,7 @@
 
 
 <div class="viewcode-block" id="Graph.match_edges_nodes">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.match_edges_nodes">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.match_edges_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">match_edges_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that all edge endpoints correspond to existing nodes.</span>
 
@@ -734,7 +828,7 @@
 
 
 <div class="viewcode-block" id="Graph.remove_duplicated_edges">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.remove_duplicated_edges">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.remove_duplicated_edges">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove duplicate edges between the same node pairs.</span>
 
@@ -765,7 +859,7 @@
 
 
 <div class="viewcode-block" id="Graph.remove_duplicated_nodes">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.remove_duplicated_nodes">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.remove_duplicated_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove duplicate nodes based on their utterances.</span>
 
@@ -804,7 +898,7 @@
 
 
 <div class="viewcode-block" id="Graph.get_all_paths">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_all_paths">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.get_all_paths">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_all_paths</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">start_node_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">visited_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">repeats_limit</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
@@ -836,7 +930,7 @@
 
 
 <div class="viewcode-block" id="Graph.find_paths">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.find_paths">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.find_paths">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_paths</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">start_node_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end_node_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">visited_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
@@ -870,7 +964,7 @@
 
 
 <div class="viewcode-block" id="Graph.get_ends">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_ends">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.get_ends">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ends</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Find all terminal nodes in the graph.</span>
 
@@ -897,7 +991,7 @@
 
 
 <div class="viewcode-block" id="Graph.get_list_from_nodes">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_list_from_nodes">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.get_list_from_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a list of concatenated utterances from all nodes.</span>
 
@@ -917,7 +1011,7 @@
 
 
 <div class="viewcode-block" id="Graph.get_list_from_graph">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_list_from_graph">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Graph.get_list_from_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a list of concatenated utterances from nodes and their edges.</span>
 

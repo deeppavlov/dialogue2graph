@@ -1,0 +1,292 @@
+dialogue2graph.datasets.complex_dialogues.generation
+====================================================
+
+.. py:module:: dialogue2graph.datasets.complex_dialogues.generation
+
+.. autoapi-nested-parse::
+
+   Generation
+   ----------
+
+   The module provides graph generator capable of creating complex validated graphs.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialogue2graph.datasets.complex_dialogues.generation.logger
+   dialogue2graph.datasets.complex_dialogues.generation.PipelineResult
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.datasets.complex_dialogues.generation.ErrorType
+   dialogue2graph.datasets.complex_dialogues.generation.GenerationError
+   dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator
+   dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline
+   dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: ErrorType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Error types that can occur during generation
+
+
+   .. py:attribute:: INVALID_GRAPH_STRUCTURE
+      :value: 'invalid_graph_structure'
+
+
+
+   .. py:attribute:: TOO_MANY_CYCLES
+      :value: 'too_many_cycles'
+
+
+
+   .. py:attribute:: SAMPLING_FAILED
+      :value: 'sampling_failed'
+
+
+
+   .. py:attribute:: INVALID_THEME
+      :value: 'invalid_theme'
+
+
+
+   .. py:attribute:: GENERATION_FAILED
+      :value: 'generation_failed'
+
+
+
+.. py:class:: GenerationError(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Base error with essential fields
+
+
+   .. py:attribute:: error_type
+      :type:  ErrorType
+
+
+   .. py:attribute:: message
+      :type:  str
+
+
+.. py:data:: PipelineResult
+
+.. py:class:: CycleGraphGenerator(**data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Class for generating graph with cycles
+
+
+   .. py:attribute:: cache
+      :type:  Optional[Any]
+      :value: None
+
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: extra
+         :value: 'allow'
+
+
+
+
+   .. py:method:: invoke(model: langchain_core.language_models.chat_models.BaseChatModel, prompt: langchain.prompts.PromptTemplate, seed=None, **kwargs) -> dialogue2graph.pipelines.core.graph.BaseGraph
+
+      Generate a cyclic dialogue graph based on the topic input.
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+      Async version of invoke - to be implemented
+
+
+
+   .. py:method:: evaluate(*args, report_type='dict', **kwargs)
+
+
+.. py:class:: GenerationPipeline(generation_model: langchain_core.language_models.chat_models.BaseChatModel, theme_validation_model: langchain_core.language_models.chat_models.BaseChatModel, validation_model: langchain_core.language_models.chat_models.BaseChatModel, cycle_ends_model: langchain_core.language_models.chat_models.BaseChatModel, generation_prompt: Optional[langchain.prompts.PromptTemplate], repair_prompt: Optional[langchain.prompts.PromptTemplate], min_cycles: int = 2, max_fix_attempts: int = 2, seed: Optional[int] = None)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Class for generation pipeline
+
+
+   .. py:attribute:: cache
+      :type:  Optional[Any]
+      :value: None
+
+
+
+   .. py:attribute:: generation_model
+      :type:  langchain_core.language_models.chat_models.BaseChatModel
+
+
+   .. py:attribute:: theme_validation_model
+      :type:  langchain_core.language_models.chat_models.BaseChatModel
+
+
+   .. py:attribute:: validation_model
+      :type:  langchain_core.language_models.chat_models.BaseChatModel
+
+
+   .. py:attribute:: cycle_ends_model
+      :type:  langchain_core.language_models.chat_models.BaseChatModel
+
+
+   .. py:attribute:: graph_generator
+      :type:  CycleGraphGenerator
+      :value: None
+
+
+
+   .. py:attribute:: generation_prompt
+      :type:  Optional[langchain.prompts.PromptTemplate]
+      :value: None
+
+
+
+   .. py:attribute:: repair_prompt
+      :type:  Optional[langchain.prompts.PromptTemplate]
+      :value: None
+
+
+
+   .. py:attribute:: min_cycles
+      :type:  int
+      :value: 2
+
+
+
+   .. py:attribute:: max_fix_attempts
+      :type:  int
+      :value: 3
+
+
+
+   .. py:attribute:: dialogue_sampler
+      :type:  dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler
+      :value: None
+
+
+
+   .. py:attribute:: seed
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: extra
+         :value: 'allow'
+
+
+
+
+   .. py:method:: validate_graph_cycle_requirement(graph: dialogue2graph.pipelines.core.graph.BaseGraph, min_cycles: int = 2) -> Dict[str, Any]
+
+      Check the graph for cycle requirements
+
+
+
+   .. py:method:: check_and_fix_transitions(graph: dialogue2graph.pipelines.core.graph.BaseGraph, max_attempts: int = 3) -> Dict[str, Any]
+
+      Check transitions in the graph and attempts to fix invalid ones via LLM
+
+
+
+   .. py:method:: generate_and_validate(topic: str) -> PipelineResult
+
+      Generate and validate a dialogue graph for given topic
+
+
+
+   .. py:method:: __call__(topic: str) -> PipelineResult
+
+      Shorthand for generate_and_validate
+
+
+
+.. py:class:: LoopedGraphGenerator(model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, generation_llm: str, validation_llm: str, cycle_ends_llm: str, theme_validation_llm: str)
+
+   Bases: :py:obj:`dialogue2graph.pipelines.core.algorithms.TopicGraphGenerator`
+
+
+   Graph generator for topic-based dialogue generation with model storage support
+
+
+   .. py:attribute:: model_storage
+      :type:  dialogue2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: generation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: validation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: cycle_ends_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: theme_validation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: pipeline
+      :type:  GenerationPipeline
+
+
+   .. py:method:: invoke(topic, seed=42) -> list[dict]
+
+
+   .. py:method:: evaluate(*args, report_type='dict', **kwargs)
+
+

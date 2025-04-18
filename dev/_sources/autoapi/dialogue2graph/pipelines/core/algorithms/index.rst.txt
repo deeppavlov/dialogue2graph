@@ -1,0 +1,208 @@
+dialogue2graph.pipelines.core.algorithms
+========================================
+
+.. py:module:: dialogue2graph.pipelines.core.algorithms
+
+.. autoapi-nested-parse::
+
+   Algorithms
+   -----------
+
+   The module contains base classes for different algorithms.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.core.algorithms.BaseAlgorithm
+   dialogue2graph.pipelines.core.algorithms.DialogueGenerator
+   dialogue2graph.pipelines.core.algorithms.DialogAugmentation
+   dialogue2graph.pipelines.core.algorithms.GraphAugmentation
+   dialogue2graph.pipelines.core.algorithms.TopicGraphGenerator
+   dialogue2graph.pipelines.core.algorithms.GraphGenerator
+   dialogue2graph.pipelines.core.algorithms.GraphExtender
+   dialogue2graph.pipelines.core.algorithms.RawDataParser
+
+
+Module Contents
+---------------
+
+.. py:class:: BaseAlgorithm(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`, :py:obj:`abc.ABC`
+
+
+   Base class for all algorithms that interact with Dialogues or Graphs.
+
+   This class defines the interface for invoking algorithms, both synchronously and asynchronously.
+
+
+   .. py:method:: invoke(*args, use_cache=False, seed=42, **kwargs)
+      :abstractmethod:
+
+
+
+   .. py:method:: ainvoke(*args, use_cache=False, seed=42, **kwargs)
+      :abstractmethod:
+
+      :async:
+
+
+
+   .. py:method:: evaluate(*args, report_type: Literal['dict', 'dataframe'] = 'dict', **kwargs) -> Union[dict, pandas.DataFrame]
+      :abstractmethod:
+
+
+
+.. py:class:: DialogueGenerator
+
+   Bases: :py:obj:`BaseAlgorithm`
+
+
+   Base class for generating Dialogues from a Graph object.
+
+   This class is intended for sampling Dialogues based on a given Graph structure.
+
+   :param graph: The Graph object used for generating the Dialogue.
+   :param start_node: The starting node in the Graph for the generation process (default=1).
+   :param end_node: The ending node in the Graph for the generation process (optional).
+   :param topic: The topic to guide the generation process (optional).
+
+
+   .. py:method:: invoke(graph: dialogue2graph.pipelines.core.graph.BaseGraph, start_node: int = 1, end_node: int = 0, topic: str = '') -> List[dialogue2graph.pipelines.core.dialogue.Dialogue]
+      :abstractmethod:
+
+
+
+.. py:class:: DialogAugmentation(/, **data: Any)
+
+   Bases: :py:obj:`BaseAlgorithm`
+
+
+   Base class for augmenting Dialogues.
+
+   This class takes a Dialogue as input and returns an augmented Dialogue as output.
+   It is designed for data augmentation or other manipulations of Dialogues.
+
+   :param dialogue: The Dialogue object to be augmented.
+   :param topic: The topic to guide the augmentation process (optional).
+
+
+   .. py:method:: invoke(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue, topic: str = '') -> dialogue2graph.pipelines.core.dialogue.Dialogue
+      :abstractmethod:
+
+
+
+   .. py:method:: ainvoke(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue, topic: str = '') -> dialogue2graph.pipelines.core.dialogue.Dialogue
+      :abstractmethod:
+
+      :async:
+
+
+
+.. py:class:: GraphAugmentation(/, **data: Any)
+
+   Bases: :py:obj:`BaseAlgorithm`
+
+
+   Base class for augmenting Graphs
+
+   :param topic: The topic to guide the augmentation process (optional).
+   :param graph: The Graph object to be augmented.
+
+
+   .. py:method:: invoke(topic: str, graph: dialogue2graph.pipelines.core.graph.BaseGraph) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+
+
+   .. py:method:: ainvoke(topic: str, graph: dialogue2graph.pipelines.core.graph.BaseGraph) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+      :async:
+
+
+
+.. py:class:: TopicGraphGenerator(/, **data: Any)
+
+   Bases: :py:obj:`BaseAlgorithm`
+
+
+   Base class for topic-based graph generation
+
+
+   .. py:method:: invoke(topic: str, model: langchain_core.language_models.chat_models.BaseChatModel) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+
+
+   .. py:method:: ainvoke(topic: str) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+      :async:
+
+
+
+.. py:class:: GraphGenerator(/, **data: Any)
+
+   Bases: :py:obj:`BaseAlgorithm`
+
+
+   Base class for graph generation
+
+
+   .. py:method:: invoke(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+
+
+   .. py:method:: ainvoke(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+      :async:
+
+
+
+.. py:class:: GraphExtender(/, **data: Any)
+
+   Bases: :py:obj:`BaseAlgorithm`
+
+
+   Base class for extending graph
+
+
+   .. py:method:: invoke(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue, graph: dialogue2graph.pipelines.core.graph.BaseGraph) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+
+
+   .. py:method:: ainvoke(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue, graph: dialogue2graph.pipelines.core.graph.BaseGraph) -> dialogue2graph.pipelines.core.graph.BaseGraph
+      :abstractmethod:
+
+      :async:
+
+
+
+.. py:class:: RawDataParser(/, **data: Any)
+
+   Bases: :py:obj:`BaseAlgorithm`
+
+
+   Base class for user data parsing
+
+
+   .. py:method:: invoke(data)
+      :abstractmethod:
+
+
+
+   .. py:method:: ainvoke(data)
+      :abstractmethod:
+
+      :async:
+
+
+

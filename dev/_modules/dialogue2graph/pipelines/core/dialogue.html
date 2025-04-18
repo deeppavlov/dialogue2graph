@@ -30,6 +30,7 @@
 <link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +148,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../../../../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -202,6 +203,22 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -269,8 +286,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../../../../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -305,6 +322,22 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
         
       </div>
     
@@ -366,12 +399,21 @@
                 <article class="bd-article">
                   
   <h1>Source code for dialogue2graph.pipelines.core.dialogue</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Dialogue</span>
+<span class="sd">--------</span>
+
+<span class="sd">The module provides Dialogue class that represents complete dialogues with multiple messages.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">ConfigDict</span>
 
 
+<div class="viewcode-block" id="DialogueMessage">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.DialogueMessage">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DialogueMessage</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a single message in a dialogue.</span>
 
@@ -381,11 +423,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">participant</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">participant</span><span class="p">:</span> <span class="nb">str</span></div>
+
 
 
 <div class="viewcode-block" id="Dialogue">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Dialogue">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Dialogue</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Represents a complete dialogue consisting of multiple messages.</span>
 
@@ -413,13 +456,13 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Dialogue.from_string">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Dialogue.from_string">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue.from_string">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">string</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dialogue&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates a Dialogue from a tab-separated string format.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            string: Tab-separated string with format: &quot;participant\ttext\n&quot;</span>
+<span class="sd">            string: Tab-separated string with format: &quot;participant\\ttext\\n&quot;</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            Dialogue object with parsed messages</span>
@@ -432,7 +475,7 @@
 
 
 <div class="viewcode-block" id="Dialogue.from_list">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Dialogue.from_list">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue.from_list">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_list</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
@@ -443,9 +486,10 @@
 
 
 <div class="viewcode-block" id="Dialogue.from_nodes_ids">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Dialogue.from_nodes_ids">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue.from_nodes_ids">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_nodes_ids</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">node_list</span><span class="p">,</span> <span class="n">validate</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dialogue&quot;</span><span class="p">:</span>
+        <span class="c1"># TODO: add docs</span>
         <span class="n">utts</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">nodes_attributes</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_node_attributes</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="s2">&quot;utterances&quot;</span><span class="p">)</span>
         <span class="n">edges_attributes</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">get_edge_attributes</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="s2">&quot;utterances&quot;</span><span class="p">)</span>
@@ -481,20 +525,23 @@
 
 
 <div class="viewcode-block" id="Dialogue.to_list">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Dialogue.to_list">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue.to_list">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">to_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts Dialogue to a list of message dictionaries.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">]</span></div>
 
 
+<div class="viewcode-block" id="Dialogue.__str__">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue.__str__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a readable string representation of the dialogue.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">participant</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">msg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span>
-        <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="Dialogue.append">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Dialogue.append">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue.append">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">participant</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds a new message to the dialogue.</span>
 
@@ -506,7 +553,7 @@
 
 
 <div class="viewcode-block" id="Dialogue.extend">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Dialogue.extend">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.Dialogue.extend">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">DialogueMessage</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds multiple messages to the dialogue.</span>
 

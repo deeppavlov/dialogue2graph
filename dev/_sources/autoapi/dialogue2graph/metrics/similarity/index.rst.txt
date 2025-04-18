@@ -1,0 +1,48 @@
+dialogue2graph.metrics.similarity
+=================================
+
+.. py:module:: dialogue2graph.metrics.similarity
+
+.. autoapi-nested-parse::
+
+   Similarity
+   -----------
+
+   The module contains functions to compare how similar dialog texts are.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.similarity.preloaded_models
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.similarity.compare_strings
+   dialogue2graph.metrics.similarity.get_similarity
+
+
+Module Contents
+---------------
+
+.. py:data:: preloaded_models
+
+.. py:function:: compare_strings(first: str, second: str, embedder: langchain_community.embeddings.HuggingFaceEmbeddings, embedder_th: float = 0.001) -> bool
+
+   Calculate pairwise_embedding_distance between two strings based on embedder
+
+   :returns: True when threshold embedder_th not exceeded, False otherwise
+
+
+.. py:function:: get_similarity(generated: list[str], golden: list[str], model_name: str = 'BAAI/bge-m3', device='cuda:0')
+
+   Calculate similarity matrix between generated and golden using model model_name
+
+

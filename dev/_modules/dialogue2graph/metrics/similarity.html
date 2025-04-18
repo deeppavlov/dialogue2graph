@@ -30,6 +30,7 @@
 <link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
   
   <!-- So that users can add custom icons -->
   <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -147,8 +148,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../../../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -202,6 +203,22 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -269,8 +286,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../../../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -305,6 +322,22 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
         
       </div>
     
@@ -369,7 +402,14 @@
                 <article class="bd-article">
                   
   <h1>Source code for dialogue2graph.metrics.similarity</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Similarity</span>
+<span class="sd">-----------</span>
+
+<span class="sd">The module contains functions to compare how similar dialog texts are.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">sentence_transformers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SentenceTransformer</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">HuggingFaceEmbeddings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain.evaluation</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_evaluator</span>
 
@@ -377,13 +417,14 @@
 
 
 <div class="viewcode-block" id="compare_strings">
-<a class="viewcode-back" href="../../../reference/dialogue2graph.metrics.html#dialogue2graph.metrics.similarity.compare_strings">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/dialogue2graph/metrics/similarity/index.html#dialogue2graph.metrics.similarity.compare_strings">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_strings</span><span class="p">(</span>
     <span class="n">first</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">second</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">embedder</span><span class="p">:</span> <span class="n">HuggingFaceEmbeddings</span><span class="p">,</span> <span class="n">embedder_th</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.001</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate pairwise_embedding_distance between two strings based on embedder</span>
-<span class="sd">    and return True when threshold embedder_th not exceeded</span>
-<span class="sd">    Return False otherwise&quot;&quot;&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True when threshold embedder_th not exceeded, False otherwise&quot;&quot;&quot;</span>
 
     <span class="n">evaluator_2</span> <span class="o">=</span> <span class="n">load_evaluator</span><span class="p">(</span><span class="s2">&quot;pairwise_embedding_distance&quot;</span><span class="p">,</span> <span class="n">embeddings</span><span class="o">=</span><span class="n">embedder</span><span class="p">)</span>
     <span class="n">score</span> <span class="o">=</span> <span class="n">evaluator_2</span><span class="o">.</span><span class="n">evaluate_string_pairs</span><span class="p">(</span><span class="n">prediction</span><span class="o">=</span><span class="n">first</span><span class="p">,</span> <span class="n">prediction_b</span><span class="o">=</span><span class="n">second</span><span class="p">)[</span>
@@ -395,14 +436,14 @@
 
 
 <div class="viewcode-block" id="get_similarity">
-<a class="viewcode-back" href="../../../reference/dialogue2graph.metrics.html#dialogue2graph.metrics.similarity.get_similarity">[docs]</a>
+<a class="viewcode-back" href="../../../autoapi/dialogue2graph/metrics/similarity/index.html#dialogue2graph.metrics.similarity.get_similarity">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_similarity</span><span class="p">(</span>
     <span class="n">generated</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">golden</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;BAAI/bge-m3&quot;</span><span class="p">,</span>
     <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda:0&quot;</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; &quot;Calculate similarity matrix between generated and golden using model model_name&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate similarity matrix between generated and golden using model model_name&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">model_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">preloaded_models</span><span class="p">:</span>
         <span class="n">preloaded_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>

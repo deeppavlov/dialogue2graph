@@ -1,0 +1,334 @@
+dialogue2graph
+==============
+
+.. py:module:: dialogue2graph
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialogue2graph/datasets/index
+   /autoapi/dialogue2graph/metrics/index
+   /autoapi/dialogue2graph/pipelines/index
+   /autoapi/dialogue2graph/utils/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.Dialogue
+   dialogue2graph.Graph
+
+
+Package Contents
+----------------
+
+.. py:class:: Dialogue(**data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Represents a complete dialogue consisting of multiple messages.
+
+   The class provides methods for creating dialogues from different formats
+   and converting dialogues to various representations.
+
+
+   .. py:attribute:: messages
+      :type:  List[DialogueMessage]
+      :value: None
+
+
+
+   .. py:attribute:: id
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: topic
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: validate
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: model_config
+
+      Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
+
+
+   .. py:method:: from_string(string: str) -> Dialogue
+      :classmethod:
+
+
+      Creates a Dialogue from a tab-separated string format.
+
+      :param string: Tab-separated string with format: "participant\ttext\n"
+
+      :returns: Dialogue object with parsed messages
+
+
+
+   .. py:method:: from_list(messages: List[Dict[str, str]], id: str = '', validate: bool = True) -> Dialogue
+      :classmethod:
+
+
+      Create a Dialogue from a list of dictionaries.
+
+
+
+   .. py:method:: from_nodes_ids(graph, node_list, validate: bool = True) -> Dialogue
+      :classmethod:
+
+
+
+   .. py:method:: to_list() -> List[Dict[str, str]]
+
+      Converts Dialogue to a list of message dictionaries.
+
+
+
+   .. py:method:: __str__() -> str
+
+      Returns a readable string representation of the dialogue.
+
+
+
+   .. py:method:: append(text: str, participant: str) -> None
+
+      Adds a new message to the dialogue.
+
+      :param text: Content of the message
+      :param participant: Sender of the message
+
+
+
+   .. py:method:: extend(messages: List[Union[DialogueMessage, Dict[str, str]]]) -> None
+
+      Adds multiple messages to the dialogue.
+
+      :param messages: List of DialogueMessage objects or dicts to add
+
+
+
+.. py:class:: Graph(graph_dict: dict, **kwargs: Any)
+
+   Bases: :py:obj:`BaseGraph`
+
+
+   Implementation of BaseGraph for dialogue graph operations.
+
+   This class provides concrete implementations for graph operations including
+   loading, visualization, path finding, and graph manipulation methods.
+
+   .. attribute:: Inherits all attributes from BaseGraph.
+
+      
+
+
+   .. py:method:: check_edges(seq: list[list[int]]) -> bool
+
+      Checks whether seq (sequence of pairs (source, target))
+      has all the edges of the graph
+
+
+
+   .. py:method:: load_graph()
+
+      Load graph from dictionary representation into NetworkX DiGraph.
+
+      Creates a directed graph from the graph_dict, handling node and edge attributes.
+      Also creates node mapping if node IDs need renumbering.
+
+
+
+   .. py:method:: visualise(*args, **kwargs)
+
+      Visualize the graph using matplotlib and networkx.
+
+      Creates a visualization of the graph with nodes and edges labeled with utterances.
+      Uses pygraphviz layout if available, falls back to kamada_kawai_layout.
+
+
+
+   .. py:method:: visualise_short(name, *args, **kwargs)
+
+      Create a compact visualization of the graph.
+
+      :param name: Title for the visualization.
+      :type name: str
+      :param \*args: Variable length argument list.
+      :param \*\*kwargs: Arbitrary keyword arguments.
+
+      Creates a simplified visualization showing only node IDs and utterance counts.
+
+
+
+   .. py:method:: find_nodes_by_utterance(utterance: str) -> list[dict]
+
+      Find nodes containing a specific utterance.
+
+      :param utterance: The utterance to search for.
+      :type utterance: str
+
+      :returns: List of nodes containing the utterance.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: find_edges_by_utterance(utterance: str) -> list[dict]
+
+      Find edges containing a specific utterance.
+
+      :param utterance: The utterance to search for.
+      :type utterance: str
+
+      :returns: List of edges containing the utterance.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: get_nodes_by_id(id: int)
+
+      Retrieve a node by its ID.
+
+      :param id: The ID of the node to retrieve.
+      :type id: int
+
+      :returns: The node with the specified ID if found, None otherwise.
+      :rtype: dict
+
+
+
+   .. py:method:: get_edges_by_source(id: int)
+
+      Get all edges originating from a specific node.
+
+      :param id: The ID of the source node.
+      :type id: int
+
+      :returns: List of edges with the specified source node.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: get_edges_by_target(id: int)
+
+      Get all edges targeting a specific node.
+
+      :param id: The ID of the target node.
+      :type id: int
+
+      :returns: List of edges with the specified target node.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: match_edges_nodes() -> bool
+
+      Verify that all edge endpoints correspond to existing nodes.
+
+      :returns: True if all edge endpoints match existing nodes, False otherwise.
+      :rtype: bool
+
+
+
+   .. py:method:: remove_duplicated_edges() -> BaseGraph
+
+      Remove duplicate edges between the same node pairs.
+
+      Combines utterances from duplicate edges into a single edge.
+
+      :returns: New graph instance with duplicate edges removed.
+      :rtype: BaseGraph
+
+
+
+   .. py:method:: remove_duplicated_nodes() -> BaseGraph | None
+
+      Remove duplicate nodes based on their utterances.
+
+      :returns:
+
+                New graph instance with duplicate nodes removed,
+                                or None if invalid state is detected.
+      :rtype: BaseGraph | None
+
+
+
+   .. py:method:: get_all_paths(start_node_id: int, visited_nodes: list[int], repeats_limit: int) -> list[list[int]]
+
+      Find all possible paths in the graph from a starting node.
+
+      :param start_node_id: ID of the starting node.
+      :type start_node_id: int
+      :param visited_nodes: List of nodes already visited in the current path.
+      :type visited_nodes: list[int]
+      :param repeats_limit: Maximum number of times a sequence can repeat.
+      :type repeats_limit: int
+
+      :returns: List of all valid paths found.
+      :rtype: list[list[int]]
+
+
+
+   .. py:method:: find_paths(start_node_id: int, end_node_id: int, visited_nodes: list[int]) -> list[list[int]]
+
+      Find all paths between two nodes in the graph.
+
+      :param start_node_id: ID of the starting node.
+      :type start_node_id: int
+      :param end_node_id: ID of the target node.
+      :type end_node_id: int
+      :param visited_nodes: List of nodes already visited.
+      :type visited_nodes: list[int]
+
+      :returns: List of all paths found between start and end nodes.
+      :rtype: list[list[int]]
+
+
+
+   .. py:method:: get_ends() -> list[int]
+
+      Find all terminal nodes in the graph.
+
+      Terminal nodes are those with no outgoing edges.
+
+      :returns: List of IDs of terminal nodes.
+      :rtype: list[int]
+
+
+
+   .. py:method:: get_list_from_nodes() -> list[str]
+
+      Create a list of concatenated utterances from all nodes.
+
+      :returns: List where each element is the concatenated utterances of a node.
+      :rtype: list[str]
+
+
+
+   .. py:method:: get_list_from_graph() -> tuple[list[str], int]
+
+      Create a list of concatenated utterances from nodes and their edges.
+
+      :returns:
+
+                Tuple containing:
+                    - list of concatenated utterances
+                    - total number of utterances in edges
+      :rtype: tuple[list[str], int]
+
+
+

@@ -31,6 +31,7 @@
 <link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -48,8 +49,8 @@
     <link rel="canonical" href="/dialogue2graph/dev/userguides/generate_synthetic.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Using Dialog2Graph pipelines" href="basic_usage.html" />
-    <link rel="prev" title="User guides" href="../userguides.html" />
+    <link rel="next" title="API Reference" href="../autoapi/index.html" />
+    <link rel="prev" title="Using Dialog2Graph pipelines" href="model_storage.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -150,8 +151,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -205,6 +206,22 @@
   <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
       
     </div>
     
@@ -274,8 +291,8 @@
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../reference/modules.html">
-    dialogue2graph
+  <a class="nav-link nav-internal" href="../autoapi/index.html">
+    API Reference
   </a>
 </li>
 
@@ -311,6 +328,22 @@
   <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
 </button></div>
         
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
       </div>
     
   </div>
@@ -321,8 +354,9 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Learn base dialogue2graph classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model_storage.html">Using Dialog2Graph pipelines</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Generate synthetic graph on certain topic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Using Dialog2Graph pipelines</a></li>
 </ul>
 </div>
 </nav></div>
@@ -385,33 +419,36 @@
                   
   <section id="generate-synthetic-graph-on-certain-topic">
 <h1>Generate synthetic graph on certain topic<a class="headerlink" href="#generate-synthetic-graph-on-certain-topic" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code> to create a validated graph from several LLM generated dialogues concerning a given topic.</p>
+<p>Use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> to create a validated graph from several LLM generated dialogues concerning a given topic.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.datasets.complex_dialogues.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoopedGraphGenerator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
 </pre></div>
 </div>
 <ol class="arabic simple">
-<li><p>Choose LLMs for dialogue generation and dialogue validation</p></li>
+<li><p>Create <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance and add choosen LLMs for dialogue generation, dialogue validation, theme validation and cycle end search.</p></li>
 </ol>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gen_model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-4o&#39;</span><span class="p">,</span>
-    <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">),</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_BASE_URL&quot;</span><span class="p">),</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_storage</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
+<span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="s2">&quot;gen_model&quot;</span><span class="p">,</span> <span class="c1"># model to use for generation</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;o1-mini&quot;</span><span class="p">},</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">val_model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span>
-    <span class="n">model</span><span class="o">=</span><span class="s1">&#39;gpt-3.5-turbo&#39;</span><span class="p">,</span>
-    <span class="n">api_key</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">),</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_BASE_URL&quot;</span><span class="p">),</span>
-    <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="s2">&quot;help_model&quot;</span><span class="p">,</span> <span class="c1"># model to use for other tasks</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">},</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p>Create <code class="docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code> and use <code class="docutils literal notranslate"><span class="pre">invoke</span></code> method to get a dialogue graph</p></li>
+<li><p>Create <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> and use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method to get a dialogue graph</p></li>
 </ol>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">LoopedGraphGenerator</span><span class="p">(</span>
-    <span class="n">generation_model</span><span class="o">=</span><span class="n">gen_model</span><span class="p">,</span>
-    <span class="n">validation_model</span><span class="o">=</span><span class="n">val_model</span><span class="p">,</span>
+    <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
+    <span class="n">generation_llm</span><span class="o">=</span><span class="s1">&#39;gen_model&#39;</span><span class="p">,</span>
+    <span class="n">validation_llm</span><span class="o">=</span><span class="s1">&#39;help_model&#39;</span><span class="p">,</span>
+    <span class="n">cycle_ends_llm</span><span class="o">=</span><span class="s1">&#39;help_model&#39;</span><span class="p">,</span>
+    <span class="n">theme_validation_llm</span><span class="o">=</span><span class="s1">&#39;help_model&#39;</span>
 <span class="p">)</span>
 
 <span class="n">generated_graph</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">topic</span><span class="o">=</span><span class="s2">&quot;restaurant reservation&quot;</span><span class="p">)</span>
@@ -430,20 +467,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../userguides.html"
+       href="model_storage.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">User guides</p>
+        <p class="prev-next-title">Using Dialog2Graph pipelines</p>
       </div>
     </a>
     <a class="right-next"
-       href="basic_usage.html"
+       href="../autoapi/index.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Using Dialog2Graph pipelines</p>
+        <p class="prev-next-title">API Reference</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

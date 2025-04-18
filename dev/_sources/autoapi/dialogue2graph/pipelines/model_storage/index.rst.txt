@@ -1,0 +1,165 @@
+dialogue2graph.pipelines.model_storage
+======================================
+
+.. py:module:: dialogue2graph.pipelines.model_storage
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.model_storage.logger
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialogue2graph.pipelines.model_storage.StoredData
+   dialogue2graph.pipelines.model_storage.ModelStorage
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: StoredData(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   StoredData is a Pydantic model that represents the storage structure for a model, its configuration, and metadata.
+
+   .. attribute:: key
+
+      Key for the stored model.
+
+      :type: str
+
+   .. attribute:: config
+
+      Configuration for the stored model.
+
+      :type: dict
+
+   .. attribute:: model_type
+
+      Type of the stored model, either "llm" (language model) or "emb" (embedding model).
+
+      :type: Union[Literal["llm"], Literal["emb"]]
+
+   .. attribute:: model
+
+      The actual model object, which can either be a HuggingFaceEmbeddings instance or a BaseChatModel instance.
+
+      :type: Union[HuggingFaceEmbeddings, BaseChatModel]
+
+   .. method:: validate_model(cls, values)
+
+      
+      Validates the `model` attribute based on the `model_type`. Ensures that:
+      - If `model_type` is "llm", the `model` must be an instance of BaseChatModel.
+      - If `model_type` is "emb", the `model` must be an instance of HuggingFaceEmbeddings.
+      :raises ValueError: If the `model` does not match the expected type for the given `model_type`.
+      
+
+
+   .. py:attribute:: key
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: config
+      :type:  dict
+      :value: None
+
+
+
+   .. py:attribute:: model_type
+      :type:  Union[Literal['llm'], Literal['emb']]
+      :value: None
+
+
+
+   .. py:attribute:: model
+      :type:  Union[langchain_huggingface.HuggingFaceEmbeddings, langchain_core.language_models.BaseChatModel]
+      :value: None
+
+
+
+   .. py:method:: validate_model(values)
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: validate_assignment
+         :value: False
+
+
+
+
+.. py:class:: ModelStorage(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   ModelStorage is a class for managing the storage of model configurations and instances.
+   It provides functionality to load configurations from a YAML file, add new models to the storage,
+   and save the current storage state back to a YAML file.
+
+   .. attribute:: storage
+
+      A dictionary that holds the stored model configurations
+      and their corresponding instances.
+
+      :type: Dict[str, StoredData]
+
+
+   .. py:attribute:: storage
+      :type:  Dict[str, StoredData]
+      :value: None
+
+
+
+   .. py:method:: load(path: pathlib.Path)
+
+      Load model configurations from a YAML file into the storage.
+
+      :param path: The file path to the YAML file containing model configurations.
+      :type path: str
+
+
+
+   .. py:method:: add(key: str, config: dict, model_type: Union[Literal['llm'], Literal['emb']])
+
+      Add a new model configuration to the storage.
+
+      :param key: The unique identifier for the model configuration.
+      :type key: str
+      :param config: The configuration dictionary for initializing the model.
+      :type config: dict
+      :param model_type: The type of the model to be added.
+                         - "llm": Large Language Model, initialized using `ChatOpenAI`.
+                         - "emb": Embedding model, initialized using `HuggingFaceEmbeddings`.
+      :type model_type: Union[Literal["llm"], Literal["emb"]]
+
+
+
+   .. py:method:: save(path: str)
+
+      Save the current model storage to a YAML file.
+
+      :param path: The file path where the storage data will be saved.
+      :type path: str
+
+
+
