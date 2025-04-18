@@ -402,7 +402,7 @@
 
 
 <div class="viewcode-block" id="ErrorType">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.ErrorType">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.ErrorType">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">ErrorType</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Types of errors that can occur during generation&quot;&quot;&quot;</span>
 
@@ -415,7 +415,7 @@
 
 
 <div class="viewcode-block" id="GenerationError">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationError">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.GenerationError">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GenerationError</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Base error with essential fields&quot;&quot;&quot;</span>
 
@@ -428,12 +428,12 @@
 
 
 <div class="viewcode-block" id="CycleGraphGenerator">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.CycleGraphGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CycleGraphGenerator</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">cache</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CycleGraphGenerator.Config">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.Config">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.CycleGraphGenerator.Config">[docs]</a>
     <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
         <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;allow&quot;</span></div>
@@ -443,7 +443,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">data</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CycleGraphGenerator.invoke">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.invoke">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.CycleGraphGenerator.invoke">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="n">PromptTemplate</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
@@ -464,14 +464,14 @@
 
 
 <div class="viewcode-block" id="CycleGraphGenerator.ainvoke">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.ainvoke">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.CycleGraphGenerator.ainvoke">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of invoke - to be implemented&quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="CycleGraphGenerator.evaluate">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator.evaluate">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.CycleGraphGenerator.evaluate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">report_type</span><span class="o">=</span><span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">pass</span></div>
 </div>
@@ -479,7 +479,7 @@
 
 
 <div class="viewcode-block" id="GenerationPipeline">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.GenerationPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GenerationPipeline</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">cache</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">generation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
@@ -501,7 +501,7 @@
     <span class="n">seed</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="GenerationPipeline.Config">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.Config">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.GenerationPipeline.Config">[docs]</a>
     <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>
         <span class="n">arbitrary_types_allowed</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="n">extra</span> <span class="o">=</span> <span class="s2">&quot;allow&quot;</span></div>
@@ -535,7 +535,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">cache</span> <span class="o">=</span> <span class="n">setup_cache</span><span class="p">()</span>
 
 <div class="viewcode-block" id="GenerationPipeline.validate_graph_cycle_requirement">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.validate_graph_cycle_requirement">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.GenerationPipeline.validate_graph_cycle_requirement">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">validate_graph_cycle_requirement</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">min_cycles</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -573,7 +573,7 @@
 
 
 <div class="viewcode-block" id="GenerationPipeline.check_and_fix_transitions">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.check_and_fix_transitions">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.GenerationPipeline.check_and_fix_transitions">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">check_and_fix_transitions</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">max_attempts</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
@@ -658,7 +658,7 @@
 
 
 <div class="viewcode-block" id="GenerationPipeline.generate_and_validate">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.generate_and_validate">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.GenerationPipeline.generate_and_validate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_and_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PipelineResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates and validates a dialogue graph for given topic&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
@@ -778,7 +778,7 @@
 
 
 <div class="viewcode-block" id="GenerationPipeline.__call__">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline.__call__">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.GenerationPipeline.__call__">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PipelineResult</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Shorthand for generate_and_validate&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_and_validate</span><span class="p">(</span><span class="n">topic</span><span class="p">)</span></div>
@@ -787,7 +787,7 @@
 
 
 <div class="viewcode-block" id="LoopedGraphGenerator">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.LoopedGraphGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LoopedGraphGenerator</span><span class="p">(</span><span class="n">TopicGraphGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Graph generator for topic-based dialogue generation with model storage support&quot;&quot;&quot;</span>
 
@@ -825,7 +825,7 @@
         <span class="p">)</span>
 
 <div class="viewcode-block" id="LoopedGraphGenerator.invoke">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.LoopedGraphGenerator.invoke">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="s1">&#39;=&#39;</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">50</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating graph for topic: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span>
@@ -859,7 +859,7 @@
 
 
 <div class="viewcode-block" id="LoopedGraphGenerator.evaluate">
-<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.evaluate">[docs]</a>
+<a class="viewcode-back" href="../../../../reference/dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.LoopedGraphGenerator.evaluate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">report_type</span><span class="o">=</span><span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">report_type</span><span class="o">=</span><span class="n">report_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 </div>

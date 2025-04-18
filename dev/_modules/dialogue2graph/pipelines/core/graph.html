@@ -377,6 +377,17 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">BaseGraph</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base abstract class for graph representations of dialogues.</span>
+
+<span class="sd">    This class provides the interface for graph operations and manipulations.</span>
+<span class="sd">    It inherits from both BaseModel for data validation and ABC for abstract methods.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        graph_dict (dict): Dictionary containing the graph structure with nodes and edges.</span>
+<span class="sd">        graph (Optional[nx.Graph]): NetworkX graph instance.</span>
+<span class="sd">        node_mapping (Optional[dict]): Mapping between original node IDs and internal representation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">graph_dict</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">node_mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -447,8 +458,22 @@
 <div class="viewcode-block" id="Graph">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Graph</span><span class="p">(</span><span class="n">BaseGraph</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implementation of BaseGraph for dialogue graph operations.</span>
+
+<span class="sd">    This class provides concrete implementations for graph operations including</span>
+<span class="sd">    loading, visualization, path finding, and graph manipulation methods.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        Inherits all attributes from BaseGraph.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
-        <span class="c1"># Pass graph_dict to the parent class</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Graph instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            graph_dict (dict): Dictionary containing the graph structure.</span>
+<span class="sd">            **kwargs: Additional keyword arguments passed to parent class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">graph_dict</span><span class="o">=</span><span class="n">graph_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">graph_dict</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_graph</span><span class="p">()</span>
@@ -476,6 +501,11 @@
 <div class="viewcode-block" id="Graph.load_graph">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.load_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">load_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load graph from dictionary representation into NetworkX DiGraph.</span>
+
+<span class="sd">        Creates a directed graph from the graph_dict, handling node and edge attributes.</span>
+<span class="sd">        Also creates node mapping if node IDs need renumbering.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]])</span>
         <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Nodes: </span><span class="si">{</span><span class="n">nodes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -522,6 +552,11 @@
 <div class="viewcode-block" id="Graph.visualise">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.visualise">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Visualize the graph using matplotlib and networkx.</span>
+
+<span class="sd">        Creates a visualization of the graph with nodes and edges labeled with utterances.</span>
+<span class="sd">        Uses pygraphviz layout if available, falls back to kamada_kawai_layout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span>  <span class="c1"># Make the plot bigger</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">nx_agraph</span><span class="o">.</span><span class="n">pygraphviz_layout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
@@ -554,6 +589,15 @@
 <div class="viewcode-block" id="Graph.visualise_short">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.visualise_short">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">visualise_short</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a compact visualization of the graph.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Title for the visualization.</span>
+<span class="sd">            *args: Variable length argument list.</span>
+<span class="sd">            **kwargs: Arbitrary keyword arguments.</span>
+
+<span class="sd">        Creates a simplified visualization showing only node IDs and utterance counts.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">nx_agraph</span><span class="o">.</span><span class="n">pygraphviz_layout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -595,6 +639,14 @@
 <div class="viewcode-block" id="Graph.find_nodes_by_utterance">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.find_nodes_by_utterance">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_nodes_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utterance</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find nodes containing a specific utterance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            utterance (str): The utterance to search for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[dict]: List of nodes containing the utterance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">node</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">utterance</span> <span class="ow">in</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;utterances&quot;</span><span class="p">]</span>
         <span class="p">]</span></div>
@@ -603,6 +655,14 @@
 <div class="viewcode-block" id="Graph.find_edges_by_utterance">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.find_edges_by_utterance">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">find_edges_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">utterance</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find edges containing a specific utterance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            utterance (str): The utterance to search for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[dict]: List of edges containing the utterance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span>
             <span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">utterance</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">[</span><span class="s2">&quot;utterances&quot;</span><span class="p">]</span>
         <span class="p">]</span></div>
@@ -611,6 +671,14 @@
 <div class="viewcode-block" id="Graph.get_nodes_by_id">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_nodes_by_id">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a node by its ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (int): The ID of the node to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The node with the specified ID if found, None otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">node</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">node</span></div>
@@ -619,20 +687,38 @@
 <div class="viewcode-block" id="Graph.get_edges_by_source">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_edges_by_source">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all edges originating from a specific node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (int): The ID of the source node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[dict]: List of edges with the specified source node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Graph.get_edges_by_target">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_edges_by_target">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get all edges targeting a specific node.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (int): The ID of the target node.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[dict]: List of edges with the specified target node.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="nb">id</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="Graph.match_edges_nodes">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.match_edges_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">match_edges_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks whether source and target</span>
-<span class="sd">        of all the edges correspond to nodes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that all edge endpoints correspond to existing nodes.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if all edge endpoints match existing nodes, False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span>
 
@@ -650,6 +736,13 @@
 <div class="viewcode-block" id="Graph.remove_duplicated_edges">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.remove_duplicated_edges">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove duplicate edges between the same node pairs.</span>
+
+<span class="sd">        Combines utterances from duplicate edges into a single edge.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BaseGraph: New graph instance with duplicate edges removed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">]</span>
         <span class="n">node_couples</span> <span class="o">=</span> <span class="p">[(</span><span class="n">e</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span>
@@ -674,6 +767,12 @@
 <div class="viewcode-block" id="Graph.remove_duplicated_nodes">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.remove_duplicated_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove duplicate nodes based on their utterances.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            BaseGraph | None: New graph instance with duplicate nodes removed,</span>
+<span class="sd">                            or None if invalid state is detected.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span>
         <span class="n">nodes</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -709,18 +808,16 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">get_all_paths</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">start_node_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">visited_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">repeats_limit</span><span class="p">:</span> <span class="nb">int</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursion to find all the graph paths consisting of nodes ids</span>
-<span class="sd">        which start from node with id=start_node_id</span>
-<span class="sd">        and do not repeat last repeats_limit elements of the visited_nodes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find all possible paths in the graph from a starting node.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          visited_nodes: a path traveled so far</span>
-<span class="sd">          repeats_limit: recursion stopper with maximum length</span>
-<span class="sd">          of finishing sequence not to repeat on the path</span>
+<span class="sd">            start_node_id (int): ID of the starting node.</span>
+<span class="sd">            visited_nodes (list[int]): List of nodes already visited in the current path.</span>
+<span class="sd">            repeats_limit (int): Maximum number of times a sequence can repeat.</span>
 
-<span class="sd">        Returns: list of found paths</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[int]]: List of all valid paths found.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">visited_nodes</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">repeats_limit</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_seq_in</span><span class="p">(</span>
             <span class="n">visited_nodes</span><span class="p">[</span><span class="o">-</span><span class="n">repeats_limit</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">start_node_id</span><span class="p">],</span> <span class="n">visited_nodes</span>
         <span class="p">):</span>
@@ -743,11 +840,15 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">find_paths</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">start_node_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">end_node_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">visited_nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recursion to find paths from start_node_id</span>
-<span class="sd">        where end_node_id on the path stops recursion</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find all paths between two nodes in the graph.</span>
+
 <span class="sd">        Args:</span>
-<span class="sd">          visited_nodes: a path traveled so far</span>
-<span class="sd">        Returns: list of all paths from start_node_id which probably could be finishing by end_node_id</span>
+<span class="sd">            start_node_id (int): ID of the starting node.</span>
+<span class="sd">            end_node_id (int): ID of the target node.</span>
+<span class="sd">            visited_nodes (list[int]): List of nodes already visited.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[list[int]]: List of all paths found between start and end nodes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">visited_paths</span> <span class="o">=</span> <span class="p">[[]]</span>
 
@@ -771,11 +872,13 @@
 <div class="viewcode-block" id="Graph.get_ends">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_ends">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_ends</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find finishing nodes which have no outgoing edges</span>
-<span class="sd">        Returns:</span>
-<span class="sd">          list of finishing nodes ids</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find all terminal nodes in the graph.</span>
 
+<span class="sd">        Terminal nodes are those with no outgoing edges.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list[int]: List of IDs of terminal nodes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span>
         <span class="n">sources</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">g</span><span class="p">[</span><span class="s2">&quot;source&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">]]))</span>
         <span class="n">finishes</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">]</span>
@@ -796,9 +899,10 @@
 <div class="viewcode-block" id="Graph.get_list_from_nodes">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_list_from_nodes">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to form auxiliary list from the graph nodes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a list of concatenated utterances from all nodes.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">          list of concatenations of all nodes utterances</span>
+<span class="sd">            list[str]: List where each element is the concatenated utterances of a node.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span>
         <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
@@ -815,10 +919,12 @@
 <div class="viewcode-block" id="Graph.get_list_from_graph">
 <a class="viewcode-back" href="../../../../reference/dialogue2graph.html#dialogue2graph.Graph.get_list_from_graph">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="nb">int</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to form auxiliary data from the graph</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a list of concatenated utterances from nodes and their edges.</span>
+
 <span class="sd">        Returns:</span>
-<span class="sd">          res_list: concatenation of utterances of every node and its outgoing edges</span>
-<span class="sd">          n_edges: total number of utterances in all edges</span>
+<span class="sd">            tuple[list[str], int]: Tuple containing:</span>
+<span class="sd">                - list of concatenated utterances</span>
+<span class="sd">                - total number of utterances in edges</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">graph</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span>
         <span class="n">res_list</span> <span class="o">=</span> <span class="p">[]</span>

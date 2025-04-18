@@ -326,7 +326,6 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="dialogue2graph.datasets.html">dialogue2graph.datasets package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.augment_dialogues.html">dialogue2graph.datasets.augment_dialogues package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html">dialogue2graph.datasets.complex_dialogues package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.core.html">dialogue2graph.datasets.core package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="dialogue2graph.metrics.html">dialogue2graph.metrics package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -421,22 +420,22 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html">dialogue2graph.datasets.complex_dialogues package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#module-dialogue2graph.datasets.complex_dialogues.find_cycle_ends">dialogue2graph.datasets.complex_dialogues.find_cycle_ends module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#module-dialogue2graph.datasets.complex_dialogues.generation">dialogue2graph.datasets.complex_dialogues.generation module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#module-dialogue2graph.datasets.complex_dialogues.prompts">dialogue2graph.datasets.complex_dialogues.prompts module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#module-dialogue2graph.datasets.complex_dialogues">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.core.html">dialogue2graph.datasets.core package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.core.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.core.html#module-dialogue2graph.datasets.core.dataset">dialogue2graph.datasets.core.dataset module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.core.html#module-dialogue2graph.datasets.core">Module contents</a></li>
-</ul>
-</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.html#module-dialogue2graph.datasets">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.html#dialogue2graph.datasets.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.html#dialogue2graph.datasets.CycleGraphGenerator"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.html#dialogue2graph.datasets.CycleGraphGenerator.cache"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.cache</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.html#dialogue2graph.datasets.CycleGraphGenerator.Config"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.Config</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.html#dialogue2graph.datasets.CycleGraphGenerator.invoke"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.invoke()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.html#dialogue2graph.datasets.CycleGraphGenerator.ainvoke"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.ainvoke()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.html#dialogue2graph.datasets.CycleGraphGenerator.evaluate"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.evaluate()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -500,7 +499,7 @@
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dialogue2graph" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="dialogue2graph.Dialogue">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.</span></span><span class="sig-name descname"><span class="pre">Dialogue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messages:</span> <span class="pre">~typing.List[~dialogue2graph.pipelines.core.dialogue.DialogueMessage]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'8e60dcd0-1bb0-11f0-be82-00224891429f'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/dialogue.html#Dialogue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Dialogue" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.</span></span><span class="sig-name descname"><span class="pre">Dialogue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">messages:</span> <span class="pre">~typing.List[~dialogue2graph.pipelines.core.dialogue.DialogueMessage]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'f27826da-1c3f-11f0-be82-0022488faac1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/dialogue.html#Dialogue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Dialogue" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
 <p>Represents a complete dialogue consisting of multiple messages.</p>
 <p>The class provides methods for creating dialogues from different formats
@@ -609,6 +608,14 @@ and converting dialogues to various representations.</p>
 <dt class="sig sig-object py" id="dialogue2graph.Graph">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.</span></span><span class="sig-name descname"><span class="pre">Graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></p>
+<p>Implementation of BaseGraph for dialogue graph operations.</p>
+<p>This class provides concrete implementations for graph operations including
+loading, visualization, path finding, and graph manipulation methods.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">Inherits</span> <span class="pre">all</span> <span class="pre">attributes</span> <span class="pre">from</span> <span class="pre">BaseGraph.</span></span></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.check_edges">
 <span class="sig-name descname"><span class="pre">check_edges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.check_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.check_edges" title="Link to this definition">#</a></dt>
@@ -624,24 +631,48 @@ has all the edges of the graph</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.load_graph">
 <span class="sig-name descname"><span class="pre">load_graph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.load_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.load_graph" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Load graph from dictionary representation into NetworkX DiGraph.</p>
+<p>Creates a directed graph from the graph_dict, handling node and edge attributes.
+Also creates node mapping if node IDs need renumbering.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.visualise">
 <span class="sig-name descname"><span class="pre">visualise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.visualise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.visualise" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Visualize the graph using matplotlib and networkx.</p>
+<p>Creates a visualization of the graph with nodes and edges labeled with utterances.
+Uses pygraphviz layout if available, falls back to kamada_kawai_layout.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.visualise_short">
 <span class="sig-name descname"><span class="pre">visualise_short</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.visualise_short"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.visualise_short" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Create a compact visualization of the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Title for the visualization.</p></li>
+<li><p><strong>*args</strong> – Variable length argument list.</p></li>
+<li><p><strong>**kwargs</strong> – Arbitrary keyword arguments.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Creates a simplified visualization showing only node IDs and utterance counts.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.find_nodes_by_utterance">
 <span class="sig-name descname"><span class="pre">find_nodes_by_utterance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utterance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.find_nodes_by_utterance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.find_nodes_by_utterance" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Find nodes containing a specific utterance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>utterance</strong> (<em>str</em>) – The utterance to search for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of nodes containing the utterance.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+<dd class="field-odd"><p>list[dict]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -649,9 +680,16 @@ has all the edges of the graph</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.find_edges_by_utterance">
 <span class="sig-name descname"><span class="pre">find_edges_by_utterance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">utterance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.find_edges_by_utterance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.find_edges_by_utterance" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Find edges containing a specific utterance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>utterance</strong> (<em>str</em>) – The utterance to search for.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of edges containing the utterance.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</span></p>
+<dd class="field-odd"><p>list[dict]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -659,26 +697,64 @@ has all the edges of the graph</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.get_nodes_by_id">
 <span class="sig-name descname"><span class="pre">get_nodes_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.get_nodes_by_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.get_nodes_by_id" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Retrieve a node by its ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The ID of the node to retrieve.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The node with the specified ID if found, None otherwise.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.get_edges_by_source">
 <span class="sig-name descname"><span class="pre">get_edges_by_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.get_edges_by_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.get_edges_by_source" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get all edges originating from a specific node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The ID of the source node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of edges with the specified source node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.get_edges_by_target">
 <span class="sig-name descname"><span class="pre">get_edges_by_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.get_edges_by_target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.get_edges_by_target" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<dd><p>Get all edges targeting a specific node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>id</strong> (<em>int</em>) – The ID of the target node.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of edges with the specified target node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.match_edges_nodes">
 <span class="sig-name descname"><span class="pre">match_edges_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.match_edges_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.match_edges_nodes" title="Link to this definition">#</a></dt>
-<dd><p>Checks whether source and target
-of all the edges correspond to nodes</p>
+<dd><p>Verify that all edge endpoints correspond to existing nodes.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if all edge endpoints match existing nodes, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -686,9 +762,14 @@ of all the edges correspond to nodes</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.remove_duplicated_edges">
 <span class="sig-name descname"><span class="pre">remove_duplicated_edges</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.remove_duplicated_edges"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.remove_duplicated_edges" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></span></p>
+<dd><p>Remove duplicate edges between the same node pairs.</p>
+<p>Combines utterances from duplicate edges into a single edge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>New graph instance with duplicate edges removed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>BaseGraph</p>
 </dd>
 </dl>
 </dd></dl>
@@ -696,9 +777,17 @@ of all the edges correspond to nodes</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.remove_duplicated_nodes">
 <span class="sig-name descname"><span class="pre">remove_duplicated_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.remove_duplicated_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.remove_duplicated_nodes" title="Link to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dd><p>Remove duplicate nodes based on their utterances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>New graph instance with duplicate nodes removed,</dt><dd><p>or None if invalid state is detected.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>BaseGraph | None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -706,35 +795,41 @@ of all the edges correspond to nodes</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.get_all_paths">
 <span class="sig-name descname"><span class="pre">get_all_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_node_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visited_nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeats_limit</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.get_all_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.get_all_paths" title="Link to this definition">#</a></dt>
-<dd><p>Recursion to find all the graph paths consisting of nodes ids
-which start from node with id=start_node_id
-and do not repeat last repeats_limit elements of the visited_nodes</p>
+<dd><p>Find all possible paths in the graph from a starting node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>visited_nodes</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – a path traveled so far</p></li>
-<li><p><strong>repeats_limit</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – recursion stopper with maximum length</p></li>
-<li><p><strong>path</strong> (<em>of finishing sequence not to repeat on the</em>)</p></li>
+<li><p><strong>start_node_id</strong> (<em>int</em>) – ID of the starting node.</p></li>
+<li><p><strong>visited_nodes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – List of nodes already visited in the current path.</p></li>
+<li><p><strong>repeats_limit</strong> (<em>int</em>) – Maximum number of times a sequence can repeat.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of all valid paths found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[list[int]]</p>
 </dd>
 </dl>
-<p>Returns: list of found paths</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.find_paths">
 <span class="sig-name descname"><span class="pre">find_paths</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_node_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_node_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">visited_nodes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.find_paths"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.find_paths" title="Link to this definition">#</a></dt>
-<dd><p>Recursion to find paths from start_node_id
-where end_node_id on the path stops recursion
-:type visited_nodes: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>
-:param visited_nodes: a path traveled so far</p>
-<p>Returns: list of all paths from start_node_id which probably could be finishing by end_node_id</p>
+<dd><p>Find all paths between two nodes in the graph.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_node_id</strong> (<em>int</em>) – ID of the starting node.</p></li>
+<li><p><strong>end_node_id</strong> (<em>int</em>) – ID of the target node.</p></li>
+<li><p><strong>visited_nodes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – List of nodes already visited.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of all paths found between start and end nodes.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</span></p>
+<dd class="field-odd"><p>list[list[int]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -742,30 +837,49 @@ where end_node_id on the path stops recursion
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.get_ends">
 <span class="sig-name descname"><span class="pre">get_ends</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.get_ends"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.get_ends" title="Link to this definition">#</a></dt>
-<dd><p>Find finishing nodes which have no outgoing edges
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>
-:returns: list of finishing nodes ids</p>
+<dd><p>Find all terminal nodes in the graph.</p>
+<p>Terminal nodes are those with no outgoing edges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of IDs of terminal nodes.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[int]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.get_list_from_nodes">
 <span class="sig-name descname"><span class="pre">get_list_from_nodes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.get_list_from_nodes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.get_list_from_nodes" title="Link to this definition">#</a></dt>
-<dd><p>Method to form auxiliary list from the graph nodes
-:rtype: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>
-:returns: list of concatenations of all nodes utterances</p>
+<dd><p>Create a list of concatenated utterances from all nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List where each element is the concatenated utterances of a node.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[str]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.Graph.get_list_from_graph">
 <span class="sig-name descname"><span class="pre">get_list_from_graph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/pipelines/core/graph.html#Graph.get_list_from_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.Graph.get_list_from_graph" title="Link to this definition">#</a></dt>
-<dd><p>Method to form auxiliary data from the graph
-:returns: concatenation of utterances of every node and its outgoing edges</p>
-<blockquote>
-<div><p>n_edges: total number of utterances in all edges</p>
-</div></blockquote>
+<dd><p>Create a list of concatenated utterances from nodes and their edges.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>res_list</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><dl class="simple">
+<dt>Tuple containing:</dt><dd><ul class="simple">
+<li><p>list of concatenated utterances</p></li>
+<li><p>total number of utterances in edges</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[list[str], int]</p>
 </dd>
 </dl>
 </dd></dl>

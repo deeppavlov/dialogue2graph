@@ -326,7 +326,6 @@
 <li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">dialogue2graph.datasets package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.augment_dialogues.html">dialogue2graph.datasets.augment_dialogues package</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html">dialogue2graph.datasets.complex_dialogues package</a></li>
-<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.core.html">dialogue2graph.datasets.core package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="dialogue2graph.metrics.html">dialogue2graph.metrics package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -436,10 +435,6 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html">dialogue2graph.datasets.complex_dialogues package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#module-dialogue2graph.datasets.complex_dialogues.find_cycle_ends">dialogue2graph.datasets.complex_dialogues.find_cycle_ends module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.find_cycle_ends.find_cycle_ends"><code class="docutils literal notranslate"><span class="pre">find_cycle_ends()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#module-dialogue2graph.datasets.complex_dialogues.generation">dialogue2graph.datasets.complex_dialogues.generation module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.ErrorType"><code class="docutils literal notranslate"><span class="pre">ErrorType</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#dialogue2graph.datasets.complex_dialogues.generation.ErrorType.INVALID_GRAPH_STRUCTURE"><code class="docutils literal notranslate"><span class="pre">ErrorType.INVALID_GRAPH_STRUCTURE</span></code></a></li>
@@ -499,27 +494,58 @@
 <li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.complex_dialogues.html#module-dialogue2graph.datasets.complex_dialogues">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="dialogue2graph.datasets.core.html">dialogue2graph.datasets.core package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.core.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.core.html#module-dialogue2graph.datasets.core.dataset">dialogue2graph.datasets.core.dataset module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.core.html#dialogue2graph.datasets.core.dataset.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="dialogue2graph.datasets.core.html#module-dialogue2graph.datasets.core">Module contents</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="dialogue2graph.datasets.core.html#dialogue2graph.datasets.core.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </div>
 </section>
 <section id="module-dialogue2graph.datasets">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-dialogue2graph.datasets" title="Link to this heading">#</a></h2>
 <dl class="py class">
-<dt class="sig sig-object py" id="dialogue2graph.datasets.Dataset">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.</span></span><span class="sig-name descname"><span class="pre">Dataset</span></span><a class="reference internal" href="../_modules/dialogue2graph/datasets/core/dataset.html#Dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.Dataset" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.</span></span><span class="sig-name descname"><span class="pre">CycleGraphGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator.cache">
+<span class="sig-name descname"><span class="pre">cache</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code><span class="pre">[</span><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code><span class="pre">]</span></em><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator.cache" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator.Config">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator.Config" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator.Config.arbitrary_types_allowed">
+<span class="sig-name descname"><span class="pre">arbitrary_types_allowed</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator.Config.arbitrary_types_allowed" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator.Config.extra">
+<span class="sig-name descname"><span class="pre">extra</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'allow'</span></em><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator.Config.extra" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator.invoke" title="Link to this definition">#</a></dt>
+<dd><p>Generate a cyclic dialogue graph based on the topic input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseGraph</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator.ainvoke">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ainvoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.ainvoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator.ainvoke" title="Link to this definition">#</a></dt>
+<dd><p>Async version of invoke - to be implemented</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.CycleGraphGenerator.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">report_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'dict'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/dialogue2graph/datasets/complex_dialogues/generation.html#CycleGraphGenerator.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.CycleGraphGenerator.evaluate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 </section>
@@ -574,7 +600,18 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-dialogue2graph.datasets">Module contents</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.Dataset"><code class="docutils literal notranslate"><span class="pre">Dataset</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator.cache"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.cache</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator.Config"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.Config</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator.Config.arbitrary_types_allowed"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.Config.arbitrary_types_allowed</span></code></a></li>
+<li class="toc-h5 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator.Config.extra"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.Config.extra</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator.invoke"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.invoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator.ainvoke"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.ainvoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.CycleGraphGenerator.evaluate"><code class="docutils literal notranslate"><span class="pre">CycleGraphGenerator.evaluate()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
