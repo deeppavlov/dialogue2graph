@@ -68,11 +68,21 @@ class LLMGraphExtender(GraphExtender):
     """
 
     model_storage: ModelStorage = Field(description="Model storage")
-    extending_llm: str = Field(description="LLM for extending graph nodes")
-    filling_llm: str = Field(description="LLM for adding missing edges")
-    formatting_llm: str = Field(description="LLM for formatting output")
-    dialog_llm: str = Field(description="LLM for dialog sampler")
-    sim_model: str = Field(description="Similarity model")
+    extending_llm: str = Field(
+        description="LLM for extending graph nodes", default="extender_extending_llm:v1"
+    )
+    filling_llm: str = Field(
+        description="LLM for adding missing edges", default="extender_filling_llm:v1"
+    )
+    formatting_llm: str = Field(
+        description="LLM for formatting output", default="extender_formatting_llm:v1"
+    )
+    dialog_llm: str = Field(
+        description="LLM for dialog sampler", default="extender_dialog_llm:v1"
+    )
+    sim_model: str = Field(
+        description="Similarity model", default="extender_sim_model:v1"
+    )
     step: int
     graph_generator: LightGraphGenerator
     step1_evals: list[Callable]
@@ -95,6 +105,42 @@ class LLMGraphExtender(GraphExtender):
         end_evals: list[Callable],
         step: int = 2,
     ):
+        # check if models are in model storage
+        # if model is not in model storage put the default model there
+        if extending_llm not in model_storage.storage:
+            model_storage.add(
+                key=extending_llm,
+                config={"model": "chatgpt-4o-latest", "temperature": 0},
+                model_type="llm",
+            )
+
+        if filling_llm not in model_storage.storage:
+            model_storage.add(
+                key=filling_llm,
+                config={"model": "o3-mini", "temperature": 1},
+                model_type="llm",
+            )
+
+        if formatting_llm not in model_storage.storage:
+            model_storage.add(
+                key=formatting_llm,
+                config={"model": "gpt-4o-mini", "temperature": 0},
+                model_type="llm",
+            )
+
+        if dialog_llm not in model_storage.storage:
+            model_storage.add(
+                key=dialog_llm,
+                config={"model": "o3-mini", "temperature": 1},
+                model_type="llm",
+            )
+
+        if sim_model not in model_storage.storage:
+            model_storage.add(
+                key=sim_model,
+                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+                model_type="emb",
+            )
         super().__init__(
             model_storage=model_storage,
             extending_llm=extending_llm,
@@ -118,12 +164,13 @@ class LLMGraphExtender(GraphExtender):
         )
 
     def _add_step(self, dialogues: list[Dialogue], graph: Graph) -> Graph:
-
         dialogs = ""
         for idx, dial in enumerate(dialogues):
             dialogs += f"\nDialogue_{idx}: {dial}"
 
-        prompt = PromptTemplate.from_template(extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs)
+        prompt = PromptTemplate.from_template(
+            extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs
+        )
 
         fixed_output_parser = OutputFixingParser.from_llm(
             parser=PydanticOutputParser(pydantic_object=DialogueNodes),
@@ -224,12 +271,13 @@ class LLMGraphExtender(GraphExtender):
         return cur_graph
 
     def _finalize_graph(self, pipeline_data, cur_graph, enable_evals, report):
-
         dialogs = ""
         for idx, dial in enumerate(pipeline_data.dialogs):
             dialogs += f"\nDialogue_{idx}: {dial}"
 
-        prompt = PromptTemplate.from_template(add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + dialogs)
+        prompt = PromptTemplate.from_template(
+            add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + dialogs
+        )
 
         messages = [
             HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))

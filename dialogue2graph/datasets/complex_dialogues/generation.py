@@ -1,4 +1,5 @@
 import logging
+import os
 from enum import Enum
 from typing import Optional, Dict, Any, Union
 
@@ -383,10 +384,20 @@ class LoopedGraphGenerator(TopicGraphGenerator):
     """Graph generator for topic-based dialogue generation with model storage support"""
 
     model_storage: ModelStorage = Field(description="Model storage")
-    generation_llm: str = Field(description="LLM for graph generation")
-    validation_llm: str = Field(description="LLM for validation")
-    cycle_ends_llm: str = Field(description="LLM for dialog sampler to find cycle ends")
-    theme_validation_llm: str = Field(description="LLM for theme validation")
+    generation_llm: str = Field(
+        description="LLM for graph generation", default="looped_graph_generation_llm:v1"
+    )
+    validation_llm: str = Field(
+        description="LLM for validation", default="looped_graph_validation_llm:v1"
+    )
+    cycle_ends_llm: str = Field(
+        description="LLM for dialog sampler to find cycle ends",
+        default="looped_graph_cycle_ends_llm:v1",
+    )
+    theme_validation_llm: str = Field(
+        description="LLM for theme validation",
+        default="looped_graph_theme_validation_llm:v1",
+    )
     pipeline: GenerationPipeline
 
     def __init__(
@@ -397,6 +408,42 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         cycle_ends_llm: str,
         theme_validation_llm: str,
     ):
+        # check if models are in model storage
+        # if model is not in model storage put the default model there
+        if generation_llm not in model_storage.storage:
+            model_storage.add(
+                key=generation_llm,
+                config={
+                    "name": "gpt-4o-latest",
+                    "api_key": os.getenv("OPENAI_API_KEY"),
+                    "base_url": os.getenv("OPENAI_BASE_URL"),
+                },
+                model_type="llm",
+            )
+
+        if validation_llm not in model_storage.storage:
+            model_storage.add(
+                key=validation_llm,
+                config={
+                    "name": "gpt-3.5-turbo",
+                    "api_key": os.getenv("OPENAI_API_KEY"),
+                    "base_url": os.getenv("OPENAI_BASE_URL"),
+                    "temperature": 0,
+                },
+                model_type="llm",
+            )
+
+        if theme_validation_llm not in model_storage.storage:
+            model_storage.add(
+                key=theme_validation_llm,
+                config={
+                    "name": "gpt-3.5-turbo",
+                    "api_key": os.getenv("OPENAI_API_KEY"),
+                    "base_url": os.getenv("OPENAI_BASE_URL"),
+                    "temperature": 0,
+                },
+                model_type="llm",
+            )
         super().__init__(
             model_storage=model_storage,
             generation_llm=generation_llm,

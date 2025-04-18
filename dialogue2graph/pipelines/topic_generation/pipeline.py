@@ -19,43 +19,7 @@ class TopicGenerationPipeline(BasePipeline):
         validation_llm: str = "topic_generation_val_llm:v1",
         theme_validation_llm: str = "topic_generation_theme_val_llm:v1",
     ):
-        # check if models are in model storage
-        # if model is not in model storage put the default model there
-        if generation_llm not in model_storage.storage:
-            model_storage.add(
-                key=generation_llm,
-                config={
-                    "name": "gpt-4o-latest",
-                    "api_key": os.getenv("OPENAI_API_KEY"),
-                    "base_url": os.getenv("OPENAI_BASE_URL"),
-                },
-                model_type="llm",
-            )
-
-        if validation_llm not in model_storage.storage:
-            model_storage.add(
-                key=validation_llm,
-                config={
-                    "name": "gpt-3.5-turbo",
-                    "api_key": os.getenv("OPENAI_API_KEY"),
-                    "base_url": os.getenv("OPENAI_BASE_URL"),
-                    "temperature": 0,
-                },
-                model_type="llm",
-            )
-
-        if theme_validation_llm not in model_storage.storage:
-            model_storage.add(
-                key=theme_validation_llm,
-                config={
-                    "name": "gpt-3.5-turbo",
-                    "api_key": os.getenv("OPENAI_API_KEY"),
-                    "base_url": os.getenv("OPENAI_BASE_URL"),
-                    "temperature": 0,
-                },
-                model_type="llm",
-            )
-
+        
         super().__init__(
             steps=[
                 LoopedGraphGenerator(

@@ -11,7 +11,7 @@ from langchain_community.document_loaders import UnstructuredMarkdownLoader
 
 if not dotenv.find_dotenv():
     pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
-    
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__file__)
 
@@ -200,7 +200,7 @@ def test_gen_light_txt_positive():
     assert parse_txt(report_path) is not None, "saved report is not valid csv"
     assert check_txt_subreports(report_path), (
         f"report file {report_path} doesn't have subreports"
- )
+    )
     pathlib.Path(report_path).unlink(missing_ok=True)
 
 
@@ -225,11 +225,13 @@ def test_gen_light_nocfg():
 
 
 def test_gen_light_wrong_cfg():
-    report_path = filepath.joinpath('d2g_light_test_report.json')
+    report_path = filepath.joinpath("d2g_light_test_report.json")
     exit_status = os.system(
         f"dialogue2graph gen-graph-light -c {filepath.joinpath('wrong_cfg.yml')} -d {filepath.joinpath('test_cli.json')} -t {filepath.joinpath('test_cli.json')} -r {report_path}"
     )
-    assert exit_status != 0, "dialogue2graph should fail with config file where no model_name is specified"
+    assert exit_status != 0, (
+        "dialogue2graph should fail with config file where no model_name is specified"
+    )
     pathlib.Path(report_path).unlink(missing_ok=True)
 
 
