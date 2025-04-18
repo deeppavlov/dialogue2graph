@@ -2,7 +2,7 @@ Development
 ===========
 
 Contribution
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 :github_source_link:`Contribution rules <CONTRIBUTING.md>` provide
 guidelines and rules for contributing to the Dialogue2Graph project. It includes information on

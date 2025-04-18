@@ -1,3 +1,10 @@
+"""
+Dialog Graph Helper
+-------------------
+
+The module contains auxilary functions for Graph creation.
+"""
+
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.utils.vector_stores import DialogueStore, NodeStore
 from dialogue2graph.metrics.similarity import compare_strings
@@ -8,14 +15,16 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 def connect_nodes(
     nodes: list[dict], dialogues: list[Dialogue], utt_sim: HuggingFaceEmbeddings
 ) -> dict[str, list[dict]]:
-    """Connecting dialog graph nodes with edges via searching dialogue utterances
+    """Connect dialog graph nodes with edges via searching dialogue utterances
     in list of nodes based on utt_sim similarity model
+
     Args:
-      nodes: list of dictionaries in a form {"id": id, "label": label, "is_start": bool, "utterances": list}
-      dialogues: list of dialogues to build a graph from
-      utt_sim: similarity model used to build vector stores
+        nodes: list of dictionaries in a form {"id": id, "label": label, "is_start": bool, "utterances": list}
+        dialogues: list of dialogues to build a graph from
+        utt_sim: similarity model used to build vector stores
+
     Returns:
-    graph dict in a form {"edges": [edges], "nodes": [nodes]}
+        graph dict in a form {"edges": [edges], "nodes": [nodes]}
     """
     edges = []
     node_store = NodeStore(nodes, utt_sim)
@@ -71,13 +80,15 @@ def connect_nodes(
 
 
 def get_helpers(dialogues: list[Dialogue]) -> tuple[list[str], list[set[str]]]:
-    """Helper pre-pocessing list of dialogues for grouping.
+    """Help preprocessing list of dialogues for grouping.
+
     Args:
-      dialogues: list of dialogues
+        dialogues: list of dialogues
+
     Returns:
-      node_utts - list of assistant utterances
-      start_utts - list of starting utterances
-      user_end - sign of that dialogue finishes with user's utterance
+        node_utts: list of assistant utterances
+        start_utts: list of starting utterances
+        user_end: sign of that dialogue finishes with user utterance
     """
 
     node_utts = []

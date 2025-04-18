@@ -1,8 +1,8 @@
 """
 Validators
 --------------------------
-This module contains validators to evaluate dialogs
 
+The module contains validators to evaluate dialogs that use power of LLMs and embeddings.
 """
 
 from typing import List
@@ -110,7 +110,8 @@ def is_greeting_repeated_emb_llm(
     starts: list = None,
 ) -> bool:
     """
-    Checks if greeting is repeated within dialogues using pairwise distance and LLM assessment.
+    Check if greeting is repeated within dialogues using pairwise distance and LLM assessment.
+
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         model_storage (ModelStorage): Model storage containing embedder and LLM model for evaluation.
@@ -167,7 +168,8 @@ def is_dialog_closed_too_early_emb_llm(
     ends: list = None,
 ) -> bool:
     """
-    Checks if assistant tried to close dialogue in the middle using pairwise distance and LLM assessment.
+    Check if assistant tried to close dialogue in the middle using pairwise distance and LLM assessment.
+
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         model_storage (ModelStorage): Model storage containing embedder and LLM model for evaluation.

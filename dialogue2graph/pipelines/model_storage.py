@@ -72,25 +72,6 @@ class ModelStorage(BaseModel):
     Attributes:
         storage (Dict[str, StoredData]): A dictionary that holds the stored model configurations
             and their corresponding instances.
-
-    Methods:
-        load(path: str):
-
-
-            Raises:
-                Exception: If there is an error while loading the configurations.
-
-        add(key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]):
-
-
-            Raises:
-                Exception: If there is an error while adding the model to the storage.
-
-        save(path: str):
-
-
-            Raises:
-                Exception: If there is an error while saving the storage.
     """
 
     storage: Dict[str, StoredData] = Field(default_factory=dict)
@@ -124,6 +105,7 @@ class ModelStorage(BaseModel):
     ):
         """
         Add a new model configuration to the storage.
+
         Args:
             key (str): The unique identifier for the model configuration.
             config (dict): The configuration dictionary for initializing the model.

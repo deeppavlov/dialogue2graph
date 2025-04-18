@@ -1,3 +1,10 @@
+"""
+Generation
+----------
+
+The module provides graph generator capable of creating complex validated graphs.
+"""
+
 import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
@@ -34,7 +41,7 @@ logger = logging.getLogger(__name__)
 
 
 class ErrorType(str, Enum):
-    """Types of errors that can occur during generation"""
+    """Error types that can occur during generation"""
 
     INVALID_GRAPH_STRUCTURE = "invalid_graph_structure"
     TOO_MANY_CYCLES = "too_many_cycles"
@@ -54,6 +61,7 @@ PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 
 class CycleGraphGenerator(BaseModel):
+    """Class for generating graph with cycles"""
     cache: Optional[Any] = Field(default=None, exclude=True)
 
     class Config:
@@ -90,6 +98,7 @@ class CycleGraphGenerator(BaseModel):
 
 
 class GenerationPipeline(BaseModel):
+    """Class for generation pipeline"""
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
     theme_validation_model: BaseChatModel
@@ -143,7 +152,7 @@ class GenerationPipeline(BaseModel):
     def validate_graph_cycle_requirement(
         self, graph: BaseGraph, min_cycles: int = 2
     ) -> Dict[str, Any]:
-        """Checks the graph for cycle requirements"""
+        """Check the graph for cycle requirements"""
         logger.info("🔍 Checking graph requirements...")
         try:
             cycles = list(nx.simple_cycles(graph.graph))
@@ -178,7 +187,7 @@ class GenerationPipeline(BaseModel):
     def check_and_fix_transitions(
         self, graph: BaseGraph, max_attempts: int = 3
     ) -> Dict[str, Any]:
-        """Checks transitions in the graph and attempts to fix invalid ones via LLM"""
+        """Check transitions in the graph and attempts to fix invalid ones via LLM"""
         logger.info("Validating initial graph")
         initial_validation = are_triplets_valid(
             graph, self.validation_model, return_type="detailed"
@@ -258,7 +267,7 @@ class GenerationPipeline(BaseModel):
             }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
-        """Generates and validates a dialogue graph for given topic"""
+        """Generate and validate a dialogue graph for given topic"""
         try:
             logger.info("Generating Graph ...")
             graph = self.graph_generator.invoke(
@@ -416,6 +425,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         )
 
     def invoke(self, topic, seed=42) -> list[dict]:
+        # TODO: add docs
         logger.info(f"\n{'=' * 50}")
         logger.info("Generating graph for topic: %s", topic)
         logger.info(f"{'=' * 50}")
@@ -447,4 +457,5 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         return successful_generations
 
     def evaluate(self, *args, report_type="dict", **kwargs):
+        # TODO: add docs
         return super().evaluate(*args, report_type=report_type, **kwargs)

@@ -1,3 +1,10 @@
+"""
+Dialogue
+--------
+
+The module provides Dialogue class that represents complete dialogues with multiple messages.
+"""
+
 import uuid
 import networkx as nx
 from typing import List, Union, Dict
@@ -47,7 +54,7 @@ class Dialogue(BaseModel):
         """Creates a Dialogue from a tab-separated string format.
 
         Args:
-            string: Tab-separated string with format: "participant\ttext\n"
+            string: Tab-separated string with format: "participant\\ttext\\n"
 
         Returns:
             Dialogue object with parsed messages
@@ -68,6 +75,7 @@ class Dialogue(BaseModel):
 
     @classmethod
     def from_nodes_ids(cls, graph, node_list, validate: bool = True) -> "Dialogue":
+        # TODO: add docs
         utts = []
         nodes_attributes = nx.get_node_attributes(graph.graph, "utterances")
         edges_attributes = nx.get_edge_attributes(graph.graph, "utterances")

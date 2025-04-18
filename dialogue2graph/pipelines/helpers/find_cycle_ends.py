@@ -1,3 +1,10 @@
+"""
+Find cycle ends
+----------------
+
+The module provides graph auxilary method to find cycle ends.
+"""
+
 import json
 from pydantic import BaseModel, Field
 from langchain_core.output_parsers import PydanticOutputParser
@@ -8,11 +15,11 @@ from langchain_core.language_models.chat_models import BaseChatModel
 
 def find_cycle_ends(G: Graph, cycle_ends_model: BaseChatModel) -> dict[str]:
     """
-    To find nodes in dialogue graph G by condition in graph_ends_prompt_template with help of model.
+    Find nodes in a dialogue graph G using conditions in graph_ends_prompt_template with the help of model.
 
     Parameters:
         G (BaseGraph): The dialogue graph
-        cycle_ends_model (BaseChatModel): The LLM model to be used
+        cycle_ends_model (BaseChatModel): The LLM to be used
 
     Returns:
         dict: {'value': bool, 'description': str}

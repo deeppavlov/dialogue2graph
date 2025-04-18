@@ -1,3 +1,10 @@
+"""
+Three Stage D2GExtender
+-----------------------
+
+The module provides three step algorithm aimed to extend dialog graph by generating.
+"""
+
 import logging
 from typing import List, Callable
 from pydantic import ConfigDict
@@ -28,6 +35,8 @@ from dialogue2graph.pipelines.d2g_extender.prompts import (
 
 
 class DialogueNodes(BaseModel):
+    """Class for dialog nodes"""
+
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     # reason: str = Field(description="explanation")
 
@@ -43,28 +52,29 @@ class LLMGraphExtender(GraphExtender):
     generated on the previous step. First step is done with LightGraphGenerator or taken from
     supported graph
     Generation stages:
-    1. a. If supported graph is given, it is used as a start.
-          If not, graph is generated with LightGraphGenerator from first step dialogs
-       b. Algorithmic connecting nodes by edges.
+
+    1.
+        a. If supported graph is given, it is used as a start. Otherwise, graph is generated with LightGraphGenerator from first step dialogs
+        b. Algorithmic connecting nodes by edges.
     2. Iterative steps:
-      a. LLM extension of graph nodes with next step dialogs.
-      b. Algorithmic connecting nodes by edges.
+        a. LLM extension of graph nodes with next step dialogs.
+        b. Algorithmic connecting nodes by edges.
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
 
     Attributes:
-      model_storage: Model storage
-      extending_llm: Name of LLM for extending graph nodes
-      filling_llm: Name of LLM for adding missing edges
-      dialog_llm: Name of LLM used in dialog sampler
-      formatting_llm: Name of LLM for formatting other LLMs output
-      sim_model: HuggingFace name for similarity model
-      step: number of dialogs for one step
-      graph_generator: graph generator for the first stage
-      step1_evals: Evaluation metrics called after first stage
-      extender_evals: Evaluation metrics called after each extension step
-      step2_evals: Evaluation metrics called after stage 2
-      end_evals: Evaluation metrics called at the end of generation process
-      model_config: It's a parameter for internal use of Pydantic
+        model_storage: Model storage
+        extending_llm: Name of LLM for extending graph nodes
+        filling_llm: Name of LLM for adding missing edges
+        dialog_llm: Name of LLM used in dialog sampler
+        formatting_llm: Name of LLM for formatting other LLMs output
+        sim_model: HuggingFace name for similarity model
+        step: number of dialogs for one step
+        graph_generator: graph generator for the first stage
+        step1_evals: Evaluation metrics called after first stage
+        extender_evals: Evaluation metrics called after each extension step
+        step2_evals: Evaluation metrics called after stage 2
+        end_evals: Evaluation metrics called at the end of generation process
+        model_config: It's a parameter for internal use of Pydantic
     """
 
     model_storage: ModelStorage = Field(description="Model storage")
@@ -168,7 +178,7 @@ class LLMGraphExtender(GraphExtender):
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
     ) -> tuple[BaseGraph, metrics.DGReportType]:
-        """Primary method of the three stages generation algorithm.
+        """Invoke primary method of the three stages generation algorithm.
 
         Args:
             pipeline_data: data for generation and evaluation.

@@ -1,3 +1,10 @@
+"""
+Pipeline
+---------
+
+The module contains base pipeline class.
+"""
+
 import time
 from typing import Union, Tuple, Any
 from pydantic import BaseModel, Field
@@ -17,6 +24,9 @@ from dialogue2graph.metrics import compare_graphs_full, compare_graphs_light
 
 
 class BasePipeline(BaseModel):
+    # TODO: add docs
+    """Abstract class for base pipeline"""
+
     name: str = Field(description="Name of the pipeline")
     steps: list[
         Union[DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]
