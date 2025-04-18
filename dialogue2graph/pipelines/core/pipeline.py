@@ -25,7 +25,9 @@ class BasePipeline(BaseModel):
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, raw_data: PipelineRawDataType, enable_evals=False) -> Tuple[Any, PipelineReport]:
+    def invoke(
+        self, raw_data: PipelineRawDataType, enable_evals=False
+    ) -> Tuple[Any, PipelineReport]:
         data: PipelineDataType = RawDGParser().invoke(raw_data)
         report = PipelineReport(service=self.name)
         st_time = time.time()

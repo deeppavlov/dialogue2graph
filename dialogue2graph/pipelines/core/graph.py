@@ -127,7 +127,7 @@ class Graph(BaseGraph):
 
     def load_graph(self):
         """Load graph from dictionary representation into NetworkX DiGraph.
-        
+
         Creates a directed graph from the graph_dict, handling node and edge attributes.
         Also creates node mapping if node IDs need renumbering.
         """

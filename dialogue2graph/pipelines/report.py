@@ -11,8 +11,8 @@ init(autoreset=True)
 
 class PipelineReport(BaseModel):
     """
-    PipelineReport is a model for generating and managing reports for a service pipeline. 
-    It provides functionality to store properties, subreports, and export the report in 
+    PipelineReport is a model for generating and managing reports for a service pipeline.
+    It provides functionality to store properties, subreports, and export the report in
     various formats such as JSON, CSV, Markdown, and plain text.
 
     Attributes:
@@ -21,6 +21,7 @@ class PipelineReport(BaseModel):
         properties (dict): Dictionary containing essential report data such as time, metrics, etc.
         subreports (List[metrics.DGReportType]): List of subreports from pipeline steps.
     """
+
     model_config = ConfigDict(arbitrary_types_allowed=True)
     service: str = Field(description="Name of the service")
     properties: dict = Field(
