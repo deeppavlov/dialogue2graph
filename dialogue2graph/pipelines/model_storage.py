@@ -1,4 +1,5 @@
 import yaml
+import re
 import dotenv
 from pydantic._internal._model_construction import ModelMetaclass
 from typing import Union, Dict
@@ -182,10 +183,11 @@ class ModelStorage(BaseModel):
                 for model_key in self.storage:
                     storage_dump[model_key] = {}
                     storage_dump[model_key]["config"] = self.storage[model_key].config
-                    storage_dump[model_key]["model_type"] = self.storage[
-                        model_key
-                    ].model_type
-                    storage_dump[model_key]["config"].remove("api_key")
+                    storage_dump[model_key]["model_type"] = re.sub(
+                        r"<class '", "",
+                        str(self.storage[model_key].model_type)
+                        ).replace("'>", "").split(".")[-1]
+                    storage_dump[model_key]["config"].pop("api_key", None)
                 yaml.dump(storage_dump, f)
             logger.info(f"Saved {len(self.storage)} models to {path}")
         except Exception as e:
