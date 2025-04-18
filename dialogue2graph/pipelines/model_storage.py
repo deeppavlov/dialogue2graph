@@ -5,7 +5,7 @@ from typing import Literal, Union, Dict
 from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
 
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
 from langchain_huggingface import HuggingFaceEmbeddings
 

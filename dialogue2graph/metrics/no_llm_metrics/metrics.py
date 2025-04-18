@@ -299,15 +299,16 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
 
 
 def is_same_structure(G1: BaseGraph, G2: BaseGraph) -> bool:
-    # TODO: add docs
+    """
+    Check if graphs are isomorphic.
+
+    Args:
+        G1: BaseGraph object containing the dialogue graph
+        G2: BaseGraph object containing the dialogue graph
+    """
     g1 = G1.graph
     g2 = G2.graph
     return nx.is_isomorphic(g1, g2)
-
-
-def all_paths_sampled(G: BaseGraph, dialogue: Dialogue) -> bool:
-    # TODO: implement and add docs
-    return True
 
 
 def _get_dialogue_triplets(seq: list[Dialogue]) -> set[tuple[str]]:

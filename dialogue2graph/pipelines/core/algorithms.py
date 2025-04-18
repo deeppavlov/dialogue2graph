@@ -70,10 +70,10 @@ class DialogAugmentation(BaseAlgorithm):
         topic: The topic to guide the augmentation process (optional).
     """
 
-    def __init__(self) -> None:
-        super().__init__()
-
     def invoke(self, dialogue: Dialogue, topic: str = "") -> Dialogue:
+        raise NotImplementedError
+
+    async def ainvoke(self, dialogue: Dialogue, topic: str = "") -> Dialogue:
         raise NotImplementedError
 
 

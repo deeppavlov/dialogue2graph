@@ -16,7 +16,7 @@ from dialogue2graph.metrics.no_llm_metrics import (
     match_dg_triplets,
     match_dialogue_triplets,
 )
-from dialogue2graph.datasets.complex_dialogues.find_cycle_ends import find_cycle_ends
+from dialogue2graph.pipelines.helpers.find_cycle_ends import find_cycle_ends
 from langchain_core.language_models.chat_models import BaseChatModel
 
 logging.basicConfig(level=logging.INFO)

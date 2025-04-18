@@ -16,8 +16,16 @@ logger = logging.getLogger(__name__)
 
 
 class BaseGraph(BaseModel, abc.ABC):
-    # TODO: add docs
-    """Abstract graph class"""
+    """Base abstract class for graph representations of dialogues.
+
+    This class provides the interface for graph operations and manipulations.
+    It inherits from both BaseModel for data validation and ABC for abstract methods.
+
+    Attributes:
+        graph_dict (dict): Dictionary containing the graph structure with nodes and edges.
+        graph (Optional[nx.Graph]): NetworkX graph instance.
+        node_mapping (Optional[dict]): Mapping between original node IDs and internal representation.
+    """
 
     graph_dict: dict
     graph: Optional[nx.Graph] = None
@@ -87,11 +95,22 @@ class BaseGraph(BaseModel, abc.ABC):
 
 
 class Graph(BaseGraph):
-    # TODO: add docs
-    """Graph class"""
+    """Implementation of BaseGraph for dialogue graph operations.
+
+    This class provides concrete implementations for graph operations including
+    loading, visualization, path finding, and graph manipulation methods.
+
+    Attributes:
+        Inherits all attributes from BaseGraph.
+    """
 
     def __init__(self, graph_dict: dict, **kwargs: Any):
-        # Pass graph_dict to the parent class
+        """Initialize the Graph instance.
+
+        Args:
+            graph_dict (dict): Dictionary containing the graph structure.
+            **kwargs: Additional keyword arguments passed to parent class.
+        """
         super().__init__(graph_dict=graph_dict, **kwargs)
         if graph_dict:
             self.load_graph()
@@ -114,7 +133,11 @@ class Graph(BaseGraph):
         return seen == edge_set
 
     def load_graph(self):
-        # TODO: add docs
+        """Load graph from dictionary representation into NetworkX DiGraph.
+
+        Creates a directed graph from the graph_dict, handling node and edge attributes.
+        Also creates node mapping if node IDs need renumbering.
+        """
         self.graph = nx.DiGraph()
         nodes = sorted([v["id"] for v in self.graph_dict["nodes"]])
         logging.debug(f"Nodes: {nodes}")
@@ -158,7 +181,11 @@ class Graph(BaseGraph):
             )
 
     def visualise(self, *args, **kwargs):
-        # TODO: add docs
+        """Visualize the graph using matplotlib and networkx.
+
+        Creates a visualization of the graph with nodes and edges labeled with utterances.
+        Uses pygraphviz layout if available, falls back to kamada_kawai_layout.
+        """
         plt.figure(figsize=(17, 11))  # Make the plot bigger
         try:
             pos = nx.nx_agraph.pygraphviz_layout(self.graph)
@@ -188,7 +215,15 @@ class Graph(BaseGraph):
         plt.show()
 
     def visualise_short(self, name, *args, **kwargs):
-        # TODO: add docs
+        """Create a compact visualization of the graph.
+
+        Args:
+            name (str): Title for the visualization.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Creates a simplified visualization showing only node IDs and utterance counts.
+        """
         try:
             pos = nx.nx_agraph.pygraphviz_layout(self.graph)
         except ImportError as e:
@@ -227,34 +262,71 @@ class Graph(BaseGraph):
         plt.show()
 
     def find_nodes_by_utterance(self, utterance: str) -> list[dict]:
-        # TODO: add docs
+        """Find nodes containing a specific utterance.
+
+        Args:
+            utterance (str): The utterance to search for.
+
+        Returns:
+            list[dict]: List of nodes containing the utterance.
+        """
         return [
             node for node in self.graph_dict["nodes"] if utterance in node["utterances"]
         ]
 
     def find_edges_by_utterance(self, utterance: str) -> list[dict]:
-        # TODO: add docs
+        """Find edges containing a specific utterance.
+
+        Args:
+            utterance (str): The utterance to search for.
+
+        Returns:
+            list[dict]: List of edges containing the utterance.
+        """
         return [
             edge for edge in self.graph_dict["edges"] if utterance in edge["utterances"]
         ]
 
     def get_nodes_by_id(self, id: int):
-        # TODO: add docs
+        """Retrieve a node by its ID.
+
+        Args:
+            id (int): The ID of the node to retrieve.
+
+        Returns:
+            dict: The node with the specified ID if found, None otherwise.
+        """
         for node in self.graph_dict["nodes"]:
             if node["id"] == id:
                 return node
 
     def get_edges_by_source(self, id: int):
-        # TODO: add docs
+        """Get all edges originating from a specific node.
+
+        Args:
+            id (int): The ID of the source node.
+
+        Returns:
+            list[dict]: List of edges with the specified source node.
+        """
         return [edge for edge in self.graph_dict["edges"] if edge["source"] == id]
 
     def get_edges_by_target(self, id: int):
-        # TODO: add docs
+        """Get all edges targeting a specific node.
+
+        Args:
+            id (int): The ID of the target node.
+
+        Returns:
+            list[dict]: List of edges with the specified target node.
+        """
         return [edge for edge in self.graph_dict["edges"] if edge["target"] == id]
 
     def match_edges_nodes(self) -> bool:
-        """Checks whether source and target
-        of all the edges correspond to nodes
+        """Verify that all edge endpoints correspond to existing nodes.
+
+        Returns:
+            bool: True if all edge endpoints match existing nodes, False otherwise.
         """
         graph = self.graph_dict
 
@@ -269,7 +341,13 @@ class Graph(BaseGraph):
         return nodes_set == edges_set
 
     def remove_duplicated_edges(self) -> BaseGraph:
-        # TODO: add docs
+        """Remove duplicate edges between the same node pairs.
+
+        Combines utterances from duplicate edges into a single edge.
+
+        Returns:
+            BaseGraph: New graph instance with duplicate edges removed.
+        """
         graph = self.graph_dict
         edges = graph["edges"]
         node_couples = [(e["source"], e["target"]) for e in edges]
@@ -291,7 +369,12 @@ class Graph(BaseGraph):
         return Graph(self.graph_dict)
 
     def remove_duplicated_nodes(self) -> BaseGraph | None:
-        # TODO: add docs
+        """Remove duplicate nodes based on their utterances.
+
+        Returns:
+            BaseGraph | None: New graph instance with duplicate nodes removed,
+                            or None if invalid state is detected.
+        """
         graph = self.graph_dict
         nodes = graph["nodes"].copy()
         edges = graph["edges"].copy()
@@ -324,18 +407,16 @@ class Graph(BaseGraph):
     def get_all_paths(
         self, start_node_id: int, visited_nodes: list[int], repeats_limit: int
     ) -> list[list[int]]:
-        """Recursively find all the graph paths consisting of nodes ids
-        which start from node with id=start_node_id
-        and do not repeat last repeats_limit elements of the visited_nodes
+        """Find all possible paths in the graph from a starting node.
 
         Args:
-          visited_nodes: a path traveled so far
-          repeats_limit: recursion stopper with maximum length
-          of finishing sequence not to repeat on the path
+            start_node_id (int): ID of the starting node.
+            visited_nodes (list[int]): List of nodes already visited in the current path.
+            repeats_limit (int): Maximum number of times a sequence can repeat.
 
-        Returns: list of found paths
+        Returns:
+            list[list[int]]: List of all valid paths found.
         """
-
         if len(visited_nodes) >= repeats_limit and self._is_seq_in(
             visited_nodes[-repeats_limit:] + [start_node_id], visited_nodes
         ):
@@ -355,13 +436,15 @@ class Graph(BaseGraph):
     def find_paths(
         self, start_node_id: int, end_node_id: int, visited_nodes: list[int]
     ) -> list[list[int]]:
-        """Recursively find paths from start_node_id
-        where end_node_id on the path stops recursion
+        """Find all paths between two nodes in the graph.
 
         Args:
-            visited_nodes: a path traveled so far
+            start_node_id (int): ID of the starting node.
+            end_node_id (int): ID of the target node.
+            visited_nodes (list[int]): List of nodes already visited.
+
         Returns:
-            list of all paths from start_node_id which probably could be finishing by end_node_id
+            list[list[int]]: List of all paths found between start and end nodes.
         """
         visited_paths = [[]]
 
@@ -382,12 +465,13 @@ class Graph(BaseGraph):
         return visited_paths
 
     def get_ends(self) -> list[int]:
-        """Find finishing nodes which have no outgoing edges
+        """Find all terminal nodes in the graph.
+
+        Terminal nodes are those with no outgoing edges.
 
         Returns:
-            list of finishing nodes ids
+            list[int]: List of IDs of terminal nodes.
         """
-
         graph = self.graph_dict
         sources = list(set([g["source"] for g in graph["edges"]]))
         finishes = [g["id"] for g in graph["nodes"] if g["id"] not in sources]
@@ -405,10 +489,10 @@ class Graph(BaseGraph):
         return finishes
 
     def get_list_from_nodes(self) -> list[str]:
-        """Form auxiliary list from the graph nodes
+        """Create a list of concatenated utterances from all nodes.
 
         Returns:
-            list of concatenations of all nodes utterances
+            list[str]: List where each element is the concatenated utterances of a node.
         """
         graph = self.graph_dict
         result = []
@@ -422,11 +506,12 @@ class Graph(BaseGraph):
         return result
 
     def get_list_from_graph(self) -> tuple[list[str], int]:
-        """Form auxiliary data from the graph
+        """Create a list of concatenated utterances from nodes and their edges.
 
         Returns:
-          res_list: concatenation of utterances of every node and its outgoing edges
-          n_edges: total number of utterances in all edges
+            tuple[list[str], int]: Tuple containing:
+                - list of concatenated utterances
+                - total number of utterances in edges
         """
         graph = self.graph_dict
         res_list = []

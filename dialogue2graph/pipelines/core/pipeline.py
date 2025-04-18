@@ -6,7 +6,7 @@ The module contains base pipeline class.
 """
 
 import time
-from typing import Union
+from typing import Union, Tuple, Any
 from pydantic import BaseModel, Field
 from dialogue2graph.pipelines.core.algorithms import (
     DialogAugmentation,
@@ -35,7 +35,9 @@ class BasePipeline(BaseModel):
     def _validate_pipeline(self):
         pass
 
-    def invoke(self, raw_data: PipelineRawDataType, enable_evals=False):
+    def invoke(
+        self, raw_data: PipelineRawDataType, enable_evals=False
+    ) -> Tuple[Any, PipelineReport]:
         data: PipelineDataType = RawDGParser().invoke(raw_data)
         report = PipelineReport(service=self.name)
         st_time = time.time()
