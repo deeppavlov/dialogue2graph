@@ -125,10 +125,11 @@ class ModelStorage(BaseModel):
         """
         logger.debug("Current storage keys: %s", list(self.storage.keys()))
         if key in self.storage:
-            if not overwright:
+            if overwright:
+                logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
+            elif self.storage[key].model_type != model_type and self.storage[key].config != config:
+                logger.warning(f"Key '{key}' already exists in storage with different model type or config. Skipping.")
                 return
-            logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
-
         try:
             logger.debug(
                 "Initializing model %s for key '%s' with config: %s" % (model_type, key, config)
