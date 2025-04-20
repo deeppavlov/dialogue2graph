@@ -1,3 +1,3 @@
-from dialogue2graph.datasets.core import Dataset
+from dialogue2graph.datasets.complex_dialogues.generation import CycleGraphGenerator
 
-__all__ = ["Dataset"]
+__all__ = ["CycleGraphGenerator"]

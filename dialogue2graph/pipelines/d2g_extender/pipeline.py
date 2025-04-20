@@ -1,3 +1,10 @@
+"""
+D2GExtenderPipeline
+-------------------
+
+The module contains pipeline to extend dialog graphs.
+"""
+
 from typing import Callable
 from dotenv import load_dotenv
 

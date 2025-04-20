@@ -20,6 +20,12 @@ To install the **Dialogue2Graph** project, please follow the steps below:
     cd dialogue2graph
     poetry install
 
+- Consider installing `PyGraphviz` from `here <https://pygraphviz.github.io/>`_, if you are planning to visualize your graphs. Then add PyGraphviz to the poetry environment.
+
+.. code-block:: bash
+
+    poetry add pygraphviz
+
 - Ensure that dependencies were installed correctly by running any Python script
 
 .. code-block:: bash
@@ -31,6 +37,8 @@ To install the **Dialogue2Graph** project, please follow the steps below:
 .. note::
 
     Never hardcode your personal tokens and other sensitive credentials. Use the ``.env`` file to store them.
+
+- Explore :doc:`user guides page <userguides>` to start your work.
 
 Key Concepts
 ~~~~~~~~~~~~

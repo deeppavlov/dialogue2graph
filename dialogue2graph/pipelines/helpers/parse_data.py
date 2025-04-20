@@ -1,3 +1,10 @@
+"""
+Helper ParseData
+------------------
+
+The module contains parser to extract user data containing dialogues and graphs
+"""
+
 # from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
 import json
 from typing import List, Optional
@@ -38,11 +45,14 @@ class RawDGParser(RawDataParser):
     def _validate_raw_graph(
         self, raw_graph: RawGraphType
     ) -> ValidatedGraphType | PosixPath:
-        """Validates raw graph data
+        """Validate raw graph data
+
         Args:
-          raw_graph: graph in a form of either schemas.DialogueGraph or file path
-        Returns: schemas.DialogueGraph or PosixPath when raw_graph is file_path
-                 None when validation error
+            raw_graph: graph in a form of either schemas.DialogueGraph or file path
+
+        Returns:
+            schemas.DialogueGraph or PosixPath when raw_graph is file_path
+            None when validation error
         """
         if raw_graph is None:
             return None
@@ -55,22 +65,27 @@ class RawDGParser(RawDataParser):
     def _validate_raw_dialogs(
         self, raw_dialogs: RawDialogsType
     ) -> ValidatedDialogType | PosixPath:
-        """Validates raw dialogs data
+        """Validate raw dialogs data
+
         Args:
-          raw_dialogs: dialogs in a form of RawDialogsType
-        Returns: ValidatedDialogType or PosixPath when raw_dialogs is file_path
-                 Empty list when validation error
+            raw_dialogs: dialogs in a form of RawDialogsType
+
+        Returns:
+            ValidatedDialogType or PosixPath when raw_dialogs is file_path
+            Empty list when validation error
         """
         if raw_dialogs is None:
             raise ValueError("Raw dialogs data is None")
         return TypeAdapter(ValidatedDialogType | PosixPath).validate_python(raw_dialogs)
 
     def _get_dialogs_from_file(self, file_path: PosixPath) -> ValidatedDialogType:
-        """Extracts dialogs from file_path
+        """Extract dialogs from file_path
+
         Args:
-          file_path: file to work with
+            file_path: file to work with
+
         Returns:
-          validated dialogs or empty list if any error
+            validated dialogs or empty list if any error
         """
         if file_path.suffix == ".json":
             with open(file_path) as f:
@@ -90,12 +105,14 @@ class RawDGParser(RawDataParser):
     def _get_graph_from_file(
         self, file_path: PosixPath, key: str
     ) -> ValidatedGraphType:
-        """Extracts graph from file_path
+        """Extract graph from file_path
+
         Args:
-          file_path: file to work with
-          key: key to search graph data in a dict from file
+            file_path: file to work with
+            key: key to search graph data in a dict from file
+
         Returns:
-          validated graph or None if validation unsuccessful
+            validated graph or None if validation unsuccessful
         """
         if file_path.suffix != ".json":
             raise ValueError("File extension must be json: %s", file_path)
@@ -115,16 +132,18 @@ class RawDGParser(RawDataParser):
 
     def invoke(self, raw_data: PipelineRawDataType) -> PipelineDataType:
         """Validate and convert user's data into list of Dialogues
+
         Args:
-          raw_data: data to parse
-            raw_data.dialogues can be as follows:
-              [{'participant': user or assistant, 'text': text}]
-              {'messages': [{'participant': user or assistant, 'text': text}]}
-              [[{'participant': user or assistant, 'text': text}]]
-              [{'messages': [{'participant': user or assistant, 'text': text}]}]
-              or same in json file presented by file path
-            raw_data.supported_graph and raw_data.true_graph:
-              either schemas.DialogueGraph or file path
+            raw_data: data to parse
+                raw_data.dialogues can be as follows:
+                    [{'participant': user or assistant, 'text': text}]
+                    {'messages': [{'participant': user or assistant, 'text': text}]}
+                    [[{'participant': user or assistant, 'text': text}]]
+                    [{'messages': [{'participant': user or assistant, 'text': text}]}]
+                    or same in json file presented by file path
+                raw_data.supported_graph and raw_data.true_graph:
+                    either schemas.DialogueGraph or file path
+
         Returns: PipelineDataType with dialogues and graphs
         """
 

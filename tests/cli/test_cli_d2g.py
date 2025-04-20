@@ -11,7 +11,7 @@ from langchain_community.document_loaders import UnstructuredMarkdownLoader
 
 if not dotenv.find_dotenv():
     pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
-    
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__file__)
 
