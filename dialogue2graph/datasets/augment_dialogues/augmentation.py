@@ -15,6 +15,7 @@ logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
 class AugmentedTurn(BaseModel):
     """Dialogue turn to augment"""
+
     participant: str
     text: list[str] = Field(
         ..., description="List of utterance variations for this turn"
@@ -23,14 +24,15 @@ class AugmentedTurn(BaseModel):
 
 class DialogueSequence(BaseModel):
     """Result as dialogue sequence"""
+
     result: list[AugmentedTurn] = Field(..., description="Sequence of augmented turns")
 
 
 class DialogueAugmenter(DialogAugmentation):
     """Class for dialogue augmentation.
-    
+
     Augments dialogues while preserving structure and conversation flow by rephrasing original dialogue lines."""
-    
+
     model_storage: ModelStorage = Field(..., description="Model storage instance")
     generation_llm: str = Field(..., description="Key for generation LLM in storage")
     formatting_llm: str = Field(..., description="Key for formatting LLM in storage")
@@ -42,7 +44,7 @@ class DialogueAugmenter(DialogAugmentation):
         topic: str = "",
     ) -> Union[list[Dialogue], str]:
         """Augment dialogue while preserving conversation structure.
-        
+
         Args:
             dialogue: Input Dialogue object to augment
             prompt: Required augmentation prompt template
@@ -97,13 +99,8 @@ class DialogueAugmenter(DialogAugmentation):
     async def ainvoke(self, *args, **kwargs):
         """Async version of invoke"""
         return self.invoke(*args, **kwargs)
-    
-    async def evaluate(
-        self,
-        dialogue: Dialogue,
-        prompt: str,
-        topic: str = ""
-    ) -> dict:
+
+    async def evaluate(self, dialogue: Dialogue, prompt: str, topic: str = "") -> dict:
         """Evaluate augmentation quality with dictionary report format."""
         result = self.invoke(dialogue, prompt, topic)
 
@@ -126,8 +123,10 @@ class DialogueAugmenter(DialogAugmentation):
         if llm_key not in self.model_storage.storage:
             raise ValueError(f"LLM key '{llm_key}' not found in model storage")
         return self.model_storage.storage[llm_key].model
-    
-    def _combine_one_dialogue(self, augmentation_result: DialogueSequence, i: int) -> dict:
+
+    def _combine_one_dialogue(
+        self, augmentation_result: DialogueSequence, i: int
+    ) -> dict:
         """Combine new augmented dialogues from utterance variations"""
         new_augmented_dialogue = {}
         new_augmented_dialogue["messages"] = []
@@ -142,7 +141,7 @@ class DialogueAugmenter(DialogAugmentation):
 
         return new_augmented_dialogue
 
-    def _create_dialogues(self, result: dict) -> list[Dialogue]:        
+    def _create_dialogues(self, result: dict) -> list[Dialogue]:
         """Create a list of Dialogue objects"""
         try:
             augmentation_result = DialogueSequence(result=result)
