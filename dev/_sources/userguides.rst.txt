@@ -20,5 +20,5 @@ This generation guide demonstrates how we can generate a dialogue graph to a cer
    :hidden:
 
    userguides/basic_usage
-   userguides/model_storage
+   userguides/generate_graphs
    userguides/generate_synthetic
