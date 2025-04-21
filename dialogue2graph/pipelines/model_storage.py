@@ -19,10 +19,13 @@ dotenv.load_dotenv()
 
 class GetModelInstance:
     config: dict
+
     def __init__(self, config: dict):
         self.config = config
+
     def instantiate(self, class_name):
         return class_name(**self.config)
+
 
 class StoredData(BaseModel):
     """
@@ -45,9 +48,7 @@ class StoredData(BaseModel):
 
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
-    model_type: ModelMetaclass = Field(
-        description="Type of the stored model"
-    )
+    model_type: ModelMetaclass = Field(description="Type of the stored model")
     model: Union[HuggingFaceEmbeddings, BaseChatModel] = Field(
         description="Model object"
     )
@@ -106,37 +107,51 @@ class ModelStorage(BaseModel):
             logger.error(f"Failed to load model configurations from {path}: {e}")
             raise
 
-
     def add(
-        self, key: str, config: dict, model_type: ModelMetaclass, overwright: bool = False
+        self,
+        key: str,
+        config: dict,
+        model_type: ModelMetaclass,
+        overwright: bool = False,
     ):
         """
-        Add a new model configuration to the storage.
+                Add a new model configuration to the storage.
 
-        Args:
-            key (str): The unique identifier for the model configuration.
-            config (dict): The configuration dictionary for initializing the model.
-            model_type (ModelMetaclass): The type name of the model to be added.
-            overwright (bool): Whether to overwright model existing under same key
-.
-        Raises:
-            KeyError: If configuration keys are invalid for the specified model_type.
-            Exception: When adding model to the storage failed
+                Args:
+                    key (str): The unique identifier for the model configuration.
+                    config (dict): The configuration dictionary for initializing the model.
+                    model_type (ModelMetaclass): The type name of the model to be added.
+                    overwright (bool): Whether to overwright model existing under same key
+        .
+                Raises:
+                    KeyError: If configuration keys are invalid for the specified model_type.
+                    Exception: When adding model to the storage failed
         """
         logger.debug("Current storage keys: %s", list(self.storage.keys()))
         if key in self.storage:
             if overwright:
                 logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
-            elif self.storage[key].model_type != model_type and self.storage[key].config != config:
-                logger.warning(f"Key '{key}' already exists in storage with different model type or config. Skipping.")
+            else:
+                if (
+                    self.storage[key].model_type == model_type
+                    and self.storage[key].config == config
+                ):
+                    logger.warning(
+                        f"Key '{key}' already exists in storage with same config. Skipping."
+                    )
+                else:
+                    logger.warning(
+                        f"Key '{key}' already exists in storage with different model type or config. Skipping."
+                    )
                 return
         try:
             logger.debug(
-                "Initializing model %s for key '%s' with config: %s" % (model_type, key, config)
-                )
+                "Initializing model %s for key '%s' with config: %s"
+                % (model_type, key, config)
+            )
             if not all(p in model_type.model_fields.keys() for p in config):
                 raise KeyError(
-                        f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
+                    f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
                 )
             model_getter = GetModelInstance(config)
             model_instance = model_getter.instantiate(model_type)
@@ -150,7 +165,6 @@ class ModelStorage(BaseModel):
         except Exception as e:
             logger.error(f"Failed to add model '{key}' to storage: {e}", exc_info=True)
             raise
-        
 
     def save(self, path: str):
         """
@@ -166,10 +180,11 @@ class ModelStorage(BaseModel):
                 for model_key in self.storage:
                     storage_dump[model_key] = {}
                     storage_dump[model_key]["config"] = self.storage[model_key].config
-                    storage_dump[model_key]["model_type"] = re.sub(
-                        r"<class '", "",
-                        str(self.storage[model_key].model_type)
-                        ).replace("'>", "").split(".")[-1]
+                    storage_dump[model_key]["model_type"] = (
+                        re.sub(r"<class '", "", str(self.storage[model_key].model_type))
+                        .replace("'>", "")
+                        .split(".")[-1]
+                    )
                     storage_dump[model_key]["config"].pop("api_key", None)
                 yaml.dump(storage_dump, f)
             logger.info(f"Saved {len(self.storage)} models to {path}")

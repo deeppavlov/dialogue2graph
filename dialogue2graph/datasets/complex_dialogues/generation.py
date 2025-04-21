@@ -5,7 +5,6 @@ Generation
 The module provides graph generator capable of creating complex validated graphs.
 """
 
-import logging
 from enum import Enum
 from typing import Optional, Dict, Any, Union
 
@@ -63,6 +62,7 @@ PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 class CycleGraphGenerator(BaseModel):
     """Class for generating graph with cycles"""
+
     cache: Optional[Any] = Field(default=None, exclude=True)
 
     class Config:
@@ -100,6 +100,7 @@ class CycleGraphGenerator(BaseModel):
 
 class GenerationPipeline(BaseModel):
     """Class for generation pipeline"""
+
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
     theme_validation_model: BaseChatModel

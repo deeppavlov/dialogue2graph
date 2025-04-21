@@ -104,7 +104,6 @@ def _message_has_closing_llm(model: BaseChatModel, text: str) -> bool:
     return result.isClosing
 
 
-
 def is_greeting_repeated_emb_llm(
     dialogs: List[Dialogue],
     model_storage: ModelStorage,
@@ -128,7 +127,10 @@ def is_greeting_repeated_emb_llm(
         starts = START_TURNS
 
     if model_storage.storage.get(embedder_name):
-        if not model_storage.storage.get(embedder_name).model_type == HuggingFaceEmbeddings:
+        if (
+            not model_storage.storage.get(embedder_name).model_type
+            == HuggingFaceEmbeddings
+        ):
             raise TypeError(f"The {embedder_name} model is not an embedder")
         embedder_model = model_storage.storage[embedder_name].model
     else:
@@ -186,7 +188,10 @@ def is_dialog_closed_too_early_emb_llm(
         ends = END_TURNS
 
     if model_storage.storage.get(embedder_name):
-        if not model_storage.storage.get(embedder_name).model_type == HuggingFaceEmbeddings:
+        if (
+            not model_storage.storage.get(embedder_name).model_type
+            == HuggingFaceEmbeddings
+        ):
             raise TypeError(f"The {embedder_name} model is not an embedder")
         embedder_model = model_storage.storage[embedder_name].model
     else:

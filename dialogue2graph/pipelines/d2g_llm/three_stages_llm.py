@@ -43,6 +43,7 @@ class DialogueNodes(BaseModel):
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 logger = Logger(__file__)
 
+
 class LLMGraphGenerator(GraphGenerator):
     """Graph generator from list of dialogues. Based on LLM.
     Three stages:
