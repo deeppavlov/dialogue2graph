@@ -407,6 +407,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -471,6 +472,7 @@
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/index.html#dialogue2graph.datasets.complex_dialogues.generation.CycleGraphGenerator">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CycleGraphGenerator</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for generating graph with cycles&quot;&quot;&quot;</span>
+
     <span class="n">cache</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CycleGraphGenerator.Config">
@@ -523,6 +525,7 @@
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.GenerationPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">GenerationPipeline</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for generation pipeline&quot;&quot;&quot;</span>
+
     <span class="n">cache</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">generation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
     <span class="n">theme_validation_model</span><span class="p">:</span> <span class="n">BaseChatModel</span>
@@ -834,10 +837,20 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Graph generator for topic-based dialogue generation with model storage support&quot;&quot;&quot;</span>
 
     <span class="n">model_storage</span><span class="p">:</span> <span class="n">ModelStorage</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model storage&quot;</span><span class="p">)</span>
-    <span class="n">generation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for graph generation&quot;</span><span class="p">)</span>
-    <span class="n">validation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for validation&quot;</span><span class="p">)</span>
-    <span class="n">cycle_ends_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for dialog sampler to find cycle ends&quot;</span><span class="p">)</span>
-    <span class="n">theme_validation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for theme validation&quot;</span><span class="p">)</span>
+    <span class="n">generation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for graph generation&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;looped_graph_generation_llm:v1&quot;</span>
+    <span class="p">)</span>
+    <span class="n">validation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for validation&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;looped_graph_validation_llm:v1&quot;</span>
+    <span class="p">)</span>
+    <span class="n">cycle_ends_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for dialog sampler to find cycle ends&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;looped_graph_cycle_ends_llm:v1&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">theme_validation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for theme validation&quot;</span><span class="p">,</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;looped_graph_theme_validation_llm:v1&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">pipeline</span><span class="p">:</span> <span class="n">GenerationPipeline</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
@@ -848,6 +861,42 @@
         <span class="n">cycle_ends_llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">theme_validation_llm</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="c1"># check if models are in model storage</span>
+        <span class="c1"># if model is not in model storage put the default model there</span>
+        <span class="k">if</span> <span class="n">generation_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">generation_llm</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-latest&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_BASE_URL&quot;</span><span class="p">),</span>
+                <span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">validation_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">validation_llm</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_BASE_URL&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">theme_validation_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">theme_validation_llm</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_API_KEY&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;base_url&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;OPENAI_BASE_URL&quot;</span><span class="p">),</span>
+                    <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
             <span class="n">generation_llm</span><span class="o">=</span><span class="n">generation_llm</span><span class="p">,</span>

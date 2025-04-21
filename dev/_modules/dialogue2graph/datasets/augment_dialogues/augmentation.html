@@ -409,41 +409,45 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.algorithms</span><span class="w"> </span><span class="kn">import</span> <span class="n">DialogAugmentation</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.dialogue</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dialogue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_metrics.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">is_correct_length</span><span class="p">,</span> <span class="n">match_roles</span>
-    <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_metrics.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_correct_length</span><span class="p">,</span> <span class="n">match_roles</span>
 
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;langchain_core.vectorstores.base&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+
 
 <div class="viewcode-block" id="AugmentedTurn">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.AugmentedTurn">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">AugmentedTurn</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dialogue turn to augment&quot;&quot;&quot;</span>
+
     <span class="n">participant</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">text</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of utterance variations for this turn&quot;</span><span class="p">)</span></div>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of utterance variations for this turn&quot;</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="DialogueSequence">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueSequence">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DialogueSequence</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Result as dialogue sequence&quot;&quot;&quot;</span>
+
     <span class="n">result</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">AugmentedTurn</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Sequence of augmented turns&quot;</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="DialogueAugmenter">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DialogueAugmenter</span><span class="p">(</span><span class="n">DialogAugmentation</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for dialogue augmentation.</span>
-<span class="sd">    </span>
+
 <span class="sd">    Augments dialogues while preserving structure and conversation flow by rephrasing original dialogue lines.&quot;&quot;&quot;</span>
-    
+
     <span class="n">model_storage</span><span class="p">:</span> <span class="n">ModelStorage</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model storage instance&quot;</span><span class="p">)</span>
     <span class="n">generation_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Key for generation LLM in storage&quot;</span><span class="p">)</span>
     <span class="n">formatting_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Key for formatting LLM in storage&quot;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="DialogueAugmenter.invoke">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.invoke">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.invoke">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span>
@@ -451,33 +455,34 @@
         <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Dialogue</span><span class="p">],</span> <span class="nb">str</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Augment dialogue while preserving conversation structure.</span>
-<span class="sd">        </span>
+
 <span class="sd">        Args:</span>
 <span class="sd">            dialogue: Input Dialogue object to augment</span>
 <span class="sd">            prompt: Required augmentation prompt template</span>
 <span class="sd">            topic: Contextual topic for augmentation (default: empty)</span>
-<span class="sd">                 </span>
+
 <span class="sd">        Returns:</span>
 <span class="sd">            List of augmented Dialogue objects or error message</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">prompt</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;Preprocessing failed: prompt should be a valid instruction for LLM&#39;</span>
-            
+        <span class="k">if</span> <span class="n">prompt</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Preprocessing failed: prompt should be a valid instruction for LLM&quot;</span>
+
         <span class="k">try</span><span class="p">:</span>
             <span class="n">message_dicts</span> <span class="o">=</span> <span class="p">[</span><span class="n">msg</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span> <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">dialogue</span><span class="o">.</span><span class="n">messages</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">message_dicts</span> <span class="o">==</span> <span class="p">[]:</span>
-                <span class="k">return</span> <span class="s1">&#39;Preprocessing failed: no messages found in the dialogue&#39;</span>
-                        
+                <span class="k">return</span> <span class="s2">&quot;Preprocessing failed: no messages found in the dialogue&quot;</span>
+
             <span class="n">augmentation_prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
             <span class="n">parser</span> <span class="o">=</span> <span class="n">JsonOutputParser</span><span class="p">(</span><span class="n">pydantic_object</span><span class="o">=</span><span class="n">DialogueSequence</span><span class="p">)</span>
-            
+
             <span class="n">fixed_parser</span> <span class="o">=</span> <span class="n">OutputFixingParser</span><span class="o">.</span><span class="n">from_llm</span><span class="p">(</span>
-                <span class="n">parser</span><span class="o">=</span><span class="n">parser</span><span class="p">,</span>
-                <span class="n">llm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_llm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formatting_llm</span><span class="p">)</span>
+                <span class="n">parser</span><span class="o">=</span><span class="n">parser</span><span class="p">,</span> <span class="n">llm</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_llm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formatting_llm</span><span class="p">)</span>
             <span class="p">)</span>
 
-            <span class="n">chain</span> <span class="o">=</span> <span class="n">augmentation_prompt</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_llm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_llm</span><span class="p">)</span> <span class="o">|</span> <span class="n">fixed_parser</span>
-            
+            <span class="n">chain</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="n">augmentation_prompt</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_llm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">generation_llm</span><span class="p">)</span> <span class="o">|</span> <span class="n">fixed_parser</span>
+            <span class="p">)</span>
+
             <span class="k">for</span> <span class="n">attempt</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="n">topic</span><span class="p">,</span> <span class="s2">&quot;dialogue&quot;</span><span class="p">:</span> <span class="n">message_dicts</span><span class="p">})</span>
@@ -487,52 +492,47 @@
                     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                         <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error creating dialogues: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Post-processing failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-                
+
                 <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
-                    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation error attempt </span><span class="si">{</span><span class="n">attempt</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ve</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation error attempt </span><span class="si">{</span><span class="n">attempt</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">ve</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                     <span class="k">if</span> <span class="n">attempt</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
                         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Augmentation failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-                        
+
             <span class="k">return</span> <span class="s2">&quot;Augmentation failed after 3 attempts&quot;</span>
-            
+
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Critical error in augmentation pipeline&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Critical error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="DialogueAugmenter.ainvoke">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.ainvoke">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.ainvoke">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Async version of invoke&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-    
+
 <div class="viewcode-block" id="DialogueAugmenter.evaluate">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.evaluate">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span>
-        <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/datasets/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.evaluate">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">prompt</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluate augmentation quality with dictionary report format.&quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">dialogue</span><span class="p">,</span> <span class="n">prompt</span><span class="p">,</span> <span class="n">topic</span><span class="p">)</span>
-        
+
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="n">result</span><span class="p">}</span>
-        
-        <span class="n">report</span> <span class="o">=</span> <span class="p">{}</span>        
+
+        <span class="n">report</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">augmented_dialogue</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span>
-            <span class="k">try</span><span class="p">:</span>        
-                <span class="n">report</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;augmented_dialogue_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">report</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;augmented_dialogue_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
                     <span class="s2">&quot;match_roles&quot;</span><span class="p">:</span> <span class="n">match_roles</span><span class="p">(</span><span class="n">dialogue</span><span class="p">,</span> <span class="n">augmented_dialogue</span><span class="p">),</span>
-                    <span class="s2">&quot;correct_length&quot;</span><span class="p">:</span> <span class="n">is_correct_length</span><span class="p">(</span><span class="n">dialogue</span><span class="p">,</span> <span class="n">augmented_dialogue</span><span class="p">)</span>
+                    <span class="s2">&quot;correct_length&quot;</span><span class="p">:</span> <span class="n">is_correct_length</span><span class="p">(</span><span class="n">dialogue</span><span class="p">,</span> <span class="n">augmented_dialogue</span><span class="p">),</span>
                 <span class="p">}</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while calculating metrics: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>        
+                <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while calculating metrics: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">report</span></div>
 
 
@@ -541,11 +541,13 @@
         <span class="k">if</span> <span class="n">llm_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LLM key &#39;</span><span class="si">{</span><span class="n">llm_key</span><span class="si">}</span><span class="s2">&#39; not found in model storage&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">[</span><span class="n">llm_key</span><span class="p">]</span><span class="o">.</span><span class="n">model</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">_combine_one_dialogue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">augmentation_result</span><span class="p">:</span> <span class="n">DialogueSequence</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_combine_one_dialogue</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">augmentation_result</span><span class="p">:</span> <span class="n">DialogueSequence</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Combine new augmented dialogues from utterance variations&quot;&quot;&quot;</span>
         <span class="n">new_augmented_dialogue</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">new_augmented_dialogue</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">new_augmented_dialogue</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">roles_to_add</span> <span class="o">=</span> <span class="p">[</span><span class="n">turn</span><span class="o">.</span><span class="n">participant</span> <span class="k">for</span> <span class="n">turn</span> <span class="ow">in</span> <span class="n">augmentation_result</span><span class="o">.</span><span class="n">result</span><span class="p">]</span>
         <span class="n">utterances_to_add</span> <span class="o">=</span> <span class="p">[</span><span class="n">turn</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">turn</span> <span class="ow">in</span> <span class="n">augmentation_result</span><span class="o">.</span><span class="n">result</span><span class="p">]</span>
 
@@ -557,13 +559,13 @@
 
         <span class="k">return</span> <span class="n">new_augmented_dialogue</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_dialogues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dialogue</span><span class="p">]:</span>        
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_dialogues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dialogue</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a list of Dialogue objects&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">augmentation_result</span> <span class="o">=</span> <span class="n">DialogueSequence</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Wrong type of augmentation result: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Creating a list of Dialogue objects failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> 
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Creating a list of Dialogue objects failed: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
 
         <span class="n">utterances_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">turn</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">turn</span> <span class="ow">in</span> <span class="n">augmentation_result</span><span class="o">.</span><span class="n">result</span><span class="p">]</span>
         <span class="n">lens</span> <span class="o">=</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">uttr_list</span><span class="p">)</span> <span class="k">for</span> <span class="n">uttr_list</span> <span class="ow">in</span> <span class="n">utterances_lists</span><span class="p">]</span>
@@ -572,8 +574,11 @@
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">lens</span><span class="p">)):</span>
             <span class="n">new_augmented_dialogue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_combine_one_dialogue</span><span class="p">(</span><span class="n">augmentation_result</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
             <span class="n">augmented_dialogues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_augmented_dialogue</span><span class="p">)</span>
-        
-        <span class="k">return</span> <span class="p">[</span><span class="n">Dialogue</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">new_augmented_dialogue</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">])</span> <span class="k">for</span> <span class="n">new_augmented_dialogue</span> <span class="ow">in</span> <span class="n">augmented_dialogues</span><span class="p">]</span></div>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">Dialogue</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">new_augmented_dialogue</span><span class="p">[</span><span class="s2">&quot;messages&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">new_augmented_dialogue</span> <span class="ow">in</span> <span class="n">augmented_dialogues</span>
+        <span class="p">]</span></div>
 
 </pre></div>
 

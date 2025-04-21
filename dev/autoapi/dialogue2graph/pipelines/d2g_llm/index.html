@@ -465,6 +465,292 @@
 </ul>
 </div>
 </section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline" title="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">D2GLLMPipeline</span></code></a></p></td>
+<td><p>D2GLLMPipeline is a pipeline class for generating graphs based on provided dialogues using LLMs.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a></p></td>
+<td><p>Graph generator from list of dialogues. Based on LLM.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.d2g_llm.</span></span><span class="sig-name descname"><span class="pre">D2GLLMPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_storage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><span class="pre">dialogue2graph.pipelines.model_storage.ModelStorage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'three_stages_grouping_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filling_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'three_stages_filling_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatting_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'three_stages_formatting_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'three_stages_sim_model:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step2_evals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_evals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/d2g_llm/pipeline.html#D2GLLMPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../core/pipeline/index.html#dialogue2graph.pipelines.core.pipeline.BasePipeline" title="dialogue2graph.pipelines.core.pipeline.BasePipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dialogue2graph.pipelines.core.pipeline.BasePipeline</span></code></a></p>
+<p>D2GLLMPipeline is a pipeline class for generating graphs based on provided dialogues using LLMs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><strong>model_storage</strong> (<a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><em>dialogue2graph.pipelines.model_storage.ModelStorage</em></a>)</p></li>
+<li><p><strong>grouping_llm</strong> (<em>str</em>)</p></li>
+<li><p><strong>filling_llm</strong> (<em>str</em>)</p></li>
+<li><p><strong>formatting_llm</strong> (<em>str</em>)</p></li>
+<li><p><strong>sim_model</strong> (<em>str</em>)</p></li>
+<li><p><strong>step2_evals</strong> (<em>list</em><em>[</em><em>Callable</em><em>]</em>)</p></li>
+<li><p><strong>end_evals</strong> (<em>list</em><em>[</em><em>Callable</em><em>]</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.name" title="Link to this definition">#</a></dt>
+<dd><p>The name of the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.model_storage">
+<span class="sig-name descname"><span class="pre">model_storage</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.model_storage" title="Link to this definition">#</a></dt>
+<dd><p>An object to manage and store models used in the pipeline.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage">ModelStorage</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.grouping_llm">
+<span class="sig-name descname"><span class="pre">grouping_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.grouping_llm" title="Link to this definition">#</a></dt>
+<dd><p>The key for the grouping LLM model in the model storage. Defaults to “d2g_llm_grouping_llm:v1”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.filling_llm">
+<span class="sig-name descname"><span class="pre">filling_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.filling_llm" title="Link to this definition">#</a></dt>
+<dd><p>The key for the filling LLM model in the model storage. Defaults to “d2g_llm_filling_llm:v1”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.formatting_llm">
+<span class="sig-name descname"><span class="pre">formatting_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.formatting_llm" title="Link to this definition">#</a></dt>
+<dd><p>The key for the formatting LLM model in the model storage. Defaults to “d2g_llm_formatting_llm:v1”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.sim_model">
+<span class="sig-name descname"><span class="pre">sim_model</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.sim_model" title="Link to this definition">#</a></dt>
+<dd><p>The key for the similarity embedder model in the model storage. Defaults to “d2g_llm_sim_model:v1”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.step2_evals">
+<span class="sig-name descname"><span class="pre">step2_evals</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.step2_evals" title="Link to this definition">#</a></dt>
+<dd><p>A list of evaluation functions to be applied at step 2 of the pipeline. Defaults to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Callable], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.end_evals">
+<span class="sig-name descname"><span class="pre">end_evals</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.end_evals" title="Link to this definition">#</a></dt>
+<dd><p>A list of evaluation functions to be applied at the end of the pipeline. Defaults to None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[Callable], optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.d2g_llm.</span></span><span class="sig-name descname"><span class="pre">LLMGraphGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_storage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><span class="pre">dialogue2graph.pipelines.model_storage.ModelStorage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">grouping_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filling_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">formatting_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sim_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step2_evals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_evals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/d2g_llm/three_stages_llm.html#LLMGraphGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.GraphGenerator" title="dialogue2graph.pipelines.core.algorithms.GraphGenerator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dialogue2graph.pipelines.core.algorithms.GraphGenerator</span></code></a></p>
+<p>Graph generator from list of dialogues. Based on LLM.
+Three stages:</p>
+<ol class="arabic simple">
+<li><p>LLM grouping assistant utterances into nodes.</p></li>
+<li><p>Algorithmic connecting nodes by edges.</p></li>
+<li><p>If one of dialogues ends with user’s utterance, ask LLM to add missing edges.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_storage</strong> (<a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><em>dialogue2graph.pipelines.model_storage.ModelStorage</em></a>)</p></li>
+<li><p><strong>grouping_llm</strong> (<em>str</em>)</p></li>
+<li><p><strong>filling_llm</strong> (<em>str</em>)</p></li>
+<li><p><strong>formatting_llm</strong> (<em>str</em>)</p></li>
+<li><p><strong>sim_model</strong> (<em>str</em>)</p></li>
+<li><p><strong>step2_evals</strong> (<em>list</em><em>[</em><em>Callable</em><em>] </em><em>| </em><em>None</em>)</p></li>
+<li><p><strong>end_evals</strong> (<em>list</em><em>[</em><em>Callable</em><em>] </em><em>| </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.model_storage">
+<span class="sig-name descname"><span class="pre">model_storage</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.model_storage" title="Link to this definition">#</a></dt>
+<dd><p>Model storage</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.grouping_llm">
+<span class="sig-name descname"><span class="pre">grouping_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.grouping_llm" title="Link to this definition">#</a></dt>
+<dd><p>Name of LLM for grouping assistant utterances into nodes</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.filling_llm">
+<span class="sig-name descname"><span class="pre">filling_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.filling_llm" title="Link to this definition">#</a></dt>
+<dd><p>Name of LLM for adding missing edges</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.formatting_llm">
+<span class="sig-name descname"><span class="pre">formatting_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.formatting_llm" title="Link to this definition">#</a></dt>
+<dd><p>Name of LLM for formatting other LLMs output</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.sim_model">
+<span class="sig-name descname"><span class="pre">sim_model</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.sim_model" title="Link to this definition">#</a></dt>
+<dd><p>HuggingFace name for similarity model</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.step2_evals">
+<span class="sig-name descname"><span class="pre">step2_evals</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.step2_evals" title="Link to this definition">#</a></dt>
+<dd><p>Evaluation metrics called after stage 2 with connecting nodes by edges</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.end_evals">
+<span class="sig-name descname"><span class="pre">end_evals</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.end_evals" title="Link to this definition">#</a></dt>
+<dd><p>Evaluation metrics called at the end of generation process</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.model_config" title="Link to this definition">#</a></dt>
+<dd><p>It’s a parameter for internal use of Pydantic</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">model_storage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><span class="pre">dialogue2graph.pipelines.model_storage.ModelStorage</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">grouping_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">filling_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">formatting_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id3" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">sim_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id4" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">step2_evals</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id5" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">end_evals</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id6" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">model_config</span></span><a class="headerlink" href="#id7" title="Link to this definition">#</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pipeline_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dialogue2graph.pipelines.helpers.parse_data.PipelineDataType</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_evals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/graph/index.html#dialogue2graph.pipelines.core.graph.BaseGraph" title="dialogue2graph.pipelines.core.graph.BaseGraph"><span class="pre">dialogue2graph.pipelines.core.graph.BaseGraph</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dialogue2graph.metrics.DGReportType</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/d2g_llm/three_stages_llm.html#LLMGraphGenerator.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.invoke" title="Link to this definition">#</a></dt>
+<dd><p>Invoke primary method of the three stages generation algorithm:</p>
+<ol class="arabic simple">
+<li><p>Grouping assistant utterances into nodes with LLM.</p></li>
+<li><p>Algorithmic connecting nodes by edges: connect_nodes.</p></li>
+<li><p>If one of dialogues ends with user’s utterance, ask LLM to add missing edges.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pipeline_data</strong> (<em>dialogue2graph.pipelines.helpers.parse_data.PipelineDataType</em>)</p></li>
+<li><p><strong>evaluation</strong> (<em>data for generation and</em>) – dialogs for generation, of List[Dialogue] type
+true_graph for evaluation, of Graph type</p></li>
+<li><p><strong>enable_evals</strong> (<em>bool</em>) – when true, evaluate method is called</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>{‘value’: False, ‘description’: ‘Numbers of nodes do not match: 7 != 8’}</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple of resulted graph of Graph type and report dictionary like in example below</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.ainvoke">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ainvoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/d2g_llm/three_stages_llm.html#LLMGraphGenerator.ainvoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.ainvoke" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gt_graph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eval_stage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dialogue2graph.metrics.DGReportType</span></span></span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/d2g_llm/three_stages_llm.html#LLMGraphGenerator.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.evaluate" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eval_stage</strong> (<em>str</em>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dialogue2graph.metrics.DGReportType</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -515,6 +801,43 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.name"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.model_storage"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.model_storage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.grouping_llm"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.grouping_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.filling_llm"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.filling_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.formatting_llm"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.formatting_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.sim_model"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.sim_model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.step2_evals"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.step2_evals</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.D2GLLMPipeline.end_evals"><code class="docutils literal notranslate"><span class="pre">D2GLLMPipeline.end_evals</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.model_storage"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.model_storage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.grouping_llm"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.grouping_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.filling_llm"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.filling_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.formatting_llm"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.formatting_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.sim_model"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.sim_model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.step2_evals"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.step2_evals</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.end_evals"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.end_evals</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.model_config"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.model_config</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.model_storage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.grouping_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.filling_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.formatting_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id4"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.sim_model</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id5"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.step2_evals</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id6"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.end_evals</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id7"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.model_config</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.invoke"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.invoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.ainvoke"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.ainvoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator.evaluate"><code class="docutils literal notranslate"><span class="pre">LLMGraphGenerator.evaluate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

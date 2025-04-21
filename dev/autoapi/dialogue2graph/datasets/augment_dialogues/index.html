@@ -464,6 +464,93 @@
 </ul>
 </div>
 </section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter" title="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DialogueAugmenter</span></code></a></p></td>
+<td><p>Class for dialogue augmentation.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="package-contents">
+<h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.datasets.augment_dialogues.</span></span><span class="sig-name descname"><span class="pre">DialogueAugmenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**data:</span> <span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/datasets/augment_dialogues/augmentation.html#DialogueAugmenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../../pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.DialogAugmentation" title="dialogue2graph.pipelines.core.algorithms.DialogAugmentation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dialogue2graph.pipelines.core.algorithms.DialogAugmentation</span></code></a></p>
+<p>Class for dialogue augmentation.</p>
+<p>Augments dialogues while preserving structure and conversation flow by rephrasing original dialogue lines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>Any</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.model_storage">
+<span class="sig-name descname"><span class="pre">model_storage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="../../pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><span class="pre">dialogue2graph.pipelines.model_storage.ModelStorage</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.model_storage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.generation_llm">
+<span class="sig-name descname"><span class="pre">generation_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.generation_llm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.formatting_llm">
+<span class="sig-name descname"><span class="pre">formatting_llm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.formatting_llm" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.invoke">
+<span class="sig-name descname"><span class="pre">invoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dialogue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><span class="pre">dialogue2graph.pipelines.core.dialogue.Dialogue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../../pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><span class="pre">dialogue2graph.pipelines.core.dialogue.Dialogue</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="../../../../_modules/dialogue2graph/datasets/augment_dialogues/augmentation.html#DialogueAugmenter.invoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.invoke" title="Link to this definition">#</a></dt>
+<dd><p>Augment dialogue while preserving conversation structure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dialogue</strong> (<a class="reference internal" href="../../pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><em>dialogue2graph.pipelines.core.dialogue.Dialogue</em></a>) – Input Dialogue object to augment</p></li>
+<li><p><strong>prompt</strong> (<em>str</em>) – Required augmentation prompt template</p></li>
+<li><p><strong>topic</strong> (<em>str</em>) – Contextual topic for augmentation (default: empty)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of augmented Dialogue objects or error message</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[list[<a class="reference internal" href="../../pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue">dialogue2graph.pipelines.core.dialogue.Dialogue</a>], str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.ainvoke">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ainvoke</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/datasets/augment_dialogues/augmentation.html#DialogueAugmenter.ainvoke"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.ainvoke" title="Link to this definition">#</a></dt>
+<dd><p>Async version of invoke</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.evaluate">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dialogue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../../pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><span class="pre">dialogue2graph.pipelines.core.dialogue.Dialogue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">topic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../../../_modules/dialogue2graph/datasets/augment_dialogues/augmentation.html#DialogueAugmenter.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.evaluate" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate augmentation quality with dictionary report format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dialogue</strong> (<a class="reference internal" href="../../pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><em>dialogue2graph.pipelines.core.dialogue.Dialogue</em></a>)</p></li>
+<li><p><strong>prompt</strong> (<em>str</em>)</p></li>
+<li><p><strong>topic</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -514,6 +601,19 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#package-contents">Package Contents</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter"><code class="docutils literal notranslate"><span class="pre">DialogueAugmenter</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.model_storage"><code class="docutils literal notranslate"><span class="pre">DialogueAugmenter.model_storage</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.generation_llm"><code class="docutils literal notranslate"><span class="pre">DialogueAugmenter.generation_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.formatting_llm"><code class="docutils literal notranslate"><span class="pre">DialogueAugmenter.formatting_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.invoke"><code class="docutils literal notranslate"><span class="pre">DialogueAugmenter.invoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.ainvoke"><code class="docutils literal notranslate"><span class="pre">DialogueAugmenter.ainvoke()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.datasets.augment_dialogues.DialogueAugmenter.evaluate"><code class="docutils literal notranslate"><span class="pre">DialogueAugmenter.evaluate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
   </nav></div>
 

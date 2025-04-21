@@ -20,6 +20,7 @@ Classes
 .. autoapisummary::
 
    dialogue2graph.datasets.CycleGraphGenerator
+   dialogue2graph.datasets.DialogueAugmenter
 
 
 Package Contents
@@ -67,5 +68,61 @@ Package Contents
 
 
    .. py:method:: evaluate(*args, report_type='dict', **kwargs)
+
+
+.. py:class:: DialogueAugmenter(/, **data: Any)
+
+   Bases: :py:obj:`dialogue2graph.pipelines.core.algorithms.DialogAugmentation`
+
+
+   Class for dialogue augmentation.
+
+   Augments dialogues while preserving structure and conversation flow by rephrasing original dialogue lines.
+
+
+   .. py:attribute:: model_storage
+      :type:  dialogue2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: generation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: formatting_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:method:: invoke(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue, prompt: str, topic: str = '') -> Union[list[dialogue2graph.pipelines.core.dialogue.Dialogue], str]
+
+      Augment dialogue while preserving conversation structure.
+
+      :param dialogue: Input Dialogue object to augment
+      :param prompt: Required augmentation prompt template
+      :param topic: Contextual topic for augmentation (default: empty)
+
+      :returns: List of augmented Dialogue objects or error message
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+      Async version of invoke
+
+
+
+   .. py:method:: evaluate(dialogue: dialogue2graph.pipelines.core.dialogue.Dialogue, prompt: str, topic: str = '') -> dict
+      :async:
+
+
+      Evaluate augmentation quality with dictionary report format.
+
 
 

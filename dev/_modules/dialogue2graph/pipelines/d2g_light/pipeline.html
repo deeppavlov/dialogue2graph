@@ -416,7 +416,7 @@
 
 
 <div class="viewcode-block" id="D2GLightPipeline">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_light/pipeline/index.html#dialogue2graph.pipelines.d2g_light.pipeline.D2GLightPipeline">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_light/pipeline/index.html#dialogue2graph.pipelines.d2g_light.D2GLightPipeline">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">D2GLightPipeline</span><span class="p">(</span><span class="n">BasePipeline</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Light graph generator pipeline&quot;&quot;&quot;</span>
 
@@ -424,34 +424,12 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">model_storage</span><span class="p">:</span> <span class="n">ModelStorage</span><span class="p">,</span>
-        <span class="n">filling_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;d2g_light_filling_llm:v1&quot;</span><span class="p">,</span>
-        <span class="n">formatting_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;d2g_light_formatting_llm:v1&quot;</span><span class="p">,</span>
-        <span class="n">sim_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;d2g_light_sim_model:v1&quot;</span><span class="p">,</span>
+        <span class="n">filling_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;three_stages_light_filling_llm:v1&quot;</span><span class="p">,</span>
+        <span class="n">formatting_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;three_stages_light_formatting_llm:v1&quot;</span><span class="p">,</span>
+        <span class="n">sim_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;three_stages_light_sim_model:v1&quot;</span><span class="p">,</span>
         <span class="n">step2_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">end_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="c1"># check if models are in model storage</span>
-        <span class="c1"># if model is not in model storage put the default model there</span>
-        <span class="k">if</span> <span class="n">filling_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
-            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                <span class="n">key</span><span class="o">=</span><span class="n">filling_llm</span><span class="p">,</span>
-                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;chatgpt-4o-latest&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">formatting_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
-            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                <span class="n">key</span><span class="o">=</span><span class="n">formatting_llm</span><span class="p">,</span>
-                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">sim_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
-            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
-                <span class="n">key</span><span class="o">=</span><span class="n">sim_model</span><span class="p">,</span>
-                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;BAAI/bge-m3&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu&quot;</span><span class="p">},</span>
-                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;emb&quot;</span><span class="p">,</span>
-            <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
             <span class="n">steps</span><span class="o">=</span><span class="p">[</span>

@@ -478,7 +478,7 @@
 <h2>Package Contents<a class="headerlink" href="#package-contents" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.topic_generation.</span></span><span class="sig-name descname"><span class="pre">TopicGenerationPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_storage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><span class="pre">dialogue2graph.pipelines.model_storage.ModelStorage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'topic_generation_gen_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'topic_generation_val_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'topic_generation_theme_val_llm:v1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/topic_generation/pipeline.html#TopicGenerationPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.topic_generation.</span></span><span class="sig-name descname"><span class="pre">TopicGenerationPipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_storage</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><span class="pre">dialogue2graph.pipelines.model_storage.ModelStorage</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">generation_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'looped_graph_generation_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'looped_graph_validation_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cycle_ends_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'looped_graph_cycle_ends_llm:v1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theme_validation_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'looped_graph_theme_validation_llm:v1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/topic_generation/pipeline.html#TopicGenerationPipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="../core/pipeline/index.html#dialogue2graph.pipelines.core.pipeline.BasePipeline" title="dialogue2graph.pipelines.core.pipeline.BasePipeline"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dialogue2graph.pipelines.core.pipeline.BasePipeline</span></code></a></p>
 <p>Pipeline for generating dialogue graph based on a given topic.</p>
 <p>This pipeline utilizes multiple language models (LLMs) for topic generation,
@@ -490,6 +490,7 @@ in the provided model storage, default configurations are added.</p>
 <li><p><strong>model_storage</strong> (<a class="reference internal" href="../model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><em>dialogue2graph.pipelines.model_storage.ModelStorage</em></a>)</p></li>
 <li><p><strong>generation_llm</strong> (<em>str</em>)</p></li>
 <li><p><strong>validation_llm</strong> (<em>str</em>)</p></li>
+<li><p><strong>cycle_ends_llm</strong> (<em>str</em>)</p></li>
 <li><p><strong>theme_validation_llm</strong> (<em>str</em>)</p></li>
 </ul>
 </dd>
@@ -508,7 +509,7 @@ in the provided model storage, default configurations are added.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.generation_llm">
 <span class="sig-name descname"><span class="pre">generation_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.generation_llm" title="Link to this definition">#</a></dt>
-<dd><p>Key for the LLM used for topic generation. Defaults to “topic_generation_gen_llm:v1”.</p>
+<dd><p>Key for the LLM used for topic generation. Defaults to “looped_graph_generation_llm:v1”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
@@ -519,7 +520,18 @@ in the provided model storage, default configurations are added.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.validation_llm">
 <span class="sig-name descname"><span class="pre">validation_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.validation_llm" title="Link to this definition">#</a></dt>
-<dd><p>Key for the LLM used for validation. Defaults to “topic_generation_val_llm:v1”.</p>
+<dd><p>Key for the LLM used for validation. Defaults to “looped_graph_validation_llm:v1”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.cycle_ends_llm">
+<span class="sig-name descname"><span class="pre">cycle_ends_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.cycle_ends_llm" title="Link to this definition">#</a></dt>
+<dd><p>Key for the LLM for dialog sampler to find cycle ends. Defaults to “looped_graph_cycle_ends_llm:v1.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
@@ -530,7 +542,7 @@ in the provided model storage, default configurations are added.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.theme_validation_llm">
 <span class="sig-name descname"><span class="pre">theme_validation_llm</span></span><a class="headerlink" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.theme_validation_llm" title="Link to this definition">#</a></dt>
-<dd><p>Key for the LLM used for theme validation. Defaults to “topic_generation_theme_val_llm:v1”.</p>
+<dd><p>Key for the LLM used for theme validation. Defaults to “looped_graph_theme_validation_llm:v1”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
@@ -641,6 +653,7 @@ Executes the pipeline for a given topic and saves the output to the specified pa
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.model_storage"><code class="docutils literal notranslate"><span class="pre">TopicGenerationPipeline.model_storage</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.generation_llm"><code class="docutils literal notranslate"><span class="pre">TopicGenerationPipeline.generation_llm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.validation_llm"><code class="docutils literal notranslate"><span class="pre">TopicGenerationPipeline.validation_llm</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.cycle_ends_llm"><code class="docutils literal notranslate"><span class="pre">TopicGenerationPipeline.cycle_ends_llm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.theme_validation_llm"><code class="docutils literal notranslate"><span class="pre">TopicGenerationPipeline.theme_validation_llm</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.topic_generation.TopicGenerationPipeline.invoke"><code class="docutils literal notranslate"><span class="pre">TopicGenerationPipeline.invoke()</span></code></a></li>
 </ul>

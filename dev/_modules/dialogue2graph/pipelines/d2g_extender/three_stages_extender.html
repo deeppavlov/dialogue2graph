@@ -436,7 +436,7 @@
 
 
 <div class="viewcode-block" id="DialogueNodes">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.three_stages_extender.DialogueNodes">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.DialogueNodes">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">DialogueNodes</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class for dialog nodes&quot;&quot;&quot;</span>
 
@@ -452,7 +452,7 @@
 
 
 <div class="viewcode-block" id="LLMGraphExtender">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.three_stages_extender.LLMGraphExtender">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.LLMGraphExtender">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">LLMGraphExtender</span><span class="p">(</span><span class="n">GraphExtender</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Graph generator which iteratively takes step dialogues and adds them to graph</span>
 <span class="sd">    generated on the previous step. First step is done with LightGraphGenerator or taken from</span>
@@ -484,11 +484,21 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">model_storage</span><span class="p">:</span> <span class="n">ModelStorage</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model storage&quot;</span><span class="p">)</span>
-    <span class="n">extending_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for extending graph nodes&quot;</span><span class="p">)</span>
-    <span class="n">filling_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for adding missing edges&quot;</span><span class="p">)</span>
-    <span class="n">formatting_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for formatting output&quot;</span><span class="p">)</span>
-    <span class="n">dialog_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for dialog sampler&quot;</span><span class="p">)</span>
-    <span class="n">sim_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Similarity model&quot;</span><span class="p">)</span>
+    <span class="n">extending_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for extending graph nodes&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;extender_extending_llm:v1&quot;</span>
+    <span class="p">)</span>
+    <span class="n">filling_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for adding missing edges&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;extender_filling_llm:v1&quot;</span>
+    <span class="p">)</span>
+    <span class="n">formatting_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for formatting output&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;extender_formatting_llm:v1&quot;</span>
+    <span class="p">)</span>
+    <span class="n">dialog_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;LLM for dialog sampler&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;extender_dialog_llm:v1&quot;</span>
+    <span class="p">)</span>
+    <span class="n">sim_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Similarity model&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;extender_sim_model:v1&quot;</span>
+    <span class="p">)</span>
     <span class="n">step</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">graph_generator</span><span class="p">:</span> <span class="n">LightGraphGenerator</span>
     <span class="n">step1_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span>
@@ -511,6 +521,42 @@
         <span class="n">end_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">],</span>
         <span class="n">step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="c1"># check if models are in model storage</span>
+        <span class="c1"># if model is not in model storage put the default model there</span>
+        <span class="k">if</span> <span class="n">extending_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">extending_llm</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-latest&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">filling_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">filling_llm</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;o3-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">formatting_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">formatting_llm</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">dialog_llm</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">dialog_llm</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;o3-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sim_model</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">model_storage</span><span class="o">.</span><span class="n">storage</span><span class="p">:</span>
+            <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                <span class="n">key</span><span class="o">=</span><span class="n">sim_model</span><span class="p">,</span>
+                <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;BAAI/bge-m3&quot;</span><span class="p">,</span> <span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu&quot;</span><span class="p">},</span>
+                <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;emb&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
             <span class="n">extending_llm</span><span class="o">=</span><span class="n">extending_llm</span><span class="p">,</span>
@@ -582,7 +628,7 @@
         <span class="k">return</span> <span class="n">Graph</span><span class="p">({</span><span class="s2">&quot;edges&quot;</span><span class="p">:</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;edges&quot;</span><span class="p">],</span> <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="n">graph_dict</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">]})</span>
 
 <div class="viewcode-block" id="LLMGraphExtender.invoke">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.three_stages_extender.LLMGraphExtender.invoke">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.LLMGraphExtender.invoke">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">pipeline_data</span><span class="p">:</span> <span class="n">PipelineDataType</span><span class="p">,</span> <span class="n">enable_evals</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">BaseGraph</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">DGReportType</span><span class="p">]:</span>
@@ -674,13 +720,13 @@
         <span class="k">return</span> <span class="n">Graph</span><span class="p">({})</span>
 
 <div class="viewcode-block" id="LLMGraphExtender.ainvoke">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.three_stages_extender.LLMGraphExtender.ainvoke">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.LLMGraphExtender.ainvoke">[docs]</a>
     <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="LLMGraphExtender.evaluate">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.three_stages_extender.LLMGraphExtender.evaluate">[docs]</a>
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/d2g_extender/three_stages_extender/index.html#dialogue2graph.pipelines.d2g_extender.LLMGraphExtender.evaluate">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">gt_graph</span><span class="p">,</span> <span class="n">eval_stage</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">metrics</span><span class="o">.</span><span class="n">DGReportType</span><span class="p">:</span>
         <span class="n">report</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eval_stage</span> <span class="o">+</span> <span class="s2">&quot;_evals&quot;</span><span class="p">):</span>
