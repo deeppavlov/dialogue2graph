@@ -1,138 +1,107 @@
-# chatsky-llm-integration
-Chatsky LLM-Autoconfig allows you to effortlessly create chatsky flows and scripts from dialogues using Large Language Models.
+# Dialogue2Graph
 
-### How to start?
-You can simply clone this repo and run poetry install to install all dependencies
+Dialogue2Graph allows you to effortlessly create *chatsky flows* and scripts from dialogues using Large Language Models.
+
+## Contents
+
+```
+./dialogue2graph - source code
+./examples - usage scenarios
+./experiments - test field for conducting experiments
+./prompt_cache - utils for LLM output caching
+./scripts - scripts for `poethepoet` automation 
+```
+
+## Current Progress
+
+Supported graph types:
+
+- [x]  chain
+- [x]  single cycle
+- [x]  multi-cycle graph
+- [x]  complex graph with cycles
+
+Currently unsupported graph types:
+
+- [ ]  single node cycle
+
+## How to Start
+
+Install poetry v. 1.8.4 ([detailed installation guide](https://python-poetry.org/docs/))
+
 ```bash
-git clone https://github.com/deeppavlov/chatsky-llm-autoconfig.git
-cd chatsky-llm-autoconfig
+pipx install poetry==1.8.4
+```
+
+Clone this repo and install project dependencies
+
+```bash
+git clone https://github.com/deeppavlov/dialogue2graph.git
+cd dialogue2graph
 poetry install
 ```
 
-Now you can try to run some scripts or previous experiments to see if everything is working as expected.
+If you are planning to visualize your graphs consider installing **PyGraphviz** from [here](https://pygraphviz.github.io/) and also add it to the poetry environment.
 
-To run python file using poetry run the following:
+```bash
+poetry add pygraphviz
+```
+
+Ensure that dependencies were installed correctly by running any Python script
+
 ```bash
 poetry run python <your_file_name>.py
 ```
 
-**!!! Put your tokens and other sensitive credentials only in `.env` files and never hardcode them !!!**
+Create `.env` file to store credentials
 
-### Contents
-```
-./data - Examples, tests and other dialogue data in JSON format
-./experiments - Test field for experimental features, test data and results
-./scripts - Here we put scripts needed for `poethepoet` automation (you probably do not need to look inside)
-./dev_packages/chatsky_llm_autoconfig - Directory containing all the code for the `chatsky_llm_autoconfig` module
-```
+**Note:** never hardcode your personal tokens and other sensitive credentials. Use the `.env` file to store them.
 
-### Current progress
-Supported types of graphs:
-  - [x]  chain
-  - [x]  single cycle
+## How to Use
 
-Currently unsupported types:
-  - [ ]  single node cycle
-  - [ ]  multi-cycle graph
-  - [ ]  incomplete graph
-  - [ ]  complex graph with cycles
+### Generate synthetic graph on certain topic
+
+Choose LLMs for generating and validating dialogue graph and invoke graph generation
+
+```python
+from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
+from langchain_community.chat_models import ChatOpenAI
 
 
-### How to contribute?
-You can find contribution guideline in [CONTRIBUTING.md](https://github.com/deeppavlov/chatsky-llm-autoconfig/blob/main/CONTRIBUTING.md)
+gen_model = ChatOpenAI(
+    model='gpt-4o',
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+)
+val_model = ChatOpenAI(
+    model='gpt-3.5-turbo',
+    api_key=os.getenv("OPENAI_API_KEY"),
+    base_url=os.getenv("OPENAI_BASE_URL"),
+    temperature=0,
+)
 
-## Prompts
+pipeline = LoopedGraphGenerator(
+    generation_model=gen_model,
+    validation_model=val_model,
+)
 
-### Graph creration prompt (one-shot): 
-
-```
-You have an example of dialogue from customer chatbot system. You also have an 
-    example of set of rules how chatbot system works should be looking - it is 
-    a set of nodes when chatbot system respons and a set of transitions that are 
-    triggered by user requests. 
-    Here is the example of set of rules: 
-    'edges': [ [ 'source': 1, 'target': 2, 'utterances': 'I need to make an order' ], 
-    [ 'source': 1, 'target': 2, 'utterances': 'I want to order from you' ], 
-    [ 'source': 2, 'target': 3, 'utterances': 'I would like to purchase 'Pale Fire' and 'Anna Karenina', please' ], 
-    'nodes': [ [ 'id': 1, 'label': 'start', 'is_start': true, 'utterances': [ 'How can I help?', 'Hello' ], 
-    [ 'id': 2, 'label': 'ask_books', 'is_start': false, 'utterances': [ 'What books do you like?'] ] 
-    I will give a dialogue, your task is to build a graph for this dialogue in the format above. We allow several edges with equal 
-    source and target and also multiple responses on one node so try not to add new nodes if it is logical just to extend an 
-    exsiting one. utterances in one node or on multiedge should close between each other and correspond to different answers 
-    to one question or different ways to say something. For example, for question about preferences or a Yes/No question 
-    both answers can be fit in one multiedge, there’s no need to make a new node. If two nodes has the same responses they 
-    should be united in one node. Do not make up utterances that aren’t present in the dialogue. Please do not combine 
-    utterances for multiedges in one list, write them separately like in example above. Every utterance from the dialogue, 
-    whether it is from user or assistanst, should contain in one of the nodes. Edges must be utterances from the user. Do not forget ending nodes with goodbyes. 
-    Sometimes dialogue can correspond to several iterations of loop, for example: 
-    ['text': 'Do you have apples?', 'participant': 'user'], 
-    ['text': 'Yes, add it to your cart?', 'participant': 'assistant'], 
-    ['text': 'No', 'participant': 'user'], 
-    ['text': 'Okay. Anything else?', 'participant': 'assistant'], 
-    ['text': 'I need a pack of chips', 'participant': 'user'], 
-    ['text': 'Yes, add it to your cart?', 'participant': 'assistant'], 
-    ['text': 'Yes', 'participant': 'user'], 
-    ['text': 'Done. Anything else?', 'participant': 'assistant'], 
-    ['text': 'No, that’s all', 'participant': 'user'], 
-    it corresponds to following graph: 
-    [ nodes: 
-    'id': 1, 
-    'label': 'confirm_availability_and_ask_to_add', 
-    'is_start': false, 
-    'utterances': 'Yes, add it to your cart?' 
-    ], 
-    [ 
-    'id': 2, 
-    'label': 'reply_to_yes', 
-    'is_start': false, 
-    'utterances': ['Done. Anything else?', 'Okay. Anything else?'] 
-    ], 
-    [ 
-    'id': 3, 
-    'label': 'finish_filling_cart', 
-    'is_start': false, 
-    'utterances': 'Okay, everything is done, you can go to cart and finish the order.' 
-    ], 
-    edges: 
-    [ 
-    'source': 1, 
-    'target': 2, 
-    'utterances': 'Yes' 
-    ], 
-    [ 
-    'source': 1, 
-    'target': 2, 
-    'utterances': 'No' 
-    ], 
-    [ 
-    'source': 2, 
-    'target': 1, 
-    'utterances': 'I need a pack of chips' 
-    ], 
-    [ 
-    'source': 2, 
-    'target': 3, 
-    'utterances': 'No, that’s all' 
-    ]. 
-    We encourage you to use cycles and complex interwining structure of the graph with 'Yes'/'No' edges for the branching.
-    This is the end of the example. Brackets must be changed back into curly braces to create a valid JSON string. Return ONLY JSON string in plain text (no code blocks) without any additional commentaries.
-    Dialogue: {dialog}
+generated_graph = pipeline.invoke(topic="restaurant reservation")
 ```
 
-### Prompt for node/edge - utterance correspondance
+### Sample dialogues from existing dialogue graph
 
-```
-You have a dialogue and a structure of graph built on this dialogue it is a set of nodes when chatbot system responses and a set of transitions that are triggered by user requests. 
-Please say if for every utterance in the dialogue there exist either a utteranse in node or in some edge. be attentive to what nodes we actually have in the "nodes" list, because some nodes from the list of edges maybe non existent:
-Graph: 
-Dialogue:
-just print the list of utteance and whether there exsit a valid edge of node contating it, if contains print the node or edge
-```
-### Graph validation prompt:
+Create graph instance and invoke sampler to get dialogue list
 
+```python
+from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
+from dialogue2graph.pipelines.core.graph import Graph
+
+G = Graph(graph_dict={...})
+
+sampler = RecursiveDialogueSampler()
+sampler.invoke(graph=G) #-> list of Dialogue objects
 ```
-1. You have an example of dialogue from customer chatbot system.
-2. You also have a set of rules how chatbot system works - a set of nodes when chatbot system respons and a set of transitions that are triggered by user requests.
-3. Chatbot system can move only along transitions listed in 2.  If a transition from node A to node B is not listed we cannot move along it.
-4. If a dialog doesn't contradcit with the rules listed in 2 print YES otherwise if such dialog could'nt happen because it contradicts the rules print NO. Dialogue: {dialogue}. Set of rules: {rules}
-```
+
+## How to Contribute
+
+See contribution guideline [CONTRIBUTING.md](https://github.com/deeppavlov/dialogue2graph/blob/dev/CONTRIBUTING.md)
