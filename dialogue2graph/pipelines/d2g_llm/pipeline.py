@@ -35,43 +35,13 @@ class D2GLLMPipeline(BasePipeline):
         self,
         name: str,
         model_storage: ModelStorage,
-        grouping_llm: str = "d2g_llm_grouping_llm:v1",
-        filling_llm: str = "d2g_llm_filling_llm:v1",
-        formatting_llm: str = "d2g_llm_formatting_llm:v1",
-        sim_model: str = "d2g_llm_sim_model:v1",
+        grouping_llm: str = "three_stages_grouping_llm:v1",
+        filling_llm: str = "three_stages_filling_llm:v1",
+        formatting_llm: str = "three_stages_formatting_llm:v1",
+        sim_model: str = "three_stages_sim_model:v1",
         step2_evals: list[Callable] = None,
         end_evals: list[Callable] = None,
     ):
-        # check if models are in model storage
-        # if model is not in model storage put the default model there
-        if grouping_llm not in model_storage.storage:
-            model_storage.add(
-                key=grouping_llm,
-                config={"model": "chatgpt-4o-latest", "temperature": 0},
-                model_type="llm",
-            )
-
-        if filling_llm not in model_storage.storage:
-            model_storage.add(
-                key=filling_llm,
-                config={"model": "o3-mini", "temperature": 1},
-                model_type="llm",
-            )
-
-        if formatting_llm not in model_storage.storage:
-            model_storage.add(
-                key=formatting_llm,
-                config={"model": "gpt-4o-mini", "temperature": 0},
-                model_type="llm",
-            )
-
-        if sim_model not in model_storage.storage:
-            model_storage.add(
-                key=sim_model,
-                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
-                model_type="emb",
-            )
-
         super().__init__(
             name=name,
             steps=[

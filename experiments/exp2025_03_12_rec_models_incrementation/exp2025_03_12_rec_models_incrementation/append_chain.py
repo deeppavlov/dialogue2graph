@@ -6,7 +6,7 @@ from dialogue2graph.pipelines.core.schemas import DialogueGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 
 from prompts import prompt_dialogs_and_graph
