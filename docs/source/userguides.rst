@@ -6,10 +6,10 @@ User guides
 
 This guide demonstrates usage of base classes in ``dialogue2graph`` package.
 
-:doc:`Configure models with ModelStorage and create Pipeline <./userguides/index_basic_usage>`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+:doc:`Configure models with ModelStorage and use the graph generators <./userguides/generate_graphs.rst>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This guide demonstrates usage of ``ModelStorage`` class enabling to store models used in your ``Pipeline``.
+This guide demonstrates usage of ``ModelStorage`` class and generating the dialogue graph using ``dialogue2graph`` algorithms.
 
 :doc:`Generate synthetic graph on certain topic <./userguides/generate_synthetic>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
