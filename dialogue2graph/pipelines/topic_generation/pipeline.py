@@ -24,9 +24,10 @@ class TopicGenerationPipeline(BasePipeline):
 
     Attributes:
         model_storage (ModelStorage): The storage object containing available models.
-        generation_llm (str): Key for the LLM used for topic generation. Defaults to "topic_generation_gen_llm:v1".
-        validation_llm (str): Key for the LLM used for validation. Defaults to "topic_generation_val_llm:v1".
-        theme_validation_llm (str): Key for the LLM used for theme validation. Defaults to "topic_generation_theme_val_llm:v1".
+        generation_llm (str): Key for the LLM used for topic generation. Defaults to "looped_graph_generation_llm:v1".
+        validation_llm (str): Key for the LLM used for validation. Defaults to "looped_graph_validation_llm:v1".
+        cycle_ends_llm (str): Key for the LLM for dialog sampler to find cycle ends. Defaults to "looped_graph_cycle_ends_llm:v1.
+        theme_validation_llm (str): Key for the LLM used for theme validation. Defaults to "looped_graph_theme_validation_llm:v1".
 
     Methods:
 
@@ -44,9 +45,10 @@ class TopicGenerationPipeline(BasePipeline):
     def __init__(
         self,
         model_storage: ModelStorage,
-        generation_llm: str = "topic_generation_gen_llm:v1",
-        validation_llm: str = "topic_generation_val_llm:v1",
-        theme_validation_llm: str = "topic_generation_theme_val_llm:v1",
+        generation_llm: str = "looped_graph_generation_llm:v1",
+        validation_llm: str = "looped_graph_validation_llm:v1",
+        cycle_ends_llm: str = "looped_graph_cycle_ends_llm:v1",
+        theme_validation_llm: str = "looped_graph_theme_validation_llm:v1",
     ):
         super().__init__(
             steps=[
@@ -54,6 +56,7 @@ class TopicGenerationPipeline(BasePipeline):
                     model_storage=model_storage,
                     generation_llm=generation_llm,
                     validation_llm=validation_llm,
+                    cycle_ends_llm=cycle_ends_llm,
                     theme_validation_llm=theme_validation_llm,
                 )
             ]

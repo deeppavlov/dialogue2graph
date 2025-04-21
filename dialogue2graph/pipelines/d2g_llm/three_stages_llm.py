@@ -110,7 +110,7 @@ class LLMGraphGenerator(GraphGenerator):
         if grouping_llm not in model_storage.storage:
             model_storage.add(
                 key=grouping_llm,
-                config={"model": "chatgpt-4o-latest", "temperature": 0},
+                config={"model": "gpt-4o-latest", "temperature": 0},
                 model_type="llm",
             )
 

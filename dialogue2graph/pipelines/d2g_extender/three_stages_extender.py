@@ -120,7 +120,7 @@ class LLMGraphExtender(GraphExtender):
         if extending_llm not in model_storage.storage:
             model_storage.add(
                 key=extending_llm,
-                config={"model": "chatgpt-4o-latest", "temperature": 0},
+                config={"model": "gpt-4o-latest", "temperature": 0},
                 model_type="llm",
             )
 
