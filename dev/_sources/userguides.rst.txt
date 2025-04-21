@@ -6,7 +6,7 @@ User guides
 
 This guide demonstrates usage of base classes in ``dialogue2graph`` package.
 
-:doc:`Configure models with ModelStorage and use the graph generators <./userguides/generate_graphs.rst>`
+:doc:`Configure models with ModelStorage and use the graph generators <./userguides/generate_graphs>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This guide demonstrates usage of ``ModelStorage`` class and generating the dialogue graph using ``dialogue2graph`` algorithms.
