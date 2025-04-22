@@ -93,10 +93,10 @@ class LLMGraphGenerator(GraphGenerator):
     def __init__(
         self,
         model_storage: ModelStorage,
-        grouping_llm: str,
-        filling_llm: str,
-        formatting_llm: str,
-        sim_model: str,
+        grouping_llm: str = "three_stages_grouping_llm:v1",
+        filling_llm: str = "three_stages_filling_llm:v1",
+        formatting_llm: str = "three_stages_formatting_llm:v1",
+        sim_model: str = "three_stages_sim_model:v1",
         step2_evals: list[Callable] | None = None,
         end_evals: list[Callable] | None = None,
     ):

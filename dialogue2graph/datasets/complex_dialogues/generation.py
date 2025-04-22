@@ -414,10 +414,10 @@ class LoopedGraphGenerator(TopicGraphGenerator):
     def __init__(
         self,
         model_storage: ModelStorage,
-        generation_llm: str,
-        validation_llm: str,
-        cycle_ends_llm: str,
-        theme_validation_llm: str,
+        generation_llm: str = "looped_graph_generation_llm:v1",
+        validation_llm: str = "looped_graph_validation_llm:v1",
+        cycle_ends_llm: str = "looped_graph_cycle_ends_llm:v1",
+        theme_validation_llm: str = "looped_graph_theme_validation_llm:v1",
     ):
         # check if models are in model storage
         # if model is not in model storage put the default model there
