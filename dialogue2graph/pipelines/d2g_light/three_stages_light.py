@@ -66,9 +66,10 @@ class LightGraphGenerator(GraphGenerator):
     def __init__(
         self,
         model_storage: ModelStorage,
-        filling_llm: str,
-        formatting_llm: str,
-        sim_model: str,
+        filling_llm: str = "three_stages_light_filling_llm:v1",
+        formatting_llm: str = "three_stages_light_formatting_llm:v1",
+        sim_model: str = "three_stages_light_sim_model:v1",
+
         step2_evals: list[Callable] | None = [],
         end_evals: list[Callable] | None = [],
     ):
