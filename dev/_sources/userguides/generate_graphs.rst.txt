@@ -7,9 +7,10 @@ First of all we need to import the :py:class:`~dialogue2graph.pipelines.model_st
 
 .. code-block:: python
 
+    from dialogue2graph import Dialogue
     from dialogue2graph.pipelines.model_storage import ModelStorage
     from dialogue2graph.pipelines.d2g_llm import LLMGraphGenerator
-    from dialogue2graph import Dialogue
+    from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
 Now, we need to read the dialogues we want to generate a graph for. In this example we will read the dialogues from a JSON file. The dialogues should be in the following format:
 
@@ -45,6 +46,11 @@ Let's read them:
         data = json.load(f)
 
     dialogues = [Dialogue(**dialogue) for dialogue in data["dialogs"]]
+    data = PipelineRawDataType(
+        dialogs=dialogues,
+        supported_graph=None,
+        true_graph=None,
+    )
 
 Now we should create a :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. This object will be used to store the models we will be using. In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used to generate the embeddings for the nodes in the graph.
 
@@ -81,7 +87,7 @@ Now we can generate the graph. We will pass the dialogues ``.invoke()`` method o
 
 .. code-block:: python
 
-    graph, report = graph_generator.invoke(dialogues, enable_evals=True)
-    graph.visualize()
+    graph, report = graph_generator.invoke(data, enable_evals=True)
+    graph.visualise()
 
     print(report)
