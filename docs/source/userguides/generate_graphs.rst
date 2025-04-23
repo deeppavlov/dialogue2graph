@@ -12,6 +12,7 @@ First of all we need to import the :py:class:`~dialogue2graph.pipelines.model_st
     from dialogue2graph.pipelines.d2g_llm import LLMGraphGenerator
     from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
+
 Now, we need to read the dialogues we want to generate a graph for. In this example we will read the dialogues from a JSON file. The dialogues should be in the following format:
 
 .. code-block:: json
@@ -89,5 +90,6 @@ Now we can generate the graph. We will pass the dialogues ``.invoke()`` method o
 
     graph, report = graph_generator.invoke(data, enable_evals=True)
     graph.visualise()
+
 
     print(report)
