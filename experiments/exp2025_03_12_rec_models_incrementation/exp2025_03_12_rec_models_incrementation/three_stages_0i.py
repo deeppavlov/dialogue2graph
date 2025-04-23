@@ -1,6 +1,6 @@
 import pandas as pd
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler

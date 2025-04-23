@@ -25,8 +25,7 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 
 
 class BasePipeline(BaseModel):
-    # TODO: add docs
-    """Abstract class for base pipeline"""
+    """Base class for pipelines"""
 
     name: str = Field(description="Name of the pipeline")
     steps: list[

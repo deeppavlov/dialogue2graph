@@ -12,6 +12,9 @@ from pydantic import BaseModel, Field
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_huggingface import HuggingFaceEmbeddings
+
 
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
@@ -81,11 +84,21 @@ class LLMGraphExtender(DGBaseGenerator):
     """
 
     model_storage: ModelStorage = Field(description="Model storage")
-    extending_llm: str = Field(description="LLM for extending graph nodes")
-    filling_llm: str = Field(description="LLM for adding missing edges")
-    formatting_llm: str = Field(description="LLM for formatting output")
-    dialog_llm: str = Field(description="LLM for dialog sampler")
-    sim_model: str = Field(description="Similarity model")
+    extending_llm: str = Field(
+        description="LLM for extending graph nodes", default="extender_extending_llm:v1"
+    )
+    filling_llm: str = Field(
+        description="LLM for adding missing edges", default="extender_filling_llm:v1"
+    )
+    formatting_llm: str = Field(
+        description="LLM for formatting output", default="extender_formatting_llm:v1"
+    )
+    dialog_llm: str = Field(
+        description="LLM for dialog sampler", default="extender_dialog_llm:v1"
+    )
+    sim_model: str = Field(
+        description="Similarity model", default="extender_sim_model:v1"
+    )
     step: int
     graph_generator: LightGraphGenerator
     step1_evals: list[Callable]
@@ -97,17 +110,47 @@ class LLMGraphExtender(DGBaseGenerator):
     def __init__(
         self,
         model_storage: ModelStorage,
-        extending_llm: str,
-        filling_llm: str,
-        formatting_llm: str,
-        dialog_llm: str,
-        sim_model: str,
-        step1_evals: list[Callable],
-        extender_evals: list[Callable],
-        step2_evals: list[Callable],
-        end_evals: list[Callable],
+        extending_llm: str = "extender_extending_llm:v1",
+        filling_llm: str = "extender_filling_llm:v1",
+        formatting_llm: str = "extender_formatting_llm:v1",
+        dialog_llm: str = "extender_dialog_llm:v1",
+        sim_model: str = "extender_sim_model:v1",
+        step1_evals: list[Callable] | None = [],
+        extender_evals: list[Callable] | None = [],
+        step2_evals: list[Callable] | None = [],
+        end_evals: list[Callable] | None = [],
         step: int = 2,
     ):
+        # if model is not in model storage put the default model there
+        model_storage.add(
+            key=extending_llm,
+            config={"model": "gpt-4o-latest", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+
+        model_storage.add(
+            key=filling_llm,
+            config={"model": "o3-mini", "temperature": 1},
+            model_type=ChatOpenAI,
+        )
+
+        model_storage.add(
+            key=formatting_llm,
+            config={"model": "gpt-4o-mini", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+
+        model_storage.add(
+            key=dialog_llm,
+            config={"model": "o3-mini", "temperature": 1},
+            model_type=ChatOpenAI,
+        )
+
+        model_storage.add(
+            key=sim_model,
+            config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
+            model_type=HuggingFaceEmbeddings,
+        )
         super().__init__(
             model_storage=model_storage,
             extending_llm=extending_llm,

@@ -1,7 +1,7 @@
 import logging
 import pandas as pd
 from langchain.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 

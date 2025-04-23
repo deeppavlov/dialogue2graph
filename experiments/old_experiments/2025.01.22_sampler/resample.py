@@ -9,7 +9,7 @@ from chatsky_llm_autoconfig.graph import Graph
 from chatsky_llm_autoconfig.metrics.automatic_metrics import all_utterances_present
 from chatsky_llm_autoconfig.utils import save_json
 
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 
 env_settings = EnvSettings()
 
