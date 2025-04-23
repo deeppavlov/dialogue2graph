@@ -8,6 +8,7 @@ The module contains pipeline to extend dialog graphs.
 from typing import Callable
 from dotenv import load_dotenv
 
+from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.d2g_extender.three_stages_extender import LLMGraphExtender
@@ -29,22 +30,22 @@ class D2GExtenderPipeline(BasePipeline):
         formatting_llm: str = "d2g_extender_formatting_llm:v1",
         dialog_llm: str = "d2g_extender_dialog_llm:v1",
         sim_model: str = "d2g_extender_sim_model:v1",
-        step1_evals: list[Callable] = None,
-        extender_evals: list[Callable] = None,
-        step2_evals: list[Callable] = None,
-        end_evals: list[Callable] = None,
+        step1_evals: list[Callable] = metrics.PreDGEvalBase,
+        extender_evals: list[Callable] = metrics.PreDGEvalBase,
+        step2_evals: list[Callable] = metrics.DGEvalBase,
+        end_evals: list[Callable] = metrics.DGEvalBase,
         step: int = 2,
     ):
         # if model is not in model storage put the default model there
         model_storage.add(
             key=extending_llm,
             config={"model_name": "chatgpt-4o-latest", "temperature": 0},
-            model_type="llm",
+            model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=filling_llm,
-            config={"mode_name": "o3-mini", "temperature": 1},
+            config={"model_name": "o3-mini", "temperature": 1},
             model_type=ChatOpenAI,
         )
 
@@ -62,7 +63,7 @@ class D2GExtenderPipeline(BasePipeline):
 
         model_storage.add(
             key=sim_model,
-            config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+            config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
             model_type=HuggingFaceEmbeddings,
         )
 

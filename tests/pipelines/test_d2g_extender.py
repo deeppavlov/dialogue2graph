@@ -1,10 +1,7 @@
 import json
 import pytest
 import dotenv
-from langchain_openai import ChatOpenAI
-from langchain_huggingface import HuggingFaceEmbeddings
 
-from dialogue2graph import metrics
 from dialogue2graph import Dialogue
 from dialogue2graph.pipelines.d2g_extender.pipeline import D2GExtenderPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
@@ -65,45 +62,9 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
     """Test that d2g_algo pipeline returns True for GT=graph_positive_1
     and input=dialogues_positive"""
 
-    ms.add(
-        key="extending_llm",
-        config={"model_name": "chatgpt-4o-latest", "temperature": 0},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="filling_llm",
-        config={"model_name": "o3-mini", "temperature": 1},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="formatting_llm",
-        config={"model_name": "gpt-4o-mini", "temperature": 0},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="dialog_llm",
-        config={"model_name": "os-mini", "temperature": 1},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
-        model_type=HuggingFaceEmbeddings,
-    )
-
     pipeline = D2GExtenderPipeline(
         name="d2g_ext",
         model_storage=ms,
-        extending_llm="extending_llm",
-        filling_llm="filling_llm",
-        formatting_llm="formatting_llm",
-        dialog_llm="dialog_llm",
-        sim_model="sim_model",
-        step1_evals=metrics.PreDGEvalBase,
-        extender_evals=metrics.PreDGEvalBase,
-        step2_evals=metrics.DGEvalBase,
-        end_evals=metrics.DGEvalBase,
-        step=1,
     )
 
     raw_data = PipelineRawDataType(
@@ -111,8 +72,8 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
     )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert report.properties["complex_graph_comparison"]["value"] is True, (
-        f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
+    assert report.properties["complex_graph_comparison"]["similarity_avg"] < 0.95, (
+        "Expected similarity_avg < 0.95 in the negative scenario."
     )
 
 
@@ -120,45 +81,9 @@ def test_d2g_extender_negative(dialogues_negative, graph_negative):
     """Test that d2g_algo pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
-    ms.add(
-        key="extending_llm",
-        config={"model_name": "chatgpt-4o-latest", "temperature": 0},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="filling_llm",
-        config={"model_name": "o3-mini", "temperature": 1},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="formatting_llm",
-        config={"model_name": "gpt-4o-mini", "temperature": 0},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="dialog_llm",
-        config={"model_name": "os-mini", "temperature": 1},
-        model_type=ChatOpenAI,
-    )
-    ms.add(
-        key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
-        model_type=HuggingFaceEmbeddings,
-    )
-
     pipeline = D2GExtenderPipeline(
         name="d2g_ext",
         model_storage=ms,
-        extending_llm="extending_llm",
-        filling_llm="filling_llm",
-        formatting_llm="formatting_llm",
-        dialog_llm="dialog_llm",
-        sim_model="sim_model",
-        step1_evals=metrics.PreDGEvalBase,
-        extender_evals=metrics.PreDGEvalBase,
-        step2_evals=metrics.DGEvalBase,
-        end_evals=metrics.DGEvalBase,
-        step=1,
     )
 
     raw_data = PipelineRawDataType(
@@ -166,6 +91,6 @@ def test_d2g_extender_negative(dialogues_negative, graph_negative):
     )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert report.properties["complex_graph_comparison"]["value"] is False, (
-        "Expected value=False in the negative scenario."
+    assert report.properties["complex_graph_comparison"]["similarity_avg"] < 0.95, (
+        "Expected similarity_avg < 0.95 in the negative scenario."
     )

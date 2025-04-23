@@ -17,7 +17,7 @@ from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
-from dialogue2graph.pipelines.core.algorithms import GraphExtender
+from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
@@ -50,7 +50,7 @@ logger = Logger(__file__)
 dialogue_sampler = RecursiveDialogueSampler()
 
 
-class LLMGraphExtender(GraphExtender):
+class LLMGraphExtender(DGBaseGenerator):
     """Graph generator which iteratively takes step dialogues and adds them to graph
     generated on the previous step. First step is done with LightGraphGenerator or taken from
     supported graph
@@ -269,9 +269,3 @@ class LLMGraphExtender(GraphExtender):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-
-    def evaluate(self, graph, gt_graph, eval_stage: str) -> metrics.DGReportType:
-        report = {}
-        for metric in getattr(self, eval_stage + "_evals"):
-            report[metric.__name__ + ":" + eval_stage] = metric(graph, gt_graph)
-        return report

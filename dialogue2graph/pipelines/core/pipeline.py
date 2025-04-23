@@ -21,6 +21,7 @@ from dialogue2graph.pipelines.helpers.parse_data import (
 )
 from dialogue2graph.pipelines.report import PipelineReport
 from dialogue2graph.metrics import compare_graphs_full, compare_graphs_light
+from dialogue2graph.pipelines.model_storage import ModelStorage
 
 
 class BasePipeline(BaseModel):
@@ -36,7 +37,11 @@ class BasePipeline(BaseModel):
         pass
 
     def invoke(
-        self, raw_data: PipelineRawDataType, enable_evals=False
+        self,
+        model_storage: ModelStorage,
+        sim_model: str,
+        raw_data: PipelineRawDataType,
+        enable_evals=False,
     ) -> Tuple[Any, PipelineReport]:
         data: PipelineDataType = RawDGParser().invoke(raw_data)
         report = PipelineReport(service=self.name)
@@ -48,11 +53,15 @@ class BasePipeline(BaseModel):
         end_time = time.time()
         report.add_property("time", end_time - st_time)
         report.add_property(
-            "simple_graph_comparison", compare_graphs_light(output, data)
+            "simple_graph_comparison",
+            compare_graphs_light(model_storage.storage[sim_model].model, output, data),
         )
         if enable_evals:
             report.add_property(
-                "complex_graph_comparison", compare_graphs_full(output, data)
+                "complex_graph_comparison",
+                compare_graphs_full(
+                    model_storage.storage[sim_model].model, output, data
+                ),
             )
 
         return output, report

@@ -8,6 +8,8 @@ The module contains pipeline for graph generation using LLMs.
 # from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
 from typing import Callable
 from dotenv import load_dotenv
+
+from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
@@ -41,8 +43,8 @@ class D2GLLMPipeline(BasePipeline):
         filling_llm: str = "d2g_llm_filling_llm:v1",
         formatting_llm: str = "d2g_llm_formatting_llm:v1",
         sim_model: str = "d2g_llm_sim_model:v1",
-        step2_evals: list[Callable] = None,
-        end_evals: list[Callable] = None,
+        step2_evals: list[Callable] = metrics.DGEvalBase,
+        end_evals: list[Callable] = metrics.DGEvalBase,
     ):
         # if model is not in model storage put the default model there
         model_storage.add(
@@ -62,7 +64,7 @@ class D2GLLMPipeline(BasePipeline):
         )
         model_storage.add(
             key=sim_model,
-            config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+            config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
             model_type=HuggingFaceEmbeddings,
         )
 

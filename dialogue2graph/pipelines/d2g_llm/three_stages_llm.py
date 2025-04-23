@@ -15,7 +15,7 @@ from langchain.schema import HumanMessage
 
 from dialogue2graph import metrics
 from dialogue2graph import Graph
-from dialogue2graph.pipelines.core.algorithms import GraphGenerator
+from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.model_storage import ModelStorage
@@ -44,7 +44,7 @@ logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 logger = Logger(__file__)
 
 
-class LLMGraphGenerator(GraphGenerator):
+class LLMGraphGenerator(DGBaseGenerator):
     """Graph generator from list of dialogues. Based on LLM.
     Three stages:
 
@@ -197,9 +197,3 @@ class LLMGraphGenerator(GraphGenerator):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-
-    def evaluate(self, graph, gt_graph, eval_stage: str) -> metrics.DGReportType:
-        report = {}
-        for metric in getattr(self, eval_stage + "_evals"):
-            report[metric.__name__ + ":" + eval_stage] = metric(graph, gt_graph)
-        return report

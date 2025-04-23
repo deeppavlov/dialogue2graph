@@ -7,6 +7,8 @@ The module contains pipeline for usual graph generation (so called light mode ge
 
 from typing import Callable
 from dotenv import load_dotenv
+
+from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
 from dialogue2graph.pipelines.model_storage import ModelStorage
@@ -26,8 +28,8 @@ class D2GLightPipeline(BasePipeline):
         filling_llm: str = "d2g_light_filling_llm:v1",
         formatting_llm: str = "d2g_light_formatting_llm:v1",
         sim_model: str = "d2g_light_sim_model:v1",
-        step2_evals: list[Callable] = None,
-        end_evals: list[Callable] = None,
+        step2_evals: list[Callable] = metrics.DGEvalBase,
+        end_evals: list[Callable] = metrics.DGEvalBase,
     ):
         # if model is not in model storage put the default model there
         model_storage.add(

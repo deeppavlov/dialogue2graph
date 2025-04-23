@@ -14,9 +14,9 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 
 from dialogue2graph import metrics
-from dialogue2graph.pipelines.core.algorithms import GraphGenerator
-from dialogue2graph.pipelines.core.schemas import ReasonGraph
 from dialogue2graph import Graph
+from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
+from dialogue2graph.pipelines.core.schemas import ReasonGraph
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.d2g_light.group_nodes import group_nodes
@@ -30,7 +30,7 @@ from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
 
-class LightGraphGenerator(GraphGenerator):
+class LightGraphGenerator(DGBaseGenerator):
     """Graph generator from list of dialogues. Based on algorithm with embedding similarity usage.
 
     Attributes:
@@ -46,7 +46,6 @@ class LightGraphGenerator(GraphGenerator):
     model_storage: ModelStorage = Field(description="Model storage")
     filling_llm: str = Field(description="LLM for adding missing edges")
     formatting_llm: str = Field(description="LLM for formatting output")
-    sim_model: str = Field(description="Similarity model")
     step2_evals: list[Callable] = Field(
         default_factory=list, description="Metrics after stage 2"
     )
@@ -149,18 +148,3 @@ class LightGraphGenerator(GraphGenerator):
 
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
-
-    def evaluate(self, graph, true_graph, eval_stage: str) -> metrics.DGReportType:
-        """Call metrics and return report
-
-        Args:
-            graph: generated graph
-            true_graph: expected graph
-            eval_stage: string defining eval stage, like step2 or end
-        Returns:
-            dictionary with report like {"metric_name": result}
-        """
-        report = {}
-        for metric in getattr(self, eval_stage + "_evals"):
-            report[metric.__name__ + ":" + eval_stage] = metric(graph, true_graph)
-        return report
