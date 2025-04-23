@@ -1,16 +1,21 @@
-CREATE TABLE IF NOT EXISTS prompt_cache (
-    idx SERIAL PRIMARY KEY,  -- Changed from INT to SERIAL
-    prompt TEXT NOT NULL,
-    response TEXT NOT NULL,
-    llm TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+-- Create a dedicated database for LangChain cache
+CREATE DATABASE langchain_cache;
 
--- Create user with environment variable
-CREATE USER prompt_cache_user WITH PASSWORD '${PROMPT_CACHE_PASSWORD}';
+-- Create a role with limited privileges (default password will be overridden)
+DO $$
+BEGIN
+  EXECUTE format('CREATE ROLE langchain_user WITH LOGIN PASSWORD %L', 
+                current_setting('app.prompt_cache_password'));
+EXCEPTION WHEN undefined_object THEN
+  -- Fallback if the variable isn't set
+  CREATE ROLE langchain_user WITH LOGIN PASSWORD 'langchain_pass';
+END
+$$;
 
--- Grant permissions
-GRANT CONNECT ON DATABASE prompt_cache_db TO prompt_cache_user;
-GRANT USAGE ON SCHEMA public TO prompt_cache_user;
-GRANT SELECT, INSERT ON prompt_cache TO prompt_cache_user;
-GRANT USAGE, SELECT ON SEQUENCE prompt_cache_idx_seq TO prompt_cache_user;
+-- Rest of your SQL remains the same...
+GRANT CONNECT ON DATABASE langchain_cache TO langchain_user;
+\c langchain_cache
+GRANT USAGE ON SCHEMA public TO langchain_user;
+GRANT CREATE ON SCHEMA public TO langchain_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO langchain_user;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO langchain_user;
