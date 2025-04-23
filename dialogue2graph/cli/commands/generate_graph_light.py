@@ -24,7 +24,7 @@ def generate_light(
     if config != {}:
         ms.load(config)
     pipeline = D2GLightPipeline(
-        "d2g_light", ms, step2_evals=metrics.DGEvalBase, end_evals=metrics.DGEvalBase
+        "three_stages_light", ms, step2_evals=metrics.DGEvalBase, end_evals=metrics.DGEvalBase
     )
 
     raw_data = PipelineRawDataType(dialogs=dialogs, true_graph=tgraph)

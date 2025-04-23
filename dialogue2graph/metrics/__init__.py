@@ -8,7 +8,7 @@ from dialogue2graph.metrics.no_llm_metrics.keys2graph import graph_triplet_compa
 
 PreDGEvalBase = [no_llm_metrics.is_same_structure]
 # DGEvalBase = [llm_metrics.compare_graphs, no_llm_metrics.is_same_structure]
-DGEvalBase = [graph_triplet_comparison.compare_two_graphs]
+DGEvalBase = [graph_triplet_comparison.compare_two_graphs, no_llm_metrics.is_same_structure]
 DGReportType = dict
 
 

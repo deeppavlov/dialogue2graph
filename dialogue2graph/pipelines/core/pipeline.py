@@ -25,8 +25,14 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 
 
 class BasePipeline(BaseModel):
-    """Base class for pipelines"""
+    """Base class for pipelines
+    Attributes:
+        model_storage (ModelStorage): An object to manage and store models used in the pipeline.
+        sim_model (str): The key for the similarity embedder model in the model storage.
+    """
 
+    model_storage: ModelStorage = Field(description="Model storage")
+    sim_model: str = Field(description="Similarity model")
     name: str = Field(description="Name of the pipeline")
     steps: list[
         Union[DialogueGenerator, DialogAugmentation, GraphGenerator, GraphExtender]
@@ -37,8 +43,6 @@ class BasePipeline(BaseModel):
 
     def invoke(
         self,
-        model_storage: ModelStorage,
-        sim_model: str,
         raw_data: PipelineRawDataType,
         enable_evals=False,
     ) -> Tuple[Any, PipelineReport]:
@@ -53,13 +57,13 @@ class BasePipeline(BaseModel):
         report.add_property("time", end_time - st_time)
         report.add_property(
             "simple_graph_comparison",
-            compare_graphs_light(model_storage.storage[sim_model].model, output, data),
+            compare_graphs_light(self.model_storage.storage[self.sim_model].model, output, data),
         )
         if enable_evals:
             report.add_property(
                 "complex_graph_comparison",
                 compare_graphs_full(
-                    model_storage.storage[sim_model].model, output, data
+                    self.model_storage.storage[self.sim_model].model, output, data
                 ),
             )
 

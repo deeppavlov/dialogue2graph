@@ -93,10 +93,10 @@ class LLMGraphGenerator(DGBaseGenerator):
     def __init__(
         self,
         model_storage: ModelStorage,
-        grouping_llm: str = "three_stages_grouping_llm:v1",
-        filling_llm: str = "three_stages_filling_llm:v1",
-        formatting_llm: str = "three_stages_formatting_llm:v1",
-        sim_model: str = "three_stages_sim_model:v1",
+        grouping_llm: str = "three_stages_llm_grouping_llm:v1",
+        filling_llm: str = "three_stages_llm_filling_llm:v1",
+        formatting_llm: str = "three_stages_llm_formatting_llm:v1",
+        sim_model: str = "three_stages_llm_sim_model:v1",
 
         step2_evals: list[Callable] | None = None,
         end_evals: list[Callable] | None = None,
@@ -109,19 +109,19 @@ class LLMGraphGenerator(DGBaseGenerator):
         # if model is not in model storage put the default model there
         model_storage.add(
             key=grouping_llm,
-            config={"model": "gpt-4o-latest", "temperature": 0},
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
             model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=filling_llm,
-            config={"model": "o3-mini", "temperature": 1},
+            config={"model_name": "o3-mini", "temperature": 1},
             model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=formatting_llm,
-            config={"model": "gpt-4o-mini", "temperature": 0},
+            config={"model_name": "gpt-4o-mini", "temperature": 0},
             model_type=ChatOpenAI,
         )
 

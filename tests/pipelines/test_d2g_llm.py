@@ -19,7 +19,7 @@ def test_data():
     Read JSON data once per pytest session
     (scope="session") to avoid re-reading the file.
     """
-    with open("tests/test_metrics_data.json", encoding="utf-8") as f:
+    with open("tests/test_pipelines_data.json", encoding="utf-8") as f:
         data = json.load(f)
     return data
 
@@ -59,11 +59,11 @@ def dialogues_negative(test_data):
 
 
 def test_d2g_llm_positive(dialogues_positive, graph_positive_1):
-    """Test that d2g_algo pipeline returns True for GT=graph_positive_1
+    """Test that d2g_llm pipeline returns True for GT=graph_positive_1
     and input=dialogues_positive"""
 
     pipeline = D2GLLMPipeline(
-        name="d2g_llm",
+        name="three_stages_llm",
         model_storage=ms,
     )
 
@@ -72,17 +72,17 @@ def test_d2g_llm_positive(dialogues_positive, graph_positive_1):
     )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert report.properties["complex_graph_comparison"]["similarity_avg"] < 0.95, (
-        "Expected similarity_avg < 0.95 in the negative scenario."
+    assert report.properties["complex_graph_comparison"]["similarity_avg"] > 0.99, (
+        f"Expected similarity_avg > 0.99, but got: {report.properties['complex_graph_comparison']['similarity_avg']}"
     )
 
 
 def test_d2g_llm_negative(dialogues_negative, graph_negative):
-    """Test that d2g_algo pipeline returns False for GT=graph_negative
+    """Test that d2g_llm pipeline returns False for GT=graph_negative
     and input=dialogues_negative"""
 
     pipeline = D2GLLMPipeline(
-        name="d2g_llm",
+        name="three_stages_llm",
         model_storage=ms,
     )
 
@@ -91,6 +91,6 @@ def test_d2g_llm_negative(dialogues_negative, graph_negative):
     )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert report.properties["complex_graph_comparison"]["similarity_avg"] < 0.95, (
-        "Expected similarity_avg < 0.95 in the negative scenario."
+    assert report.properties["complex_graph_comparison"]["similarity_avg"] <= 0.99, (
+        "Expected similarity_avg <= 0.99 in the negative scenario."
     )

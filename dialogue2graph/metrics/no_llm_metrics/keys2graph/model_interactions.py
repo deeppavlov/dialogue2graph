@@ -143,7 +143,7 @@ def generate_dialog_graph_by_keys(
 
     client = OpenAI(api_key=api_key, base_url=base_url)
 
-    keys_str = json.dumps(keys_dict, ensure_ascii=False, indent=2)
+    # keys_str = json.dumps(keys_dict, ensure_ascii=False, indent=2)
 
     # Генерируем динамический промпт
     dynamic_prompt = build_dynamic_graph_prompt(keys_dict)

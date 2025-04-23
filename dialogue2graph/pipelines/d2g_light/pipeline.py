@@ -31,6 +31,8 @@ class D2GLightPipeline(BasePipeline):
         end_evals: list[Callable] = metrics.DGEvalBase,
     ):
         super().__init__(
+            model_storage=model_storage,
+            sim_model=sim_model,
             name=name,
             steps=[
                 LightGraphGenerator(

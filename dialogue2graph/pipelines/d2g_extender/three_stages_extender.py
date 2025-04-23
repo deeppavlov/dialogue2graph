@@ -19,7 +19,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
+from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
 from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
@@ -60,7 +60,7 @@ class LLMGraphExtender(DGBaseGenerator):
     Generation stages:
 
     1.
-        a. If supported graph is given, it is used as a start. Otherwise, graph is generated with LightGraphGenerator from first step dialogs
+        a. If supported graph is given, it is used as a start. Otherwise, graph is generated with LLMGraphGenerator from first step dialogs
         b. Algorithmic connecting nodes by edges.
     2. Iterative steps:
         a. LLM extension of graph nodes with next step dialogs.
@@ -100,7 +100,7 @@ class LLMGraphExtender(DGBaseGenerator):
         description="Similarity model", default="extender_sim_model:v1"
     )
     step: int
-    graph_generator: LightGraphGenerator
+    graph_generator: LLMGraphGenerator
     step1_evals: list[Callable]
     extender_evals: list[Callable]
     step2_evals: list[Callable]
@@ -110,6 +110,7 @@ class LLMGraphExtender(DGBaseGenerator):
     def __init__(
         self,
         model_storage: ModelStorage,
+        grouping_llm: str = "extender_grouping_llm:v1",
         extending_llm: str = "extender_extending_llm:v1",
         filling_llm: str = "extender_filling_llm:v1",
         formatting_llm: str = "extender_formatting_llm:v1",
@@ -123,26 +124,32 @@ class LLMGraphExtender(DGBaseGenerator):
     ):
         # if model is not in model storage put the default model there
         model_storage.add(
+            key=grouping_llm,
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+
+        model_storage.add(
             key=extending_llm,
-            config={"model": "gpt-4o-latest", "temperature": 0},
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
             model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=filling_llm,
-            config={"model": "o3-mini", "temperature": 1},
+            config={"model_name": "o3-mini", "temperature": 1},
             model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=formatting_llm,
-            config={"model": "gpt-4o-mini", "temperature": 0},
+            config={"model_name": "gpt-4o-mini", "temperature": 0},
             model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=dialog_llm,
-            config={"model": "o3-mini", "temperature": 1},
+            config={"model_name": "o3-mini", "temperature": 1},
             model_type=ChatOpenAI,
         )
 
@@ -158,8 +165,9 @@ class LLMGraphExtender(DGBaseGenerator):
             formatting_llm=formatting_llm,
             dialog_llm=dialog_llm,
             sim_model=sim_model,
-            graph_generator=LightGraphGenerator(
+            graph_generator=LLMGraphGenerator(
                 model_storage,
+                grouping_llm,
                 filling_llm,
                 formatting_llm,
                 sim_model,

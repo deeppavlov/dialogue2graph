@@ -24,6 +24,7 @@ class D2GExtenderPipeline(BasePipeline):
         self,
         name: str,
         model_storage: ModelStorage,
+        grouping_llm: str = "extender_grouping_llm:v1",
         extending_llm: str = "extender_extending_llm:v1",
         filling_llm: str = "extender_filling_llm:v1",
         formatting_llm: str = "extender_formatting_llm:v1",
@@ -36,10 +37,13 @@ class D2GExtenderPipeline(BasePipeline):
         step: int = 2,
     ):
         super().__init__(
+            model_storage=model_storage,
+            sim_model=sim_model,
             name=name,
             steps=[
                 LLMGraphExtender(
                     model_storage,
+                    grouping_llm,
                     extending_llm,
                     filling_llm,
                     formatting_llm,

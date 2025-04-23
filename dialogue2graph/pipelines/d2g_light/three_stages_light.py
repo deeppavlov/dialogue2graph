@@ -79,13 +79,13 @@ class LightGraphGenerator(DGBaseGenerator):
         # if model is not in model storage put the default model there
         model_storage.add(
             key=filling_llm,
-            config={"model": "gpt-4o-latest", "temperature": 0},
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
             model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=formatting_llm,
-            config={"model": "gpt-4o-mini", "temperature": 0},
+            config={"model_name": "gpt-4o-mini", "temperature": 0},
             model_type=ChatOpenAI,
         )
 

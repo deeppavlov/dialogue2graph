@@ -15,6 +15,8 @@ from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 logger = Logger(__file__)
 ms = ModelStorage()
 
+metrics_path_name = "tests/metrics_results"
+metrics_path = Path(metrics_path_name)
 
 dataset = load_dataset(
     "DeepPavlov/d2g_generated_augmented", token=os.getenv("HUGGINGFACE_TOKEN")
@@ -77,18 +79,18 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
 
     date = datetime.now().strftime("%d.%m.%Y")
     last_summary_file = get_latest_file(
-        Path("tests/metrics/"), pipeline.name + "*.json"
+        metrics_path, pipeline.name + "*.json"
     )
     last_summary_file_today = get_latest_file(
-        Path("tests/metrics/"), f"{pipeline.name}_{date}*.json"
+        metrics_path, f"{pipeline.name}_{date}*.json"
     )
     report_number = (
         int(last_summary_file_today.stem.split("_")[-1]) + 1
         if last_summary_file_today is not None
         else 1
     )
-    Path("tests/metrics").mkdir(parents=True, exist_ok=True)
-    with open(f"tests/metrics/{pipeline.name}_{date}_{report_number}.json", "w") as f:
+    metrics_path.mkdir(parents=True, exist_ok=True)
+    with open(f"{metrics_path_name}/{pipeline.name}_{date}_{report_number}.json", "w") as f:
         json.dump(new_summary, f, ensure_ascii=False, indent=4)
 
     if last_summary_file is not None:
@@ -101,21 +103,21 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
 def test_d2g_pipelines():
     pipelines = [
         D2GLightPipeline(
-            name="d2g_light",
+            name="three_stages_light",
             model_storage=ms,
         ),
         D2GLLMPipeline(
-            name="d2g_llm",
+            name="three_stages_llm",
             model_storage=ms,
         ),
         D2GExtenderPipeline(
-            name="d2g_extender",
+            name="extender",
             model_storage=ms,
         ),
     ]
 
     for pipeline in pipelines:
         assert test_d2g_pipeline(pipeline), (
-            "Pipeline %s results got worse: check tests/metrics/%s*.json for details"
-            % (pipeline.name, pipeline.name)
+            "Pipeline %s results got worse: check %s/%s*.json for details"
+            % (pipeline.name, metrics_path_name, pipeline.name)
         )

@@ -37,14 +37,16 @@ class D2GLLMPipeline(BasePipeline):
         self,
         name: str,
         model_storage: ModelStorage,
-        grouping_llm: str = "three_stages_grouping_llm:v1",
-        filling_llm: str = "three_stages_filling_llm:v1",
-        formatting_llm: str = "three_stages_formatting_llm:v1",
-        sim_model: str = "three_stages_sim_model:v1",
+        grouping_llm: str = "three_stages_llm_grouping_llm:v1",
+        filling_llm: str = "three_stages_llm_filling_llm:v1",
+        formatting_llm: str = "three_stages_llm_formatting_llm:v1",
+        sim_model: str = "three_stages_llm_sim_model:v1",
         step2_evals: list[Callable] = metrics.DGEvalBase,
         end_evals: list[Callable] = metrics.DGEvalBase,
     ):
         super().__init__(
+            model_storage=model_storage,
+            sim_model = sim_model,
             name=name,
             steps=[
                 LLMGraphGenerator(

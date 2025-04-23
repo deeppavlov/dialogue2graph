@@ -205,7 +205,7 @@ def _compare_two_graphs_llm(
         try:
             llm_content = llm_content.replace("```", "").replace("json", "")
             parsed = json.loads(llm_content)
-        except:
+        except json.JSONDecodeError:
             print("Не удалось распарсить JSON-ответ от модели.")
             parsed = {"matched_nodes": [], "matched_edges": []}
 
