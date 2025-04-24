@@ -65,7 +65,7 @@ Choose LLMs for generating and validating dialogue graph and invoke graph genera
 
 ```python
 from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 
 
 gen_model = ChatOpenAI(

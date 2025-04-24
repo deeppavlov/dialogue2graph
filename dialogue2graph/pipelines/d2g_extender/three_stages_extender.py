@@ -81,11 +81,21 @@ class LLMGraphExtender(GraphExtender):
     """
 
     model_storage: ModelStorage = Field(description="Model storage")
-    extending_llm: str = Field(description="LLM for extending graph nodes")
-    filling_llm: str = Field(description="LLM for adding missing edges")
-    formatting_llm: str = Field(description="LLM for formatting output")
-    dialog_llm: str = Field(description="LLM for dialog sampler")
-    sim_model: str = Field(description="Similarity model")
+    extending_llm: str = Field(
+        description="LLM for extending graph nodes", default="extender_extending_llm:v1"
+    )
+    filling_llm: str = Field(
+        description="LLM for adding missing edges", default="extender_filling_llm:v1"
+    )
+    formatting_llm: str = Field(
+        description="LLM for formatting output", default="extender_formatting_llm:v1"
+    )
+    dialog_llm: str = Field(
+        description="LLM for dialog sampler", default="extender_dialog_llm:v1"
+    )
+    sim_model: str = Field(
+        description="Similarity model", default="extender_sim_model:v1"
+    )
     step: int
     graph_generator: LightGraphGenerator
     step1_evals: list[Callable]
@@ -97,17 +107,53 @@ class LLMGraphExtender(GraphExtender):
     def __init__(
         self,
         model_storage: ModelStorage,
-        extending_llm: str,
-        filling_llm: str,
-        formatting_llm: str,
-        dialog_llm: str,
-        sim_model: str,
-        step1_evals: list[Callable],
-        extender_evals: list[Callable],
-        step2_evals: list[Callable],
-        end_evals: list[Callable],
+        extending_llm: str = "extender_extending_llm:v1",
+        filling_llm: str = "extender_filling_llm:v1",
+        formatting_llm: str = "extender_formatting_llm:v1",
+        dialog_llm: str = "extender_dialog_llm:v1",
+        sim_model: str = "extender_sim_model:v1",
+        step1_evals: list[Callable] | None = [],
+        extender_evals: list[Callable] | None = [],
+        step2_evals: list[Callable] | None = [],
+        end_evals: list[Callable] | None = [],
         step: int = 2,
     ):
+        # check if models are in model storage
+        # if model is not in model storage put the default model there
+        if extending_llm not in model_storage.storage:
+            model_storage.add(
+                key=extending_llm,
+                config={"model": "gpt-4o-latest", "temperature": 0},
+                model_type="llm",
+            )
+
+        if filling_llm not in model_storage.storage:
+            model_storage.add(
+                key=filling_llm,
+                config={"model": "o3-mini", "temperature": 1},
+                model_type="llm",
+            )
+
+        if formatting_llm not in model_storage.storage:
+            model_storage.add(
+                key=formatting_llm,
+                config={"model": "gpt-4o-mini", "temperature": 0},
+                model_type="llm",
+            )
+
+        if dialog_llm not in model_storage.storage:
+            model_storage.add(
+                key=dialog_llm,
+                config={"model": "o3-mini", "temperature": 1},
+                model_type="llm",
+            )
+
+        if sim_model not in model_storage.storage:
+            model_storage.add(
+                key=sim_model,
+                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+                model_type="emb",
+            )
         super().__init__(
             model_storage=model_storage,
             extending_llm=extending_llm,

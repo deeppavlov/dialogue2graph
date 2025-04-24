@@ -24,8 +24,7 @@ from dialogue2graph.metrics import compare_graphs_full, compare_graphs_light
 
 
 class BasePipeline(BaseModel):
-    # TODO: add docs
-    """Abstract class for base pipeline"""
+    """Base class for pipelines"""
 
     name: str = Field(description="Name of the pipeline")
     steps: list[

@@ -23,9 +23,9 @@ class D2GLightPipeline(BasePipeline):
         self,
         name: str,
         model_storage: ModelStorage,
-        filling_llm: str = "d2g_light_filling_llm:v1",
-        formatting_llm: str = "d2g_light_formatting_llm:v1",
-        sim_model: str = "d2g_light_sim_model:v1",
+        filling_llm: str = "three_stages_light_filling_llm:v1",
+        formatting_llm: str = "three_stages_light_formatting_llm:v1",
+        sim_model: str = "three_stages_light_sim_model:v1",
         step2_evals: list[Callable] = None,
         end_evals: list[Callable] = None,
     ):

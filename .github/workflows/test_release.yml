@@ -1,0 +1,51 @@
+name: test_release
+
+on:
+  push:
+    branches: '**'
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ github.ref != 'refs/heads/dev' && github.ref != 'refs/heads/main' }}
+
+jobs:
+  test_full:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+        os: [macOS-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: set up python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: setup poetry and install dependencies
+        run: |
+          python -m pip install --upgrade pip poetry==1.8.4
+      
+      - name: build release
+        run: |
+          python -m poetry build
+    
+      - name: install and test installed package
+        shell: bash
+        run: |
+          python -m venv test_env
+          . ${GITHUB_WORKSPACE}/test_env/bin/activate || . ${GITHUB_WORKSPACE}/test_env/Scripts/activate
+          pip install ./dist/*.whl
+          pip install pytest
+          # Debug information
+          echo "Current directory: $(pwd)"
+          echo "Directory contents:"
+          ls -la
+          # Actually run the tests with explicit path
+          python -m pytest tests/ -v

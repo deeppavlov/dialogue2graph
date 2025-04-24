@@ -12,8 +12,8 @@ import sys
 sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
 
 project = "Dialogue2Graph"
-copyright = "2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
-author = "Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
+copyright = "2025, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin, Anna Mikhailova, Maria Molchanova, Yuri Peshkichev"
+author = "Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin, Anna Mikhailova, Maria Molchanova, Yuri Peshkichev"
 
 # Get the deployment environment
 on_github = os.environ.get("GITHUB_ACTIONS") == "true"
