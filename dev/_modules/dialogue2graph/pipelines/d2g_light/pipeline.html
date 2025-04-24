@@ -411,6 +411,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.pipeline</span><span class="w"> </span><span class="kn">import</span> <span class="n">BasePipeline</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.d2g_light.three_stages_light</span><span class="w"> </span><span class="kn">import</span> <span class="n">LightGraphGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_huggingface</span><span class="w"> </span><span class="kn">import</span> <span class="n">HuggingFaceEmbeddings</span>
 
 <span class="n">load_dotenv</span><span class="p">()</span>
 
@@ -430,6 +432,22 @@
         <span class="n">step2_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">end_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+        <span class="c1"># if model is not in model storage put the default model there</span>
+        <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">filling_llm</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;chatgpt-4o-latest&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+            <span class="n">model_type</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">formatting_llm</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+            <span class="n">model_type</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">sim_model</span><span class="p">,</span>
+            <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;BAAI/bge-m3&quot;</span><span class="p">,</span> <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu&quot;</span><span class="p">}},</span>
+            <span class="n">model_type</span><span class="o">=</span><span class="n">HuggingFaceEmbeddings</span><span class="p">,</span>
+        <span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span>
             <span class="n">steps</span><span class="o">=</span><span class="p">[</span>

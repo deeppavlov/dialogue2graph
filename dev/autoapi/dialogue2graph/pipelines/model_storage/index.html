@@ -381,6 +381,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../utils/index.html">dialogue2graph.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../utils/dg_helper/index.html">dialogue2graph.utils.dg_helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../utils/logger/index.html">dialogue2graph.utils.logger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../utils/prompt_caching/index.html">dialogue2graph.utils.prompt_caching</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../utils/vector_stores/index.html">dialogue2graph.utils.vector_stores</a></li>
 </ul>
@@ -470,10 +471,13 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.model_storage.StoredData" title="dialogue2graph.pipelines.model_storage.StoredData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoredData</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.model_storage.GetModelInstance" title="dialogue2graph.pipelines.model_storage.GetModelInstance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GetModelInstance</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.model_storage.StoredData" title="dialogue2graph.pipelines.model_storage.StoredData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StoredData</span></code></a></p></td>
 <td><p>StoredData is a Pydantic model that represents the storage structure for a model, its configuration, and metadata.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelStorage</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ModelStorage</span></code></a></p></td>
 <td><p>ModelStorage is a class for managing the storage of model configurations and instances.</p></td>
 </tr>
 </tbody>
@@ -486,6 +490,26 @@
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.model_storage.logger">
 <span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.model_storage.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#dialogue2graph.pipelines.model_storage.logger" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.model_storage.GetModelInstance">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.model_storage.</span></span><span class="sig-name descname"><span class="pre">GetModelInstance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/model_storage.html#GetModelInstance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.model_storage.GetModelInstance" title="Link to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<em>dict</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.model_storage.GetModelInstance.config">
+<span class="sig-name descname"><span class="pre">config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#dialogue2graph.pipelines.model_storage.GetModelInstance.config" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.model_storage.GetModelInstance.instantiate">
+<span class="sig-name descname"><span class="pre">instantiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/model_storage.html#GetModelInstance.instantiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.model_storage.GetModelInstance.instantiate" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.model_storage.StoredData">
@@ -562,7 +586,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id2">
-<span class="sig-name descname"><span class="pre">model_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'llm'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'emb'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">model_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pydantic._internal._model_construction.ModelMetaclass</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -634,16 +658,32 @@ and their corresponding instances.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.model_storage.ModelStorage.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'llm'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'emb'</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/model_storage.html#ModelStorage.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.model_storage.ModelStorage.add" title="Link to this definition">#</a></dt>
-<dd><p>Add a new model configuration to the storage.</p>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pydantic._internal._model_construction.ModelMetaclass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwright</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../_modules/dialogue2graph/pipelines/model_storage.html#ModelStorage.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.model_storage.ModelStorage.add" title="Link to this definition">#</a></dt>
+<dd><blockquote>
+<div><p>Add a new model configuration to the storage.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>key (str): The unique identifier for the model configuration.
+config (dict): The configuration dictionary for initializing the model.
+model_type (ModelMetaclass): The type name of the model to be added.
+overwright (bool): Whether to overwright model existing under same key</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="simple">
+<dt>.</dt><dd><dl class="simple">
+<dt>Raises:</dt><dd><p>KeyError: If configuration keys are invalid for the specified model_type.
+Exception: When adding model to the storage failed</p>
+</dd>
+</dl>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<em>str</em>) – The unique identifier for the model configuration.</p></li>
-<li><p><strong>config</strong> (<em>dict</em>) – The configuration dictionary for initializing the model.</p></li>
-<li><p><strong>model_type</strong> (<em>Union</em><em>[</em><em>Literal</em><em>[</em><em>&quot;llm&quot;</em><em>]</em><em>, </em><em>Literal</em><em>[</em><em>&quot;emb&quot;</em><em>]</em><em>]</em>) – The type of the model to be added.
-- “llm”: Large Language Model, initialized using <cite>ChatOpenAI</cite>.
-- “emb”: Embedding model, initialized using <cite>HuggingFaceEmbeddings</cite>.</p></li>
+<li><p><strong>key</strong> (<em>str</em>)</p></li>
+<li><p><strong>config</strong> (<em>dict</em>)</p></li>
+<li><p><strong>model_type</strong> (<em>pydantic._internal._model_construction.ModelMetaclass</em>)</p></li>
+<li><p><strong>overwright</strong> (<em>bool</em>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -716,6 +756,11 @@ and their corresponding instances.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.model_storage.logger"><code class="docutils literal notranslate"><span class="pre">logger</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.model_storage.GetModelInstance"><code class="docutils literal notranslate"><span class="pre">GetModelInstance</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.model_storage.GetModelInstance.config"><code class="docutils literal notranslate"><span class="pre">GetModelInstance.config</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.model_storage.GetModelInstance.instantiate"><code class="docutils literal notranslate"><span class="pre">GetModelInstance.instantiate()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.model_storage.StoredData"><code class="docutils literal notranslate"><span class="pre">StoredData</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.model_storage.StoredData.key"><code class="docutils literal notranslate"><span class="pre">StoredData.key</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.model_storage.StoredData.config"><code class="docutils literal notranslate"><span class="pre">StoredData.config</span></code></a></li>

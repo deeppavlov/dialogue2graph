@@ -381,6 +381,7 @@
 </details></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../../utils/index.html">dialogue2graph.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../../utils/dg_helper/index.html">dialogue2graph.utils.dg_helper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../utils/logger/index.html">dialogue2graph.utils.logger</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../utils/prompt_caching/index.html">dialogue2graph.utils.prompt_caching</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../utils/vector_stores/index.html">dialogue2graph.utils.vector_stores</a></li>
 </ul>
@@ -494,16 +495,13 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_paths" title="dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_paths"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicated_paths</span></code></a>(→ list[list[int]])</p></td>
 <td><p>Remove duplicating paths from node_paths</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_doublets" title="dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_doublets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dialogue_doublets</span></code></a>(→ set[tuple[str]])</p></td>
-<td><p>Find all dialogue doublets with (edge, target) utterances</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets" title="dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dialogue_triplets</span></code></a>(→ set[tuple[str]])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets" title="dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dialogue_triplets</span></code></a>(→ set[tuple[str]])</p></td>
 <td><p>Find all dialogue triplets with (source, edge, target) utterances</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_dialogues" title="dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_dialogues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicated_dialogues</span></code></a>(→ list[list[dict]])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_dialogues" title="dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_dialogues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicated_dialogues</span></code></a>(→ list[list[dict]])</p></td>
 <td><p>Remove duplicated dialogues from list of dialogs seq</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogues" title="dialogue2graph.pipelines.core.dialogue_sampling.get_dialogues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dialogues</span></code></a>(...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogues" title="dialogue2graph.pipelines.core.dialogue_sampling.get_dialogues"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dialogues</span></code></a>(...)</p></td>
 <td><p>Find all the dialogues in the graph finishing with end_nodes_ids</p></td>
 </tr>
 </tbody>
@@ -628,23 +626,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_doublets">
-<span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.core.dialogue_sampling.</span></span><span class="sig-name descname"><span class="pre">get_dialogue_doublets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../../_modules/dialogue2graph/pipelines/core/dialogue_sampling.html#get_dialogue_doublets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_doublets" title="Link to this definition">#</a></dt>
-<dd><p>Find all dialogue doublets with (edge, target) utterances</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>seq</strong> (<em>list</em><em>[</em><em>list</em><em>[</em><em>dict</em><em>]</em><em>]</em>) – sequence of dialogs</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Set of (user_utterance, assistant_utterance)</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>set[tuple[str]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets">
 <span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.core.dialogue_sampling.</span></span><span class="sig-name descname"><span class="pre">get_dialogue_triplets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">set</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../../../../_modules/dialogue2graph/pipelines/core/dialogue_sampling.html#get_dialogue_triplets"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets" title="Link to this definition">#</a></dt>
 <dd><p>Find all dialogue triplets with (source, edge, target) utterances</p>
@@ -764,7 +745,6 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.dialogue_sampling.mix_ends"><code class="docutils literal notranslate"><span class="pre">mix_ends()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_all_sequences"><code class="docutils literal notranslate"><span class="pre">get_all_sequences()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_paths"><code class="docutils literal notranslate"><span class="pre">remove_duplicated_paths()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_doublets"><code class="docutils literal notranslate"><span class="pre">get_dialogue_doublets()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_triplets"><code class="docutils literal notranslate"><span class="pre">get_dialogue_triplets()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.dialogue_sampling.remove_duplicated_dialogues"><code class="docutils literal notranslate"><span class="pre">remove_duplicated_dialogues()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogues"><code class="docutils literal notranslate"><span class="pre">get_dialogues()</span></code></a></li>

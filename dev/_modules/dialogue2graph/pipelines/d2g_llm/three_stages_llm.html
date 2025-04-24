@@ -420,8 +420,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGraph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">ReasonGraph</span><span class="p">,</span> <span class="n">Node</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
-
-
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.utils.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.utils.dg_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">connect_nodes</span><span class="p">,</span> <span class="n">get_helpers</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.helpers.parse_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineDataType</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -433,9 +432,6 @@
     <span class="n">grouping_prompt_1</span><span class="p">,</span>
     <span class="n">grouping_prompt_2</span><span class="p">,</span>
 <span class="p">)</span>
-
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DialogueNodes">
@@ -449,6 +445,7 @@
 
 
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;langchain_core.vectorstores.base&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="LLMGraphGenerator">
@@ -503,7 +500,6 @@
         <span class="n">filling_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;three_stages_filling_llm:v1&quot;</span><span class="p">,</span>
         <span class="n">formatting_llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;three_stages_formatting_llm:v1&quot;</span><span class="p">,</span>
         <span class="n">sim_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;three_stages_sim_model:v1&quot;</span><span class="p">,</span>
-
         <span class="n">step2_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">end_evals</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>

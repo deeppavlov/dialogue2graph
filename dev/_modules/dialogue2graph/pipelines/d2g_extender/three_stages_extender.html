@@ -414,6 +414,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain.schema</span><span class="w"> </span><span class="kn">import</span> <span class="n">HumanMessage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.utils.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">metrics</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.dialogue_sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveDialogueSampler</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.d2g_light.three_stages_light</span><span class="w"> </span><span class="kn">import</span> <span class="n">LightGraphGenerator</span>
@@ -448,6 +449,8 @@
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;langchain_core.vectorstores.base&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+
 <span class="n">dialogue_sampler</span> <span class="o">=</span> <span class="n">RecursiveDialogueSampler</span><span class="p">()</span>
 
 

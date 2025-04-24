@@ -17,6 +17,7 @@ Classes
 
 .. autoapisummary::
 
+   dialogue2graph.pipelines.model_storage.GetModelInstance
    dialogue2graph.pipelines.model_storage.StoredData
    dialogue2graph.pipelines.model_storage.ModelStorage
 
@@ -25,6 +26,15 @@ Module Contents
 ---------------
 
 .. py:data:: logger
+
+.. py:class:: GetModelInstance(config: dict)
+
+   .. py:attribute:: config
+      :type:  dict
+
+
+   .. py:method:: instantiate(class_name)
+
 
 .. py:class:: StoredData(/, **data: Any)
 
@@ -80,7 +90,7 @@ Module Contents
 
 
    .. py:attribute:: model_type
-      :type:  Union[Literal['llm'], Literal['emb']]
+      :type:  pydantic._internal._model_construction.ModelMetaclass
       :value: None
 
 
@@ -139,18 +149,19 @@ Module Contents
 
 
 
-   .. py:method:: add(key: str, config: dict, model_type: Union[Literal['llm'], Literal['emb']])
+   .. py:method:: add(key: str, config: dict, model_type: pydantic._internal._model_construction.ModelMetaclass, overwright: bool = False)
 
-      Add a new model configuration to the storage.
+              Add a new model configuration to the storage.
 
-      :param key: The unique identifier for the model configuration.
-      :type key: str
-      :param config: The configuration dictionary for initializing the model.
-      :type config: dict
-      :param model_type: The type of the model to be added.
-                         - "llm": Large Language Model, initialized using `ChatOpenAI`.
-                         - "emb": Embedding model, initialized using `HuggingFaceEmbeddings`.
-      :type model_type: Union[Literal["llm"], Literal["emb"]]
+              Args:
+                  key (str): The unique identifier for the model configuration.
+                  config (dict): The configuration dictionary for initializing the model.
+                  model_type (ModelMetaclass): The type name of the model to be added.
+                  overwright (bool): Whether to overwright model existing under same key
+      .
+              Raises:
+                  KeyError: If configuration keys are invalid for the specified model_type.
+                  Exception: When adding model to the storage failed
 
 
 

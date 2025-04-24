@@ -7,6 +7,9 @@ First of all we need to import the :py:class:`~dialogue2graph.pipelines.model_st
 
 .. code-block:: python
 
+    from langchain_openai import ChatOpenAI
+    from langchain_huggingface import HuggingFaceEmbeddings
+    
     from dialogue2graph import Dialogue
     from dialogue2graph.pipelines.model_storage import ModelStorage
     from dialogue2graph.pipelines.d2g_llm import LLMGraphGenerator
@@ -53,7 +56,7 @@ Let's read them:
         true_graph=None,
     )
 
-Now we should create a :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. This object will be used to store the models we will be using. In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used to generate the embeddings for the nodes in the graph.
+Now we should create a :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. This object will be used to store the models we will be using. In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used to generate the embeddings for the nodes in the graph. Config dictionary should be compatible with the parameters list fo the model class, ``HuggingFaceEmbeddings`` for example.
 
 .. code-block:: python
 
@@ -61,17 +64,18 @@ Now we should create a :py:class:`~dialogue2graph.pipelines.model_storage.ModelS
     model_storage.add(
         "my_formatting_model",
         config={
-            "model": "gpt-4.1-mini"
+            "model_name": "gpt-4.1-mini"
         },
-        model_type="llm",
+        model_type=ChatOpenAI,
     )
 
     model_storage.add(
         "my_embedding_model",
         config={
-            "model_name": "sentence-transformers/all-MiniLM-L6-v2"
+            "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+            "model_kwargs": {"device": "cpu"}
         },
-        model_type="emb",
+        model_type=HuggingFaceEmbeddings,
     )
 
 Now we can create the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. This object will be used to generate the graph. We will pass the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object to the constructor of the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. Note, that we are overriding the default model on the formatting and similarity tasks with the models we added to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. The rest of the models will be used as default. Don't forget to use correct ``model_type`` when adding the model to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage`. The available types are ``llm`` for LLMs and ``emb`` for embedders.

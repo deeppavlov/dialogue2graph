@@ -407,7 +407,6 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseGraph</span>
@@ -420,8 +419,9 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.helpers.find_cycle_ends</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_cycle_ends</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.language_models.chat_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseChatModel</span>
 
-<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.utils.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_DialogPathsCounter</span><span class="p">:</span>
@@ -611,26 +611,21 @@
 
 
 
-<div class="viewcode-block" id="get_dialogue_doublets">
-<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/dialogue_sampling/index.html#dialogue2graph.pipelines.core.dialogue_sampling.get_dialogue_doublets">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_dialogue_doublets</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Find all dialogue doublets with (edge, target) utterances</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        seq: sequence of dialogs</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Set of (user_utterance, assistant_utterance)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">doublets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">dialogue</span> <span class="ow">in</span> <span class="n">seq</span><span class="p">:</span>
-        <span class="n">user_texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dialogue</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;participant&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;user&quot;</span><span class="p">]</span>
-        <span class="n">assist_texts</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dialogue</span> <span class="k">if</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;participant&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;assistant&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">assist_texts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">user_texts</span><span class="p">):</span>
-            <span class="n">user_texts</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
-        <span class="n">doublets</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">user_texts</span><span class="p">,</span> <span class="n">assist_texts</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">doublets</span></div>
-
+<span class="c1"># def get_dialogue_doublets(seq: list[list[dict]]) -&gt; set[tuple[str]]:</span>
+<span class="c1">#     &quot;&quot;&quot;Find all dialogue doublets with (edge, target) utterances</span>
+<span class="c1">#     Args:</span>
+<span class="c1">#       seq: sequence of dialogs</span>
+<span class="c1">#     Returns:</span>
+<span class="c1">#       Set of (user_utterance, assistant_utterance)</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     doublets = set()</span>
+<span class="c1">#     for dialogue in seq:</span>
+<span class="c1">#         user_texts = [d[&quot;text&quot;] for d in dialogue if d[&quot;participant&quot;] == &quot;user&quot;]</span>
+<span class="c1">#         assist_texts = [d[&quot;text&quot;] for d in dialogue if d[&quot;participant&quot;] == &quot;assistant&quot;]</span>
+<span class="c1">#         if len(assist_texts) &gt; len(user_texts):</span>
+<span class="c1">#             user_texts += [&quot;&quot;]</span>
+<span class="c1">#         doublets.update(zip(user_texts, assist_texts))</span>
+<span class="c1">#     return doublets</span>
 
 
 <div class="viewcode-block" id="get_dialogue_triplets">
@@ -669,9 +664,7 @@
         <span class="k">return</span> <span class="p">[]</span>
     <span class="n">uniq_seq</span> <span class="o">=</span> <span class="p">[</span><span class="n">non_empty_seq</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
     <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">non_empty_seq</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">get_dialogue_doublets</span><span class="p">([</span><span class="n">s</span><span class="p">])</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span>
-            <span class="n">get_dialogue_doublets</span><span class="p">(</span><span class="n">uniq_seq</span><span class="p">)</span>
-        <span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">get_dialogue_triplets</span><span class="p">([</span><span class="n">s</span><span class="p">])</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">get_dialogue_triplets</span><span class="p">(</span><span class="n">uniq_seq</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">get_dialogue_triplets</span><span class="p">([</span><span class="n">s</span><span class="p">])</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">get_dialogue_triplets</span><span class="p">(</span><span class="n">uniq_seq</span><span class="p">)):</span>
             <span class="n">uniq_seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">uniq_seq</span></div>
 

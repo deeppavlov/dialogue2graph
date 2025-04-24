@@ -421,7 +421,10 @@
 <h1>Using Dialog2Graph algorithms<a class="headerlink" href="#using-dialog2graph-algorithms" title="Link to this heading">#</a></h1>
 <p>This guide demonstrates usage of <code class="docutils literal notranslate"><span class="pre">dialogue2graph</span></code> algorithms to generate a dialogue graph. The following example shows how to use the algorithm that generates graph based on the dialogues you provide using both LLM and Embedding models. Also we will dive into details of <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> usage.</p>
 <p>First of all we need to import the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> and <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/d2g_llm/index.html#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a> we will be using.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dialogue</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_huggingface</span><span class="w"> </span><span class="kn">import</span> <span class="n">HuggingFaceEmbeddings</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dialogue</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.d2g_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGraphGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.helpers.parse_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineRawDataType</span>
@@ -463,22 +466,23 @@
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we should create a <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object. This object will be used to store the models we will be using. In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used to generate the embeddings for the nodes in the graph.</p>
+<p>Now we should create a <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object. This object will be used to store the models we will be using. In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used to generate the embeddings for the nodes in the graph. Config dictionary should be compatible with the parameters list fo the model class, <code class="docutils literal notranslate"><span class="pre">HuggingFaceEmbeddings</span></code> for example.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_storage</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
 <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="s2">&quot;my_formatting_model&quot;</span><span class="p">,</span>
     <span class="n">config</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4.1-mini&quot;</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-4.1-mini&quot;</span>
     <span class="p">},</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="s2">&quot;my_embedding_model&quot;</span><span class="p">,</span>
     <span class="n">config</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;sentence-transformers/all-MiniLM-L6-v2&quot;</span>
+        <span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;sentence-transformers/all-MiniLM-L6-v2&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;model_kwargs&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;device&quot;</span><span class="p">:</span> <span class="s2">&quot;cpu&quot;</span><span class="p">}</span>
     <span class="p">},</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;emb&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="n">HuggingFaceEmbeddings</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>

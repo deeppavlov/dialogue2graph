@@ -420,7 +420,9 @@
   <section id="generate-synthetic-graph-on-certain-topic">
 <h1>Generate synthetic graph on certain topic<a class="headerlink" href="#generate-synthetic-graph-on-certain-topic" title="Link to this heading">#</a></h1>
 <p>Use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> to create a validated graph from several LLM generated dialogues concerning a given topic.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.datasets.complex_dialogues.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoopedGraphGenerator</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.datasets.complex_dialogues.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoopedGraphGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
 </pre></div>
 </div>
@@ -430,13 +432,13 @@
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_storage</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
 <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="s2">&quot;gen_model&quot;</span><span class="p">,</span> <span class="c1"># model to use for generation</span>
-    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;o1-mini&quot;</span><span class="p">},</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;o1-mini&quot;</span><span class="p">},</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="s2">&quot;help_model&quot;</span><span class="p">,</span> <span class="c1"># model to use for other tasks</span>
-    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">},</span>
-    <span class="n">model_type</span><span class="o">=</span><span class="s2">&quot;llm&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;model_name&quot;</span><span class="p">:</span> <span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">},</span>
+    <span class="n">model_type</span><span class="o">=</span><span class="n">ChatOpenAI</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
