@@ -22,6 +22,6 @@ class DGBaseGenerator(GraphGenerator):
         sim_model = self.model_storage.storage[self.sim_model].model
         for metric in getattr(self, eval_stage + "_evals"):
             report[metric.__name__ + ":" + eval_stage] = metric(
-                sim_model, true_graph, graph
+                true_graph, graph, sim_model
             )
         return report

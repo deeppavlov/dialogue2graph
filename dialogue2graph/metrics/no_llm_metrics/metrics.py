@@ -301,7 +301,7 @@ def match_graph_triplets(G1: BaseGraph, G2: BaseGraph, change_to_original_ids=Fa
     return node_mapping, edge_mapping
 
 
-def is_same_structure(sim_model, G1: BaseGraph, G2: BaseGraph) -> bool:
+def is_same_structure(G1: BaseGraph, G2: BaseGraph, sim_model=None) -> bool:
     """
     Check if graphs are isomorphic.
 

@@ -57,7 +57,7 @@ class BasePipeline(BaseModel):
         report.add_property("time", end_time - st_time)
         report.add_property(
             "simple_graph_comparison",
-            compare_graphs_light(self.model_storage.storage[self.sim_model].model, output, data),
+            compare_graphs_light(output, data),
         )
         if enable_evals:
             report.add_property(

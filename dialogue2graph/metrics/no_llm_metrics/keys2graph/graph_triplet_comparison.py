@@ -37,7 +37,7 @@ def _embed(model: HuggingFaceEmbeddings, text: str) -> np.ndarray:
 
 
 # ---------- 2. основная публичная функция ----------
-def compare_two_graphs(model: HuggingFaceEmbeddings, original_graph, generated_graph):
+def compare_two_graphs(original_graph, generated_graph, model: HuggingFaceEmbeddings):
     """
     Возвращает:
       {

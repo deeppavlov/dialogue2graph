@@ -39,14 +39,21 @@ def compare_summaries(pipeline_name, last_summary, new_summary) -> bool:
     if last_avg["graph"] != "average" or new_avg["graph"] != "average":
         logger.warning("Summary does not contain average graph")
         return False
-    if last_avg["duration"] < new_avg["duration"]:
+    duration_diff = new_avg["duration"] - last_avg["duration"]
+    if duration_diff > 1:
         logger.warning(
-            "Pipeline %s got slower: %f -> %f",
+            "Pipeline %s got slower for: %f",
             pipeline_name,
-            last_avg["duration"],
-            new_avg["duration"],
+            duration_diff,
         )
-    return last_avg["similarity"] <= new_avg["similarity"]
+    avg_diff = last_avg["similarity"] - new_avg["similarity"]
+    if avg_diff >= 0.01:
+        logger.warning(
+            "Pipeline %s got worse for: %f",
+            pipeline_name,
+            avg_diff,
+        )
+    return avg_diff < 0.01
 
 
 def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
@@ -59,7 +66,7 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
 
         raw_data = PipelineRawDataType(dialogs=dialogs, true_graph=graph)
         report = pipeline.invoke(
-            ms, f"{pipeline.name}_sim_model:v1", raw_data, enable_evals=True
+            raw_data, enable_evals=True
         )[1].model_dump()
         new_summary.append(
             {

@@ -1,11 +1,9 @@
-name: coverage
+name: check_metrics
 
 on:
-  push:
-    branches: '**'
   pull_request:
     branches:
-    - dev
+    - main
   workflow_dispatch:
 
 concurrency:
@@ -28,6 +26,6 @@ jobs:
           python -m pip install --upgrade pip poetry
           python -m poetry install --with tests --no-ansi --no-interaction
 
-      - name: run check_dg_metrics
+      - name: run check_metrics
         run: |
-          python -m poetry run poe coverage || exit 1
+          python -m poetry run poe check_metrics || exit 1
