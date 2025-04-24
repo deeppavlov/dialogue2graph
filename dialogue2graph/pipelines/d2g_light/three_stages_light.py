@@ -69,7 +69,6 @@ class LightGraphGenerator(GraphGenerator):
         filling_llm: str = "three_stages_light_filling_llm:v1",
         formatting_llm: str = "three_stages_light_formatting_llm:v1",
         sim_model: str = "three_stages_light_sim_model:v1",
-
         step2_evals: list[Callable] | None = [],
         end_evals: list[Callable] | None = [],
     ):
