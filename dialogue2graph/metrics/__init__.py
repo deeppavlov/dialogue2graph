@@ -15,6 +15,19 @@ DGReportType = dict
 def compare_graphs_light(
     graph: Graph, data: PipelineDataType
 ) -> bool:
+    """
+    Compares a generated Graph with the true Graph using two metrics:
+
+    1. `match_dg_triplets`: checks if the generated graph matches the triplets from the dialogs.
+    2. `is_same_structure`: checks if the generated graph has the same structure as the true graph.
+
+    Args:
+        graph (Graph): The generated graph to compare with the true graph.
+        data (PipelineDataType): Contains the true graph and the dialogs.
+
+    Returns:
+        bool: True if both metrics return True, False otherwise.
+    """
     if data.true_graph is None:
         return False
     return no_llm_metrics.match_dg_triplets(graph, data.dialogs)[
@@ -31,6 +44,17 @@ def compare_graphs_light(
 def compare_graphs_full(
     model: HuggingFaceEmbeddings, graph: Graph, data: PipelineDataType
 ) -> CompareResponse:
+    """
+    Compares a generated Graph with the true Graph using the triplet comparison metric.
+
+    Args:
+        model (HuggingFaceEmbeddings): The model to use for computing the embeddings.
+        graph (Graph): The generated graph to compare with the true graph.
+        data (PipelineDataType): Contains the true graph and the dialogs.
+
+    Returns:
+        CompareResponse: A dictionary with a "value" key that is True if the graphs match, and a "description" key with a description of the comparison result.
+    """
     if data.true_graph is None:
         return {"value": False, "description": "No true graph given"}
     return graph_triplet_comparison.compare_two_graphs(data.true_graph, graph, model)

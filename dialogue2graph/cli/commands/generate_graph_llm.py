@@ -1,11 +1,18 @@
+import os
 import json
 from pathlib import Path
 import datetime
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLAlchemyMd5Cache
+from sqlalchemy import create_engine
 
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
+
+engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
 
 ms = ModelStorage()
 

@@ -1,6 +1,10 @@
+import os
 import json
 import pytest
 import dotenv
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLAlchemyMd5Cache
+from sqlalchemy import create_engine
 
 from dialogue2graph import Dialogue
 from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
@@ -10,6 +14,9 @@ from dialogue2graph.pipelines.model_storage import ModelStorage
 dotenv.load_dotenv()
 if not dotenv.find_dotenv():
     pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
+
+engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
 
 ms = ModelStorage()
 

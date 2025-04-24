@@ -46,6 +46,24 @@ class BasePipeline(BaseModel):
         raw_data: PipelineRawDataType,
         enable_evals=False,
     ) -> Tuple[Any, PipelineReport]:
+        """
+        Invoke the pipeline to process the raw data and generate a report.
+     
+        This method processes the given raw data through each step in the pipeline,
+        generating both output data (result of the pipeline) and a report detailing the pipeline's execution.
+        It measures execution time, performs simple graph comparisons, and optionally
+        evaluates the results with more detailed comparisons.
+     
+        Args:
+            raw_data (PipelineRawDataType): The raw input data to be processed by the pipeline.
+            enable_evals (bool, optional): If True, performs additional evaluations 
+                                           and adds more detailed comparisons to the report.
+     
+        Returns:
+            Tuple[Any, PipelineReport]: A tuple containing the final output of the pipeline
+                                        and a detailed report of the pipeline's execution.
+        """
+    
         data: PipelineDataType = RawDGParser().invoke(raw_data)
         report = PipelineReport(service=self.name)
         st_time = time.time()
