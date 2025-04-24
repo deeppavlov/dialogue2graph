@@ -10,9 +10,10 @@ from pydantic import BaseModel
 from typing import Optional, Any
 import matplotlib.pyplot as plt
 import abc
-import logging
 
-logger = logging.getLogger(__name__)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class BaseGraph(BaseModel, abc.ABC):
@@ -140,13 +141,13 @@ class Graph(BaseGraph):
         """
         self.graph = nx.DiGraph()
         nodes = sorted([v["id"] for v in self.graph_dict["nodes"]])
-        logging.debug(f"Nodes: {nodes}")
+        logger.debug(f"Nodes: {nodes}")
 
         self.node_mapping = {}
         renumber_flg = nodes != list(range(1, len(nodes) + 1))
         if renumber_flg:
             self.node_mapping = {node_id: idx + 1 for idx, node_id in enumerate(nodes)}
-        logging.debug(f"Renumber flag: {renumber_flg}")
+        logger.debug(f"Renumber flag: {renumber_flg}")
 
         for node in self.graph_dict["nodes"]:
             cur_node_id = node["id"]

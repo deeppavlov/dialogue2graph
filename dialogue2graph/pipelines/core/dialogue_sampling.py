@@ -6,7 +6,6 @@ The module contains class for sampling dialogs from a graph.
 """
 
 import itertools
-import logging
 from typing import Literal
 import pandas as pd
 from dialogue2graph.pipelines.core.graph import BaseGraph
@@ -19,8 +18,9 @@ from dialogue2graph.metrics.no_llm_metrics import (
 from dialogue2graph.pipelines.helpers.find_cycle_ends import find_cycle_ends
 from langchain_core.language_models.chat_models import BaseChatModel
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class _DialogPathsCounter:
@@ -189,23 +189,21 @@ def remove_duplicated_paths(node_paths: list[list[int]]) -> list[list[int]]:
     return res
 
 
-def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
-    """Find all dialogue doublets with (edge, target) utterances
-
-    Args:
-        seq: sequence of dialogs
-
-    Returns:
-        Set of (user_utterance, assistant_utterance)
-    """
-    doublets = set()
-    for dialogue in seq:
-        user_texts = [d["text"] for d in dialogue if d["participant"] == "user"]
-        assist_texts = [d["text"] for d in dialogue if d["participant"] == "assistant"]
-        if len(assist_texts) > len(user_texts):
-            user_texts += [""]
-        doublets.update(zip(user_texts, assist_texts))
-    return doublets
+# def get_dialogue_doublets(seq: list[list[dict]]) -> set[tuple[str]]:
+#     """Find all dialogue doublets with (edge, target) utterances
+#     Args:
+#       seq: sequence of dialogs
+#     Returns:
+#       Set of (user_utterance, assistant_utterance)
+#     """
+#     doublets = set()
+#     for dialogue in seq:
+#         user_texts = [d["text"] for d in dialogue if d["participant"] == "user"]
+#         assist_texts = [d["text"] for d in dialogue if d["participant"] == "assistant"]
+#         if len(assist_texts) > len(user_texts):
+#             user_texts += [""]
+#         doublets.update(zip(user_texts, assist_texts))
+#     return doublets
 
 
 def get_dialogue_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
@@ -239,9 +237,7 @@ def remove_duplicated_dialogues(seq: list[list[dict]]) -> list[list[dict]]:
         return []
     uniq_seq = [non_empty_seq[0]]
     for s in non_empty_seq[1:]:
-        if not get_dialogue_doublets([s]).issubset(
-            get_dialogue_doublets(uniq_seq)
-        ) or not get_dialogue_triplets([s]).issubset(get_dialogue_triplets(uniq_seq)):
+        if not get_dialogue_triplets([s]).issubset(get_dialogue_triplets(uniq_seq)):
             uniq_seq.append(s)
     return uniq_seq
 

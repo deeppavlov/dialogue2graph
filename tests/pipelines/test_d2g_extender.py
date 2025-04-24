@@ -1,6 +1,9 @@
 import json
 import pytest
 import dotenv
+from langchain_openai import ChatOpenAI
+from langchain_huggingface import HuggingFaceEmbeddings
+
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
 from dialogue2graph.pipelines.d2g_extender.pipeline import D2GExtenderPipeline
@@ -64,28 +67,28 @@ def test_d2g_extender_positive(dialogues_positive, graph_positive_1):
 
     ms.add(
         key="extending_llm",
-        config={"model": "chatgpt-4o-latest", "temperature": 0},
-        model_type="llm",
+        config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="filling_llm",
-        config={"model": "o3-mini", "temperature": 1},
-        model_type="llm",
+        config={"model_name": "o3-mini", "temperature": 1},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="formatting_llm",
-        config={"model": "gpt-4o-mini", "temperature": 0},
-        model_type="llm",
+        config={"model_name": "gpt-4o-mini", "temperature": 0},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="dialog_llm",
-        config={"model": "os-mini", "temperature": 1},
-        model_type="llm",
+        config={"model_name": "os-mini", "temperature": 1},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "device": "cuda:0"},
-        model_type="emb",
+        config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
+        model_type=HuggingFaceEmbeddings,
     )
 
     pipeline = D2GExtenderPipeline(
@@ -119,28 +122,28 @@ def test_d2g_extender_negative(dialogues_negative, graph_negative):
 
     ms.add(
         key="extending_llm",
-        config={"model": "chatgpt-4o-latest", "temperature": 0},
-        model_type="llm",
+        config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="filling_llm",
-        config={"model": "o3-mini", "temperature": 1},
-        model_type="llm",
+        config={"model_name": "o3-mini", "temperature": 1},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="formatting_llm",
-        config={"model": "gpt-4o-mini", "temperature": 0},
-        model_type="llm",
+        config={"model_name": "gpt-4o-mini", "temperature": 0},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="dialog_llm",
-        config={"model": "os-mini", "temperature": 1},
-        model_type="llm",
+        config={"model_name": "os-mini", "temperature": 1},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
-        model_type="emb",
+        config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
+        model_type=HuggingFaceEmbeddings,
     )
 
     pipeline = D2GExtenderPipeline(

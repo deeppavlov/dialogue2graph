@@ -1,7 +1,8 @@
 import yaml
-import logging
+import re
 import dotenv
-from typing import Literal, Union, Dict
+from pydantic._internal._model_construction import ModelMetaclass
+from typing import Union, Dict
 from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
 
@@ -9,13 +10,21 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
 from langchain_huggingface import HuggingFaceEmbeddings
 
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 dotenv.load_dotenv()
-logger = logging.getLogger(__name__)
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
-)
+
+
+class GetModelInstance:
+    config: dict
+
+    def __init__(self, config: dict):
+        self.config = config
+
+    def instantiate(self, class_name):
+        return class_name(**self.config)
 
 
 class StoredData(BaseModel):
@@ -39,19 +48,17 @@ class StoredData(BaseModel):
 
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
-    model_type: Union[Literal["llm"], Literal["emb"]] = Field(
-        description="Type of the stored model"
-    )
+    model_type: ModelMetaclass = Field(description="Type of the stored model")
     model: Union[HuggingFaceEmbeddings, BaseChatModel] = Field(
         description="Model object"
     )
 
     @model_validator(mode="before")
     def validate_model(cls, values):
-        if values.get("model_type") == "llm":
+        if values.get("model_type") == ChatOpenAI:
             if not isinstance(values.get("model"), BaseChatModel):
                 raise ValueError("LLM model must be an instance of BaseChatModel")
-        elif values.get("model_type") == "emb":
+        elif values.get("model_type") == HuggingFaceEmbeddings:
             if not isinstance(values.get("model"), HuggingFaceEmbeddings):
                 raise ValueError(
                     "Embedding model must be an instance of HuggingFaceEmbeddings"
@@ -92,7 +99,7 @@ class ModelStorage(BaseModel):
                     self.add(
                         key=key,
                         config=config.pop("config"),
-                        model_type=config.pop("model_type"),
+                        model_type=eval(config.pop("model_type")),
                     )
                     logger.debug(f"Loaded model configuration for '{key}'")
             logger.info(f"Successfully loaded {len(loaded_storage)} models from {path}")
@@ -101,35 +108,53 @@ class ModelStorage(BaseModel):
             raise
 
     def add(
-        self, key: str, config: dict, model_type: Union[Literal["llm"], Literal["emb"]]
+        self,
+        key: str,
+        config: dict,
+        model_type: ModelMetaclass,
+        overwright: bool = False,
     ):
         """
-        Add a new model configuration to the storage.
+                Add a new model configuration to the storage.
 
-        Args:
-            key (str): The unique identifier for the model configuration.
-            config (dict): The configuration dictionary for initializing the model.
-            model_type (Union[Literal["llm"], Literal["emb"]]): The type of the model to be added.
-                - "llm": Large Language Model, initialized using `ChatOpenAI`.
-                - "emb": Embedding model, initialized using `HuggingFaceEmbeddings`.
+                Args:
+                    key (str): The unique identifier for the model configuration.
+                    config (dict): The configuration dictionary for initializing the model.
+                    model_type (ModelMetaclass): The type name of the model to be added.
+                    overwright (bool): Whether to overwright model existing under same key
+        .
+                Raises:
+                    KeyError: If configuration keys are invalid for the specified model_type.
+                    Exception: When adding model to the storage failed
         """
         logger.debug("Current storage keys: %s", list(self.storage.keys()))
         if key in self.storage:
-            logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
+            if overwright:
+                logger.warning(f"Key '{key}' already exists in storage. Overwriting.")
+            else:
+                if (
+                    self.storage[key].model_type == model_type
+                    and self.storage[key].config == config
+                ):
+                    logger.warning(
+                        f"Key '{key}' already exists in storage with same config. Skipping."
+                    )
+                else:
+                    logger.warning(
+                        f"Key '{key}' already exists in storage with different model type or config. Skipping."
+                    )
+                return
         try:
-            if model_type == "llm":
-                logger.debug(
-                    f"Initializing LLM model for key '{key}' with config: {config}"
+            logger.debug(
+                "Initializing model %s for key '%s' with config: %s"
+                % (model_type, key, config)
+            )
+            if not all(p in model_type.model_fields.keys() for p in config):
+                raise KeyError(
+                    f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
                 )
-                model_instance = ChatOpenAI(**config)
-            elif model_type == "emb":
-                device = config.pop("device", None)
-                if device:
-                    config["model_kwargs"] = {"device": device}
-                logger.debug(
-                    f"Initializing embedding model for key '{key}' with config: {config}"
-                )
-                model_instance = HuggingFaceEmbeddings(**config)
+            model_getter = GetModelInstance(config)
+            model_instance = model_getter.instantiate(model_type)
 
             logger.debug("Created model instance of type: %s", type(model_instance))
             item = StoredData(
@@ -155,9 +180,11 @@ class ModelStorage(BaseModel):
                 for model_key in self.storage:
                     storage_dump[model_key] = {}
                     storage_dump[model_key]["config"] = self.storage[model_key].config
-                    storage_dump[model_key]["model_type"] = self.storage[
-                        model_key
-                    ].model_type
+                    storage_dump[model_key]["model_type"] = (
+                        re.sub(r"<class '", "", str(self.storage[model_key].model_type))
+                        .replace("'>", "")
+                        .split(".")[-1]
+                    )
                     storage_dump[model_key]["config"].pop("api_key", None)
                 yaml.dump(storage_dump, f)
             logger.info(f"Saved {len(self.storage)} models to {path}")
