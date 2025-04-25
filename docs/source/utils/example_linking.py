@@ -15,7 +15,7 @@ def create_notebook_link(source: Path, destination: Path) -> None:
     """
     destination.unlink(missing_ok=True)
     destination.parent.mkdir(exist_ok=True, parents=True)
-    # destination.symlink_to(source.resolve(), False)
+    destination.symlink_to(source.resolve(), False)
 
 
 def generate_doc_heading(name, link):
@@ -81,7 +81,7 @@ def symlink_files_to_dest_folder(
                 create_notebook_link(entity, destination / base_path)
                 if name in name2link:
                     name += f' {file_count}'
-                name2link[name] = str(base_path)
+                name2link[name] = str(base_path).replace('.ipynb', '')
 
     path = destination / "index.rst"
     logger.info(f"dest {path}")
