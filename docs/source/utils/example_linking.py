@@ -81,7 +81,7 @@ def symlink_files_to_dest_folder(
                 create_notebook_link(entity, destination / base_path)
                 if name in name2link:
                     name += f' {file_count}'
-                name2link[name] = str(base_path).replace('.ipynb', '')
+                name2link[name] = str(base_path)
 
     path = destination / "index.rst"
     logger.info(f"dest {path}")
