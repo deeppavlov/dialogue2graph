@@ -98,6 +98,8 @@ html_theme = "pydata_sphinx_theme"
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
 
+html_show_sourcelink = False
+
 extlinks = {
     "github_source_link": (
         "https://github.com/deeppavlov/dialogue2graph/tree/dev/%s",
@@ -148,6 +150,10 @@ def skip_submodules(app, what, name, obj, skip, options):
 
 def setup(sphinx):
     symlink_files_to_dest_folder(
-        [('basics', 'Base classes example')]
+        [('basics', 'Base classes example'),
+         ('cli_usage', 'CLI usage example'),
+         ('data_generation', 'Examples of data generation'),
+         ('evaluation', 'Examples of evaluation'),
+         ('pipeline_usage', 'Examples of pipeline usage')]
     )
     sphinx.connect("autoapi-skip-member", skip_submodules)

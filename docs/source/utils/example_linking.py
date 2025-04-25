@@ -15,11 +15,11 @@ def create_notebook_link(source: Path, destination: Path) -> None:
     """
     destination.unlink(missing_ok=True)
     destination.parent.mkdir(exist_ok=True, parents=True)
-    destination.symlink_to(source.resolve(), False)
+    # destination.symlink_to(source.resolve(), False)
 
 
 def generate_doc_heading(name, link):
-    main_str = f":doc:`{name} <./{link.replace('.ipynb', '')}>`"
+    main_str = f":doc:`{name} <./{link}>`"
     break_line = "~" * len(main_str)
     return f"{main_str}\n{break_line}"
 
@@ -40,7 +40,7 @@ def create_index_file(
         generate_doc_heading(name, link) for name, link in name2link.items()
     ]
     doc_headings = "\n\n".join(doc_headings)
-    toctree_entries = "\n\t\t".join(list(name2link.values()))
+    toctree_entries = "\n\t".join(list(name2link.values()))
     title = 'Examples\n========'
     contents = f"""{title}
 
@@ -48,6 +48,7 @@ def create_index_file(
 
 .. toctree::
     :hidden:
+    
     {toctree_entries}
     """
 
@@ -68,15 +69,19 @@ def symlink_files_to_dest_folder(
     for folder, name in include:
         current_dir = Path(f"{source}/{folder}")
         logger.info(f"current_dir {current_dir}")
+        file_count = 0
         for entity in [
             obj for obj in set(current_dir.glob("./*")) if not obj.name.startswith("__")
         ]:
             base_name = f"{folder}.{entity.name}"
             if entity.is_file() and entity.suffix == ".ipynb":
+                file_count += 1
                 base_path = Path(base_name)
                 logger.info(f"create_notebook_link {entity.name}")
                 create_notebook_link(entity, destination / base_path)
-                name2link[name] = str(base_path)
+                if name in name2link:
+                    name += f' {file_count}'
+                name2link[name] = str(base_path).replace('.ipynb', '')
 
     path = destination / "index.rst"
     logger.info(f"dest {path}")
