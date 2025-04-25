@@ -17,8 +17,8 @@ This guide demonstrates usage of ``ModelStorage`` class and generating the dialo
 This generation guide demonstrates how we can generate a dialogue graph to a certain topic.
 
 .. toctree::
-   :hidden:
 
    userguides/basic_usage
    userguides/generate_graphs
    userguides/generate_synthetic
+   examples/index

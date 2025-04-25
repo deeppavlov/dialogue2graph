@@ -8,6 +8,7 @@
 
 import os
 import sys
+from docs.source.utils.example_linking import symlink_files_to_dest_folder
 
 sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
 
@@ -146,4 +147,7 @@ def skip_submodules(app, what, name, obj, skip, options):
 
 
 def setup(sphinx):
+    symlink_files_to_dest_folder(
+        [('basics', 'Base classes example')]
+    )
     sphinx.connect("autoapi-skip-member", skip_submodules)
