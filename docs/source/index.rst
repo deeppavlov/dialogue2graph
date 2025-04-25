@@ -25,6 +25,11 @@ The ``Research`` section contains an overview of conducted research on dialogue2
 
 This section contains a series of usage examples, including graph generation and visualisation.
 
+:doc:`Examples <examples/index>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This section contains a series of usage examples in IPython notebooks.
+
 :doc:`API Reference <autoapi/index>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -50,6 +55,7 @@ You can get more info about the development team in the ``About us`` section.
    getting_started
    research
    userguides
+   examples/index
    autoapi/index
    development
    about_us

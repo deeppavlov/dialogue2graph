@@ -75,7 +75,7 @@ def symlink_files_to_dest_folder(
                 base_path = Path(base_name)
                 logger.info(f"create_notebook_link {entity.name}")
                 create_notebook_link(entity, destination / base_path)
-                name2link[name] = str("examples" / base_path).replace('\\', '/')
+                name2link[name] = str("examples" / base_path).replace('\\', '/').replace('.ipynb', '')
 
     path = destination / "index.rst"
     logger.info(f"dest {path}")
