@@ -26,7 +26,7 @@ The ``Research`` section contains an overview of conducted research on dialogue2
 This section contains a series of usage examples, including graph generation and visualisation.
 
 :doc:`Examples <examples/index>`
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section contains a series of usage examples in IPython notebooks.
 

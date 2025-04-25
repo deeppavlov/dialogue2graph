@@ -73,6 +73,8 @@ autoapi_options = [
 suppress_warnings = ["autoapi.python_import_resolution"]
 autoapi_ignore = ["*/cli/*.py"]
 
+nbsphinx_allow_errors = True
+
 napoleon_google_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
@@ -153,7 +155,6 @@ def setup(sphinx):
         [('basics', 'Base classes example'),
          ('cli_usage', 'CLI usage example'),
          ('data_generation', 'Examples of data generation'),
-         ('evaluation', 'Examples of evaluation'),
          ('pipeline_usage', 'Examples of pipeline usage')]
     )
     sphinx.connect("autoapi-skip-member", skip_submodules)
