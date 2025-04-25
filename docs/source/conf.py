@@ -44,6 +44,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
     "sphinx_autodoc_typehints",
+    "nbsphinx"
 ]
 
 templates_path = ["_templates"]
