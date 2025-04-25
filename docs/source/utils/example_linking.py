@@ -19,7 +19,7 @@ def create_notebook_link(source: Path, destination: Path) -> None:
 
 
 def generate_doc_heading(name, link):
-    main_str = f":doc:`{name} <./{link}>`"
+    main_str = f":doc:`{name} <./{link.replace('.ipynb', '')}>`"
     break_line = "~" * len(main_str)
     return f"{main_str}\n{break_line}"
 
@@ -47,6 +47,7 @@ def create_index_file(
 {doc_headings}
 
 .. toctree::
+    :hidden:
     {toctree_entries}
     """
 
@@ -75,7 +76,7 @@ def symlink_files_to_dest_folder(
                 base_path = Path(base_name)
                 logger.info(f"create_notebook_link {entity.name}")
                 create_notebook_link(entity, destination / base_path)
-                name2link[name] = str("examples" / base_path).replace('\\', '/').replace('.ipynb', '')
+                name2link[name] = str(base_path)
 
     path = destination / "index.rst"
     logger.info(f"dest {path}")
