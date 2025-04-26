@@ -1,5 +1,5 @@
-import tracemalloc
-tracemalloc.start()
+# import tracemalloc
+# tracemalloc.start()
 import os
 import json
 from pathlib import Path
@@ -11,21 +11,16 @@ from langchain_community.cache import SQLAlchemyMd5Cache
 from sqlalchemy import create_engine
 
 
-os.environ['CUDA_VISIBLE_DEVICES'] = 'cpu'
-
-from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
-from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
-
-
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
 from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
-from dialogue2graph.pipelines.d2g_extender.pipeline import D2GExtenderPipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
 from transformers.utils.logging import disable_progress_bar
+os.environ['CUDA_VISIBLE_DEVICES'] = 'cpu'
+
 disable_progress_bar()
 
 engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
@@ -216,9 +211,8 @@ def test_d2g_pipelines():
         if not pipeline_results[idx]:
             logger.warning("Pipeline %s results got worse: check %s/%s*.json for details",
                          pipelines[idx].name, metrics_path_name, pipelines[idx].name)
-    print("MEM: ", tracemalloc.get_traced_memory())
 
     assert all(pipeline_results), "Pipelines results got worse!"
 
-    print("MEM: ", tracemalloc.get_traced_memory())
-    tracemalloc.stop()
+    # print("MEM: ", tracemalloc.get_traced_memory())
+    # tracemalloc.stop()

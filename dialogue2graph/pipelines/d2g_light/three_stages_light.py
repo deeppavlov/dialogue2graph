@@ -15,7 +15,6 @@ from langchain.schema import HumanMessage
 from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFaceEmbeddings
 
-import torch
 
 from dialogue2graph import metrics
 from dialogue2graph import Graph
