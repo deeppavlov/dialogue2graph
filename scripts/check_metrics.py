@@ -2,6 +2,7 @@
 # tracemalloc.start()
 import os
 import json
+from dotenv import load_dotenv
 from pathlib import Path
 from typing import Optional
 from datetime import datetime
@@ -23,6 +24,7 @@ from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
 # disable_progress_bar()
 
+load_dotenv()
 engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
 set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
 
