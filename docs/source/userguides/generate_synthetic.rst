@@ -5,6 +5,8 @@ Use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraph
 
 .. code-block:: python
 
+    from langchain_openai import ChatOpenAI
+
     from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
     from dialogue2graph.pipelines.model_storage import ModelStorage
 
@@ -15,13 +17,13 @@ Use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraph
     model_storage = ModelStorage()
     model_storage.add(
         "gen_model", # model to use for generation
-        config={"name": "o1-mini"},
-        model_type="llm",
+        config={"model_name": "o1-mini"},
+        model_type=ChatOpenAI,
     )
     model_storage.add(
         "help_model", # model to use for other tasks
-        config={"name": "gpt-3.5-turbo"},
-        model_type="llm",
+        config={"model_name": "gpt-3.5-turbo"},
+        model_type=ChatOpenAI,
     )
 
 2. Create :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator` and use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke` method to get a dialogue graph

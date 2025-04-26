@@ -12,6 +12,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
 
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 from dialogue2graph.utils.logger import Logger
 
@@ -157,13 +160,13 @@ class ModelStorage(BaseModel):
                 "Initializing model %s for key '%s' with config: %s"
                 % (model_type, key, config)
             )
-            # if not all(p in model_type.model_fields.keys() for p in config):
-            #     logger.error(
-            #         f"Invalid parameter names for model {model_type.model_fields.keys()}"
-            #     )
-            #     raise KeyError(
-            #         f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
-            #     )
+            if not all(p in model_type.model_fields.keys() for p in config):
+                logger.error(
+                    f"Invalid parameter names for model {model_type.model_fields.keys()}"
+                )
+                raise KeyError(
+                    f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
+                )
             model_getter = GetModelInstance(config)
             model_instance = model_getter.instantiate(model_type)
 

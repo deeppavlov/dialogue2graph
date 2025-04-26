@@ -13,6 +13,8 @@ from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
+from langchain_openai import ChatOpenAI
+from langchain_huggingface import HuggingFaceEmbeddings
 from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
 
 load_dotenv()
@@ -44,6 +46,28 @@ class D2GLLMPipeline(BasePipeline):
         step2_evals: list[Callable] = metrics.DGEvalBase,
         end_evals: list[Callable] = metrics.DGEvalBase,
     ):
+        # if model is not in model storage put the default model there
+        model_storage.add(
+            key=grouping_llm,
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=filling_llm,
+            config={"model_name": "o3-mini", "temperature": 1},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=formatting_llm,
+            config={"model_name": "gpt-4o-mini", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=sim_model,
+            config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+            model_type=HuggingFaceEmbeddings,
+        )
+
         super().__init__(
             model_storage=model_storage,
             sim_model = sim_model,

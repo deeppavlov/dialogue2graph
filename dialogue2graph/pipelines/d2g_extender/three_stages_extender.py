@@ -15,7 +15,6 @@ from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 from langchain_huggingface import HuggingFaceEmbeddings
 
-
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler

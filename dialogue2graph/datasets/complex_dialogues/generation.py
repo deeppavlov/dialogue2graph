@@ -5,7 +5,6 @@ Generation
 The module provides graph generator capable of creating complex validated graphs.
 """
 
-
 import os
 from enum import Enum
 from typing import Optional, Dict, Any, Union
