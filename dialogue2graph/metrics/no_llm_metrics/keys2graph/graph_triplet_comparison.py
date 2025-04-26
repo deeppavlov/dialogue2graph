@@ -9,6 +9,8 @@ from scipy.optimize import linear_sum_assignment
 # from openai import OpenAI                              # NEW
 import dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+
 
 # from .config import get_embedding_model
 # для имени модели
@@ -18,8 +20,10 @@ dotenv.load_dotenv()
 # base_url=os.environ["OPENAI_API_BASE"]
 
 
-def _embed(model: HuggingFaceEmbeddings, text: str) -> np.ndarray:
-    document_embeddings = model.embed_documents([text])[0]
+def _embed(model: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings,
+           text: str) -> np.ndarray:
+    document_embeddings = model.embed_documents([text])
+    document_embeddings = document_embeddings[0]
     return np.array(document_embeddings, dtype=np.float32)
 
 
@@ -37,7 +41,8 @@ def _embed(model: HuggingFaceEmbeddings, text: str) -> np.ndarray:
 
 
 # ---------- 2. основная публичная функция ----------
-def compare_two_graphs(original_graph, generated_graph, model: HuggingFaceEmbeddings):
+def compare_two_graphs(original_graph, generated_graph,
+                       model: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings):
     """
     Возвращает:
       {
@@ -141,7 +146,7 @@ def _get_triplets_from_graph(g):
     return triplets
 
 
-def _build_maps(model: HuggingFaceEmbeddings, g):
+def _build_maps(model: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings, g):
     """
     Возвращает:
       embeddings_map : ключ -> [векторы]

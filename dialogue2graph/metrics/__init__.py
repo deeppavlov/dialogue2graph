@@ -1,4 +1,6 @@
 from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+
 from dialogue2graph.pipelines.core.graph import Graph
 from dialogue2graph.pipelines.core.schemas import CompareResponse
 # from dialogue2graph.metrics import llm_metrics
@@ -42,7 +44,8 @@ def compare_graphs_light(
 
 
 def compare_graphs_full(
-    model: HuggingFaceEmbeddings, graph: Graph, data: PipelineDataType
+    model: HuggingFaceInferenceAPIEmbeddings | HuggingFaceEmbeddings,
+    graph: Graph, data: PipelineDataType
 ) -> CompareResponse:
     """
     Compares a generated Graph with the true Graph using the triplet comparison metric.

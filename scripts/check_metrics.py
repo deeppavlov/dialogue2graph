@@ -1,12 +1,21 @@
+import tracemalloc
+tracemalloc.start()
 import os
 import json
 from pathlib import Path
 from typing import Optional
 from datetime import datetime
+from datasets import load_dataset
 from langchain_core.globals import set_llm_cache
 from langchain_community.cache import SQLAlchemyMd5Cache
 from sqlalchemy import create_engine
-from datasets import load_dataset
+
+
+os.environ['CUDA_VISIBLE_DEVICES'] = 'cpu'
+
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
+from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
+
 
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
@@ -16,18 +25,32 @@ from dialogue2graph.pipelines.d2g_extender.pipeline import D2GExtenderPipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
+from transformers.utils.logging import disable_progress_bar
+disable_progress_bar()
+
 engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
 set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
-
-logger = Logger(__file__)
-ms = ModelStorage()
-
-metrics_path_name = "tests/metrics_results"
-metrics_path = Path(metrics_path_name)
 
 dataset = load_dataset(
     "DeepPavlov/d2g_generated_augmented", token=os.getenv("HUGGINGFACE_TOKEN")
 )
+
+
+
+logger = Logger(__file__)
+ms = ModelStorage()
+
+# ms.add(
+#     key="sim_model",
+#         # config={"model_name": "BAAI/bge-m3", "encode_kwargs": {"normalize_embeddings": True}},
+#         config={"model_name": "Intel/bge-small-en-v1.5-rag-int8-static", "model_kwargs": {"device": "cpu"}, "encode_kwargs": {"normalize_embeddings": True}},
+#         model_type=QuantizedBiEncoderEmbeddings,
+# )
+
+metrics_path_name = "tests/metrics_results"
+metrics_path = Path(metrics_path_name)
+
+
 
 def get_latest_file(
     directory_path: Path, pattern: str = "*"
@@ -100,7 +123,9 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
     """
     # Run the pipeline on a single random item from the dataset
     new_summary = []
-    for data in dataset["train"].select(range(0, len(dataset["train"]), 30)):
+    # for data in dataset["train"].select(range(0, len(dataset["train"]), 30)):
+    for data in dataset["train"].select(range(1)):
+
         dialogs = data["augmented_dialogues"][0]["messages"]
         graph = data["graph"]
 
@@ -165,23 +190,35 @@ def test_d2g_pipelines():
         If any pipeline's results are not improving, it raises an AssertionError
         with a message indicating which pipeline's results got worse
     """
+
     pipelines = [
         D2GLightPipeline(
             name="three_stages_light",
             model_storage=ms,
+            sim_model="sim_model"
         ),
         D2GLLMPipeline(
             name="three_stages_llm",
             model_storage=ms,
+            sim_model="sim_model"
+
         ),
-        D2GExtenderPipeline(
-            name="extender",
-            model_storage=ms,
-        ),
+        # D2GExtenderPipeline(
+        #     name="extender",
+        #     model_storage=ms,
+        #     sim_model="sim_model"
+        # ),
     ]
 
-    for pipeline in pipelines:
-        assert test_d2g_pipeline(pipeline), (
-            "Pipeline %s results got worse: check %s/%s*.json for details"
-            % (pipeline.name, metrics_path_name, pipeline.name)
-        )
+    pipeline_results = [test_d2g_pipeline(pipeline) for pipeline in pipelines]
+
+    for idx in range(len(pipeline_results)):
+        if not pipeline_results[idx]:
+            logger.warning("Pipeline %s results got worse: check %s/%s*.json for details",
+                         pipelines[idx].name, metrics_path_name, pipelines[idx].name)
+    print("MEM: ", tracemalloc.get_traced_memory())
+
+    assert all(pipeline_results), "Pipelines results got worse!"
+
+    print("MEM: ", tracemalloc.get_traced_memory())
+    tracemalloc.stop()

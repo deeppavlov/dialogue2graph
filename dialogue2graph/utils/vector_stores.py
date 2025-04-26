@@ -10,6 +10,7 @@ import uuid
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 
 
 class DialogueStore:
@@ -28,7 +29,7 @@ class DialogueStore:
     _assistant_size: int
     _score_threshold: int
 
-    def _load_dialogue(self, dialogue: list, embedder: HuggingFaceEmbeddings):
+    def _load_dialogue(self, dialogue: list, embedder: HuggingFaceInferenceAPIEmbeddings|HuggingFaceEmbeddings):
         """Auxiliary method to initialize instance
 
         Args:
@@ -58,7 +59,7 @@ class DialogueStore:
     def __init__(
         self,
         dialogue: list[dict[str, str]],
-        embedder: HuggingFaceEmbeddings,
+        embedder: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings,
         score_threshold=0.995,
     ):
         """Initialize instance for dialogue based on embedder
@@ -113,7 +114,7 @@ class NodeStore:
     _nodes_store: Chroma
     _utterances: list[tuple[str, int]] = []
 
-    def _load_nodes(self, nodes: list, embedder: HuggingFaceEmbeddings):
+    def _load_nodes(self, nodes: list, embedder: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings):
         """Auxiliary method to initialize instance
 
         Args:
@@ -130,10 +131,9 @@ class NodeStore:
             Document(page_content=utt[0], id=id, metadata={"id": id})
             for id, utt in enumerate(self._utterances)
         ]
-
         self._nodes_store.add_documents(documents=docs)
 
-    def __init__(self, nodes: list[dict], embedder: HuggingFaceEmbeddings):
+    def __init__(self, nodes: list[dict], embedder: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings):
         """Initialize instance for nodes based on embedder
 
         Args:
