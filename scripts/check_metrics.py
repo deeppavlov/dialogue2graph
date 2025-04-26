@@ -18,10 +18,10 @@ from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
-from transformers.utils.logging import disable_progress_bar
-os.environ['CUDA_VISIBLE_DEVICES'] = 'cpu'
+# from transformers.utils.logging import disable_progress_bar
+# os.environ['CUDA_VISIBLE_DEVICES'] = 'cpu'
 
-disable_progress_bar()
+# disable_progress_bar()
 
 engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
 set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
