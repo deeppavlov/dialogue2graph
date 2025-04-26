@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Optional
 from datetime import datetime
 from datasets import load_dataset
-from langchain_core.globals import set_llm_cache
-from langchain_community.cache import SQLAlchemyMd5Cache
-from sqlalchemy import create_engine
+# from langchain_core.globals import set_llm_cache
+# from langchain_community.cache import SQLAlchemyMd5Cache
+# from sqlalchemy import create_engine
 
 
 from dialogue2graph.utils.logger import Logger
@@ -25,8 +25,8 @@ from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 # disable_progress_bar()
 
 load_dotenv()
-engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
-set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
+# engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+# set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
 
 dataset = load_dataset(
     "DeepPavlov/d2g_generated_augmented", token=os.getenv("HUGGINGFACE_TOKEN")
