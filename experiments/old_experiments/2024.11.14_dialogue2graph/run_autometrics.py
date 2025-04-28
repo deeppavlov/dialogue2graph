@@ -39,7 +39,7 @@ from chatsky_llm_autoconfig.settings import EnvSettings
 from chatsky_llm_autoconfig.metrics.automatic_metrics import *
 import datetime
 from colorama import Fore
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 

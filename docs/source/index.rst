@@ -25,7 +25,7 @@ The ``Research`` section contains an overview of conducted research on dialogue2
 
 This section contains a series of usage examples, including graph generation and visualisation.
 
-:doc:`API Reference <reference/modules>`
+:doc:`API Reference <autoapi/index>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The API reference contains documentation for classes and abstractions used in the library which can be used to determine the exact 
@@ -50,7 +50,7 @@ You can get more info about the development team in the ``About us`` section.
    getting_started
    research
    userguides
-   reference/modules
+   autoapi/index
    development
    about_us
 

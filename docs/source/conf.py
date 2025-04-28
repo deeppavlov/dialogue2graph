@@ -12,8 +12,8 @@ import sys
 sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
 
 project = "Dialogue2Graph"
-copyright = "2024, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
-author = "Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin"
+copyright = "2025, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin, Anna Mikhailova, Maria Molchanova, Yuri Peshkichev"
+author = "Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin, Anna Mikhailova, Maria Molchanova, Yuri Peshkichev"
 
 # Get the deployment environment
 on_github = os.environ.get("GITHUB_ACTIONS") == "true"
@@ -34,11 +34,16 @@ if on_github:
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.doctest",
+    "autoapi.extension",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
     "sphinx_autodoc_typehints",
-    "sphinxcontrib.apidoc",
 ]
 
 templates_path = ["_templates"]
@@ -46,18 +51,39 @@ templates_path = ["_templates"]
 autodoc_default_options = {
     "members": True,
     "undoc-members": False,
-    "private-members": False,
+    "private-members": True,
     "special-members": "__call__",
     "member-order": "bysource",
     "exclude-members": "_abc_impl, model_fields, model_computed_fields, model_config",
 }
 
-# Mock imports that cause issues
-autodoc_mock_imports = ["datasets"]
+autodoc_typehints = "both"
 
-apidoc_module_dir = "../../dialogue2graph"
-apidoc_output_dir = "reference"
+autoapi_dirs = ["../../dialogue2graph"]
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+    "special-members",
+    "imported-members",
+]
+suppress_warnings = ["autoapi.python_import_resolution"]
+autoapi_ignore = ["*/cli/*.py"]
 
+napoleon_google_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_preprocess_types = False
+napoleon_type_aliases = None
+napoleon_attr_annotations = True
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -94,6 +120,14 @@ html_theme_options = {
     "show_toc_level": 2,
     # Add this to fix static file paths
     "static_page_path": "/dialogue2graph/dev/_static/",
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/deeppavlov/dialogue2graph",
+            "icon": "fa-brands fa-github",
+            "type": "fontawesome",
+        },
+    ],
 }
 
 # Fix relative URLs for GitHub Pages deployment
@@ -102,3 +136,13 @@ html_use_relative_paths = True
 # Ensure all static paths are properly prefixed for GitHub Pages
 if os.environ.get("GITHUB_ACTIONS") == "true":
     html_static_path_suffix = "/dialogue2graph/dev"
+
+
+def skip_submodules(app, what, name, obj, skip, options):
+    if what == "module" and "." not in name:
+        skip = True
+    return skip
+
+
+def setup(sphinx):
+    sphinx.connect("autoapi-skip-member", skip_submodules)

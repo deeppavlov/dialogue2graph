@@ -1,57 +1,70 @@
+"""
+D2GLLMPipeline
+--------------
+
+The module contains pipeline for graph generation using LLMs.
+"""
+
 # from dialogue2graph.pipelines.core.pipeline import Pipeline as BasePipeline
 from typing import Callable
 from dotenv import load_dotenv
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 
+from langchain_openai import ChatOpenAI
+from langchain_huggingface import HuggingFaceEmbeddings
 from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
 
 load_dotenv()
 
 
 class D2GLLMPipeline(BasePipeline):
-    """LLM graph generator pipeline"""
+    """
+    D2GLLMPipeline is a pipeline class for generating graphs based on provided dialogues using LLMs.
+
+    Attributes:
+        name (str): The name of the pipeline.
+        model_storage (ModelStorage): An object to manage and store models used in the pipeline.
+        grouping_llm (str): The key for the grouping LLM model in the model storage. Defaults to "d2g_llm_grouping_llm:v1".
+        filling_llm (str): The key for the filling LLM model in the model storage. Defaults to "d2g_llm_filling_llm:v1".
+        formatting_llm (str): The key for the formatting LLM model in the model storage. Defaults to "d2g_llm_formatting_llm:v1".
+        sim_model (str): The key for the similarity embedder model in the model storage. Defaults to "d2g_llm_sim_model:v1".
+        step2_evals (list[Callable], optional): A list of evaluation functions to be applied at step 2 of the pipeline. Defaults to None.
+        end_evals (list[Callable], optional): A list of evaluation functions to be applied at the end of the pipeline. Defaults to None.
+    """
 
     def __init__(
         self,
         name: str,
         model_storage: ModelStorage,
-        grouping_llm: str = "d2g_llm_grouping_llm:v1",
-        filling_llm: str = "d2g_llm_filling_llm:v1",
-        formatting_llm: str = "d2g_llm_formatting_llm:v1",
-        sim_model: str = "d2g_llm_sim_model:v1",
+        grouping_llm: str = "three_stages_grouping_llm:v1",
+        filling_llm: str = "three_stages_filling_llm:v1",
+        formatting_llm: str = "three_stages_formatting_llm:v1",
+        sim_model: str = "three_stages_sim_model:v1",
         step2_evals: list[Callable] = None,
         end_evals: list[Callable] = None,
     ):
-        # check if models are in model storage
         # if model is not in model storage put the default model there
-        if grouping_llm not in model_storage.storage:
-            model_storage.add(
-                key=grouping_llm,
-                config={"model": "chatgpt-4o-latest", "temperature": 0},
-                model_type="llm",
-            )
-
-        if filling_llm not in model_storage.storage:
-            model_storage.add(
-                key=filling_llm,
-                config={"model": "o3-mini", "temperature": 1},
-                model_type="llm",
-            )
-
-        if formatting_llm not in model_storage.storage:
-            model_storage.add(
-                key=formatting_llm,
-                config={"model": "gpt-4o-mini", "temperature": 0},
-                model_type="llm",
-            )
-
-        if sim_model not in model_storage.storage:
-            model_storage.add(
-                key=sim_model,
-                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
-                model_type="emb",
-            )
+        model_storage.add(
+            key=grouping_llm,
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=filling_llm,
+            config={"model_name": "o3-mini", "temperature": 1},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=formatting_llm,
+            config={"model_name": "gpt-4o-mini", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
+        model_storage.add(
+            key=sim_model,
+            config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+            model_type=HuggingFaceEmbeddings,
+        )
 
         super().__init__(
             name=name,

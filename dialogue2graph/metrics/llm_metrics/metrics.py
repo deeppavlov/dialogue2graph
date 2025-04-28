@@ -2,10 +2,9 @@
 LLM Metrics.
 ------------
 
-This module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
+The module contains functions that checks Graphs and Dialogues for various metrics using LLM calls.
 """
 
-import logging
 import json
 from typing import List, TypedDict, Union
 from pydantic import BaseModel, Field
@@ -22,11 +21,13 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import HumanMessage
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class InvalidTransition(TypedDict):
+    # TODO: add docs
     from_: List[str]  # Using from_ because 'from' is reserved
     user: List[str]
     to: List[str]
@@ -34,6 +35,7 @@ class InvalidTransition(TypedDict):
 
 
 class GraphValidationResult(TypedDict):
+    # TODO: add docs
     is_valid: bool
     invalid_transitions: List[InvalidTransition]
 
@@ -42,7 +44,7 @@ def are_triplets_valid(
     G: Graph, model: BaseChatModel, return_type: str = "dict"
 ) -> Union[dict, GraphValidationResult]:
     """
-    Validates dialogue graph structure and logical transitions between nodes.
+    Validate dialogue graph structure and logical transitions between nodes.
 
     Parameters:
         G (BaseGraph): The dialogue graph to validate
@@ -161,7 +163,7 @@ def are_triplets_valid(
 
 def is_theme_valid(G: BaseGraph, model: BaseChatModel, topic: str) -> dict[str]:
     """
-    Validates if the dialog stays on theme/topic throughout the conversation.
+    Validate if the dialog stays on theme/topic throughout the conversation.
 
     Parameters:
         G (BaseGraph): The dialog graph to validate
@@ -264,7 +266,7 @@ def compare_graphs(
     device="cuda:0",
 ) -> CompareResponse:
     """
-    Compares two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
+    Compare two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
     LLM formatter is used to keep LLM answer in a required format.
 
     Args:

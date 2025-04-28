@@ -1,8 +1,8 @@
 """
 Validators
 --------------------------
-This module contains validators to evaluate dialogs
 
+The module contains validators to evaluate dialogs that use power of LLMs and embeddings.
 """
 
 from typing import List
@@ -13,7 +13,9 @@ from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.metrics.similarity import compare_strings
 
-from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_openai import ChatOpenAI
+from langchain_core.language_models import BaseChatModel
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 
@@ -110,7 +112,8 @@ def is_greeting_repeated_emb_llm(
     starts: list = None,
 ) -> bool:
     """
-    Checks if greeting is repeated within dialogues using pairwise distance and LLM assessment.
+    Check if greeting is repeated within dialogues using pairwise distance and LLM assessment.
+
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         model_storage (ModelStorage): Model storage containing embedder and LLM model for evaluation.
@@ -124,7 +127,10 @@ def is_greeting_repeated_emb_llm(
         starts = START_TURNS
 
     if model_storage.storage.get(embedder_name):
-        if not model_storage.storage.get(embedder_name).model_type == "emb":
+        if (
+            not model_storage.storage.get(embedder_name).model_type
+            == HuggingFaceEmbeddings
+        ):
             raise TypeError(f"The {embedder_name} model is not an embedder")
         embedder_model = model_storage.storage[embedder_name].model
     else:
@@ -133,7 +139,7 @@ def is_greeting_repeated_emb_llm(
         )
 
     if model_storage.storage.get(llm_name):
-        if not model_storage.storage.get(llm_name).model_type == "llm":
+        if not model_storage.storage.get(llm_name).model_type == ChatOpenAI:
             raise TypeError(f"The {llm_name} model is not an LLM")
         llm_model = model_storage.storage[llm_name].model
     else:
@@ -167,7 +173,8 @@ def is_dialog_closed_too_early_emb_llm(
     ends: list = None,
 ) -> bool:
     """
-    Checks if assistant tried to close dialogue in the middle using pairwise distance and LLM assessment.
+    Check if assistant tried to close dialogue in the middle using pairwise distance and LLM assessment.
+
     Args:
         dialogs (List[Dialogue]): Dialog list from graph.
         model_storage (ModelStorage): Model storage containing embedder and LLM model for evaluation.
@@ -181,7 +188,10 @@ def is_dialog_closed_too_early_emb_llm(
         ends = END_TURNS
 
     if model_storage.storage.get(embedder_name):
-        if not model_storage.storage.get(embedder_name).model_type == "emb":
+        if (
+            not model_storage.storage.get(embedder_name).model_type
+            == HuggingFaceEmbeddings
+        ):
             raise TypeError(f"The {embedder_name} model is not an embedder")
         embedder_model = model_storage.storage[embedder_name].model
     else:
@@ -190,7 +200,7 @@ def is_dialog_closed_too_early_emb_llm(
         )
 
     if model_storage.storage.get(llm_name):
-        if not model_storage.storage.get(llm_name).model_type == "llm":
+        if not model_storage.storage.get(llm_name).model_type == ChatOpenAI:
             raise TypeError(f"The {llm_name} model is not an LLM")
         llm_model = model_storage.storage[llm_name].model
     else:

@@ -1,4 +1,11 @@
-import logging
+"""
+Generation
+----------
+
+The module provides graph generator capable of creating complex validated graphs.
+"""
+
+import os
 from enum import Enum
 from typing import Optional, Dict, Any, Union
 
@@ -29,12 +36,13 @@ from .prompts import (
 )
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 class ErrorType(str, Enum):
-    """Types of errors that can occur during generation"""
+    """Error types that can occur during generation"""
 
     INVALID_GRAPH_STRUCTURE = "invalid_graph_structure"
     TOO_MANY_CYCLES = "too_many_cycles"
@@ -54,6 +62,8 @@ PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 
 class CycleGraphGenerator(BaseModel):
+    """Class for generating graph with cycles"""
+
     cache: Optional[Any] = Field(default=None, exclude=True)
 
     class Config:
@@ -90,6 +100,8 @@ class CycleGraphGenerator(BaseModel):
 
 
 class GenerationPipeline(BaseModel):
+    """Class for generation pipeline"""
+
     cache: Optional[Any] = Field(default=None, exclude=True)
     generation_model: BaseChatModel
     theme_validation_model: BaseChatModel
@@ -143,7 +155,7 @@ class GenerationPipeline(BaseModel):
     def validate_graph_cycle_requirement(
         self, graph: BaseGraph, min_cycles: int = 2
     ) -> Dict[str, Any]:
-        """Checks the graph for cycle requirements"""
+        """Check the graph for cycle requirements"""
         logger.info("🔍 Checking graph requirements...")
         try:
             cycles = list(nx.simple_cycles(graph.graph))
@@ -178,7 +190,7 @@ class GenerationPipeline(BaseModel):
     def check_and_fix_transitions(
         self, graph: BaseGraph, max_attempts: int = 3
     ) -> Dict[str, Any]:
-        """Checks transitions in the graph and attempts to fix invalid ones via LLM"""
+        """Check transitions in the graph and attempts to fix invalid ones via LLM"""
         logger.info("Validating initial graph")
         initial_validation = are_triplets_valid(
             graph, self.validation_model, return_type="detailed"
@@ -258,7 +270,7 @@ class GenerationPipeline(BaseModel):
             }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
-        """Generates and validates a dialogue graph for given topic"""
+        """Generate and validate a dialogue graph for given topic"""
         try:
             logger.info("Generating Graph ...")
             graph = self.graph_generator.invoke(
@@ -383,20 +395,66 @@ class LoopedGraphGenerator(TopicGraphGenerator):
     """Graph generator for topic-based dialogue generation with model storage support"""
 
     model_storage: ModelStorage = Field(description="Model storage")
-    generation_llm: str = Field(description="LLM for graph generation")
-    validation_llm: str = Field(description="LLM for validation")
-    cycle_ends_llm: str = Field(description="LLM for dialog sampler to find cycle ends")
-    theme_validation_llm: str = Field(description="LLM for theme validation")
+    generation_llm: str = Field(
+        description="LLM for graph generation", default="looped_graph_generation_llm:v1"
+    )
+    validation_llm: str = Field(
+        description="LLM for validation", default="looped_graph_validation_llm:v1"
+    )
+    cycle_ends_llm: str = Field(
+        description="LLM for dialog sampler to find cycle ends",
+        default="looped_graph_cycle_ends_llm:v1",
+    )
+    theme_validation_llm: str = Field(
+        description="LLM for theme validation",
+        default="looped_graph_theme_validation_llm:v1",
+    )
     pipeline: GenerationPipeline
 
     def __init__(
         self,
         model_storage: ModelStorage,
-        generation_llm: str,
-        validation_llm: str,
-        cycle_ends_llm: str,
-        theme_validation_llm: str,
+        generation_llm: str = "looped_graph_generation_llm:v1",
+        validation_llm: str = "looped_graph_validation_llm:v1",
+        cycle_ends_llm: str = "looped_graph_cycle_ends_llm:v1",
+        theme_validation_llm: str = "looped_graph_theme_validation_llm:v1",
     ):
+        # check if models are in model storage
+        # if model is not in model storage put the default model there
+        if generation_llm not in model_storage.storage:
+            model_storage.add(
+                key=generation_llm,
+                config={
+                    "name": "gpt-4o-latest",
+                    "api_key": os.getenv("OPENAI_API_KEY"),
+                    "base_url": os.getenv("OPENAI_BASE_URL"),
+                },
+                model_type="llm",
+            )
+
+        if validation_llm not in model_storage.storage:
+            model_storage.add(
+                key=validation_llm,
+                config={
+                    "name": "gpt-3.5-turbo",
+                    "api_key": os.getenv("OPENAI_API_KEY"),
+                    "base_url": os.getenv("OPENAI_BASE_URL"),
+                    "temperature": 0,
+                },
+                model_type="llm",
+            )
+
+        if theme_validation_llm not in model_storage.storage:
+            model_storage.add(
+                key=theme_validation_llm,
+                config={
+                    "name": "gpt-3.5-turbo",
+                    "api_key": os.getenv("OPENAI_API_KEY"),
+                    "base_url": os.getenv("OPENAI_BASE_URL"),
+                    "temperature": 0,
+                },
+                model_type="llm",
+            )
         super().__init__(
             model_storage=model_storage,
             generation_llm=generation_llm,
@@ -416,6 +474,7 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         )
 
     def invoke(self, topic, seed=42) -> list[dict]:
+        # TODO: add docs
         logger.info(f"\n{'=' * 50}")
         logger.info("Generating graph for topic: %s", topic)
         logger.info(f"{'=' * 50}")
@@ -447,4 +506,5 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         return successful_generations
 
     def evaluate(self, *args, report_type="dict", **kwargs):
+        # TODO: add docs
         return super().evaluate(*args, report_type=report_type, **kwargs)

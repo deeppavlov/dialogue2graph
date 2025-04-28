@@ -1,3 +1,10 @@
+"""
+Three Stage LightGraphGenerator
+-------------------------------
+
+The module provides three step algorithm aimed to generate dialog graph.
+"""
+
 import logging
 from pydantic import Field
 from typing import Callable
@@ -37,9 +44,17 @@ class LightGraphGenerator(GraphGenerator):
     """
 
     model_storage: ModelStorage = Field(description="Model storage")
-    filling_llm: str = Field(description="LLM for adding missing edges")
-    formatting_llm: str = Field(description="LLM for formatting output")
-    sim_model: str = Field(description="Similarity model")
+    filling_llm: str = Field(
+        description="LLM for adding missing edges",
+        default="three_stages_light_filling_llm:v1",
+    )
+    formatting_llm: str = Field(
+        description="LLM for formatting output",
+        default="three_stages_light_formatting_llm:v1",
+    )
+    sim_model: str = Field(
+        description="Similarity model", default="three_stages_light_sim_model:v1"
+    )
     step2_evals: list[Callable] = Field(
         default_factory=list, description="Metrics after stage 2"
     )
@@ -51,16 +66,35 @@ class LightGraphGenerator(GraphGenerator):
     def __init__(
         self,
         model_storage: ModelStorage,
-        filling_llm: str,
-        formatting_llm: str,
-        sim_model: str,
-        step2_evals: list[Callable] | None = None,
-        end_evals: list[Callable] | None = None,
+        filling_llm: str = "three_stages_light_filling_llm:v1",
+        formatting_llm: str = "three_stages_light_formatting_llm:v1",
+        sim_model: str = "three_stages_light_sim_model:v1",
+        step2_evals: list[Callable] | None = [],
+        end_evals: list[Callable] | None = [],
     ):
-        if step2_evals is None:
-            step2_evals = []
-        if end_evals is None:
-            end_evals = []
+        # check if models are in model storage
+        # if model is not in model storage put the default model there
+        if filling_llm not in model_storage.storage:
+            model_storage.add(
+                key=filling_llm,
+                config={"model": "gpt-4o-latest", "temperature": 0},
+                model_type="llm",
+            )
+
+        if formatting_llm not in model_storage.storage:
+            model_storage.add(
+                key=formatting_llm,
+                config={"model": "gpt-4o-mini", "temperature": 0},
+                model_type="llm",
+            )
+
+        if sim_model not in model_storage.storage:
+            model_storage.add(
+                key=sim_model,
+                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+                model_type="emb",
+            )
+
         super().__init__(
             model_storage=model_storage,
             filling_llm=filling_llm,
@@ -73,7 +107,7 @@ class LightGraphGenerator(GraphGenerator):
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
     ) -> tuple[BaseGraph, metrics.DGReportType]:
-        """Efficient implementation of the three stages generation algorithm."""
+        """Invoke efficient implementation of the three stages generation algorithm."""
 
         node_utts, start_utts, user_end = get_helpers(pipeline_data.dialogs)
         groups = group_nodes(pipeline_data.dialogs, node_utts)
@@ -144,12 +178,14 @@ class LightGraphGenerator(GraphGenerator):
         return self.invoke(*args, **kwargs)
 
     def evaluate(self, graph, true_graph, eval_stage: str) -> metrics.DGReportType:
-        """Calls metrics and returns report
+        """Call metrics and return report
+
         Args:
-          graph: generated graph
-          true_graph: expected graph
-          eval_stage: string defining eval stage, like step2 or end
-        Returns: dictionary with report like {"metric_name": result}
+            graph: generated graph
+            true_graph: expected graph
+            eval_stage: string defining eval stage, like step2 or end
+        Returns:
+            dictionary with report like {"metric_name": result}
         """
         report = {}
         for metric in getattr(self, eval_stage + "_evals"):

@@ -1,6 +1,9 @@
 import json
 import pytest
 import dotenv
+from langchain_openai import ChatOpenAI
+from langchain_huggingface import HuggingFaceEmbeddings
+
 from dialogue2graph import metrics
 from dialogue2graph import Dialogue
 from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
@@ -65,18 +68,18 @@ def test_d2g_light_positive(dialogues_positive, graph_positive_1):
 
     ms.add(
         key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1},
-        model_type="llm",
+        config={"model_name": "o3-mini", "temperature": 1},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0},
-        model_type="llm",
+        config={"model_name": "gpt-4o-mini", "temperature": 0},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "device": "cuda:0"},
-        model_type="emb",
+        config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
+        model_type=HuggingFaceEmbeddings,
     )
 
     pipeline = D2GLightPipeline(
@@ -105,18 +108,18 @@ def test_d2g_light_negative(dialogues_negative, graph_negative):
 
     ms.add(
         key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1},
-        model_type="llm",
+        config={"model_name": "o3-mini", "temperature": 1},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0},
-        model_type="llm",
+        config={"model_name": "gpt-4o-mini", "temperature": 0},
+        model_type=ChatOpenAI,
     )
     ms.add(
         key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
-        model_type="emb",
+        config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
+        model_type=HuggingFaceEmbeddings,
     )
 
     pipeline = D2GLightPipeline(

@@ -1,3 +1,10 @@
+"""
+Three Stage D2GExtender
+-----------------------
+
+The module provides three step algorithm aimed to extend dialog graph by generating.
+"""
+
 import logging
 from typing import List, Callable
 from pydantic import ConfigDict
@@ -6,6 +13,7 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
 
+from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
@@ -28,6 +36,8 @@ from dialogue2graph.pipelines.d2g_extender.prompts import (
 
 
 class DialogueNodes(BaseModel):
+    """Class for dialog nodes"""
+
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     # reason: str = Field(description="explanation")
 
@@ -35,6 +45,8 @@ class DialogueNodes(BaseModel):
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
+logger = Logger(__file__)
+
 dialogue_sampler = RecursiveDialogueSampler()
 
 
@@ -43,36 +55,47 @@ class LLMGraphExtender(GraphExtender):
     generated on the previous step. First step is done with LightGraphGenerator or taken from
     supported graph
     Generation stages:
-    1. a. If supported graph is given, it is used as a start.
-          If not, graph is generated with LightGraphGenerator from first step dialogs
-       b. Algorithmic connecting nodes by edges.
+
+    1.
+        a. If supported graph is given, it is used as a start. Otherwise, graph is generated with LightGraphGenerator from first step dialogs
+        b. Algorithmic connecting nodes by edges.
     2. Iterative steps:
-      a. LLM extension of graph nodes with next step dialogs.
-      b. Algorithmic connecting nodes by edges.
+        a. LLM extension of graph nodes with next step dialogs.
+        b. Algorithmic connecting nodes by edges.
     3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
 
     Attributes:
-      model_storage: Model storage
-      extending_llm: Name of LLM for extending graph nodes
-      filling_llm: Name of LLM for adding missing edges
-      dialog_llm: Name of LLM used in dialog sampler
-      formatting_llm: Name of LLM for formatting other LLMs output
-      sim_model: HuggingFace name for similarity model
-      step: number of dialogs for one step
-      graph_generator: graph generator for the first stage
-      step1_evals: Evaluation metrics called after first stage
-      extender_evals: Evaluation metrics called after each extension step
-      step2_evals: Evaluation metrics called after stage 2
-      end_evals: Evaluation metrics called at the end of generation process
-      model_config: It's a parameter for internal use of Pydantic
+        model_storage: Model storage
+        extending_llm: Name of LLM for extending graph nodes
+        filling_llm: Name of LLM for adding missing edges
+        dialog_llm: Name of LLM used in dialog sampler
+        formatting_llm: Name of LLM for formatting other LLMs output
+        sim_model: HuggingFace name for similarity model
+        step: number of dialogs for one step
+        graph_generator: graph generator for the first stage
+        step1_evals: Evaluation metrics called after first stage
+        extender_evals: Evaluation metrics called after each extension step
+        step2_evals: Evaluation metrics called after stage 2
+        end_evals: Evaluation metrics called at the end of generation process
+        model_config: It's a parameter for internal use of Pydantic
     """
 
     model_storage: ModelStorage = Field(description="Model storage")
-    extending_llm: str = Field(description="LLM for extending graph nodes")
-    filling_llm: str = Field(description="LLM for adding missing edges")
-    formatting_llm: str = Field(description="LLM for formatting output")
-    dialog_llm: str = Field(description="LLM for dialog sampler")
-    sim_model: str = Field(description="Similarity model")
+    extending_llm: str = Field(
+        description="LLM for extending graph nodes", default="extender_extending_llm:v1"
+    )
+    filling_llm: str = Field(
+        description="LLM for adding missing edges", default="extender_filling_llm:v1"
+    )
+    formatting_llm: str = Field(
+        description="LLM for formatting output", default="extender_formatting_llm:v1"
+    )
+    dialog_llm: str = Field(
+        description="LLM for dialog sampler", default="extender_dialog_llm:v1"
+    )
+    sim_model: str = Field(
+        description="Similarity model", default="extender_sim_model:v1"
+    )
     step: int
     graph_generator: LightGraphGenerator
     step1_evals: list[Callable]
@@ -84,17 +107,53 @@ class LLMGraphExtender(GraphExtender):
     def __init__(
         self,
         model_storage: ModelStorage,
-        extending_llm: str,
-        filling_llm: str,
-        formatting_llm: str,
-        dialog_llm: str,
-        sim_model: str,
-        step1_evals: list[Callable],
-        extender_evals: list[Callable],
-        step2_evals: list[Callable],
-        end_evals: list[Callable],
+        extending_llm: str = "extender_extending_llm:v1",
+        filling_llm: str = "extender_filling_llm:v1",
+        formatting_llm: str = "extender_formatting_llm:v1",
+        dialog_llm: str = "extender_dialog_llm:v1",
+        sim_model: str = "extender_sim_model:v1",
+        step1_evals: list[Callable] | None = [],
+        extender_evals: list[Callable] | None = [],
+        step2_evals: list[Callable] | None = [],
+        end_evals: list[Callable] | None = [],
         step: int = 2,
     ):
+        # check if models are in model storage
+        # if model is not in model storage put the default model there
+        if extending_llm not in model_storage.storage:
+            model_storage.add(
+                key=extending_llm,
+                config={"model": "gpt-4o-latest", "temperature": 0},
+                model_type="llm",
+            )
+
+        if filling_llm not in model_storage.storage:
+            model_storage.add(
+                key=filling_llm,
+                config={"model": "o3-mini", "temperature": 1},
+                model_type="llm",
+            )
+
+        if formatting_llm not in model_storage.storage:
+            model_storage.add(
+                key=formatting_llm,
+                config={"model": "gpt-4o-mini", "temperature": 0},
+                model_type="llm",
+            )
+
+        if dialog_llm not in model_storage.storage:
+            model_storage.add(
+                key=dialog_llm,
+                config={"model": "o3-mini", "temperature": 1},
+                model_type="llm",
+            )
+
+        if sim_model not in model_storage.storage:
+            model_storage.add(
+                key=sim_model,
+                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
+                model_type="emb",
+            )
         super().__init__(
             model_storage=model_storage,
             extending_llm=extending_llm,
@@ -118,12 +177,13 @@ class LLMGraphExtender(GraphExtender):
         )
 
     def _add_step(self, dialogues: list[Dialogue], graph: Graph) -> Graph:
-
         dialogs = ""
         for idx, dial in enumerate(dialogues):
             dialogs += f"\nDialogue_{idx}: {dial}"
 
-        prompt = PromptTemplate.from_template(extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs)
+        prompt = PromptTemplate.from_template(
+            extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs
+        )
 
         fixed_output_parser = OutputFixingParser.from_llm(
             parser=PydanticOutputParser(pydantic_object=DialogueNodes),
@@ -167,7 +227,7 @@ class LLMGraphExtender(GraphExtender):
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
     ) -> tuple[BaseGraph, metrics.DGReportType]:
-        """Primary method of the three stages generation algorithm.
+        """Invoke primary method of the three stages generation algorithm.
 
         Args:
             pipeline_data: data for generation and evaluation.
@@ -224,12 +284,13 @@ class LLMGraphExtender(GraphExtender):
         return cur_graph
 
     def _finalize_graph(self, pipeline_data, cur_graph, enable_evals, report):
-
         dialogs = ""
         for idx, dial in enumerate(pipeline_data.dialogs):
             dialogs += f"\nDialogue_{idx}: {dial}"
 
-        prompt = PromptTemplate.from_template(add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + dialogs)
+        prompt = PromptTemplate.from_template(
+            add_edge_prompt_1 + "{graph_dict}. " + add_edge_prompt_2 + dialogs
+        )
 
         messages = [
             HumanMessage(content=prompt.format(graph_dict=cur_graph.graph_dict))
