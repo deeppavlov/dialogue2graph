@@ -1,3 +1,5 @@
+:tutorial_name: basics/base_classes_usage.ipynb
+
 Learn base dialogue2graph classes
 =========================================
 

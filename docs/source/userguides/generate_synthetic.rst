@@ -1,3 +1,5 @@
+:tutorial_name: data_generation/LoopedGraphGenerator_example.ipynb
+
 Generate synthetic graph on certain topic
 =========================================
 

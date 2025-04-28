@@ -8,7 +8,6 @@
 
 import os
 import sys
-from docs.source.utils.example_linking import symlink_files_to_dest_folder
 
 sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
 
@@ -44,11 +43,8 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
-    "sphinx_autodoc_typehints",
-    "nbsphinx"
+    "sphinx_autodoc_typehints"
 ]
-
-templates_path = ["_templates"]
 
 autodoc_default_options = {
     "members": True,
@@ -73,8 +69,6 @@ autoapi_options = [
 suppress_warnings = ["autoapi.python_import_resolution"]
 autoapi_ignore = ["*/cli/*.py"]
 
-nbsphinx_allow_errors = True
-
 napoleon_google_docstring = True
 napoleon_include_init_with_doc = False
 napoleon_include_private_with_doc = False
@@ -94,6 +88,9 @@ napoleon_attr_annotations = True
 
 # html_theme = 'alabaster'
 html_theme = "pydata_sphinx_theme"
+
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ["_templates"]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -115,6 +112,9 @@ html_js_files = [
     "scripts/bootstrap.js",
     "scripts/fontawesome.js",
 ]
+html_css_files = [
+    "css/custom.css",
+]
 
 # Fix base URL for GitHub Pages
 html_baseurl = "/dialogue2graph/dev/"
@@ -134,6 +134,7 @@ html_theme_options = {
             "type": "fontawesome",
         },
     ],
+    "secondary_sidebar_items": ["example-links"],
 }
 
 # Fix relative URLs for GitHub Pages deployment
@@ -151,10 +152,4 @@ def skip_submodules(app, what, name, obj, skip, options):
 
 
 def setup(sphinx):
-    symlink_files_to_dest_folder(
-        [('basics', 'Base classes example'),
-         ('cli_usage', 'CLI usage example'),
-         ('data_generation', 'Examples of data generation'),
-         ('pipeline_usage', 'Examples of pipeline usage')]
-    )
     sphinx.connect("autoapi-skip-member", skip_submodules)
