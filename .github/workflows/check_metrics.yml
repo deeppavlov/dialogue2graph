@@ -27,5 +27,8 @@ jobs:
           python -m poetry install --with tests --no-ansi --no-interaction
 
       - name: run check_metrics
+        env:
+          SQLALCHEMY_DATABASE_URI: ${{ secrets.SQLALCHEMY_DATABASE_URI }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python -m poetry run poe check_metrics || exit 1

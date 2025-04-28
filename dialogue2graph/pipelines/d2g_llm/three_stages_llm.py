@@ -97,7 +97,6 @@ class LLMGraphGenerator(DGBaseGenerator):
         filling_llm: str = "three_stages_llm_filling_llm:v1",
         formatting_llm: str = "three_stages_llm_formatting_llm:v1",
         sim_model: str = "three_stages_llm_sim_model:v1",
-
         step2_evals: list[Callable] | None = None,
         end_evals: list[Callable] | None = None,
     ):

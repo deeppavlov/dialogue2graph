@@ -69,7 +69,11 @@ def parse_md(md_path):
 def check_json_subreports(report_path):
     with open(str(report_path)) as f:
         report = json.load(f)
-    print("REPO: ", "compare_two_graphs:step2" in report["subreports"][0], report["subreports"][0])
+    print(
+        "REPO: ",
+        "compare_two_graphs:step2" in report["subreports"][0],
+        report["subreports"][0],
+    )
     if "subreports" not in report:
         return False
     if (

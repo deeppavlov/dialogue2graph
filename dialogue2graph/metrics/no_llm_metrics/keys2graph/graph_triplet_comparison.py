@@ -20,8 +20,9 @@ dotenv.load_dotenv()
 # base_url=os.environ["OPENAI_API_BASE"]
 
 
-def _embed(model: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings,
-           text: str) -> np.ndarray:
+def _embed(
+    model: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings, text: str
+) -> np.ndarray:
     document_embeddings = model.embed_documents([text])
     document_embeddings = document_embeddings[0]
     return np.array(document_embeddings, dtype=np.float32)
@@ -41,8 +42,11 @@ def _embed(model: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings,
 
 
 # ---------- 2. основная публичная функция ----------
-def compare_two_graphs(original_graph, generated_graph,
-                       model: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings):
+def compare_two_graphs(
+    original_graph,
+    generated_graph,
+    model: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings,
+):
     """
     Возвращает:
       {
@@ -146,7 +150,7 @@ def _get_triplets_from_graph(g):
     return triplets
 
 
-def _build_maps(model: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings, g):
+def _build_maps(model: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings, g):
     """
     Возвращает:
       embeddings_map : ключ -> [векторы]

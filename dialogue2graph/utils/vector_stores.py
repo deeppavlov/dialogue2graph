@@ -29,7 +29,11 @@ class DialogueStore:
     _assistant_size: int
     _score_threshold: int
 
-    def _load_dialogue(self, dialogue: list, embedder: HuggingFaceInferenceAPIEmbeddings|HuggingFaceEmbeddings):
+    def _load_dialogue(
+        self,
+        dialogue: list,
+        embedder: HuggingFaceInferenceAPIEmbeddings | HuggingFaceEmbeddings,
+    ):
         """Auxiliary method to initialize instance
 
         Args:
@@ -59,7 +63,7 @@ class DialogueStore:
     def __init__(
         self,
         dialogue: list[dict[str, str]],
-        embedder: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings,
+        embedder: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings,
         score_threshold=0.995,
     ):
         """Initialize instance for dialogue based on embedder
@@ -114,7 +118,11 @@ class NodeStore:
     _nodes_store: Chroma
     _utterances: list[tuple[str, int]] = []
 
-    def _load_nodes(self, nodes: list, embedder: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings):
+    def _load_nodes(
+        self,
+        nodes: list,
+        embedder: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings,
+    ):
         """Auxiliary method to initialize instance
 
         Args:
@@ -133,7 +141,11 @@ class NodeStore:
         ]
         self._nodes_store.add_documents(documents=docs)
 
-    def __init__(self, nodes: list[dict], embedder: HuggingFaceEmbeddings|HuggingFaceInferenceAPIEmbeddings):
+    def __init__(
+        self,
+        nodes: list[dict],
+        embedder: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings,
+    ):
         """Initialize instance for nodes based on embedder
 
         Args:

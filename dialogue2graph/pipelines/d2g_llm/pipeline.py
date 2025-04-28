@@ -70,7 +70,7 @@ class D2GLLMPipeline(BasePipeline):
 
         super().__init__(
             model_storage=model_storage,
-            sim_model = sim_model,
+            sim_model=sim_model,
             name=name,
             steps=[
                 LLMGraphGenerator(

@@ -93,7 +93,6 @@ class LightGraphGenerator(DGBaseGenerator):
             config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
             # config={"model_name": "BAAI/bge-m3", "config_kwargs": {"load_in_8bit": True, "torch_dtype": torch.float16}},
             # config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu", "torch_dtype": torch.float16}}, "low_cpu_mem_usage": True,
-
             model_type=HuggingFaceEmbeddings,
         )
 

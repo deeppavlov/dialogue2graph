@@ -3,6 +3,7 @@ from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 
 from dialogue2graph.pipelines.core.graph import Graph
 from dialogue2graph.pipelines.core.schemas import CompareResponse
+
 # from dialogue2graph.metrics import llm_metrics
 from dialogue2graph.metrics import no_llm_metrics
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
@@ -10,13 +11,14 @@ from dialogue2graph.metrics.no_llm_metrics.keys2graph import graph_triplet_compa
 
 PreDGEvalBase = [no_llm_metrics.is_same_structure]
 # DGEvalBase = [llm_metrics.compare_graphs, no_llm_metrics.is_same_structure]
-DGEvalBase = [graph_triplet_comparison.compare_two_graphs, no_llm_metrics.is_same_structure]
+DGEvalBase = [
+    graph_triplet_comparison.compare_two_graphs,
+    no_llm_metrics.is_same_structure,
+]
 DGReportType = dict
 
 
-def compare_graphs_light(
-    graph: Graph, data: PipelineDataType
-) -> bool:
+def compare_graphs_light(graph: Graph, data: PipelineDataType) -> bool:
     """
     Compares a generated Graph with the true Graph using two metrics:
 
@@ -45,7 +47,8 @@ def compare_graphs_light(
 
 def compare_graphs_full(
     model: HuggingFaceInferenceAPIEmbeddings | HuggingFaceEmbeddings,
-    graph: Graph, data: PipelineDataType
+    graph: Graph,
+    data: PipelineDataType,
 ) -> CompareResponse:
     """
     Compares a generated Graph with the true Graph using the triplet comparison metric.

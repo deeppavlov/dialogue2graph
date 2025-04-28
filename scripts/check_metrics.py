@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import Optional
 from datetime import datetime
 from datasets import load_dataset
-# from langchain_core.globals import set_llm_cache
-# from langchain_community.cache import SQLAlchemyMd5Cache
-# from sqlalchemy import create_engine
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLAlchemyMd5Cache
+from sqlalchemy import create_engine
 
 
 from dialogue2graph.utils.logger import Logger
@@ -22,17 +22,19 @@ from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 # from transformers.utils.logging import disable_progress_bar
 # os.environ['CUDA_VISIBLE_DEVICES'] = 'cpu'
 
+
 # disable_progress_bar()
 
 load_dotenv()
-# engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
-# set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
+engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
 
 dataset = load_dataset(
     "DeepPavlov/d2g_generated_augmented", token=os.getenv("HUGGINGFACE_TOKEN")
 )
 
 
+# "model_kwargs": {"device": "cpu"},
 
 logger = Logger(__file__)
 ms = ModelStorage()
@@ -40,7 +42,11 @@ ms = ModelStorage()
 # ms.add(
 #     key="sim_model",
 #         # config={"model_name": "BAAI/bge-m3", "encode_kwargs": {"normalize_embeddings": True}},
-#         config={"model_name": "Intel/bge-small-en-v1.5-rag-int8-static", "model_kwargs": {"device": "cpu"}, "encode_kwargs": {"normalize_embeddings": True}},
+#         # config={"model_name": "Intel/bge-small-en-v1.5-rag-int8-static",
+#         #         "query_instruction": "Represent this sentence for searching relevant passages: ",
+#         #         "encode_kwargs": {"normalize_embeddings": True}},
+#         config={"model_name": "BAAI/bge-m3",
+#                 "encode_kwargs": {"normalize_embeddings": True}},
 #         model_type=QuantizedBiEncoderEmbeddings,
 # )
 
@@ -48,10 +54,7 @@ metrics_path_name = "tests/metrics_results"
 metrics_path = Path(metrics_path_name)
 
 
-
-def get_latest_file(
-    directory_path: Path, pattern: str = "*"
-) -> Optional[Path]:
+def get_latest_file(directory_path: Path, pattern: str = "*") -> Optional[Path]:
     """
     Return the latest file from the given directory_path that matches the given pattern.
 
@@ -64,7 +67,9 @@ def get_latest_file(
     """
     try:
         return max(
-            directory_path.glob(pattern), key=lambda item: item.stat().st_ctime, default=None
+            directory_path.glob(pattern),
+            key=lambda item: item.stat().st_ctime,
+            default=None,
         )
     except ValueError:
         return None
@@ -121,16 +126,13 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
     # Run the pipeline on a single random item from the dataset
     new_summary = []
     # for data in dataset["train"].select(range(0, len(dataset["train"]), 30)):
-    for data in dataset["train"].select(range(1)):
-
+    for data in dataset["train"].select(range(2)):
         dialogs = data["augmented_dialogues"][0]["messages"]
         graph = data["graph"]
 
         # Parse the raw data
         raw_data = PipelineRawDataType(dialogs=dialogs, true_graph=graph)
-        report = pipeline.invoke(
-            raw_data, enable_evals=True
-        )[1].model_dump()
+        report = pipeline.invoke(raw_data, enable_evals=True)[1].model_dump()
         # Extract the duration and similarity from the report
         new_summary.append(
             {
@@ -152,9 +154,7 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
 
     # Get the date and create a new file with the date and report number
     date = datetime.now().strftime("%d.%m.%Y")
-    last_summary_file = get_latest_file(
-        metrics_path, pipeline.name + "*.json"
-    )
+    last_summary_file = get_latest_file(metrics_path, pipeline.name + "*.json")
     last_summary_file_today = get_latest_file(
         metrics_path, f"{pipeline.name}_{date}*.json"
     )
@@ -165,7 +165,9 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
     )
     # Save the new summary to a file
     metrics_path.mkdir(parents=True, exist_ok=True)
-    with open(f"{metrics_path_name}/{pipeline.name}_{date}_{report_number}.json", "w") as f:
+    with open(
+        f"{metrics_path_name}/{pipeline.name}_{date}_{report_number}.json", "w"
+    ) as f:
         json.dump(new_summary, f, ensure_ascii=False, indent=4)
 
     # If there is a last summary, compare it with the new summary
@@ -182,7 +184,7 @@ def test_d2g_pipelines():
     Tests all D2G pipelines. Checks if the results of pipelines are improving.
     Compares the results of the current run with the results of the last run.
     Asserts that the result is True (i.e., the pipeline's results are improving).
-    
+
     Raises:
         If any pipeline's results are not improving, it raises an AssertionError
         with a message indicating which pipeline's results got worse
@@ -192,13 +194,10 @@ def test_d2g_pipelines():
         D2GLightPipeline(
             name="three_stages_light",
             model_storage=ms,
-            sim_model="sim_model"
+            # sim_model="sim_model"
         ),
         D2GLLMPipeline(
-            name="three_stages_llm",
-            model_storage=ms,
-            sim_model="sim_model"
-
+            name="three_stages_llm", model_storage=ms, sim_model="sim_model"
         ),
         # D2GExtenderPipeline(
         #     name="extender",
@@ -211,8 +210,12 @@ def test_d2g_pipelines():
 
     for idx in range(len(pipeline_results)):
         if not pipeline_results[idx]:
-            logger.warning("Pipeline %s results got worse: check %s/%s*.json for details",
-                         pipelines[idx].name, metrics_path_name, pipelines[idx].name)
+            logger.warning(
+                "Pipeline %s results got worse: check %s/%s*.json for details",
+                pipelines[idx].name,
+                metrics_path_name,
+                pipelines[idx].name,
+            )
 
     assert all(pipeline_results), "Pipelines results got worse!"
 
