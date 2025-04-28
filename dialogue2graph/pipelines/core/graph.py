@@ -118,6 +118,12 @@ class Graph(BaseGraph):
     def _is_seq_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
+    
+    def export(self, file_path: str, export_config: Optional[dict] = None):
+        """
+        Export the graph to a YAML file compatible with Chatsky.
+        """
+        pass
 
     def check_edges(self, seq: list[list[int]]) -> bool:
         """Checks whether seq (sequence of pairs (source, target))
