@@ -20,7 +20,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
 
 class _DialogPathsCounter:

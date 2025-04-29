@@ -42,12 +42,12 @@ class D2GExtenderPipeline(BasePipeline):
         model_storage.add(
             key=extending_llm,
             config={"model_name": "chatgpt-4o-latest", "temperature": 0},
-            model_type="llm",
+            model_type=ChatOpenAI,
         )
 
         model_storage.add(
             key=filling_llm,
-            config={"mode_name": "o3-mini", "temperature": 1},
+            config={"model_name": "o3-mini", "temperature": 1},
             model_type=ChatOpenAI,
         )
 

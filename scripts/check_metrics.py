@@ -1,5 +1,3 @@
-# import tracemalloc
-# tracemalloc.start()
 import os
 import json
 from dotenv import load_dotenv
@@ -7,49 +5,31 @@ from pathlib import Path
 from typing import Optional
 from datetime import datetime
 from datasets import load_dataset
-# from langchain_core.globals import set_llm_cache
-# from langchain_community.cache import SQLAlchemyMd5Cache
-# from sqlalchemy import create_engine
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLAlchemyMd5Cache
+from sqlalchemy import create_engine
 
 
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph.pipelines.core.pipeline import BasePipeline
 from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
 from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
+from dialogue2graph.pipelines.d2g_extender import D2GExtenderPipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
-# from transformers.utils.logging import disable_progress_bar
-# os.environ['CUDA_VISIBLE_DEVICES'] = 'cpu'
-
-
-# disable_progress_bar()
 
 load_dotenv()
-# engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
-# set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
+engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
 
 dataset = load_dataset(
     "DeepPavlov/d2g_generated_augmented", token=os.getenv("HUGGINGFACE_TOKEN")
 )
 
 
-# "model_kwargs": {"device": "cpu"},
-
 logger = Logger(__file__)
 ms = ModelStorage()
-
-# ms.add(
-#     key="sim_model",
-#         # config={"model_name": "BAAI/bge-m3", "encode_kwargs": {"normalize_embeddings": True}},
-#         # config={"model_name": "Intel/bge-small-en-v1.5-rag-int8-static",
-#         #         "query_instruction": "Represent this sentence for searching relevant passages: ",
-#         #         "encode_kwargs": {"normalize_embeddings": True}},
-#         config={"model_name": "BAAI/bge-m3",
-#                 "encode_kwargs": {"normalize_embeddings": True}},
-#         model_type=QuantizedBiEncoderEmbeddings,
-# )
-
 metrics_path_name = "tests/metrics_results"
 metrics_path = Path(metrics_path_name)
 
@@ -194,16 +174,16 @@ def test_d2g_pipelines():
         D2GLightPipeline(
             name="three_stages_light",
             model_storage=ms,
-            # sim_model="sim_model"
+            sim_model="sim_model"
         ),
         D2GLLMPipeline(
             name="three_stages_llm", model_storage=ms, sim_model="sim_model"
         ),
-        # D2GExtenderPipeline(
-        #     name="extender",
-        #     model_storage=ms,
-        #     sim_model="sim_model"
-        # ),
+        D2GExtenderPipeline(
+            name="extender",
+            model_storage=ms,
+            sim_model="sim_model"
+        ),
     ]
 
     pipeline_results = [test_d2g_pipeline(pipeline) for pipeline in pipelines]
@@ -219,5 +199,3 @@ def test_d2g_pipelines():
 
     assert all(pipeline_results), "Pipelines results got worse!"
 
-    # print("MEM: ", tracemalloc.get_traced_memory())
-    # tracemalloc.stop()

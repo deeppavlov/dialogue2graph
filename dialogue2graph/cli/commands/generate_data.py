@@ -2,8 +2,10 @@ import json
 from pathlib import Path
 from dialogue2graph.pipelines.topic_generation.pipeline import TopicGenerationPipeline
 from dialogue2graph.pipelines.model_storage import ModelStorage
+from dialogue2graph.utils.logger import Logger
 
 ms = ModelStorage()
+logger = Logger(__name__)
 
 
 def generate_data(topic: str, config: dict, output_path: str):
@@ -19,7 +21,7 @@ def generate_data(topic: str, config: dict, output_path: str):
 
     result = pipeline.invoke(topic=topic)
 
-    print("Result:", result)
+    logger.info("Result: %s" % result)
 
     # Save results
     output_file = Path(output_path)

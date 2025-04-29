@@ -6,6 +6,7 @@ The module provides three step algorithm aimed to generate dialog graph.
 """
 
 import logging
+from datetime import datetime
 from pydantic import Field
 from typing import Callable
 from pydantic import ConfigDict
@@ -20,7 +21,7 @@ from dialogue2graph import metrics
 from dialogue2graph import Graph
 from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
 from dialogue2graph.pipelines.core.schemas import ReasonGraph
-from dialogue2graph.pipelines.core.graph import BaseGraph
+from dialogue2graph.pipelines.core.graph import BaseGraph, Metadata
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.pipelines.d2g_light.group_nodes import group_nodes
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
@@ -91,8 +92,6 @@ class LightGraphGenerator(DGBaseGenerator):
         model_storage.add(
             key=sim_model,
             config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
-            # config={"model_name": "BAAI/bge-m3", "config_kwargs": {"load_in_8bit": True, "torch_dtype": torch.float16}},
-            # config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu", "torch_dtype": torch.float16}}, "low_cpu_mem_usage": True,
             model_type=HuggingFaceEmbeddings,
         )
 
@@ -130,7 +129,14 @@ class LightGraphGenerator(DGBaseGenerator):
         )
         graph_dict.update(reason="")
 
-        result_graph = Graph(graph_dict=graph_dict)
+        metadata = Metadata(
+            generator_name="d2g_light",
+            models_config=self.model_storage.model_dump(),
+            schema_version="v1",
+            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
+
+        result_graph = Graph(graph_dict=graph_dict, metadata=metadata)
         report = {}
 
         if enable_evals and pipeline_data.true_graph:
@@ -165,15 +171,15 @@ class LightGraphGenerator(DGBaseGenerator):
                 result.reason = "Fixes: " + result.reason
                 graph_dict = result.model_dump()
                 if all(e["target"] for e in graph_dict["edges"]):
-                    result_graph = Graph(graph_dict=graph_dict)
+                    result_graph = Graph(graph_dict=graph_dict, metadata=metadata)
                     if enable_evals and pipeline_data.true_graph:
                         report.update(
                             self.evaluate(result_graph, pipeline_data.true_graph, "end")
                         )
             else:
-                return Graph(graph_dict={}), report
+                return Graph(graph_dict={}, metadata=metadata), report
 
         return result_graph, report
 
-    async def ainvoke(self, *args, **kwargs):
+    async def ainvoke(self, *args, **kwargs): # pragma: no cover
         return self.invoke(*args, **kwargs)

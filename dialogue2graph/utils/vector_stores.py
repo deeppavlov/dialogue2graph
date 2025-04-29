@@ -10,7 +10,6 @@ import uuid
 from langchain_core.documents import Document
 from langchain_chroma import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
 
 
 class DialogueStore:
@@ -32,7 +31,7 @@ class DialogueStore:
     def _load_dialogue(
         self,
         dialogue: list,
-        embedder: HuggingFaceInferenceAPIEmbeddings | HuggingFaceEmbeddings,
+        embedder: HuggingFaceEmbeddings,
     ):
         """Auxiliary method to initialize instance
 
@@ -63,7 +62,7 @@ class DialogueStore:
     def __init__(
         self,
         dialogue: list[dict[str, str]],
-        embedder: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings,
+        embedder: HuggingFaceEmbeddings,
         score_threshold=0.995,
     ):
         """Initialize instance for dialogue based on embedder
@@ -121,7 +120,7 @@ class NodeStore:
     def _load_nodes(
         self,
         nodes: list,
-        embedder: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings,
+        embedder: HuggingFaceEmbeddings,
     ):
         """Auxiliary method to initialize instance
 
@@ -144,7 +143,7 @@ class NodeStore:
     def __init__(
         self,
         nodes: list[dict],
-        embedder: HuggingFaceEmbeddings | HuggingFaceInferenceAPIEmbeddings,
+        embedder: HuggingFaceEmbeddings,
     ):
         """Initialize instance for nodes based on embedder
 

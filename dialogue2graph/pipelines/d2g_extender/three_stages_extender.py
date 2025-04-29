@@ -6,6 +6,7 @@ The module provides three step algorithm aimed to extend dialog graph by generat
 """
 
 import logging
+from datetime import datetime
 from typing import List, Callable
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
@@ -20,7 +21,7 @@ from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
 from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
-from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.core.graph import BaseGraph, Graph, Metadata
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.model_storage import ModelStorage
@@ -224,9 +225,12 @@ class LLMGraphExtender(DGBaseGenerator):
             )
         except Exception as e:
             logger.error("Error in dialog sampler: %s", e)
-            return Graph({})
+            return Graph(graph_dict={}, metadata=graph.metadata)
 
-        return Graph({"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]})
+        return Graph(
+            graph_dict={"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]},
+            metadata=graph.metadata,
+            )
 
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
@@ -244,7 +248,12 @@ class LLMGraphExtender(DGBaseGenerator):
         cur_graph = pipeline_data.supported_graph or self._initial_graph(
             pipeline_data, enable_evals, report
         )
-
+        cur_graph.metadata = Metadata(
+            generator_name="d2g_extender",
+            models_config=self.model_storage.model_dump(),
+            schema_version="v1",
+            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
         if enable_evals and pipeline_data.true_graph:
             report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step1"))
 
@@ -276,7 +285,7 @@ class LLMGraphExtender(DGBaseGenerator):
             return result_graph, report
         except Exception as e:
             logger.error("Error in step3: %s", e)
-            return Graph({}), report
+            return Graph(graph_dict={}, metadata=cur_graph.metadata), report
 
     def _initial_graph(self, pipeline_data, enable_evals, report):
         raw_data = PipelineDataType(
@@ -308,14 +317,17 @@ class LLMGraphExtender(DGBaseGenerator):
         result = chain.invoke(messages)
 
         if result and all(e["target"] for e in result.model_dump()["edges"]):
-            result_graph = Graph(graph_dict=result.model_dump())
+            result_graph = Graph(
+                graph_dict=result.model_dump(),
+                metadata=cur_graph.metadata
+                )
             if enable_evals and pipeline_data.true_graph:
                 report.update(
                     self.evaluate(result_graph, pipeline_data.true_graph, "end")
                 )
             return result_graph
 
-        return Graph({})
+        return Graph(graph_dict={}, metadata=cur_graph.metadata)
 
-    async def ainvoke(self, *args, **kwargs):
+    async def ainvoke(self, *args, **kwargs): # pragma: no cover
         return self.invoke(*args, **kwargs)

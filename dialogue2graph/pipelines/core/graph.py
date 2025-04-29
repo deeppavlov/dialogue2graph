@@ -5,6 +5,7 @@ Graph
 The module contains base class for graphs.
 """
 
+from datetime import datetime
 import networkx as nx
 from pydantic import BaseModel
 from typing import Optional, Any
@@ -13,8 +14,23 @@ import abc
 
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
+class Metadata(BaseModel):
+    """
+    Metadata class for storing additional information related to a graph.
+
+    Attributes:
+            "generator_name": name of the graph generator used to create the graph.
+            "models_config": configuration parameters for the models used in the graph generation process.
+            "schema_version": version of the schema used to represent the graph.
+            "timestamp": timestamp indicating when the metadata was created.
+    """
+    generator_name: str = ""
+    models_config: dict = {}
+    schema_version: str = "v1"
+    timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
 
 class BaseGraph(BaseModel, abc.ABC):
     """Base abstract class for graph representations of dialogues.
@@ -29,6 +45,7 @@ class BaseGraph(BaseModel, abc.ABC):
     """
 
     graph_dict: dict
+    metadata: Metadata = Metadata(generator_name="", models_config={}, schema_version="", timestamp="")
     graph: Optional[nx.Graph] = None
     node_mapping: Optional[dict] = None
 
@@ -36,62 +53,62 @@ class BaseGraph(BaseModel, abc.ABC):
         arbitrary_types_allowed = True
 
     @abc.abstractmethod
-    def load_graph(self, *args, **kwargs):
+    def load_graph(self, *args, **kwargs): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def visualise(self, *args, **kwargs):
+    def visualise(self, *args, **kwargs): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_nodes_by_utterance(self):
+    def find_nodes_by_utterance(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_edges_by_utterance(self):
+    def find_edges_by_utterance(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_nodes_by_id(self):
+    def get_nodes_by_id(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def match_edges_nodes(self):
+    def match_edges_nodes(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def check_edges(self):
+    def check_edges(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def remove_duplicated_edges(self):
+    def remove_duplicated_edges(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def remove_duplicated_nodes(self):
+    def remove_duplicated_nodes(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_paths(self):
+    def find_paths(self): # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_all_paths(self):
+    def get_all_paths(self): # pragma: no cover
         raise NotImplementedError
 
-    def get_edges_by_source(self):
+    def get_edges_by_source(self): # pragma: no cover
         raise NotImplementedError
 
-    def get_edges_by_target(self):
+    def get_edges_by_target(self): # pragma: no cover
         raise NotImplementedError
 
-    def get_nodes_by_source(self):
+    def get_nodes_by_source(self): # pragma: no cover
         raise NotImplementedError
 
-    def get_list_from_nodes(self):
+    def get_list_from_nodes(self): # pragma: no cover
         raise NotImplementedError
 
-    def get_list_from_graph(self):
+    def get_list_from_graph(self): # pragma: no cover
         raise NotImplementedError
 
 
@@ -105,14 +122,14 @@ class Graph(BaseGraph):
         Inherits all attributes from BaseGraph.
     """
 
-    def __init__(self, graph_dict: dict, **kwargs: Any):
+    def __init__(self, graph_dict: dict, metadata: Metadata = Metadata(), **kwargs: Any):
         """Initialize the Graph instance.
 
         Args:
             graph_dict (dict): Dictionary containing the graph structure.
             **kwargs: Additional keyword arguments passed to parent class.
         """
-        super().__init__(graph_dict=graph_dict, **kwargs)
+        super().__init__(graph_dict=graph_dict, metadata=metadata, **kwargs)
         if graph_dict:
             self.load_graph()
 
@@ -367,7 +384,7 @@ class Graph(BaseGraph):
             + new_edges,
             "nodes": graph["nodes"],
         }
-        return Graph(self.graph_dict)
+        return Graph(graph_dict=self.graph_dict, metadata=self.metadata)
 
     def remove_duplicated_nodes(self) -> BaseGraph | None:
         """Remove duplicate nodes based on their utterances.

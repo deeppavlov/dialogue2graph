@@ -15,7 +15,7 @@ from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
 
 logging.basicConfig(level=logging.INFO)

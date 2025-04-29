@@ -6,6 +6,7 @@ The module provides three step algorithm aimed to generate dialog graph and base
 """
 
 import logging
+from datetime import datetime
 from typing import List, Callable
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
@@ -19,7 +20,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from dialogue2graph import metrics
 from dialogue2graph import Graph
 from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
-from dialogue2graph.pipelines.core.graph import BaseGraph
+from dialogue2graph.pipelines.core.graph import BaseGraph, Metadata
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.model_storage import ModelStorage
 from dialogue2graph.utils.logger import Logger
@@ -159,6 +160,12 @@ class LLMGraphGenerator(DGBaseGenerator):
             tuple of resulted graph of Graph type and report dictionary like in example below:
             {'value': False, 'description': 'Numbers of nodes do not match: 7 != 8'}
         """
+        metadata = Metadata(
+            generator_name="d2g_llm",
+            models_config=self.model_storage.model_dump(),
+            schema_version="v1",
+            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
         try:
             dialogs = ""
             for idx, dial in enumerate(pipeline_data.dialogs):
@@ -180,6 +187,10 @@ class LLMGraphGenerator(DGBaseGenerator):
                 [HumanMessage(content=prompt.format(graph_example_1=graph_example_1))]
             )
             nodes = [node.model_dump() for node in llm_output.nodes]
+        except Exception as e:
+            logger.error("Error in step1: %s", e)
+            return Graph(graph_dict={}, metadata=metadata), {}
+        try:
             # Connect nodes
             graph_dict = connect_nodes(
                 nodes,
@@ -189,13 +200,16 @@ class LLMGraphGenerator(DGBaseGenerator):
             graph_dict["reason"] = ""
 
             # Evaluate if needed
-            result_graph = Graph(graph_dict=graph_dict)
+            result_graph = Graph(graph_dict=graph_dict, metadata=metadata)
             report = (
                 self.evaluate(result_graph, pipeline_data.true_graph, "step2")
                 if enable_evals and pipeline_data.true_graph
                 else {}
             )
-
+        except Exception as e:
+            logger.error("Error in step2: %s", e)
+            return Graph(graph_dict={}, metadata=metadata), {}
+        try:
             # Handle user end dialogues
             if get_helpers(pipeline_data.dialogs)[2]:
                 prompt = PromptTemplate.from_template(
@@ -219,9 +233,9 @@ class LLMGraphGenerator(DGBaseGenerator):
 
                 # Validate edges
                 if not all(e.get("target") for e in graph_dict["edges"]):
-                    return Graph(graph_dict={}), report
+                    return Graph(graph_dict={}, metadata=metadata), report
 
-                result_graph = Graph(graph_dict=graph_dict)
+                result_graph = Graph(graph_dict=graph_dict, metadata=metadata)
                 if enable_evals and pipeline_data.true_graph:
                     report.update(
                         self.evaluate(result_graph, pipeline_data.true_graph, "end")
@@ -230,7 +244,7 @@ class LLMGraphGenerator(DGBaseGenerator):
             return result_graph, report
         except Exception as e:
             logger.error("Error in step3: %s", e)
-            return Graph({}), {}
+            return Graph(graph_dict={}, metadata=metadata), {}
 
-    async def ainvoke(self, *args, **kwargs):
+    async def ainvoke(self, *args, **kwargs): # pragma: no cover
         return self.invoke(*args, **kwargs)

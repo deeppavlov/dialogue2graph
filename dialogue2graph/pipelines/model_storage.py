@@ -9,12 +9,10 @@ from pydantic import BaseModel, Field, model_validator
 from langchain_community.chat_models import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
 from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.embeddings import HuggingFaceInferenceAPIEmbeddings
-from langchain_community.embeddings import QuantizedBiEncoderEmbeddings
 
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
 dotenv.load_dotenv()
 
@@ -52,9 +50,7 @@ class StoredData(BaseModel):
     config: dict = Field(description="Configuration for the stored model")
     model_type: ModelMetaclass = Field(description="Type of the stored model")
     model: Union[
-        QuantizedBiEncoderEmbeddings,
         HuggingFaceEmbeddings,
-        HuggingFaceInferenceAPIEmbeddings,
         BaseChatModel,
     ] = Field(description="Model object")
 
@@ -67,11 +63,6 @@ class StoredData(BaseModel):
             if not isinstance(values.get("model"), HuggingFaceEmbeddings):
                 raise ValueError(
                     "HuggingFaceEmbeddings model must be an instance of HuggingFaceEmbeddings"
-                )
-        elif values.get("model_type") == HuggingFaceInferenceAPIEmbeddings:
-            if not isinstance(values.get("model"), HuggingFaceInferenceAPIEmbeddings):
-                raise ValueError(
-                    "HuggingFaceInferenceAPIEmbeddings model must be an instance of HuggingFaceInferenceAPIEmbeddings"
                 )
         return values
 
@@ -159,13 +150,13 @@ class ModelStorage(BaseModel):
                 "Initializing model %s for key '%s' with config: %s"
                 % (model_type, key, config)
             )
-            # if not all(p in model_type.model_fields.keys() for p in config):
-            #     logger.error(
-            #         f"Invalid parameter names for model {model_type} {model_type.model_fields.keys()}"
-            #     )
-            #     raise KeyError(
-            #         f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
-            #     )
+            if not all(p in model_type.model_fields.keys() for p in config):
+                logger.error(
+                    f"Invalid parameter names for model {model_type} {model_type.model_fields.keys()}"
+                )
+                raise KeyError(
+                    f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
+                )
             model_getter = GetModelInstance(config)
             model_instance = model_getter.instantiate(model_type)
 
