@@ -463,8 +463,6 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             key=generation_llm,
             config={
                 "model_name": "chatgpt-4o-latest",
-                "openai_api_key": os.getenv("OPENAI_API_KEY"),
-                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
                 "temperature": 0,
             },
             model_type=ChatOpenAI,
@@ -474,8 +472,6 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             key=validation_llm,
             config={
                 "model_name": "gpt-3.5-turbo",
-                "openai_api_key": os.getenv("OPENAI_API_KEY"),
-                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
                 "temperature": 0,
             },
             model_type=ChatOpenAI,
@@ -485,8 +481,6 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             key=cycle_ends_llm,
             config={
                 "model_name": "chatgpt-4o-latest",
-                "openai_api_key": os.getenv("OPENAI_API_KEY"),
-                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
                 "temperature": 0,
             },
             model_type=ChatOpenAI,
@@ -496,8 +490,6 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             key=theme_validation_llm,
             config={
                 "model_name": "gpt-3.5-turbo",
-                "openai_api_key": os.getenv("OPENAI_API_KEY"),
-                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
                 "temperature": 0,
             },
             model_type=ChatOpenAI,
