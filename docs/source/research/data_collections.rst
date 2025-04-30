@@ -3,6 +3,10 @@ Datasets
 
 We provide several datasets that can be utilized for your experiments.
 
+.. |huggingface| image:: ../_static/images/logo-colab.svg
+    :align: middle
+    :width: 40
+
 Task oriented dialog datasets
 -------------------------------
 
@@ -17,9 +21,6 @@ Task oriented dialog datasets
 |**Format**     |``['domain', 'dialogue_id', 'dialogue']``                                                                          |
 +---------------+-------------------------------------------------------------------------------------------------------------------+
 |**Link**       | |huggingface| `d2g_real_dialogues on HuggingFace <https://huggingface.co/datasets/DeepPavlov/d2g_real_dialogues>`_|
-|               |.. |huggingface| image:: ../_static/images/logo-colab.svg                                                          |
-|               |    :align: middle                                                                                                 |
-|               |    :width: 40                                                                                                     |
 +---------------+-------------------------------------------------------------------------------------------------------------------+
 |**Usage**      |.. code-block:: python                                                                                             |
 |               |                                                                                                                   |
@@ -40,9 +41,6 @@ Synthetic dialogue graph dataset
 |**Format**     |``['graph', 'topic', 'dialogues']``                                                                      |
 +---------------+---------------------------------------------------------------------------------------------------------+
 |**Link**       | |huggingface| `d2g_generated on HuggingFace <https://huggingface.co/datasets/DeepPavlov/d2g_generated>`_|
-|               |.. |huggingface| image:: ../_static/images/logo-colab.svg                                                |
-|               |    :align: middle                                                                                       |
-|               |    :width: 40                                                                                           |
 +---------------+---------------------------------------------------------------------------------------------------------+
 |**Usage**      |.. code-block:: python                                                                                   |
 |               |                                                                                                         |

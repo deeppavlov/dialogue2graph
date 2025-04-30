@@ -1,9 +1,12 @@
 Using Dialog2Graph algorithms
 =============================
 
-This guide demonstrates usage of ``dialogue2graph`` algorithms to generate a dialogue graph. The following example shows how to use the algorithm that generates graph based on the dialogues you provide using both LLM and Embedding models. Also we will dive into details of :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` usage.
+This guide demonstrates usage of ``dialog2graph`` dialog graph generation algorithms. 
+The following example shows how to use the particular algorithm that generates graph from the set of dialogs. It leverages both Embedding and LLM models. 
+Also we dive into details of :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` usage.
 
-First of all we need to import the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` and :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` we will be using.
+First of all, we need to import the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` and 
+:py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator`.
 
 .. code-block:: python
 
@@ -13,7 +16,8 @@ First of all we need to import the :py:class:`~dialogue2graph.pipelines.model_st
     from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
 
-Now, we need to read the dialogues we want to generate a graph for. In this example we will read the dialogues from a JSON file. The dialogues should be in the following format:
+Now, we need to get the dialogs that are the source for the further graph. In this example we will read the dialogs from a JSON file. 
+The dialogs should be presented in the following format:
 
 .. code-block:: json
 
@@ -37,7 +41,8 @@ Now, we need to read the dialogues we want to generate a graph for. In this exam
         ],
     }
 
-Let's read them:
+As we got the dialogs from the file, we reformat the initial dictionaries to :py:class:`~dialogue2graph.Dialogue` objects. Then, the dialogs are 
+passed to the data parser :py:class:`~dialogue2graph.pipelines.helpers.parse_data.PipelineRawDataType`. So, we've prepared data for the generator:
 
 .. code-block:: python
 
@@ -53,7 +58,9 @@ Let's read them:
         true_graph=None,
     )
 
-Now we should create a :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. This object will be used to store the models we will be using. In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used to generate the embeddings for the nodes in the graph.
+Now we should create a :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. This object will be used to store the models for generation. 
+In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used 
+to generate the embeddings for the nodes in the graph.
 
 .. code-block:: python
 
@@ -74,7 +81,12 @@ Now we should create a :py:class:`~dialogue2graph.pipelines.model_storage.ModelS
         model_type="emb",
     )
 
-Now we can create the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. This object will be used to generate the graph. We will pass the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object to the constructor of the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. Note, that we are overriding the default model on the formatting and similarity tasks with the models we added to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. The rest of the models will be used as default. Don't forget to use correct ``model_type`` when adding the model to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage`. The available types are ``llm`` for LLMs and ``emb`` for embedders.
+Now we can create the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. This object will be used to generate the graph. 
+We will pass the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object to the constructor of the 
+:py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. Note, that we are overriding the default model on the formatting and 
+similarity tasks with the models we added to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` object. 
+The rest of the models will be used as default. Don't forget to use correct ``model_type`` when adding the model to the 
+:py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage`. The available types are ``llm`` for LLMs and ``emb`` for embedders.
 
 .. code-block:: python
 
@@ -84,12 +96,14 @@ Now we can create the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGener
         sim_model="my_embedding_model"
     )
 
-Now we can generate the graph. We will pass the dialogues ``.invoke()`` method of the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. The method will return a graph object and a report object. To include the metrics in the report, we need to set the ``enable_evals`` parameter to ``True``. It will run some metrics on the graph during and after the generation process. Keep in mind that this will usually slow down the generation process and rise the token count.
+Now we can generate the graph. We will pass the dialogs ``.invoke()`` method of the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` 
+object. The method will return a graph object and a report object. To include the metrics in the report, we need to set the ``enable_evals`` 
+parameter to ``True``. It will run some metrics on the graph during and after the generation process. Keep in mind that this will usually slow down 
+the generation process and rise the token count.
 
 .. code-block:: python
 
     graph, report = graph_generator.invoke(data, enable_evals=True)
     graph.visualise()
-
 
     print(report)

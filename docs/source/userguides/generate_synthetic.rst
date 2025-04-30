@@ -3,14 +3,16 @@
 Generate synthetic graph on certain topic
 =========================================
 
-Use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator` to create a validated graph from several LLM generated dialogues concerning a given topic. 
+Use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator` to create a validated graph from several 
+LLM generated dialogues concerning a given topic. 
 
 .. code-block:: python
 
     from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
     from dialogue2graph.pipelines.model_storage import ModelStorage
 
-1. Create :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` instance and add choosen LLMs for dialogue generation, dialogue validation, theme validation and cycle end search.
+1. Create :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` instance and add choosen LLMs for dialogue generation, 
+dialogue validation, theme validation and cycle end search.
 
 .. code-block:: python
 
@@ -26,7 +28,8 @@ Use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraph
         model_type="llm",
     )
 
-2. Create :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator` and use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke` method to get a dialogue graph
+2. Create :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator` and 
+use :py:class:`~dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke` method to get a dialogue graph
 
 .. code-block:: python
 
