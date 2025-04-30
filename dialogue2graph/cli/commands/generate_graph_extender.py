@@ -4,7 +4,7 @@ from pathlib import Path
 import datetime
 from langchain_core.globals import set_llm_cache
 from langchain_community.cache import SQLAlchemyMd5Cache
-from langchain.cache import InMemoryCache
+from langchain_community.cache import InMemoryCache
 from sqlalchemy import create_engine
 
 from dialogue2graph import metrics
