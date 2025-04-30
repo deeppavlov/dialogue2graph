@@ -1,9 +1,9 @@
 import copy
 from sentence_transformers import SentenceTransformer
 
-# from chatsky_llm_autoconfig.schemas import DialogueMessage
-from dialogue2graph.pipelines.core.dialogue import Dialogue
-from dialogue2graph.metrics.similarity import compare_strings
+# from chatsky_llm_autoconfig.schemas import DialogMessage
+from dialog2graph.pipelines.core.dialog import Dialog
+from dialog2graph.metrics.similarity import compare_strings
 from settings import EnvSettings
 
 
@@ -102,27 +102,27 @@ def indices(lst, element):
         result.append(offset)
 
 
-def get_tails(dialogue: Dialogue, assistant: list, node: str):
+def get_tails(dialog: Dialog, assistant: list, node: str):
     # end = assistant.index(node) if node in assistant else None
     # start = assistant_back.index(node) if node in assistant else None
     ids = indices(assistant, node)
     tails = []
     for id in ids:
-        tail = dialogue.messages[: id * 2][-4:]
-        tail += dialogue.messages[id * 2 + 1 :][:4]
+        tail = dialog.messages[: id * 2][-4:]
+        tail += dialog.messages[id * 2 + 1 :][:4]
         tails.append(tail)
     return tails
 
 
-def compare_tails(dialogues: list[Dialogue], node1: str, node2: str):
+def compare_tails(dialogs: list[Dialog], node1: str, node2: str):
     tails1 = []
     tails2 = []
-    for dialogue in dialogues:
-        # user = [d for d in dialogue.messages if d.participant=='user']
-        assistant = [d.text for d in dialogue.messages if d.participant == "assistant"]
+    for dialog in dialogs:
+        # user = [d for d in dialog.messages if d.participant=='user']
+        assistant = [d.text for d in dialog.messages if d.participant == "assistant"]
         # assistant_back = list(reversed(assistant))
-        tails1.extend(get_tails(dialogue, assistant, node1))
-        tails2.extend(get_tails(dialogue, assistant, node2))
+        tails1.extend(get_tails(dialog, assistant, node1))
+        tails2.extend(get_tails(dialog, assistant, node2))
 
         # if tail1:
         #     tails1.append(tail1)
@@ -141,7 +141,7 @@ def compare_tails(dialogues: list[Dialogue], node1: str, node2: str):
 
 
 def nodes2groups(
-    dialogues: list[Dialogue],
+    dialogs: list[Dialog],
     nodes_list: list[str],
     next_list: list[str],
     mix_list: list[str],
@@ -162,7 +162,7 @@ def nodes2groups(
         for ind2, node2 in zip(
             range(ind1 + 1, ind1 + 1 + len(cur_nodes_list)), cur_nodes_list
         ):
-            tail_cond = compare_tails(dialogues, node1, node2)
+            tail_cond = compare_tails(dialogs, node1, node2)
             if tail_cond:
                 pairs.append((1, (ind1, ind2)))
 

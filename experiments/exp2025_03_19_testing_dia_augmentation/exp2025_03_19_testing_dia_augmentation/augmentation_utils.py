@@ -6,9 +6,9 @@ def to_set(x):
     return set(x)
 
 
-def check_no_duplicates_all_dialogues(dialogues):
+def check_no_duplicates_all_dialogs(dialogs):
     all_utterances = []
-    for dia in dialogues:
+    for dia in dialogs:
         utterances = [uttr["text"] for uttr in dia]
         all_utterances.append(utterances)
 
@@ -30,8 +30,8 @@ def check_no_duplicates_all_dialogues(dialogues):
         return False
 
 
-def check_no_duplicates_one_dialogue(dialogue):
-    utterances = [uttr["text"] for uttr in dialogue]
+def check_no_duplicates_one_dialog(dialog):
+    utterances = [uttr["text"] for uttr in dialog]
 
     if len(utterances) == len(set(utterances)):
         return True
@@ -46,9 +46,9 @@ def check_no_duplicates_one_dialogue(dialogue):
         return False
 
 
-def check_diagonal_similarity(dialogue_1, dialogue_2, embedder):
-    utterances_1 = [uttr["text"] for uttr in dialogue_1]
-    utterances_2 = [uttr["text"] for uttr in dialogue_2]
+def check_diagonal_similarity(dialog_1, dialog_2, embedder):
+    utterances_1 = [uttr["text"] for uttr in dialog_1]
+    utterances_2 = [uttr["text"] for uttr in dialog_2]
 
     model = SentenceTransformer(embedder)
     embeddings_1 = model.encode(utterances_1)

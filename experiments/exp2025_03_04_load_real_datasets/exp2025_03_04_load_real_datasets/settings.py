@@ -20,7 +20,7 @@ class EnvSettings(BaseSettings, case_sensitive=True):
     EMBEDDER_THRESHOLD: Optional[float]
     ONE_WORD_TH: Optional[float]
     EMBEDDER_TYPO: Optional[float]
-    DIALOGUE_MAX: Optional[int]
+    DIALOG_MAX: Optional[int]
     EMBEDDER_DEVICE: Optional[str]
     RERANKER_MODEL: Optional[str]
     RERANKER_THRESHOLD: Optional[float]

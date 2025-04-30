@@ -1,13 +1,13 @@
 naive_augmentation_prompt = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 
 INSTRUCTIONS:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Keep the same structure (participant, source, target if present)
    - Create variation of the 'text' field that:
      * Express the same meaning/intent
@@ -24,7 +24,7 @@ INSTRUCTIONS:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"text": "utterance text", "participant": "assistant"}}
 For user messages: {{"text": "utterance text", "participant": "user"}}
 
@@ -37,15 +37,15 @@ Example format:
 """
 
 one_shot_augmentation_prompt = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 
 INSTRUCTIONS:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Keep the same structure (participant, source, target if present)
    - Create variation of the 'text' field that:
      * Express the same meaning/intent
@@ -62,13 +62,13 @@ INSTRUCTIONS:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": "utterance text"}}
 For user messages: {{"participant": "user", "text": "utterance text"}}
 
-Below are EXAMPLES of original dialogue and augmented dialogue.
+Below are EXAMPLES of original dialog and augmented dialog.
 
-ORIGINAL DIALOGUE:
+ORIGINAL DIALOG:
 [{{'participant': 'assistant',
   'text': 'Hi there! What would you like to know about eco-friendly packaging?'}},
  {{'participant': 'user',
@@ -91,7 +91,7 @@ ORIGINAL DIALOGUE:
  {{'participant': 'assistant',
   'text': "I'm glad I could help! If you need more information, feel free to ask."}}]
 
-AUGMENTED DIALOGUE:
+AUGMENTED DIALOG:
 [{{'participant': 'assistant',
   'text': 'Hello! What information are you seeking regarding eco-friendly packaging?'}},
  {{'participant': 'user',

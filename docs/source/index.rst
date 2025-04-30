@@ -1,13 +1,13 @@
-.. Dialogue2Graph master file, created by
+.. Dialog2Graph master file, created by
    sphinx-quickstart on Tue Oct  8 17:01:38 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Dialogue2Graph Documentation
+Dialog2Graph Documentation
 ===========================================
 
-**Dialogue2Graph** project extends the `Chatsky project <https://github.com/deeppavlov/chatsky>`_ by enhancing `chatsky flows` and `scripts` creation 
-with the help of Large Language Models (LLMs). This project is based on the dialogue2graph approach which helps to transform conversational data into structured, 
+**Dialog2Graph** project extends the `Chatsky project <https://github.com/deeppavlov/chatsky>`_ by enhancing `chatsky flows` and `scripts` creation 
+with the help of Large Language Models (LLMs). This project is based on the dialog2graph approach which helps to transform conversational data into structured, 
 graph-based representations.
 
 :doc:`Getting Started <getting_started>`
@@ -18,7 +18,7 @@ The ``Getting started`` section contains instructions of how to install the proj
 :doc:`Research <research>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``Research`` section contains an overview of conducted research on dialogue2graph problem, including creating data collections, choosing metrics for graph assessment.
+The ``Research`` section contains an overview of conducted research on dialog2graph problem, including creating data collections, choosing metrics for graph assessment.
 
 :doc:`User Guides <userguides>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

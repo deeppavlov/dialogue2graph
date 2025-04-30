@@ -1,13 +1,13 @@
 naive_augmentation_prompt = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 
 INSTRUCTIONS:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Keep the same structure (participant, source, target if present)
    - Create variation of the 'text' field that:
      * Express the same meaning/intent
@@ -24,7 +24,7 @@ INSTRUCTIONS:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"text": "utterance text", "participant": "assistant"}}
 For user messages: {{"text": "utterance text", "participant": "user"}}
 
@@ -37,15 +37,15 @@ Example format:
 """
 
 one_shot_augmentation_prompt = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 
 INSTRUCTIONS:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Keep the same structure (participant, source, target if present)
    - Create variation of the 'text' field that:
      * Express the same meaning/intent
@@ -62,13 +62,13 @@ INSTRUCTIONS:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": "utterance text"}}
 For user messages: {{"participant": "user", "text": "utterance text"}}
 
-Below are EXAMPLES of original dialogue and augmented dialogue.
+Below are EXAMPLES of original dialog and augmented dialog.
 
-ORIGINAL DIALOGUE:
+ORIGINAL DIALOG:
 [{{'participant': 'assistant',
   'text': 'Hi there! What would you like to know about eco-friendly packaging?'}},
  {{'participant': 'user',
@@ -91,7 +91,7 @@ ORIGINAL DIALOGUE:
  {{'participant': 'assistant',
   'text': "I'm glad I could help! If you need more information, feel free to ask."}}]
 
-AUGMENTED DIALOGUE:
+AUGMENTED DIALOG:
 [{{'participant': 'assistant',
   'text': 'Hello! What information are you seeking regarding eco-friendly packaging?'}},
  {{'participant': 'user',
@@ -117,10 +117,10 @@ AUGMENTED DIALOGUE:
 """
 
 variations_augmentation_prompt = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTIONS:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -137,7 +137,7 @@ INSTRUCTIONS:
    - 'participant': either 'user' or 'assistant'
    - 'text': string   
 
-Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": "utterance text"}}
 For user messages: {{"participant": "user", "text": "utterance text"}}
 
@@ -155,19 +155,19 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages.
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages.
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_2 = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTIONS:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -198,21 +198,21 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": ["utterance variation 1", "utterance variation 2", "utterance variation 3"]}}
 For user messages: {{"participant": "user", "text": ["utterance variation 1", "utterance variation 2", "utterance variation 3"]}}
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_3 = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTION:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -225,7 +225,7 @@ INSTRUCTION:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-3. Make sure that there are no repetitive lines in the entire dialogue.
+3. Make sure that there are no repetitive lines in the entire dialog.
 
 4. The output must be a list of dictionaries, where each dictionary has:
    - 'participant': either 'user' or 'assistant'
@@ -245,21 +245,21 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": [list of utterance variations]}}
 For user messages: {{"participant": "user", "text": [list of utterance variations]}}
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_4 = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTION:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -272,7 +272,7 @@ INSTRUCTION:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-3. Make sure that no utterance in the entire dialogue repeats another utterance word for word.
+3. Make sure that no utterance in the entire dialog repeats another utterance word for word.
 
 4. The output must be a list of dictionaries, where each dictionary has:
    - 'participant': either 'user' or 'assistant'
@@ -292,21 +292,21 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": [list of utterance variations]}}
 For user messages: {{"participant": "user", "text": [list of utterance variations]}}
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_5 = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTION:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -337,22 +337,22 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": [list of utterance variations]}}
 For user messages: {{"participant": "user", "text": [list of utterance variations]}}
-Make sure that no utterance in the entire dialogue repeats another utterance word for word.
+Make sure that no utterance in the entire dialog repeats another utterance word for word.
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_6 = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTION:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -365,7 +365,7 @@ INSTRUCTION:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-3. Make sure that no utterance in the entire dialogue repeats another utterance word for word.
+3. Make sure that no utterance in the entire dialog repeats another utterance word for word.
 
 4. The output must be a list of dictionaries, where each dictionary has:
    - 'participant': either 'user' or 'assistant'
@@ -385,21 +385,21 @@ UTTERANCE VARIATIONS: ["Okay, if you ever need more help, don't hesitate to ask.
 ORIGINAL UTTERANCE: "I'm curious about the pricing for eco-friendly packaging."
 UTTERANCE VARIATIONS: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": [list of utterance variations]}}
 For user messages: {{"participant": "user", "text": [list of utterance variations]}}
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_7 = """
-You are a professional writer. You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are a professional writer. You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTION:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -412,7 +412,7 @@ INSTRUCTION:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-3. Make sure that no utterance in the entire dialogue repeats another utterance word for word.
+3. Make sure that no utterance in the entire dialog repeats another utterance word for word.
 
 4. The output must be a list of dictionaries, where each dictionary has:
    - 'participant': either 'user' or 'assistant'
@@ -432,21 +432,21 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": [list of utterance variations]}}
 For user messages: {{"participant": "user", "text": [list of utterance variations]}}
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_8 = """
-You are a professional writer. You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are a professional writer. You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTION:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -459,7 +459,7 @@ INSTRUCTION:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-3. Be creative and make sure that no utterance in the entire dialogue repeats another utterance word for word.
+3. Be creative and make sure that no utterance in the entire dialog repeats another utterance word for word.
 
 4. The output must be a list of dictionaries, where each dictionary has:
    - 'participant': either 'user' or 'assistant'
@@ -479,21 +479,21 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": [list of utterance variations]}}
 For user messages: {{"participant": "user", "text": [list of utterance variations]}}
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """
 
 variations_augmentation_prompt_9 = """
-You are tasked with augmenting a dialogue by adding variations to existing utterances while maintaining the original dialogue flow and intent.
+You are tasked with augmenting a dialog by adding variations to existing utterances while maintaining the original dialog flow and intent.
 
 INSTRUCTION:
-1. For each message in the dialogue:
+1. For each message in the dialog:
    - Create 2-5 variations of the 'text' field that:
      * Express the same meaning/intent
      * Use different wording and phrasing
@@ -506,7 +506,7 @@ INSTRUCTION:
    - Maintain consistency in tone and style
    - Make sense in the conversation flow
 
-3. Make sure that all the utterances in the dialogue are different from each other.
+3. Make sure that all the utterances in the dialog are different from each other.
 
 4. The output must be a list of dictionaries, where each dictionary has:
    - 'participant': either 'user' or 'assistant'
@@ -526,12 +526,12 @@ AUGMENTED PHRASES: ["Okay, if you ever need more help, don't hesitate to ask. Ha
 ORIGINAL PHRASE: "I'm curious about the pricing for eco-friendly packaging."
 AUGMENTED PHRASES: ['Can you tell me about the expenses associated with eco-friendly packaging?', 'I want to know about the costs of eco-friendly packaging.']
 
-Now you will be provided with INPUT TOPIC and INPUT DIALOGUE. Return ONLY a valid JSON array containing the augmented dialogue messages. Each message should be in this exact format:
+Now you will be provided with INPUT TOPIC and INPUT DIALOG. Return ONLY a valid JSON array containing the augmented dialog messages. Each message should be in this exact format:
 For assistant messages: {{"participant": "assistant", "text": [list of utterance variations]}}
 For user messages: {{"participant": "user", "text": [list of utterance variations]}}
 
 INPUT THEME: {topic}
 
-INPUT DIALOGUE:
-{dialogue}
+INPUT DIALOG:
+{dialog}
 """

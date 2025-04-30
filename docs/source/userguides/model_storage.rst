@@ -1,19 +1,19 @@
 Using Dialog2Graph pipelines
 ============================
 
-This document describes how to use Dialog2Graph pipelines to process your data. The following example shows how to use the pipeline that generates graph based on the dialogues you provide using both LLM and Embedding models. Also we will dive into details of :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` usage.
+This document describes how to use Dialog2Graph pipelines to process your data. The following example shows how to use the pipeline that generates graph based on the dialogs you provide using both LLM and Embedding models. Also we will dive into details of :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` usage.
 
-First of all we need to import the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` and :py:class:`~dialogue2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline` we will be using.
+First of all we need to import the :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` and :py:class:`~dialog2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline` we will be using.
 
 .. code-block:: python
 
-    from dialogue2graph.pipelines.model_storage import ModelStorage
-    from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
+    from dialog2graph.pipelines.model_storage import ModelStorage
+    from dialog2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
 
 
-:py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` instance is used to store LLM and SentenceTransformer models and use cached variants to avoid multiple instances of the same model being up simultaneously.
+:py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` instance is used to store LLM and SentenceTransformer models and use cached variants to avoid multiple instances of the same model being up simultaneously.
 
-Each :py:class:`~dialogue2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline` has it's own default models, but you can override them by passing the key to the model you've added to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage`.
+Each :py:class:`~dialog2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline` has it's own default models, but you can override them by passing the key to the model you've added to the :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage`.
 
 .. code-block:: python
 
@@ -43,13 +43,13 @@ Each :py:class:`~dialogue2graph.pipelines.d2g_llm.pipeline.D2GLLMPipeline` has i
         sim_model="my_embedding_model"
         )
 
-In this example we are overriding the default "gpt-4o-mini" model with "gpt-3.5-turbo" model for the formatting task in the pipeline and the similarity model to use "all-MiniLM-L6-v2". The rest of the models will be used as default. Don't forget to use correct ``model_type`` when adding the model to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage`. The available types are ``llm`` for LLMs and ``emb`` for embedders.
+In this example we are overriding the default "gpt-4o-mini" model with "gpt-3.5-turbo" model for the formatting task in the pipeline and the similarity model to use "all-MiniLM-L6-v2". The rest of the models will be used as default. Don't forget to use correct ``model_type`` when adding the model to the :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage`. The available types are ``llm`` for LLMs and ``emb`` for embedders.
 
-Note, that the adding of the models to the :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` is not necessary if you are using the default models.
+Note, that the adding of the models to the :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` is not necessary if you are using the default models.
 
 .. code-block:: python
 
-    # Define the data, but it can also be a path to the JSON file or a list of Dialogue objects
+    # Define the data, but it can also be a path to the JSON file or a list of Dialog objects
     data = [{'text': 'Hey there! How can I help you today?',
         'participant': 'assistant'},
     {'text': 'I need to book a ride to the airport.', 'participant': 'user'},
@@ -69,10 +69,10 @@ Note, that the adding of the models to the :py:class:`~dialogue2graph.pipelines.
     graph, report = pipe.invoke(data)
     report.to_markdown("report.md")
 
-That's it! Now, you have a :py:class:`~dialogue2graph.pipelines.core.graph.Graph`  object that you can use for further processing.
-And you have a :py:class:`~dialogue2graph.pipelines.report.PipelineReport` object that contains some metrics regarding your data. It can be exported to various formats using built in functions.
+That's it! Now, you have a :py:class:`~dialog2graph.pipelines.core.graph.Graph`  object that you can use for further processing.
+And you have a :py:class:`~dialog2graph.pipelines.report.PipelineReport` object that contains some metrics regarding your data. It can be exported to various formats using built in functions.
 
-If needed you can both save your :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` and load it later.
+If needed you can both save your :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` and load it later.
 
 .. code-block:: python
 

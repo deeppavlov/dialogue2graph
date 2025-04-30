@@ -10,13 +10,13 @@ from langchain_community.cache import SQLAlchemyMd5Cache
 from sqlalchemy import create_engine
 
 
-from dialogue2graph.utils.logger import Logger
-from dialogue2graph.pipelines.core.pipeline import BasePipeline
-from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
-from dialogue2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
-from dialogue2graph.pipelines.d2g_extender import D2GExtenderPipeline
-from dialogue2graph.pipelines.model_storage import ModelStorage
-from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
+from dialog2graph.utils.logger import Logger
+from dialog2graph.pipelines.core.pipeline import BasePipeline
+from dialog2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
+from dialog2graph.pipelines.d2g_llm.pipeline import D2GLLMPipeline
+from dialog2graph.pipelines.d2g_extender import D2GExtenderPipeline
+from dialog2graph.pipelines.model_storage import ModelStorage
+from dialog2graph.pipelines.helpers.parse_data import PipelineRawDataType
 
 
 load_dotenv()
@@ -107,7 +107,7 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
     new_summary = []
     # for data in dataset["train"].select(range(0, len(dataset["train"]), 30)):
     for data in dataset["train"].select(range(1)):
-        dialogs = data["augmented_dialogues"][0]["messages"]
+        dialogs = data["augmented_dialogs"][0]["messages"]
         graph = data["graph"]
 
         # Parse the raw data

@@ -9,9 +9,9 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
+sys.path.insert(0, os.path.abspath("../../dialog2graph"))
 
-project = "Dialogue2Graph"
+project = "Dialog2Graph"
 copyright = "2025, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin, Anna Mikhailova, Maria Molchanova, Yuri Peshkichev"
 author = "Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin, Anna Mikhailova, Maria Molchanova, Yuri Peshkichev"
 
@@ -20,11 +20,11 @@ on_github = os.environ.get("GITHUB_ACTIONS") == "true"
 
 # Configure URLs for GitHub Pages
 if on_github:
-    html_baseurl = "/dialogue2graph/dev/"
+    html_baseurl = "/dialog2graph/dev/"
     html_context = {
         "display_github": True,
         "github_user": "deeppavlov",
-        "github_repo": "dialogue2graph",
+        "github_repo": "dialog2graph",
         "github_version": "dev",
         "conf_py_path": "/docs/source/",
     }
@@ -59,7 +59,7 @@ autodoc_default_options = {
 
 autodoc_typehints = "both"
 
-autoapi_dirs = ["../../dialogue2graph"]
+autoapi_dirs = ["../../dialog2graph"]
 autoapi_options = [
     "members",
     "undoc-members",
@@ -98,7 +98,7 @@ html_static_path = ["_static"]
 
 extlinks = {
     "github_source_link": (
-        "https://github.com/deeppavlov/dialogue2graph/tree/dev/%s",
+        "https://github.com/deeppavlov/dialog2graph/tree/dev/%s",
         None,
     ),
 }
@@ -111,7 +111,7 @@ html_js_files = [
 ]
 
 # Fix base URL for GitHub Pages
-html_baseurl = "/dialogue2graph/dev/"
+html_baseurl = "/dialog2graph/dev/"
 
 # Important: Add this to handle static files correctly
 html_theme_options = {
@@ -119,11 +119,11 @@ html_theme_options = {
     "navigation_depth": 3,
     "show_toc_level": 2,
     # Add this to fix static file paths
-    "static_page_path": "/dialogue2graph/dev/_static/",
+    "static_page_path": "/dialog2graph/dev/_static/",
     "icon_links": [
         {
             "name": "GitHub",
-            "url": "https://github.com/deeppavlov/dialogue2graph",
+            "url": "https://github.com/deeppavlov/dialog2graph",
             "icon": "fa-brands fa-github",
             "type": "fontawesome",
         },
@@ -135,7 +135,7 @@ html_use_relative_paths = True
 
 # Ensure all static paths are properly prefixed for GitHub Pages
 if os.environ.get("GITHUB_ACTIONS") == "true":
-    html_static_path_suffix = "/dialogue2graph/dev"
+    html_static_path_suffix = "/dialog2graph/dev"
 
 
 def skip_submodules(app, what, name, obj, skip, options):

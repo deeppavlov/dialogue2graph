@@ -4,7 +4,7 @@ Getting started
 Installation
 ~~~~~~~~~~~~
 
-To install the **Dialogue2Graph** project, please follow the steps below:
+To install the **Dialog2Graph** project, please follow the steps below:
 
 - Install poetry v. 1.8.4 (`detailed installation guide <https://python-poetry.org/docs/>`_) 
 
@@ -16,8 +16,8 @@ To install the **Dialogue2Graph** project, please follow the steps below:
 
 .. code-block:: bash
 
-    git https://github.com/deeppavlov/dialogue2graph.git
-    cd dialogue2graph
+    git https://github.com/deeppavlov/dialog2graph.git
+    cd dialog2graph
     poetry install
 
 - Consider installing `PyGraphviz` from `here <https://pygraphviz.github.io/>`_, if you are planning to visualize your graphs. Then add PyGraphviz to the poetry environment.
@@ -43,5 +43,5 @@ To install the **Dialogue2Graph** project, please follow the steps below:
 Key Concepts
 ~~~~~~~~~~~~
 
-A **dialogue graph** is a structured, graph-based representation of conversational data, where **nodes** represent key elements such 
+A **dialog graph** is a structured, graph-based representation of conversational data, where **nodes** represent key elements such 
 as utterances, intents, or states, and **edges** define the transitions between these elements.

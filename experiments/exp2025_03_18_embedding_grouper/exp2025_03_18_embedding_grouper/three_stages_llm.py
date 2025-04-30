@@ -9,18 +9,18 @@ from langchain.output_parsers import PydanticOutputParser
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
-from dialogue2graph.pipelines.core.algorithms import GraphGenerator
-from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
-from dialogue2graph.pipelines.core.schemas import DialogueGraph, Node
-from dialogue2graph.pipelines.core.dialogue import Dialogue
-from dialogue2graph.metrics.similarity import is_same_structure, compare_graphs
-from utils import call_llm_api, nodes2graph, dialogues2list
+from dialog2graph.pipelines.core.algorithms import GraphGenerator
+from dialog2graph.pipelines.core.graph import BaseGraph, Graph
+from dialog2graph.pipelines.core.schemas import DialogGraph, Node
+from dialog2graph.pipelines.core.dialog import Dialog
+from dialog2graph.metrics.similarity import is_same_structure, compare_graphs
+from utils import call_llm_api, nodes2graph, dialogs2list
 from missing_edges_prompt import three_1, three_2
 from prompts import graph_example_1, part_1, part_2
 from settings import EnvSettings
 
 
-class DialogueNodes(BaseModel):
+class DialogNodes(BaseModel):
     nodes: List[Node] = Field(description="List of nodes representing assistant states")
     reason: str = Field(description="explanation")
 
@@ -29,13 +29,13 @@ env_settings = EnvSettings()
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
 
 
-# @AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
+# @AlgorithmRegistry.register(input_type=list[Dialog], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class ThreeStagesGraphGenerator(GraphGenerator):
     """Graph generator based on list of diaolgues.
     Thee stages:
     1. Algorithmic grouping assistant utterances into nodes.
     2. Algorithmic connecting nodes by edges.
-    3. If one of dialogues ends with user's utterance, ask LLM to add missing edges.
+    3. If one of dialogs ends with user's utterance, ask LLM to add missing edges.
     """
 
     # def __init__(self):
@@ -43,16 +43,16 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
     def invoke(
         self,
-        dialogue: list[Dialogue] = None,
-        graph: DialogueGraph = None,
+        dialog: list[Dialog] = None,
+        graph: DialogGraph = None,
         model_name="chatgpt-4o-latest",
         temp=0,
     ) -> BaseGraph:
         partial_variables = {}
         prompt_extra = part_2
-        for idx, dial in enumerate(dialogue):
+        for idx, dial in enumerate(dialog):
             partial_variables[f"var_{idx}"] = dial.to_list()
-            prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
+            prompt_extra += f" Dialog_{idx}: {{var_{idx}}}"
         prompt = PromptTemplate(
             template=part_1 + "{graph_example_1}. " + prompt_extra,
             input_variables=["graph_example_1"],
@@ -65,12 +65,12 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             base_url=env_settings.OPENAI_BASE_URL,
             temperature=temp,
         )
-        model = base_model | PydanticOutputParser(pydantic_object=DialogueNodes)
+        model = base_model | PydanticOutputParser(pydantic_object=DialogNodes)
         nodes = call_llm_api(
             prompt.format(graph_example_1=graph_example_1), model, temp=0
         ).model_dump()
 
-        nexts, _, starts, neigbhours, last_user = dialogues2list(dialogue)
+        nexts, _, starts, neigbhours, last_user = dialogs2list(dialog)
 
         # print("LAST: ", last_user)
 
@@ -94,7 +94,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
             model_name="BAAI/bge-m3", model_kwargs={"device": env_settings.DEVICE}
         )
         try:
-            graph_dict = nodes2graph(nodes["nodes"], dialogue, embeddings)
+            graph_dict = nodes2graph(nodes["nodes"], dialog, embeddings)
         except Exception as e:
             print(e)
             return Graph({})
@@ -117,9 +117,9 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
             partial_variables = {}
             prompt_extra = ""
-            for idx, dial in enumerate(dialogue):
+            for idx, dial in enumerate(dialog):
                 partial_variables[f"var_{idx}"] = dial.to_list()
-                prompt_extra += f" Dialogue_{idx}: {{var_{idx}}}"
+                prompt_extra += f" Dialog_{idx}: {{var_{idx}}}"
             prompt = PromptTemplate(
                 template=three_1 + "{graph_dict}. " + three_2 + prompt_extra,
                 input_variables=["graph_dict"],
@@ -128,7 +128,7 @@ class ThreeStagesGraphGenerator(GraphGenerator):
 
             print("PROMPT: ", prompt)
 
-            model = base_model | PydanticOutputParser(pydantic_object=DialogueGraph)
+            model = base_model | PydanticOutputParser(pydantic_object=DialogGraph)
 
             result = call_llm_api(
                 prompt.format(graph_dict=graph_dict), model, temp=temp
@@ -148,8 +148,8 @@ class ThreeStagesGraphGenerator(GraphGenerator):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, dialogues, target_graph, report_type="dict"):
-        graph = self.invoke(dialogues)
+    async def evaluate(self, dialogs, target_graph, report_type="dict"):
+        graph = self.invoke(dialogs)
         report = {
             "is_same_structure": is_same_structure(graph, target_graph),
             "graph_match": compare_graphs(graph, target_graph),

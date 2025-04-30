@@ -1,9 +1,9 @@
-from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialog2graph.pipelines.core.dialog import Dialog
 
-from vectors import DialogueStore, NodeStore
+from vectors import DialogStore, NodeStore
 from settings import EnvSettings
 
-# from dialogue2graph.metrics.embedder import compare_strings
+# from dialog2graph.metrics.embedder import compare_strings
 from embedder import compare_strings
 
 from langchain.schema import HumanMessage
@@ -43,17 +43,15 @@ def call_llm_api(query: str, llm, client=None, langchain_model=True) -> str | No
     return None
 
 
-def nodes2graph(
-    nodes: list, dialogues: list[Dialogue], embeddings: HuggingFaceEmbeddings
-):
-    """Connecting nodes with edges for searching dialogue utterances in list of nodes based on embedding similarity
-    Input: nodes and list of dialogues
+def nodes2graph(nodes: list, dialogs: list[Dialog], embeddings: HuggingFaceEmbeddings):
+    """Connecting nodes with edges for searching dialog utterances in list of nodes based on embedding similarity
+    Input: nodes and list of dialogs
     """
     edges = []
     node_store = NodeStore(nodes, embeddings)
-    for d in dialogues:
+    for d in dialogs:
         texts = d.to_list()
-        store = DialogueStore(texts, embeddings)
+        store = DialogStore(texts, embeddings)
         for n in nodes:
             for u in n["utterances"]:
                 ids = store.search_assistant(u)
@@ -102,14 +100,14 @@ def nodes2graph(
     return {"edges": edges, "nodes": nodes}
 
 
-def dialogues2list(dialogues: list[Dialogue]):
-    """Helper pre-pocessing list of dialogues for grouping.
+def dialogs2list(dialogs: list[Dialog]):
+    """Helper pre-pocessing list of dialogs for grouping.
     Returns:
     nodes - list of assistant utterances
     nexts - list of following user's utterances
     starts - list of starting utterances
     neigbhours - dictionary of adjacent assistants utterances
-    last_user - sign of that dialogue finishes with user's utterance
+    last_user - sign of that dialog finishes with user's utterance
     """
 
     nodes = []
@@ -117,7 +115,7 @@ def dialogues2list(dialogues: list[Dialogue]):
     starts = []
     neighbours = {}
     last_user = False
-    for d in dialogues:
+    for d in dialogs:
         start = 1
         texts = d.to_list()
         for idx, t in enumerate(texts):

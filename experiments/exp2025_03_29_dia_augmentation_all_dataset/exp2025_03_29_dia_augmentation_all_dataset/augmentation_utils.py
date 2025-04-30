@@ -7,9 +7,9 @@ def to_set(x):
     return set(x)
 
 
-def check_no_duplicates_all_dialogues(dialogues):
+def check_no_duplicates_all_dialogs(dialogs):
     all_utterances = []
-    for dia in dialogues:
+    for dia in dialogs:
         utterances = [uttr for turn in dia for uttr in turn["text"]]
         all_utterances.append(utterances)
 
@@ -31,11 +31,11 @@ def check_no_duplicates_all_dialogues(dialogues):
         return False
 
 
-def check_no_duplicates_one_dialogue(dialogue, uttr_variations=False):
+def check_no_duplicates_one_dialog(dialog, uttr_variations=False):
     if uttr_variations:
-        utterances = [uttr for turn in dialogue for uttr in turn["text"]]
+        utterances = [uttr for turn in dialog for uttr in turn["text"]]
     else:
-        utterances = [turn["text"] for turn in dialogue]
+        utterances = [turn["text"] for turn in dialog]
 
     if len(utterances) == len(set(utterances)):
         return True
@@ -47,8 +47,8 @@ def check_no_duplicates_one_dialogue(dialogue, uttr_variations=False):
         return False
 
 
-def check_no_duplicates_one_uttr_list(dialogue):
-    utterances_lists = [turn["text"] for turn in dialogue]
+def check_no_duplicates_one_uttr_list(dialog):
+    utterances_lists = [turn["text"] for turn in dialog]
     for utterances in utterances_lists:
         if len(utterances) == len(set(utterances)):
             return True
@@ -60,9 +60,9 @@ def check_no_duplicates_one_uttr_list(dialogue):
             return False
 
 
-def check_diagonal_similarity(dialogue_1, dialogue_2, embedder):
-    utterances_1 = [uttr["text"] for uttr in dialogue_1]
-    utterances_2 = [uttr["text"] for uttr in dialogue_2]
+def check_diagonal_similarity(dialog_1, dialog_2, embedder):
+    utterances_1 = [uttr["text"] for uttr in dialog_1]
+    utterances_2 = [uttr["text"] for uttr in dialog_2]
 
     model = SentenceTransformer(embedder)
     embeddings_1 = model.encode(utterances_1)
@@ -84,18 +84,18 @@ def check_diagonal_similarity(dialogue_1, dialogue_2, embedder):
     return (True, mean_diagonal_similarity)
 
 
-def is_correct_length_modified(dialogue_1, dialogue_2):
+def is_correct_length_modified(dialog_1, dialog_2):
     try:
-        result = len(dialogue_1) == len(dialogue_2)
+        result = len(dialog_1) == len(dialog_2)
     except Exception as e:
         result = f"Length comparison error: {e}"
 
     return result
 
 
-def match_roles_modified(dialogue_1, dialogue_2):
+def match_roles_modified(dialog_1, dialog_2):
     try:
-        for phrase_1, phrase_2 in zip(dialogue_1, dialogue_2):
+        for phrase_1, phrase_2 in zip(dialog_1, dialog_2):
             if phrase_1["participant"] != phrase_2["participant"]:
                 return False
     except Exception as e:
@@ -104,18 +104,18 @@ def match_roles_modified(dialogue_1, dialogue_2):
     return True
 
 
-def count_uttr_variations(dialogue):
-    utterances_lists = [turn["text"] for turn in dialogue]
+def count_uttr_variations(dialog):
+    utterances_lists = [turn["text"] for turn in dialog]
     for utterances in utterances_lists:
         if len(utterances) < 2:
             return False
     return True
 
 
-# def validate_dialogues_by_pairs(dialogues, augmented_dialogues, return_result=False):
+# def validate_dialogs_by_pairs(dialogs, augmented_dialogs, return_result=False):
 #     failure_instances_length, failure_instances_roles, errors = [], [], []
 
-#     for i, (orig_dia, aug_dia) in enumerate(zip(dialogues, augmented_dialogues)):
+#     for i, (orig_dia, aug_dia) in enumerate(zip(dialogs, augmented_dialogs)):
 #         try:
 #             if is_correct_length_modified(orig_dia, aug_dia) == False:
 #                 failure_instances_length.append(i)
