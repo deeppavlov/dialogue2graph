@@ -22,17 +22,19 @@ class BaseAlgorithm(BaseModel, abc.ABC):
     """
 
     @abc.abstractmethod
-    def invoke(self, *args, use_cache=False, seed=42, **kwargs): # pragma: no cover
+    def invoke(self, *args, use_cache=False, seed=42, **kwargs):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def ainvoke(self, *args, use_cache=False, seed=42, **kwargs): # pragma: no cover
+    async def ainvoke(
+        self, *args, use_cache=False, seed=42, **kwargs
+    ):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
     def evaluate(
         self, *args, report_type: Literal["dict", "dataframe"] = "dict", **kwargs
-    ) -> Union[dict, DataFrame]: # pragma: no cover
+    ) -> Union[dict, DataFrame]:  # pragma: no cover
         raise NotImplementedError
 
 
@@ -54,7 +56,7 @@ class DialogueGenerator(BaseAlgorithm):
 
     def invoke(
         self, graph: BaseGraph, start_node: int = 1, end_node: int = 0, topic: str = ""
-    ) -> List[Dialogue]: # pragma: no cover
+    ) -> List[Dialogue]:  # pragma: no cover
         raise NotImplementedError
 
 
@@ -70,10 +72,14 @@ class DialogAugmentation(BaseAlgorithm):
         topic: The topic to guide the augmentation process (optional).
     """
 
-    def invoke(self, dialogue: Dialogue, topic: str = "") -> Dialogue: # pragma: no cover
+    def invoke(
+        self, dialogue: Dialogue, topic: str = ""
+    ) -> Dialogue:  # pragma: no cover
         raise NotImplementedError
 
-    async def ainvoke(self, dialogue: Dialogue, topic: str = "") -> Dialogue: # pragma: no cover
+    async def ainvoke(
+        self, dialogue: Dialogue, topic: str = ""
+    ) -> Dialogue:  # pragma: no cover
         raise NotImplementedError
 
 
@@ -84,48 +90,54 @@ class GraphAugmentation(BaseAlgorithm):
         topic: The topic to guide the augmentation process (optional).
         graph: The Graph object to be augmented."""
 
-    def invoke(self, topic: str, graph: BaseGraph) -> BaseGraph: # pragma: no cover
+    def invoke(self, topic: str, graph: BaseGraph) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
-    async def ainvoke(self, topic: str, graph: BaseGraph) -> BaseGraph: # pragma: no cover
+    async def ainvoke(
+        self, topic: str, graph: BaseGraph
+    ) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
 
 class TopicGraphGenerator(BaseAlgorithm):
     """Base class for topic-based graph generation"""
 
-    def invoke(self, topic: str, model: BaseChatModel) -> BaseGraph: # pragma: no cover
+    def invoke(self, topic: str, model: BaseChatModel) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
-    async def ainvoke(self, topic: str) -> BaseGraph: # pragma: no cover
+    async def ainvoke(self, topic: str) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
 
 class GraphGenerator(BaseAlgorithm):
     """Base class for graph generation"""
 
-    def invoke(self, dialogue: Dialogue) -> BaseGraph: # pragma: no cover
+    def invoke(self, dialogue: Dialogue) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
-    async def ainvoke(self, dialogue: Dialogue) -> BaseGraph: # pragma: no cover
+    async def ainvoke(self, dialogue: Dialogue) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
 
 class GraphExtender(BaseAlgorithm):
     """Base class for extending graph"""
 
-    def invoke(self, dialogue: Dialogue, graph: BaseGraph) -> BaseGraph: # pragma: no cover
+    def invoke(
+        self, dialogue: Dialogue, graph: BaseGraph
+    ) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
-    async def ainvoke(self, dialogue: Dialogue, graph: BaseGraph) -> BaseGraph: # pragma: no cover
+    async def ainvoke(
+        self, dialogue: Dialogue, graph: BaseGraph
+    ) -> BaseGraph:  # pragma: no cover
         raise NotImplementedError
 
 
 class RawDataParser(BaseAlgorithm):
     """Base class for user data parsing"""
 
-    def invoke(self, data): # pragma: no cover
+    def invoke(self, data):  # pragma: no cover
         raise NotImplementedError
 
-    async def ainvoke(self, data): # pragma: no cover
+    async def ainvoke(self, data):  # pragma: no cover
         raise NotImplementedError

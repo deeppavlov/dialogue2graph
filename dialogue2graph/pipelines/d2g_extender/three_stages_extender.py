@@ -14,7 +14,8 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
 
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
@@ -230,7 +231,7 @@ class LLMGraphExtender(DGBaseGenerator):
         return Graph(
             graph_dict={"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]},
             metadata=graph.metadata,
-            )
+        )
 
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
@@ -318,9 +319,8 @@ class LLMGraphExtender(DGBaseGenerator):
 
         if result and all(e["target"] for e in result.model_dump()["edges"]):
             result_graph = Graph(
-                graph_dict=result.model_dump(),
-                metadata=cur_graph.metadata
-                )
+                graph_dict=result.model_dump(), metadata=cur_graph.metadata
+            )
             if enable_evals and pipeline_data.true_graph:
                 report.update(
                     self.evaluate(result_graph, pipeline_data.true_graph, "end")
@@ -329,5 +329,5 @@ class LLMGraphExtender(DGBaseGenerator):
 
         return Graph(graph_dict={}, metadata=cur_graph.metadata)
 
-    async def ainvoke(self, *args, **kwargs): # pragma: no cover
+    async def ainvoke(self, *args, **kwargs):  # pragma: no cover
         return self.invoke(*args, **kwargs)

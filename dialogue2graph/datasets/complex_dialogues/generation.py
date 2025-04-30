@@ -8,13 +8,15 @@ The module provides graph generator capable of creating complex validated graphs
 import os
 from enum import Enum
 from typing import Optional, Dict, Any, Union
+from datetime import datetime
 
 from pydantic import BaseModel, Field
 import networkx as nx
 
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers.pydantic import PydanticOutputParser
-from langchain_core.language_models.chat_models import BaseChatModel
+from langchain_openai import ChatOpenAI
+
 
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.metrics.no_llm_metrics import match_dg_triplets
@@ -23,7 +25,7 @@ from dialogue2graph.metrics.no_llm_validators import (
     is_greeting_repeated_regex,
     is_dialog_closed_too_early_regex,
 )
-from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.core.graph import BaseGraph, Graph, Metadata
 from dialogue2graph.pipelines.core.algorithms import TopicGraphGenerator
 from dialogue2graph.pipelines.core.schemas import GraphGenerationResult, DialogueGraph
 from dialogue2graph.pipelines.model_storage import ModelStorage
@@ -45,7 +47,7 @@ class ErrorType(str, Enum):
     """Error types that can occur during generation"""
 
     INVALID_GRAPH_STRUCTURE = "invalid_graph_structure"
-    TOO_MANY_CYCLES = "too_many_cycles"
+    TOO_FEW_CYCLES = "too_few_cycles"
     SAMPLING_FAILED = "sampling_failed"
     INVALID_THEME = "invalid_theme"
     GENERATION_FAILED = "generation_failed"
@@ -65,6 +67,7 @@ class CycleGraphGenerator(BaseModel):
     """Class for generating graph with cycles"""
 
     cache: Optional[Any] = Field(default=None, exclude=True)
+    model_storage: ModelStorage = Field(default=None)
 
     class Config:
         arbitrary_types_allowed = True
@@ -74,7 +77,7 @@ class CycleGraphGenerator(BaseModel):
         super().__init__(**data)
 
     def invoke(
-        self, model: BaseChatModel, prompt: PromptTemplate, seed=None, **kwargs
+        self, generation_llm: str, prompt: PromptTemplate, seed=None, **kwargs
     ) -> BaseGraph:
         """
         Generate a cyclic dialogue graph based on the topic input.
@@ -85,11 +88,28 @@ class CycleGraphGenerator(BaseModel):
         prompt.template = add_uuid_to_prompt(original_template, seed)
 
         parser = PydanticOutputParser(pydantic_object=DialogueGraph)
-        chain = prompt | model | parser
+        chain = prompt | self.model_storage.storage[generation_llm].model | parser
 
         # Reset template to original
         prompt.template = original_template
-        return Graph(chain.invoke(kwargs).model_dump())
+        models_config = self.model_storage.model_dump()
+        for model_key in models_config["storage"]:
+            keys_to_pop = []
+            for key in models_config["storage"][model_key]["config"]:
+                if "api_key" in key or "api_base" in key or "base_url" in key:
+                    keys_to_pop.append(key)
+            for key in keys_to_pop:
+                models_config["storage"][model_key]["config"].pop(key, None)
+        metadata = Metadata(
+            generator_name="cycle_generator",
+            models_config=models_config,
+            schema_version="v1",
+            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
+        return Graph(
+            graph_dict=chain.invoke(kwargs).model_dump(),
+            metadata=metadata,
+        )
 
     async def ainvoke(self, *args, **kwargs):
         """Async version of invoke - to be implemented"""
@@ -103,10 +123,16 @@ class GenerationPipeline(BaseModel):
     """Class for generation pipeline"""
 
     cache: Optional[Any] = Field(default=None, exclude=True)
-    generation_model: BaseChatModel
-    theme_validation_model: BaseChatModel
-    validation_model: BaseChatModel
-    cycle_ends_model: BaseChatModel
+    model_storage: ModelStorage
+    generation_llm: str
+    validation_llm: str
+    cycle_ends_llm: str
+    theme_validation_llm: str
+
+    # generation_model: BaseChatModel
+    # theme_validation_model: BaseChatModel
+    # validation_model: BaseChatModel
+    # cycle_ends_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
     generation_prompt: Optional[PromptTemplate] = Field(
         default_factory=lambda: cycle_graph_generation_prompt_informal
@@ -127,10 +153,15 @@ class GenerationPipeline(BaseModel):
 
     def __init__(
         self,
-        generation_model: BaseChatModel,
-        theme_validation_model: BaseChatModel,
-        validation_model: BaseChatModel,
-        cycle_ends_model: BaseChatModel,
+        model_storage: ModelStorage,
+        generation_llm: str,
+        validation_llm: str,
+        cycle_ends_llm: str,
+        theme_validation_llm: str,
+        # generation_model: BaseChatModel,
+        # theme_validation_model: BaseChatModel,
+        # validation_model: BaseChatModel,
+        # cycle_ends_model: BaseChatModel,
         generation_prompt: Optional[PromptTemplate],
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 2,
@@ -138,10 +169,11 @@ class GenerationPipeline(BaseModel):
         seed: Optional[int] = None,
     ):
         super().__init__(
-            generation_model=generation_model,
-            theme_validation_model=theme_validation_model,
-            validation_model=validation_model,
-            cycle_ends_model=cycle_ends_model,
+            model_storage=model_storage,
+            generation_llm=generation_llm,
+            validation_llm=validation_llm,
+            cycle_ends_llm=cycle_ends_llm,
+            theme_validation_llm=theme_validation_llm,
             generation_prompt=generation_prompt,
             repair_prompt=repair_prompt,
             min_cycles=min_cycles,
@@ -151,6 +183,7 @@ class GenerationPipeline(BaseModel):
         self.seed = seed
         if self.seed:
             self.cache = setup_cache()
+        self.graph_generator = CycleGraphGenerator(model_storage=model_storage)
 
     def validate_graph_cycle_requirement(
         self, graph: BaseGraph, min_cycles: int = 2
@@ -193,7 +226,9 @@ class GenerationPipeline(BaseModel):
         """Check transitions in the graph and attempts to fix invalid ones via LLM"""
         logger.info("Validating initial graph")
         initial_validation = are_triplets_valid(
-            graph, self.validation_model, return_type="detailed"
+            graph,
+            self.model_storage.storage[self.validation_llm].model,
+            return_type="detailed",
         )
         logger.info("Finished validating initial graph")
         if initial_validation["is_valid"]:
@@ -224,7 +259,7 @@ class GenerationPipeline(BaseModel):
                     )
 
                 current_graph = self.graph_generator.invoke(
-                    model=self.generation_model,
+                    generation_llm=self.generation_llm,
                     prompt=self.repair_prompt,
                     invalid_transitions=initial_validation["invalid_transitions"],
                     graph_json=current_graph.graph_dict,
@@ -242,7 +277,9 @@ class GenerationPipeline(BaseModel):
             current_attempt += 1
 
         validation = are_triplets_valid(
-            current_graph, self.validation_model, return_type="detailed"
+            current_graph,
+            self.model_storage.storage[self.validation_llm].model,
+            return_type="detailed",
         )
         if validation["is_valid"]:
             return {
@@ -274,7 +311,7 @@ class GenerationPipeline(BaseModel):
         try:
             logger.info("Generating Graph ...")
             graph = self.graph_generator.invoke(
-                model=self.generation_model,
+                generation_llm=self.generation_llm,
                 prompt=self.generation_prompt,
                 graph_example=graph_example,
                 topic=topic,
@@ -298,13 +335,13 @@ class GenerationPipeline(BaseModel):
             )
             if not cycle_validation["meets_requirements"]:
                 return GenerationError(
-                    error_type=ErrorType.TOO_MANY_CYCLES,
+                    error_type=ErrorType.TOO_FEW_CYCLES,
                     message=f"Graph requires minimum {self.min_cycles} cycles, found {cycle_validation['cycles_count']}",
                 )
 
             logger.info("Sampling dialogues...")
             sampled_dialogues = self.dialogue_sampler.invoke(
-                graph, self.cycle_ends_model, 15
+                graph, self.model_storage.storage[self.cycle_ends_llm].model, 15
             )
             logger.info(f"Sampled {len(sampled_dialogues)} dialogues")
             if not match_dg_triplets(graph, sampled_dialogues)["value"]:
@@ -323,7 +360,11 @@ class GenerationPipeline(BaseModel):
                     message="Failed to sample valid dialogues - Closing phrases appear in the middle of a dialogue",
                 )
 
-            theme_validation = is_theme_valid(graph, self.theme_validation_model, topic)
+            theme_validation = is_theme_valid(
+                graph,
+                self.model_storage.storage[self.theme_validation_llm].model,
+                topic,
+            )
             if not theme_validation["value"]:
                 return GenerationError(
                     error_type=ErrorType.INVALID_THEME,
@@ -361,7 +402,7 @@ class GenerationPipeline(BaseModel):
                     )
                 logger.info("Sampling dialogues...")
                 sampled_dialogues = self.dialogue_sampler.invoke(
-                    graph, self.cycle_ends_model, 15
+                    graph, self.model_storage.storage[self.cycle_ends_llm].model, 15
                 )
                 logger.info("Sampled %d dialogues", len(sampled_dialogues))
                 if not match_dg_triplets(graph, sampled_dialogues)["value"]:
@@ -370,14 +411,12 @@ class GenerationPipeline(BaseModel):
                         message="Failed to sample valid dialogues - not all utterances are present",
                     )
 
-            logger.info(f"going to return: {transition_validation['graph'].graph_dict}")
-            ret = GraphGenerationResult(
+            return GraphGenerationResult(
                 graph=transition_validation["graph"].graph_dict,
+                metadata=transition_validation["graph"].metadata,
                 topic=topic,
                 dialogues=sampled_dialogues,
             )
-            logger.info(f"ret: {ret}")
-            return ret
 
         except Exception as e:
             logger.error(f"Unexpected error during generation: {str(e)}")
@@ -419,42 +458,51 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         cycle_ends_llm: str = "looped_graph_cycle_ends_llm:v1",
         theme_validation_llm: str = "looped_graph_theme_validation_llm:v1",
     ):
-        # check if models are in model storage
         # if model is not in model storage put the default model there
-        if generation_llm not in model_storage.storage:
-            model_storage.add(
-                key=generation_llm,
-                config={
-                    "name": "gpt-4o-latest",
-                    "api_key": os.getenv("OPENAI_API_KEY"),
-                    "base_url": os.getenv("OPENAI_BASE_URL"),
-                },
-                model_type="llm",
-            )
+        model_storage.add(
+            key=generation_llm,
+            config={
+                "model_name": "chatgpt-4o-latest",
+                "openai_api_key": os.getenv("OPENAI_API_KEY"),
+                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
+                "temperature": 0,
+            },
+            model_type=ChatOpenAI,
+        )
 
-        if validation_llm not in model_storage.storage:
-            model_storage.add(
-                key=validation_llm,
-                config={
-                    "name": "gpt-3.5-turbo",
-                    "api_key": os.getenv("OPENAI_API_KEY"),
-                    "base_url": os.getenv("OPENAI_BASE_URL"),
-                    "temperature": 0,
-                },
-                model_type="llm",
-            )
+        model_storage.add(
+            key=validation_llm,
+            config={
+                "model_name": "gpt-3.5-turbo",
+                "openai_api_key": os.getenv("OPENAI_API_KEY"),
+                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
+                "temperature": 0,
+            },
+            model_type=ChatOpenAI,
+        )
 
-        if theme_validation_llm not in model_storage.storage:
-            model_storage.add(
-                key=theme_validation_llm,
-                config={
-                    "name": "gpt-3.5-turbo",
-                    "api_key": os.getenv("OPENAI_API_KEY"),
-                    "base_url": os.getenv("OPENAI_BASE_URL"),
-                    "temperature": 0,
-                },
-                model_type="llm",
-            )
+        model_storage.add(
+            key=cycle_ends_llm,
+            config={
+                "model_name": "chatgpt-4o-latest",
+                "openai_api_key": os.getenv("OPENAI_API_KEY"),
+                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
+                "temperature": 0,
+            },
+            model_type=ChatOpenAI,
+        )
+
+        model_storage.add(
+            key=theme_validation_llm,
+            config={
+                "model_name": "gpt-3.5-turbo",
+                "openai_api_key": os.getenv("OPENAI_API_KEY"),
+                "openai_api_base": os.getenv("OPENAI_BASE_URL"),
+                "temperature": 0,
+            },
+            model_type=ChatOpenAI,
+        )
+
         super().__init__(
             model_storage=model_storage,
             generation_llm=generation_llm,
@@ -462,12 +510,11 @@ class LoopedGraphGenerator(TopicGraphGenerator):
             cycle_ends_llm=cycle_ends_llm,
             theme_validation_llm=theme_validation_llm,
             pipeline=GenerationPipeline(
-                generation_model=model_storage.storage[generation_llm].model,
-                validation_model=model_storage.storage[validation_llm].model,
-                cycle_ends_model=model_storage.storage[cycle_ends_llm].model,
-                theme_validation_model=model_storage.storage[
-                    theme_validation_llm
-                ].model,
+                model_storage=model_storage,
+                generation_llm=generation_llm,
+                validation_llm=validation_llm,
+                cycle_ends_llm=cycle_ends_llm,
+                theme_validation_llm=theme_validation_llm,
                 generation_prompt=cycle_graph_generation_prompt_informal,
                 repair_prompt=cycle_graph_repair_prompt,
             ),
@@ -485,10 +532,10 @@ class LoopedGraphGenerator(TopicGraphGenerator):
 
             if isinstance(result, GraphGenerationResult):
                 logger.info(f"✅ Successfully generated graph for {topic}")
-                logger.info(f"ID: {result.dialogues[0].id}")
                 successful_generations.append(
                     {
                         "graph": result.graph.model_dump(),
+                        "metadata": result.metadata.model_dump(),  # The metadata is already a dictionary
                         "topic": result.topic,
                         "dialogues": [
                             dia.model_dump() for dia in result.dialogues

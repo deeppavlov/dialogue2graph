@@ -1,7 +1,7 @@
 import pytest
 import dotenv
 from langchain_openai import ChatOpenAI
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from dialogue2graph import Dialogue
 from dialogue2graph.metrics.no_llm_validators import (
@@ -26,7 +26,9 @@ def model_storage():
         config={"model_name": "BAAI/bge-m3"},
         model_type=HuggingFaceEmbeddings,
     )
-    model_storage.add("my_llm", config={"name": "gpt-4o-mini"}, model_type=ChatOpenAI)
+    model_storage.add(
+        "my_llm", config={"model_name": "gpt-4o-mini"}, model_type=ChatOpenAI
+    )
     return (model_storage, "my_emb", "my_llm")
 
 

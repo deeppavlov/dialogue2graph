@@ -10,6 +10,7 @@ class DGBaseGenerator(GraphGenerator):
     Attributes:
         sim_model: str, model name in storage
     """
+
     sim_model: str = Field(description="Similarity model")
 
     def evaluate(self, graph, true_graph, eval_stage: str) -> metrics.DGReportType:

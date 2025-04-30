@@ -16,6 +16,7 @@ from dialogue2graph.utils.logger import Logger
 
 logger = Logger(__name__)
 
+
 class Metadata(BaseModel):
     """
     Metadata class for storing additional information related to a graph.
@@ -26,11 +27,12 @@ class Metadata(BaseModel):
             "schema_version": version of the schema used to represent the graph.
             "timestamp": timestamp indicating when the metadata was created.
     """
+
     generator_name: str = ""
     models_config: dict = {}
     schema_version: str = "v1"
     timestamp: str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
+
 
 class BaseGraph(BaseModel, abc.ABC):
     """Base abstract class for graph representations of dialogues.
@@ -45,7 +47,9 @@ class BaseGraph(BaseModel, abc.ABC):
     """
 
     graph_dict: dict
-    metadata: Metadata = Metadata(generator_name="", models_config={}, schema_version="", timestamp="")
+    metadata: Metadata = Metadata(
+        generator_name="", models_config={}, schema_version="", timestamp=""
+    )
     graph: Optional[nx.Graph] = None
     node_mapping: Optional[dict] = None
 
@@ -53,62 +57,62 @@ class BaseGraph(BaseModel, abc.ABC):
         arbitrary_types_allowed = True
 
     @abc.abstractmethod
-    def load_graph(self, *args, **kwargs): # pragma: no cover
+    def load_graph(self, *args, **kwargs):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def visualise(self, *args, **kwargs): # pragma: no cover
+    def visualise(self, *args, **kwargs):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_nodes_by_utterance(self): # pragma: no cover
+    def find_nodes_by_utterance(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_edges_by_utterance(self): # pragma: no cover
+    def find_edges_by_utterance(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_nodes_by_id(self): # pragma: no cover
+    def get_nodes_by_id(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def match_edges_nodes(self): # pragma: no cover
+    def match_edges_nodes(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def check_edges(self): # pragma: no cover
+    def check_edges(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def remove_duplicated_edges(self): # pragma: no cover
+    def remove_duplicated_edges(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def remove_duplicated_nodes(self): # pragma: no cover
+    def remove_duplicated_nodes(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def find_paths(self): # pragma: no cover
+    def find_paths(self):  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_all_paths(self): # pragma: no cover
+    def get_all_paths(self):  # pragma: no cover
         raise NotImplementedError
 
-    def get_edges_by_source(self): # pragma: no cover
+    def get_edges_by_source(self):  # pragma: no cover
         raise NotImplementedError
 
-    def get_edges_by_target(self): # pragma: no cover
+    def get_edges_by_target(self):  # pragma: no cover
         raise NotImplementedError
 
-    def get_nodes_by_source(self): # pragma: no cover
+    def get_nodes_by_source(self):  # pragma: no cover
         raise NotImplementedError
 
-    def get_list_from_nodes(self): # pragma: no cover
+    def get_list_from_nodes(self):  # pragma: no cover
         raise NotImplementedError
 
-    def get_list_from_graph(self): # pragma: no cover
+    def get_list_from_graph(self):  # pragma: no cover
         raise NotImplementedError
 
 
@@ -122,7 +126,9 @@ class Graph(BaseGraph):
         Inherits all attributes from BaseGraph.
     """
 
-    def __init__(self, graph_dict: dict, metadata: Metadata = Metadata(), **kwargs: Any):
+    def __init__(
+        self, graph_dict: dict, metadata: Metadata = Metadata(), **kwargs: Any
+    ):
         """Initialize the Graph instance.
 
         Args:

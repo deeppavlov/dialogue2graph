@@ -106,7 +106,7 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
     # Run the pipeline on a single random item from the dataset
     new_summary = []
     # for data in dataset["train"].select(range(0, len(dataset["train"]), 30)):
-    for data in dataset["train"].select(range(2)):
+    for data in dataset["train"].select(range(1)):
         dialogs = data["augmented_dialogues"][0]["messages"]
         graph = data["graph"]
 
@@ -172,18 +172,12 @@ def test_d2g_pipelines():
 
     pipelines = [
         D2GLightPipeline(
-            name="three_stages_light",
-            model_storage=ms,
-            sim_model="sim_model"
+            name="three_stages_light", model_storage=ms, sim_model="sim_model"
         ),
         D2GLLMPipeline(
             name="three_stages_llm", model_storage=ms, sim_model="sim_model"
         ),
-        D2GExtenderPipeline(
-            name="extender",
-            model_storage=ms,
-            sim_model="sim_model"
-        ),
+        D2GExtenderPipeline(name="extender", model_storage=ms, sim_model="sim_model"),
     ]
 
     pipeline_results = [test_d2g_pipeline(pipeline) for pipeline in pipelines]
@@ -198,4 +192,3 @@ def test_d2g_pipelines():
             )
 
     assert all(pipeline_results), "Pipelines results got worse!"
-

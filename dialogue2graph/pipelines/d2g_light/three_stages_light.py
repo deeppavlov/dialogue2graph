@@ -14,7 +14,7 @@ from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 from langchain_openai import ChatOpenAI
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 
 from dialogue2graph import metrics
@@ -181,5 +181,5 @@ class LightGraphGenerator(DGBaseGenerator):
 
         return result_graph, report
 
-    async def ainvoke(self, *args, **kwargs): # pragma: no cover
+    async def ainvoke(self, *args, **kwargs):  # pragma: no cover
         return self.invoke(*args, **kwargs)

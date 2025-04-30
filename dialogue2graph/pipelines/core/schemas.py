@@ -8,6 +8,7 @@ The module contains base classes for graph abstractions.
 from typing import List
 from pydantic import BaseModel, Field
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.pipelines.core.graph import Metadata
 
 
 class Edge(BaseModel):
@@ -48,6 +49,7 @@ class GraphGenerationResult(BaseModel):
     """Complete result with graph and dialogues"""
 
     graph: DialogueGraph
+    metadata: Metadata
     topic: str
     dialogues: List[Dialogue]
 
