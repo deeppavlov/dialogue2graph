@@ -150,14 +150,15 @@ class ModelStorage(BaseModel):
                 "Initializing model %s for key '%s' with config: %s"
                 % (model_type, key, config)
             )
-            if "name" in config or not all(
+            if "name" in config:
+                raise KeyError(
+                    f"Instead of 'name' parameter for model {key} of type {model_type} please use 'model_name'"
+                )                
+            if not all(
                 p in model_type.model_fields.keys() for p in config
             ):
-                logger.error(
-                    f"Invalid parameter names for model {model_type} {model_type.model_fields.keys()}"
-                )
                 raise KeyError(
-                    f"Invalid parameter names for model '{key}': {[p for p in config if p == 'name' or p not in model_type.model_fields.keys()]}"
+                    f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
                 )
             model_getter = GetModelInstance(config)
             model_instance = model_getter.instantiate(model_type)

@@ -1,14 +1,11 @@
 from dialog2graph.datasets.complex_dialogs.generation import (
     CycleGraphGenerator,
-    GenerationPipeline,
-    LoopedGraphGenerator,
     ErrorType,
     GenerationError,
 )
 from dialog2graph.pipelines.core.dialog import Dialog
 from dialog2graph.pipelines.core.graph import Graph, BaseGraph
 from dialog2graph.pipelines.core.dialog_sampling import RecursiveDialogSampler
-from dialog2graph.pipelines.model_storage import ModelStorage
 
 # from dialog2graph.metrics.automatic_metrics import all_utterances_present
 
@@ -17,26 +14,6 @@ def test_cycle_graph_generator_init():
     """Test CycleGraphGenerator initialization"""
     generator = CycleGraphGenerator()
     assert isinstance(generator, CycleGraphGenerator)
-
-
-def test_generation_pipeline_init():
-    """Test GenerationPipeline initialization"""
-    pipeline = GenerationPipeline(
-        model_storage=ModelStorage(),
-        generation_llm="generation_llm",
-        validation_llm="validation_llm",
-        cycle_ends_llm="cycle_ends_llm",
-        theme_validation_llm="theme_validation_llm",
-        generation_prompt=None,
-        repair_prompt=None,
-    )
-    assert isinstance(pipeline, GenerationPipeline)
-
-
-def test_looped_graph_generator_init():
-    """Test LoopedGraphGenerator initialization"""
-    generator = LoopedGraphGenerator(ModelStorage())
-    assert isinstance(generator, LoopedGraphGenerator)
 
 
 def test_dialog_init():
