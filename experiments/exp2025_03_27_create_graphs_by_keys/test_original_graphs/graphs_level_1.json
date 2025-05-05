@@ -1,0 +1,1669 @@
+[
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Hello! How can I help you book a flight today?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "ask_destination",
+              "is_start": false,
+              "utterances": [
+                "Sure! Which city would you like to travel to?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "ask_dates",
+              "is_start": false,
+              "utterances": [
+                "Great. Could you let me know your preferred travel dates?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "confirm_booking",
+              "is_start": false,
+              "utterances": [
+                "All right. I’ve found a suitable flight. Would you like to confirm the booking?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit_conversation",
+              "is_start": false,
+              "utterances": [
+                "Your flight is booked. Is there anything else I can help with?"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'd like to book a flight."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I want to go to London.",
+                "I need to fly to New York."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "I'm traveling next week.",
+                "My dates are the 10th to the 15th."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Yes, please confirm.",
+                "No, never mind."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented example where the user wants to book a flight. The conversation flows from greeting to final confirmation."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "start_order",
+              "is_start": true,
+              "utterances": [
+                "Hello! Are you looking to order a pizza today?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "choose_size",
+              "is_start": false,
+              "utterances": [
+                "Sure thing! What size pizza would you like?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "choose_toppings",
+              "is_start": false,
+              "utterances": [
+                "Got it. Any specific toppings you’d prefer?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "confirm_order",
+              "is_start": false,
+              "utterances": [
+                "Your pizza is ready to be placed. Would you like to confirm your order?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "handle_change",
+              "is_start": false,
+              "utterances": [
+                "No problem, we can change the toppings or size. What would you like to change?"
+              ]
+            },
+            {
+              "id": 6,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Your order has been placed. Anything else I can help with?"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "Yes, I'd like to order a pizza."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I'd like a large pizza.",
+                "I want a medium size."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Pepperoni and mushrooms, please.",
+                "Just cheese."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Wait, I want to change something.",
+                "Let me add a topping."
+              ]
+            },
+            {
+              "source": 5,
+              "target": 3,
+              "utterances": [
+                "Change toppings to extra olives and chicken."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 6,
+              "utterances": [
+                "Yes, confirm the order."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented pizza ordering conversation with a loop for changing the order details."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Welcome to the Tech Support Bot. What can I help you with?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "ask_device",
+              "is_start": false,
+              "utterances": [
+                "Which device is having issues?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "troubleshoot_steps",
+              "is_start": false,
+              "utterances": [
+                "Let’s try some troubleshooting steps."
+              ]
+            },
+            {
+              "id": 4,
+              "label": "clarify_error",
+              "is_start": false,
+              "utterances": [
+                "I didn't quite get that. Could you specify the error message?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "resolutions",
+              "is_start": false,
+              "utterances": [
+                "We can attempt a factory reset or reinstall the software."
+              ]
+            },
+            {
+              "id": 6,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Great! Let me know if you need anything else."
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "My laptop won't turn on.",
+                "My phone is stuck on the boot screen."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "It's my laptop.",
+                "It's my tablet."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Something is blinking, and then nothing happens."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 3,
+              "utterances": [
+                "The error code is 0x0000"
+              ]
+            },
+            {
+              "source": 3,
+              "target": 5,
+              "utterances": [
+                "I have the error code. Now what's next?"
+              ]
+            },
+            {
+              "source": 5,
+              "target": 6,
+              "utterances": [
+                "I'll try a factory reset now."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented tech support scenario with a prompt to clarify error messages and a loop if the user didn’t specify the error clearly."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "welcome",
+              "is_start": true,
+              "utterances": [
+                "Hello! Need help with paying your bills?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "select_bill",
+              "is_start": false,
+              "utterances": [
+                "Which bill are you looking to settle today?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "payment_method",
+              "is_start": false,
+              "utterances": [
+                "How would you like to pay? Credit card, debit card, or bank transfer?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "confirm_payment",
+              "is_start": false,
+              "utterances": [
+                "Do you want to confirm the payment?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Your payment is completed. Have a great day!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I want to pay my electricity bill.",
+                "I need to pay my water bill."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "Electricity bill #12345",
+                "My water bill #98765"
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Let me pay with my credit card.",
+                "I'll use bank transfer."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Yes, proceed.",
+                "No, I'll do it later."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented conversation for bill payment. The user chooses which bill to pay, then picks a payment method, and finally confirms."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "start",
+              "is_start": true,
+              "utterances": [
+                "Hi, I'm the Bank Assistant Bot. How can I help you manage your account?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "ask_balance_transfer",
+              "is_start": false,
+              "utterances": [
+                "Would you like to check your balance or transfer funds?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "transfer_details",
+              "is_start": false,
+              "utterances": [
+                "Who would you like to transfer to, and how much?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "confirm_transfer",
+              "is_start": false,
+              "utterances": [
+                "I've initiated the transfer. Do you approve?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "The transfer is complete. Anything else I can do?"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I need to transfer money."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "Yes, I'd like to send $100 to my friend."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "His account is 123456 at XYZ Bank."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Yes, I confirm.",
+                "No, cancel please."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented bank assistant that helps transfer funds and confirms the transaction."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Welcome to the Restaurant Table Booking Bot. How can I assist you?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "ask_details",
+              "is_start": false,
+              "utterances": [
+                "Which date and time would you like to book for?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "number_of_people",
+              "is_start": false,
+              "utterances": [
+                "How many guests are in your party?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "confirm_table",
+              "is_start": false,
+              "utterances": [
+                "I've found a table for you. Would you like to confirm?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Your reservation is set. Have a lovely meal!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'd like to make a reservation."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "Tomorrow evening at 7 PM.",
+                "Saturday at noon."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "There will be four of us."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Yes, confirm the table.",
+                "No, I need to change the time."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented system for booking a restaurant table, checking date/time, party size, and confirming the reservation."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "intro",
+              "is_start": true,
+              "utterances": [
+                "Hello, this is the Online Shopping Bot. What would you like to purchase?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "ask_product",
+              "is_start": false,
+              "utterances": [
+                "Which product are you interested in?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "confirm_cart",
+              "is_start": false,
+              "utterances": [
+                "Would you like to add this item to your cart?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "ask_payment_shipping",
+              "is_start": false,
+              "utterances": [
+                "How do you want to pay and where should we ship it?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Your order is placed. Thank you for shopping with us!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I want to buy a new laptop."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I'm looking at Model X for $999.",
+                "I want a gaming laptop."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Yes, add it to cart."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Credit card, ship to my home address."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented shopping assistant: the user chooses a product, adds it to the cart, and then pays."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "welcome",
+              "is_start": true,
+              "utterances": [
+                "Welcome to the Vehicle Maintenance Bot. What seems to be the issue?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "ask_vehicle_type",
+              "is_start": false,
+              "utterances": [
+                "Is this for a car, motorcycle, or truck?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "diagnosis",
+              "is_start": false,
+              "utterances": [
+                "Let’s run through some quick diagnostics."
+              ]
+            },
+            {
+              "id": 4,
+              "label": "ask_confirmation",
+              "is_start": false,
+              "utterances": [
+                "Do you want to schedule an appointment with a mechanic?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Appointment scheduled. Anything else I can help with?"
+              ]
+            },
+            {
+              "id": 6,
+              "label": "no_appointment",
+              "is_start": false,
+              "utterances": [
+                "Alright, let me know if you change your mind."
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "My engine is making a strange noise."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "It's my car."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "I found an oil leak, what now?"
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "Yes, please schedule."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 6,
+              "utterances": [
+                "No, I'll handle it myself."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented vehicle maintenance conversation that diagnoses the issue and optionally schedules a mechanic appointment."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "start",
+              "is_start": true,
+              "utterances": [
+                "Hello! This is Insurance Support. How can I help you today?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "report_incident",
+              "is_start": false,
+              "utterances": [
+                "Could you describe the incident or claim you want to file?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "collect_details",
+              "is_start": false,
+              "utterances": [
+                "Please provide your policy number and any relevant information."
+              ]
+            },
+            {
+              "id": 4,
+              "label": "options_provided",
+              "is_start": false,
+              "utterances": [
+                "Here are your next steps: get a damage assessment or fill out the claim form. Which do you prefer?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Your claim has been recorded. We'll be in touch soon."
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I need to file an auto insurance claim."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "My car was hit in a parking lot."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Policy #AB12345, front bumper damaged."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "I'll fill out the claim form."
+              ]
+            }
+          ]
+        },
+        "summary": "Task-oriented insurance claim conversation where the user files a claim and decides how to proceed."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Hey, let's chat about weekend travel plans. What are you up to?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "destination_talk",
+              "is_start": false,
+              "utterances": [
+                "Any particular city or activity in mind?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "discussion",
+              "is_start": false,
+              "utterances": [
+                "That sounds interesting. What do you love about that place?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "follow_up",
+              "is_start": false,
+              "utterances": [
+                "Sounds like a plan! Anything else you want to explore?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "farewell",
+              "is_start": false,
+              "utterances": [
+                "Great chatting! Have a fantastic trip!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'm planning a short weekend trip."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I'm thinking of visiting the mountains.",
+                "Maybe a beach getaway."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "I love the scenery there."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "No, that's all."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain conversation about weekend travel plans, discussing destinations and preferences."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Hi there, let's talk about your favorite movies!"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "movie_genre",
+              "is_start": false,
+              "utterances": [
+                "What kind of movies do you enjoy?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "discussion",
+              "is_start": false,
+              "utterances": [
+                "Oh, that's a great genre! Any specific favorite?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "follow_up",
+              "is_start": false,
+              "utterances": [
+                "Nice choice. What do you think makes that movie special?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Thanks for sharing your movie picks. Chat anytime!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I love watching movies in my free time."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I'm into sci-fi and action."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Interstellar is my favorite."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "It has amazing visuals and a thought-provoking plot."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain conversation about movies, genres, and what the user likes most."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "hello",
+              "is_start": true,
+              "utterances": [
+                "Hi, want to discuss the current weather?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "weather_preference",
+              "is_start": false,
+              "utterances": [
+                "Do you like sunny days or cooler, cloudy weather?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "opinion",
+              "is_start": false,
+              "utterances": [
+                "Interesting! Any reason why you prefer that kind of weather?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "farewell",
+              "is_start": false,
+              "utterances": [
+                "Stay cozy, and feel free to chat again soon!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "Yeah, what's the weather like?"
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I love sunny days!",
+                "I prefer rainy weather."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "It makes me feel energetic.",
+                "I find it peaceful to watch the rain."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain chat about weather preferences and personal reasons behind liking certain weather."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "initial",
+              "is_start": true,
+              "utterances": [
+                "Hey! Do you like reading books?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "genre_discussion",
+              "is_start": false,
+              "utterances": [
+                "What genre do you usually read?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "book_recommendation",
+              "is_start": false,
+              "utterances": [
+                "That’s awesome! Any recommendations you’d make?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Thanks for the chat. Happy reading!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I love reading fantasy novels."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I'm into epic fantasy series like The Lord of the Rings."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "You should try 'The Way of Kings' by Brandon Sanderson."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain conversation about reading habits, favorite genres, and sharing book recommendations."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "intro",
+              "is_start": true,
+              "utterances": [
+                "Hello! Let’s talk about music and bands you enjoy."
+              ]
+            },
+            {
+              "id": 2,
+              "label": "music_genre",
+              "is_start": false,
+              "utterances": [
+                "Which genre do you listen to the most?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "favorite_band",
+              "is_start": false,
+              "utterances": [
+                "Cool! Do you have a favorite band or artist?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "wrap_up",
+              "is_start": false,
+              "utterances": [
+                "Awesome taste! Anything else you'd like to share?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Great chatting about music. See you around!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I love listening to rock music."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "Hard rock is my go-to."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "I'm a huge fan of AC/DC."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "No, that's it."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain conversation about music genres and favorite artists, wrapping up with a friendly conclusion."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Hello, do you enjoy cooking?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "food_preference",
+              "is_start": false,
+              "utterances": [
+                "Which cuisines do you like to cook or eat?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "technique_discussion",
+              "is_start": false,
+              "utterances": [
+                "That sounds delicious. How do you usually prepare it?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "close",
+              "is_start": false,
+              "utterances": [
+                "Great! Enjoy your meal. Chat soon!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I love trying new recipes."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I'm into Italian cuisine."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "I make my own pasta sauce from scratch."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain discussion about cooking preferences and techniques, ending with a friendly wrap-up."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "start",
+              "is_start": true,
+              "utterances": [
+                "Hi there! Let's talk about your hobbies."
+              ]
+            },
+            {
+              "id": 2,
+              "label": "hobby_type",
+              "is_start": false,
+              "utterances": [
+                "What do you like to do in your free time?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "explore_hobby",
+              "is_start": false,
+              "utterances": [
+                "That’s fun! How did you get into it?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Thanks for sharing. Keep enjoying your hobbies!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I love painting landscapes."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I started during lockdown."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "It's relaxing and lets me be creative."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain chat about hobbies, their origin, and reasons why the user enjoys them."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "intro",
+              "is_start": true,
+              "utterances": [
+                "Hello! How about we chat about your favorite sports?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "sport_choice",
+              "is_start": false,
+              "utterances": [
+                "Which sport do you follow the most?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "team_preference",
+              "is_start": false,
+              "utterances": [
+                "Interesting, do you have a favorite team?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Hope your team wins next time. Bye!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'm a huge basketball fan."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I follow the NBA closely."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Yes, I love the Lakers!"
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain sports conversation where the user shares their favorite sport and team."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Hello! Let's talk about vacation ideas."
+              ]
+            },
+            {
+              "id": 2,
+              "label": "vacation_style",
+              "is_start": false,
+              "utterances": [
+                "Do you prefer a relaxing beach holiday or an adventure trip?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "discussion",
+              "is_start": false,
+              "utterances": [
+                "Awesome choice! Any specific destination in mind?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Have a wonderful time! Let’s chat again soon."
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'm planning my next trip."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I'd love an adventure trip."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "I'd like to go hiking in the mountains."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain conversation about potential vacation preferences, leading to a final choice of a mountain adventure."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "welcome",
+              "is_start": true,
+              "utterances": [
+                "Hi! Want to chat about new tech gadgets?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "tech_interest",
+              "is_start": false,
+              "utterances": [
+                "Which gadget caught your eye recently?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "in_depth",
+              "is_start": false,
+              "utterances": [
+                "That’s cool! Any features you find particularly impressive?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "farewell",
+              "is_start": false,
+              "utterances": [
+                "Happy gadget hunting! Talk to you later."
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I’m curious about the latest smartwatch."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "Yes, the one with advanced health tracking."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "It can track my sleep and stress levels."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain chat about new technology gadgets, with the user specifically interested in a smartwatch."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "start",
+              "is_start": true,
+              "utterances": [
+                "Hi! Looking for library recommendations or e-books?"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "ask_genre",
+              "is_start": false,
+              "utterances": [
+                "What genre are you interested in reading?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "recommendation",
+              "is_start": false,
+              "utterances": [
+                "I’ve heard great things about that genre. Have you tried this author?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Hope you enjoy your next read! See you soon."
+              ]
+            },
+            {
+              "id": 5,
+              "label": "misunderstanding",
+              "is_start": false,
+              "utterances": [
+                "I'm not sure I understand. Are you looking for something else?"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "Yes, I'd like a new e-book."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "I like mystery novels."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 5,
+              "utterances": [
+                "I want to watch movies though."
+              ]
+            },
+            {
+              "source": 5,
+              "target": 2,
+              "utterances": [
+                "No, sorry, let's stick to books. I do want a mystery novel."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Thanks, I'll check that author out."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain conversation about book recommendations with a misunderstanding node that clarifies what the user wants."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "greeting",
+              "is_start": true,
+              "utterances": [
+                "Hey, let's chat about random trivia!"
+              ]
+            },
+            {
+              "id": 2,
+              "label": "trivia_request",
+              "is_start": false,
+              "utterances": [
+                "What topic would you like some trivia on?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "trivia_fact",
+              "is_start": false,
+              "utterances": [
+                "Here's a fun fact about that topic."
+              ]
+            },
+            {
+              "id": 4,
+              "label": "cycle_question",
+              "is_start": false,
+              "utterances": [
+                "Want another trivia fact or a different topic?"
+              ]
+            },
+            {
+              "id": 5,
+              "label": "exit",
+              "is_start": false,
+              "utterances": [
+                "Thanks for playing with trivia. Bye!"
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'm feeling curious."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "Tell me something about space."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "Wow, that's interesting."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 2,
+              "utterances": [
+                "I want trivia about animals now."
+              ]
+            },
+            {
+              "source": 4,
+              "target": 5,
+              "utterances": [
+                "No, I'm good."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain conversation about random trivia with a loop that allows requesting additional facts or ending the chat."
+      },
+      {
+        "graph": {
+          "nodes": [
+            {
+              "id": 1,
+              "label": "init",
+              "is_start": true,
+              "utterances": [
+                "Hello! Let’s talk about your plans for the upcoming holiday."
+              ]
+            },
+            {
+              "id": 2,
+              "label": "holiday_plans",
+              "is_start": false,
+              "utterances": [
+                "Any specific tradition you follow or new plans this year?"
+              ]
+            },
+            {
+              "id": 3,
+              "label": "explore_ideas",
+              "is_start": false,
+              "utterances": [
+                "That sounds awesome. Do you have any special dish or activity in mind?"
+              ]
+            },
+            {
+              "id": 4,
+              "label": "conclusion",
+              "is_start": false,
+              "utterances": [
+                "Enjoy your holiday! Talk to you next time."
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "source": 1,
+              "target": 2,
+              "utterances": [
+                "I'm excited for the holiday season."
+              ]
+            },
+            {
+              "source": 2,
+              "target": 3,
+              "utterances": [
+                "We usually decorate a tree and have a family dinner."
+              ]
+            },
+            {
+              "source": 3,
+              "target": 4,
+              "utterances": [
+                "We might try a new dessert recipe."
+              ]
+            }
+          ]
+        },
+        "summary": "Open-domain chat discussing holiday traditions and plans, concluding with well wishes."
+      }
+ ]
+  

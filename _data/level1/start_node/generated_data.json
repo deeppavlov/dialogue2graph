@@ -1,0 +1,2395 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'm here to help you book your flight. Where would you like to fly to?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_destination",
+          "utterances": [
+            "Great! Please provide your destination city."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "ask_dates",
+          "utterances": [
+            "When are you planning to travel?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "show_flight_options",
+          "utterances": [
+            "Here are the available flights for your selected destination and dates.",
+            "You can choose from the following flights: {flight_options}"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "confirm_booking",
+          "utterances": [
+            "Would you like to confirm this booking?",
+            "Do you want to proceed with this flight?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "booking_confirmed",
+          "utterances": [
+            "Your flight has been booked successfully!"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "booking_cancelled",
+          "utterances": [
+            "Your booking has been canceled. Let me know if you need anything else."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a flight",
+            "Book a flight"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm going to New York",
+            "Destination is London"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I will travel from June 1 to June 10",
+            "Dates are July 15 to July 20"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I'd like to choose this flight",
+            "Proceed with booking"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, confirm",
+            "Confirm booking"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "No, cancel",
+            "Cancel booking"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start_order",
+          "is_start": true,
+          "utterances": [
+            "Hi there! Let's get your pizza order started. What size would you like?",
+            "Hey! Ready to order some pizza? What's your size preference?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "choose_size",
+          "utterances": [
+            "Great choice! What size would you like? Small, Medium, or Large?",
+            "Alright! Which size are you going for? Small, Medium, or Large?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "choose_toppings",
+          "utterances": [
+            "Awesome! What toppings would you like on your pizza?",
+            "Perfect! Choose your favorite toppings."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "confirm_order",
+          "utterances": [
+            "Got it! You're ordering a {pizza_size} pizza with {toppings}. Shall I place the order?",
+            "Thanks! A {pizza_size} pizza with {toppings}. Ready to confirm your order?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "handle_change",
+          "utterances": [
+            "No problem! What would you like to change in your order?",
+            "Sure thing! Let me know what you'd like to modify."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "exit",
+          "utterances": [
+            "Alright, if you need anything else, just let me know!",
+            "Okay, have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to order a pizza",
+            "Let's order"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "I want to cancel",
+            "Exit"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like a Medium",
+            "Medium size",
+            "Large"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I'd like to change my order",
+            "I want to modify my order"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I want pepperoni and mushrooms",
+            "No onions, please"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I want to change my order",
+            "Modify my order"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Yes, confirm the order",
+            "Sounds good"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I want to change my order",
+            "No, I need to modify it"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Change size",
+            "I want a different size"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 3,
+          "utterances": [
+            "Change toppings",
+            "I want different toppings"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_device",
+          "utterances": [
+            "Which device are you experiencing issues with?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "troubleshoot_steps",
+          "utterances": [
+            "Let's go through some troubleshooting steps."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "clarify_error",
+          "utterances": [
+            "Could you specify the error message?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "resolutions",
+          "utterances": [
+            "Based on your input, here are some resolution steps."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "exit",
+          "utterances": [
+            "Is there anything else I can help you with?",
+            "Thank you for contacting support. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "report_device_issue"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "provide_device_type"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "describe_error"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "commit_resolution"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 3,
+          "utterances": [
+            "provide_error_code"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "commit_resolution"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "welcome",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the bill payment service. How can I assist you today?",
+            "Hello! How can I help you with your bill payments today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "select_bill",
+          "utterances": [
+            "Please select the type of bill you would like to pay.",
+            "Which bill would you like to pay today?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "payment_method",
+          "utterances": [
+            "Please choose your preferred payment method.",
+            "How would you like to pay your bill?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "confirm_payment",
+          "utterances": [
+            "Please confirm your payment.",
+            "Would you like to confirm the payment?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "exit",
+          "utterances": [
+            "Thank you for using our service. Goodbye!",
+            "Your payment has been processed. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to pay a bill",
+            "I'd like to pay my bills"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to pay the electricity bill",
+            "I need to pay the water bill"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I choose credit card",
+            "I'd like to pay via debit card",
+            "I prefer bank transfer"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Confirm",
+            "Cancel"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "ask_balance_transfer",
+          "is_start": true,
+          "utterances": [
+            "How can I assist you today? You can check your balance or transfer funds."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "balance_inquiry",
+          "utterances": [
+            "Your current balance is $X. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "transfer_details",
+          "utterances": [
+            "Please provide the amount you wish to transfer."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "confirm_transfer",
+          "utterances": [
+            "You are transferring $Y to account Z at bank W. Do you want to proceed?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "exit",
+          "utterances": [
+            "Thank you for using our services. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "check balance",
+            "I want to check my balance"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "transfer money",
+            "I want to transfer funds"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 1,
+          "utterances": [
+            "yes"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "no"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "transfer $100",
+            "I'd like to transfer $200"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "approve_transfer",
+            "yes, proceed",
+            "cancel_transfer",
+            "no, cancel"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Welcome to our restaurant. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_details",
+          "utterances": [
+            "Sure, I'd be happy to help you book a table. Can you please provide the date and time you'd like to reserve?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "ask_number_of_people",
+          "utterances": [
+            "Great. How many people will be in your party?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "confirm_table",
+          "utterances": [
+            "Thank you! I have reserved a table for {number_of_people} on {date_time}. Do you confirm this reservation?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "reservation_confirmed",
+          "utterances": [
+            "Your reservation has been confirmed. We look forward to serving you!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I would like to make a reservation."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Sure, I would like to reserve a table for tonight."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "There will be 4 of us."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, I confirm the reservation."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "intro",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our online store! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_product",
+          "utterances": [
+            "What product would you like to purchase?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "confirm_cart",
+          "utterances": [
+            "I've added the product to your cart. Would you like to proceed to checkout?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "ask_payment_shipping",
+          "utterances": [
+            "Please provide your payment method and shipping address."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "exit",
+          "utterances": [
+            "Thank you for your purchase! Your order confirmation has been sent to your email."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to buy something."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like to purchase a laptop."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, proceed to checkout."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Here are my payment details and shipping address."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "welcome",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our vehicle maintenance service. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_vehicle_type",
+          "utterances": [
+            "What type of vehicle do you have?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "diagnosis",
+          "utterances": [
+            "Please describe the issue you're experiencing with your vehicle."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "ask_confirmation",
+          "utterances": [
+            "Would you like to schedule an appointment now?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "exit",
+          "utterances": [
+            "Thank you for contacting us. Have a great day!"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "no_appointment",
+          "utterances": [
+            "No problem. If you need assistance later, feel free to reach out."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I have an issue with my vehicle."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I have a sedan.",
+            "I have an SUV.",
+            "I have a truck."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The engine is making a noise.",
+            "The brakes are failing.",
+            "There is a leak."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, schedule an appointment."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "No, thanks."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 5,
+          "utterances": [
+            "Thank you."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the Insurance Claims Assistant. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Report Incident",
+          "utterances": [
+            "I'm here to help you file an insurance claim. Could you please provide your policy number?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Collect Details",
+          "utterances": [
+            "Thank you. Please describe the incident in detail."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Options Provided",
+          "utterances": [
+            "Your claim has been filed successfully. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Exit",
+          "utterances": [
+            "Thank you for contacting us. Have a great day."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to file an insurance claim."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Here is my policy number: 123456."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The incident occurred on 5th Street."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "No, that's all."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hi! I'm here to help you plan your weekend trip. Where would you like to go?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "destination_talk",
+          "utterances": [
+            "Great choice! What kind of activities are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "discussion",
+          "utterances": [
+            "Awesome! Let's finalize your trip details."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "follow_up",
+          "utterances": [
+            "Is there anything else you'd like to add to your trip plan?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "farewell",
+          "utterances": [
+            "Hope you have a wonderful weekend trip! Let me know if you need anything else."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to plan a trip",
+            "Let's choose a destination"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to choose the destination",
+            "Let's talk activities"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'd like to add more details",
+            "Can we discuss further?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "That's all for now",
+            "I'm ready to finalize"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hi! I'd love to hear about your favorite movies."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "movie_genre",
+          "utterances": [
+            "What kind of movies do you enjoy?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "discussion",
+          "utterances": [
+            "Any specific favorite?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "follow_up",
+          "utterances": [
+            "What do you think makes that movie special?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "exit",
+          "utterances": [
+            "Thanks for sharing! It was great talking about movies with you."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Sure!",
+            "Let's talk about movies!",
+            "Okay!"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I enjoy science fiction.",
+            "I like comedies.",
+            "Action movies are my favorite."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I love Inception.",
+            "My favorite is The Godfather.",
+            "I really like the Avengers."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I think it's the plot twists.",
+            "The characters are very well developed.",
+            "The special effects are amazing."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "hello",
+          "is_start": true,
+          "utterances": [
+            "Hi there! How's the weather been treating you lately?",
+            "Hello! Let's talk about your weather preferences."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "weather_preference",
+          "utterances": [
+            "What's your favorite type of weather?",
+            "Do you have a preferred kind of weather?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "opinion",
+          "utterances": [
+            "Any reason why you prefer that kind of weather?",
+            "Could you share why you like that weather?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "farewell",
+          "utterances": [
+            "It was great chatting with you! Have a nice day!",
+            "Thanks for sharing your preferences. Goodbye!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Let's talk about the weather.",
+            "Sure, what's up with the weather?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I prefer sunny weather.",
+            "I like rainy days."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I like sunny days because they make me happy.",
+            "Rainy weather is soothing and relaxing."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "initial",
+          "is_start": true,
+          "utterances": [
+            "Hi there! Looking for a new book to dive into?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "genre_discussion",
+          "utterances": [
+            "Awesome! What genre are you feeling today? We've got fiction, non-fiction, fantasy, mystery, and more."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "book_recommendation",
+          "utterances": [
+            "You should check out 'The Silent Patient' by Alex Michaelides. It's a fantastic thriller!"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "exit",
+          "utterances": [
+            "Happy reading! Let me know if you need more recommendations."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes, I'd like some book suggestions."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm into mystery books."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Thanks!"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "intro",
+          "is_start": true,
+          "utterances": [
+            "Hey there! I'd love to learn about your music preferences. Shall we get started?",
+            "Hi! Let's chat about the music you like. Ready to begin?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "music_genre",
+          "utterances": [
+            "What's your favorite music genre?",
+            "Which type of music do you enjoy the most?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "favorite_band",
+          "utterances": [
+            "Who's your all-time favorite band?",
+            "Which band do you like the most?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "wrap_up",
+          "utterances": [
+            "Thanks for sharing your preferences!",
+            "Great choices! Thanks for telling me about your favorite music."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "exit",
+          "utterances": [
+            "Goodbye! Have a great day!",
+            "See you later! Enjoy your music."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Sure, let's go!",
+            "Absolutely, let's start."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I love rock music.",
+            "I'm really into jazz."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "My favorite band is Coldplay.",
+            "I really like Imagine Dragons."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Thank you!",
+            "That's all from me."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'd love to chat about your cooking preferences and techniques. What type of cuisine do you enjoy the most?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "food_preference",
+          "utterances": [
+            "Great choice! Do you have any specific preparation techniques you prefer?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "technique_discussion",
+          "utterances": [
+            "That's interesting! Is there anything else you'd like to share about your cooking habits?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "close",
+          "utterances": [
+            "It was nice talking with you about your cooking preferences. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I enjoy Italian and Thai cuisines."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I prefer grilling and baking as my main preparation techniques."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "No, that's all I wanted to discuss. Thank you!"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "Hi there! I'd love to hear about your hobbies."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "hobby_type",
+          "utterances": [
+            "What are some of your favorite hobbies?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "explore_hobby",
+          "utterances": [
+            "That's awesome! How did you get into that hobby?",
+            "What do you enjoy most about it?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "exit",
+          "utterances": [
+            "Thanks for sharing! It was great talking to you.",
+            "Glad I could hear about your hobbies. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I love painting."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I started painting when I was a child.",
+            "Painting helps me relax."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "That's interesting!",
+            "I think that's really cool."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "intro",
+          "is_start": true,
+          "utterances": [
+            "Hi! Let's talk about your favorite sports."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "sport_choice",
+          "utterances": [
+            "Which sport do you like the most?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "team_preference",
+          "utterances": [
+            "Which team is your favorite in that sport?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "exit",
+          "utterances": [
+            "Thanks for sharing your favorites! Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'm ready."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I love football."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'm a fan of the Eagles."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'm here to help you plan your vacation. How would you like to start?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "vacation_style",
+          "utterances": [
+            "What kind of vacation are you interested in? Adventure or relaxation?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "discussion",
+          "utterances": [
+            "Great choice! Let's discuss more about your destination preferences."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "exit",
+          "utterances": [
+            "Alright, I hope you have a wonderful vacation! Let me know if you need anything else."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to plan my vacation."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I would like a relaxing trip."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I want to go to the mountains for hiking."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "welcome",
+          "is_start": true,
+          "utterances": [
+            "Hey there! Interested in the latest tech gadgets?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "tech_interest",
+          "utterances": [
+            "Which gadget caught your eye recently?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "in_depth",
+          "utterances": [
+            "Any features you find particularly impressive?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "farewell",
+          "utterances": [
+            "Great chatting with you about tech gadgets! Let me know if you have more questions."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes, I'm interested in tech gadgets."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in smartwatches."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "They have great health tracking features."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "Hi! I'm here to help you find your next e-book. What genre are you interested in?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_genre",
+          "utterances": [
+            "Sure, what genre are you interested in?",
+            "What kind of books do you like?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "recommendation",
+          "utterances": [
+            "Based on your preference for {genre}, I recommend '{book_title}' by {author}.",
+            "I think you'll love '{book_title}' by {author} in the {genre} genre."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "exit",
+          "utterances": [
+            "Glad I could help! Enjoy your reading!",
+            "Happy to assist! Let me know if you need anything else."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "misunderstanding",
+          "utterances": [
+            "I'm sorry, I didn't catch that. Are you looking for something else?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "request_e_book"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "specify_genre"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "acknowledge_recommendation"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "misunderstanding"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Are you looking for something else?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "change_preference"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 0,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hi there! Ready to hear some cool trivia?",
+            "Hello! Want to learn some interesting facts?"
+          ]
+        },
+        {
+          "id": 1,
+          "label": "trivia_request",
+          "utterances": [
+            "Great! What topic are you interested in?",
+            "Awesome! Which topic would you like?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "trivia_fact",
+          "utterances": [
+            "Here's a fact about {trivia_topic}!",
+            "{trivia_topic} fact coming right up!"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "cycle_question",
+          "utterances": [
+            "Want to hear another fact?",
+            "Would you like to learn something else?",
+            "Care for another trivia fact?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "exit",
+          "utterances": [
+            "Alright! Have a great day!",
+            "Bye! Hope you enjoyed the trivia."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 0,
+          "target": 1,
+          "utterances": [
+            "Yes",
+            "Sure",
+            "Let's go"
+          ]
+        },
+        {
+          "source": 0,
+          "target": 4,
+          "utterances": [
+            "No, thanks",
+            "Not interested"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "space",
+            "animals"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Thanks",
+            "Got it",
+            "Cool"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 1,
+          "utterances": [
+            "Yes",
+            "Another one",
+            "Sure"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "No, that's all",
+            "Thanks, bye",
+            "Exit"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 0,
+          "label": "init",
+          "is_start": true,
+          "utterances": [
+            "Hi! Let's talk about your holiday plans. What are you excited about?"
+          ]
+        },
+        {
+          "id": 1,
+          "label": "holiday_plans",
+          "utterances": [
+            "That's great! Can you share some of your holiday traditions?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "explore_ideas",
+          "utterances": [
+            "Sounds fun! Do you have any new plans for this holiday?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "conclusion",
+          "utterances": [
+            "Thank you for sharing your holiday plans! Have a wonderful holiday!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 0,
+          "target": 1,
+          "utterances": [
+            "I'm excited for the holidays!",
+            "Looking forward to the holidays!"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I have some traditions to share.",
+            "Every year I do a special dinner with my family."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Yes, I'm planning to travel.",
+            "Nothing else, just the usual."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "sub_topic",
+      "bot_goal",
+      "success_criteria",
+      "context_info",
+      "language",
+      "formality_level",
+      "emotional_tone",
+      "lexical_diversity",
+      "use_of_jargon",
+      "max_dialog_depth",
+      "max_branching_factor",
+      "mandatory_nodes",
+      "optional_nodes",
+      "user_intents",
+      "intent_hierarchy",
+      "required_slots",
+      "follow_up_questions",
+      "fallback_strategy",
+      "confirmation_needed",
+      "max_dialog_length",
+      "alternate_paths",
+      "escalation_policy",
+      "user_feedback_collection",
+      "user_persona",
+      "dynamic_content"
+    ]
+  }
+]

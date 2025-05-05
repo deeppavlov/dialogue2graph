@@ -1,0 +1,1578 @@
+[
+  {
+    "annotation": {
+      "topic": "Hotel Booking",
+      "sub_topic": [
+        "city selection",
+        "date selection",
+        "room type selection",
+        "reservation modification",
+        "upselling services"
+      ],
+      "bot_goal": "complete a hotel room booking",
+      "success_criteria": [
+        "user confirms reservation",
+        "user cancels reservation"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Professional",
+        "Informative"
+      ],
+      "lexical_diversity": "low",
+      "use_of_jargon": "no",
+      "max_dialog_depth": 7,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "greet",
+        "ask_city",
+        "ask_dates",
+        "ask_room_type",
+        "confirm_booking"
+      ],
+      "optional_nodes": [
+        "modification",
+        "upsell"
+      ],
+      "start_node": "greet",
+      "user_intents": [
+        "book_hotel",
+        "modify_reservation",
+        "confirm_booking",
+        "cancel_booking"
+      ],
+      "intent_hierarchy": {
+        "book_hotel": [
+          "provide_city",
+          "provide_dates",
+          "provide_room_type"
+        ],
+        "modify_reservation": [
+          "change_dates",
+          "change_room_type"
+        ],
+        "confirm_booking": [],
+        "cancel_booking": []
+      },
+      "user_utterances_examples": {
+        "book_hotel": [
+          "I want to book a hotel room."
+        ],
+        "modify_reservation": [
+          "I need to change the dates.",
+          "Can I get a single room instead?"
+        ],
+        "confirm_booking": [
+          "Yes, let's confirm it.",
+          "Yes, I'll add breakfast."
+        ],
+        "cancel_booking": [
+          "No, I'll book later.",
+          "No thanks, I'll pass on those."
+        ]
+      },
+      "required_slots": [
+        "city",
+        "check_in_date",
+        "check_out_date",
+        "room_type"
+      ],
+      "bot_utterances_templates": {
+        "greet": [
+          "Hello and welcome to our Hotel Booking service! How can I assist you today?"
+        ],
+        "ask_city": [
+          "Which city are you traveling to?"
+        ],
+        "ask_dates": [
+          "What are your check-in and check-out dates?"
+        ],
+        "date_error": [
+          "I didn’t catch that. Could you please recheck your dates or specify them more clearly?"
+        ],
+        "ask_room_type": [
+          "Would you like a single room, a double room, or perhaps a suite?"
+        ],
+        "confirm_booking": [
+          "I’ve found a suitable room. Would you like to confirm this reservation?"
+        ],
+        "modification": [
+          "No problem. What changes would you like to make to your reservation?"
+        ],
+        "upsell": [
+          "Would you like to add breakfast or spa access for an additional cost?"
+        ],
+        "exit_confirmed": [
+          "Your reservation is confirmed! Thank you for booking with us. Have a wonderful stay!"
+        ],
+        "exit_cancelled": [
+          "I understand. Let me know if you need anything else. Have a great day!"
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "Your reservation is confirmed! Thank you for booking with us. Have a wonderful stay!",
+        "I understand. Let me know if you need anything else. Have a great day!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": [
+        "confirm_booking",
+        "upsell"
+      ],
+      "max_dialog_length": 5,
+      "alternate_paths": {
+        "if date input fails": "ask_dates again",
+        "if booking confirmation declined": "offer modification or upsell or cancellation"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "IT Support for hardware and software issues",
+      "sub_topic": [
+        "hardware diagnostics",
+        "software troubleshooting",
+        "device type identification",
+        "issue escalation"
+      ],
+      "bot_goal": "assist users in resolving hardware and software issues",
+      "success_criteria": [
+        "user confirms issue resolved"
+      ],
+      "context_info": [
+        "issue type (hardware/software)",
+        "device type provided"
+      ],
+      "language": "english",
+      "formality_level": "formal",
+      "emotional_tone": [
+        "Professional",
+        "Supportive"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "yes",
+      "max_dialog_depth": 7,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "greeting",
+        "ask_device",
+        "hardware_path",
+        "software_path",
+        "hardware_diagnostics",
+        "software_diagnostics",
+        "confirm_fix",
+        "exit"
+      ],
+      "optional_nodes": [
+        "request_info",
+        "alternative_solutions"
+      ],
+      "start_node": "greeting",
+      "user_intents": [
+        "report_hardware_issue",
+        "report_software_issue",
+        "provide_error_information",
+        "escalate_issue",
+        "confirm_issue_resolved"
+      ],
+      "intent_hierarchy": {
+        "report_hardware_issue": [
+          "computer_powers_on_issue",
+          "other_hardware_problems"
+        ],
+        "report_software_issue": [
+          "application_crashing",
+          "operating_system_issue"
+        ],
+        "provide_error_information": [
+          "provide_error_code",
+          "provide_logs"
+        ],
+        "escalate_issue": [
+          "transfer_to_technician",
+          "attempt_advanced_fix"
+        ],
+        "confirm_issue_resolved": [
+          "issue_resolved",
+          "issue_not_resolved"
+        ]
+      },
+      "user_utterances_examples": {
+        "report_hardware_issue": [
+          "I'm having a problem with my laptop.",
+          "It's definitely a hardware issue.",
+          "My computer won't power on properly.",
+          "I unplugged and replugged everything."
+        ],
+        "report_software_issue": [
+          "I'm getting a software error.",
+          "I think it's a software problem.",
+          "My browser keeps crashing.",
+          "I reinstalled the software."
+        ],
+        "provide_error_information": [
+          "I'm not sure, I see a weird error code.",
+          "The error code is 404 for hardware? Strange. Let's escalate."
+        ],
+        "escalate_issue": [
+          "Please escalate to a technician.",
+          "I'll try the advanced fix."
+        ],
+        "confirm_issue_resolved": [
+          "Yes, it works now. Thanks!",
+          "No, it's still not fixed."
+        ]
+      },
+      "required_slots": [
+        "device_type",
+        "issue_type",
+        "error_code"
+      ],
+      "bot_utterances_templates": {
+        "greeting": [
+          "Welcome to the IT Support Center! Are you experiencing a hardware or software issue today?"
+        ],
+        "ask_device": [
+          "What type of device is having the issue?"
+        ],
+        "hardware_path": [
+          "Let's run through some hardware diagnostics. Please describe the problem in detail."
+        ],
+        "software_path": [
+          "Let’s check your software issue. Which application or operating system is acting up?"
+        ],
+        "hardware_diagnostics": [
+          "Try reseating the cables or running a power cycle. Did that help?"
+        ],
+        "software_diagnostics": [
+          "Could you try reinstalling or updating the software? Let me know if it resolves the issue."
+        ],
+        "confirm_fix": [
+          "Is your issue resolved now?"
+        ],
+        "request_info": [
+          "I might need more information from you, such as error codes or logs."
+        ],
+        "alternative_solutions": [
+          "We can escalate this to a technician or attempt an advanced fix. Which do you prefer?"
+        ],
+        "exit": [
+          "Thank you for contacting IT Support. Have a great day!"
+        ]
+      },
+      "follow_up_questions": {
+        "hardware_issue": [
+          "Please describe the problem in detail."
+        ],
+        "software_issue": [
+          "Which application or operating system is acting up?"
+        ]
+      },
+      "closing_phrases": [
+        "Thank you for contacting IT Support. Have a great day!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": [
+        "confirm_fix",
+        "alternative_solutions"
+      ],
+      "max_dialog_length": 7,
+      "alternate_paths": {
+        "if_issue_not_resolved": "alternative_solutions",
+        "if_additional_information_needed": "request_info"
+      },
+      "escalation_policy": "transfer to agent",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Online Grocery Ordering",
+      "sub_topic": [
+        "department selection",
+        "item selection",
+        "cart management",
+        "checkout process",
+        "payment methods"
+      ],
+      "bot_goal": "assist with online grocery ordering",
+      "success_criteria": [
+        "user confirms order placed successfully"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Professional"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "no",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "welcome",
+        "ask_department",
+        "ask_items",
+        "ask_quantity",
+        "review_cart",
+        "checkout",
+        "payment_info",
+        "confirm_order",
+        "exit"
+      ],
+      "optional_nodes": [
+        "loop_back"
+      ],
+      "start_node": "welcome",
+      "user_intents": [
+        "request_groceries",
+        "select_department",
+        "choose_items",
+        "specify_quantity",
+        "review_cart",
+        "proceed_to_checkout",
+        "provide_payment_info",
+        "confirm_order",
+        "exit_dialog"
+      ],
+      "intent_hierarchy": {
+        "request_groceries": [],
+        "select_department": [
+          "produce",
+          "dairy",
+          "bakery",
+          "other"
+        ],
+        "choose_item": [],
+        "specify_quantity": [],
+        "review_cart": [
+          "add_more_items",
+          "proceed_to_checkout"
+        ],
+        "checkout": [
+          "provide_payment_method"
+        ],
+        "provide_payment_info": [],
+        "confirm_order": [
+          "confirm",
+          "add_more_items"
+        ],
+        "exit_dialog": []
+      },
+      "user_utterances_examples": {
+        "request_groceries": [
+          "I need some groceries.",
+          "I want to order groceries."
+        ],
+        "select_department": [
+          "Produce section, please.",
+          "Bakery, I'd like some bread.",
+          "Dairy is needed."
+        ],
+        "choose_items": [
+          "I'd like apples.",
+          "I need sourdough bread."
+        ],
+        "specify_quantity": [
+          "I'll take 6 apples.",
+          "One loaf of bread."
+        ],
+        "review_cart": [
+          "I need more items.",
+          "Let's check out now."
+        ],
+        "proceed_to_checkout": [
+          "Let's check out now."
+        ],
+        "add_more_items": [
+          "I need more items.",
+          "Wait, I'd like to add more items first."
+        ],
+        "provide_payment_info": [
+          "I'll pay with my credit card."
+        ],
+        "confirm_order": [
+          "Yes, please confirm the order.",
+          "Wait, I'd like to add more items first."
+        ],
+        "exit_dialog": "unknown"
+      },
+      "required_slots": [
+        "department",
+        "item",
+        "quantity",
+        "payment_method",
+        "payment_details"
+      ],
+      "bot_utterances_templates": {
+        "welcome": [
+          "Hello, and welcome to the Online Grocery Ordering service. What can I help you find today?"
+        ],
+        "ask_department": [
+          "Which department would you like to shop in? Produce, dairy, bakery, or something else?"
+        ],
+        "ask_items": [
+          "Which items would you like to add to your cart?"
+        ],
+        "ask_quantity": [
+          "How many units of this item do you need?"
+        ],
+        "review_cart": [
+          "Here’s what you have so far. Would you like to add more items or proceed to checkout?"
+        ],
+        "loop_back": [
+          "Sure, let's add more items. Which department next?"
+        ],
+        "checkout": [
+          "Alright, let's proceed to checkout. How would you like to pay—credit card, PayPal, or store credits?"
+        ],
+        "payment_info": [
+          "Please enter or confirm your payment details."
+        ],
+        "confirm_order": [
+          "Your order is ready to be placed. Shall I confirm it?"
+        ],
+        "exit": [
+          "Your order has been placed successfully! Anything else I can help with?"
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "Your order has been placed successfully! Anything else I can help with?"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": [
+        "confirm_order"
+      ],
+      "max_dialog_length": 15,
+      "alternate_paths": {
+        "if user needs to add more items": "loop_back"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "departments": [
+          "Produce",
+          "Dairy",
+          "Bakery",
+          "Other"
+        ],
+        "payment_methods": [
+          "credit card",
+          "PayPal",
+          "store credits"
+        ]
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Car rental booking",
+      "sub_topic": [
+        "Location selection",
+        "Date and time booking",
+        "Car type selection",
+        "Insurance options",
+        "Price confirmation",
+        "Discount application",
+        "Final confirmation"
+      ],
+      "bot_goal": "assist with car rental booking",
+      "success_criteria": [
+        "user confirms booking"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Professional"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "greeting",
+        "ask_location",
+        "ask_date_time",
+        "ask_car_type",
+        "ask_insurance",
+        "confirm_price",
+        "final_confirmation",
+        "exit"
+      ],
+      "optional_nodes": [
+        "ask_discount_code",
+        "apply_discount"
+      ],
+      "start_node": "greeting",
+      "user_intents": [
+        "initiate_booking",
+        "provide_location",
+        "provide_rental_period",
+        "choose_car_type",
+        "choose_insurance",
+        "confirm_payment",
+        "provide_discount_code",
+        "confirm_booking"
+      ],
+      "intent_hierarchy": {
+        "initiate_booking": [],
+        "provide_location": [],
+        "provide_rental_period": [],
+        "choose_car_type": [
+          "economy",
+          "sedan",
+          "SUV",
+          "luxury"
+        ],
+        "choose_insurance": [
+          "add_insurance",
+          "no_insurance"
+        ],
+        "confirm_payment": [
+          "proceed",
+          "decline"
+        ],
+        "provide_discount_code": [
+          "provide_code",
+          "no_code"
+        ],
+        "confirm_booking": []
+      },
+      "user_utterances_examples": {
+        "initiate_booking": [
+          "Yes, I need a car."
+        ],
+        "provide_location": [
+          "I'll pick it up at LAX."
+        ],
+        "provide_rental_period": [
+          "I need it from Friday 10 AM to Sunday 4 PM."
+        ],
+        "choose_car_type": [
+          "An SUV, please.",
+          "I'll take an economy car."
+        ],
+        "choose_insurance": [
+          "Yes, I'll add insurance.",
+          "No, I have my own coverage."
+        ],
+        "confirm_payment": [
+          "Yes, let's proceed.",
+          "I'm okay with the price so far."
+        ],
+        "provide_discount_code": [
+          "I have a discount code: SAVE20.",
+          "No discount code."
+        ],
+        "confirm_booking": [
+          "Cool, let's finalize now.",
+          "Yes, confirm the booking."
+        ]
+      },
+      "required_slots": [
+        "pickup_location",
+        "rental_period",
+        "car_type",
+        "insurance",
+        "price",
+        "discount_code"
+      ],
+      "bot_utterances_templates": {
+        "greeting": [
+          "Hello, welcome to Speedy Car Rentals! Are you looking for a rental car today?"
+        ],
+        "ask_location": [
+          "Which city or airport would you like to pick up the car from?"
+        ],
+        "ask_date_time": [
+          "What date and time do you need the car?"
+        ],
+        "ask_car_type": [
+          "We have economy, sedan, SUV, and luxury. Which type suits you?"
+        ],
+        "ask_insurance": [
+          "Would you like to add our comprehensive insurance package?"
+        ],
+        "confirm_price": [
+          "The estimated total cost is $XXX. Would you like to proceed?"
+        ],
+        "ask_discount_code": [
+          "Do you have a discount code or loyalty membership you’d like to apply?"
+        ],
+        "apply_discount": [
+          "Great, I've applied your discount code. The new total is $YYY."
+        ],
+        "final_confirmation": [
+          "All set. Confirm your booking?"
+        ],
+        "exit": [
+          "Your booking is confirmed. Thank you for choosing Speedy Car Rentals!"
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "Your booking is confirmed. Thank you for choosing Speedy Car Rentals!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": [
+        "confirm_price",
+        "final_confirmation"
+      ],
+      "max_dialog_length": 19,
+      "alternate_paths": {
+        "if discount code is provided": "apply_discount",
+        "if no discount code": "final_confirmation"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "price": [
+          "$XXX",
+          "$YYY"
+        ]
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Bank loan application process",
+      "sub_topic": [
+        "loan type selection",
+        "loan amount",
+        "personal information",
+        "eligibility check",
+        "interest rate offer",
+        "application confirmation"
+      ],
+      "bot_goal": "facilitate loan application",
+      "success_criteria": [
+        "user confirms loan application submission"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "formal",
+      "emotional_tone": [
+        "Professional",
+        "Informative"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "yes",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "greet",
+        "ask_loan_type",
+        "ask_loan_amount",
+        "ask_personal_info",
+        "check_eligibility",
+        "offer_interest",
+        "accept_loan",
+        "exit"
+      ],
+      "optional_nodes": [
+        "ask_questions",
+        "misunderstanding"
+      ],
+      "start_node": "greet",
+      "user_intents": [
+        "initiate_loan",
+        "choose_loan_type",
+        "specify_amount",
+        "provide_personal_info",
+        "confirm_eligibility",
+        "respond_interest_offer",
+        "ask_questions",
+        "confirm_application",
+        "exit_application"
+      ],
+      "intent_hierarchy": {
+        "initiate_loan": [],
+        "choose_loan_type": [
+          "personal",
+          "auto",
+          "home"
+        ],
+        "specify_amount": [],
+        "provide_personal_info": [],
+        "confirm_eligibility": [],
+        "respond_interest_offer": [
+          "accept_proceed",
+          "reject_proceed"
+        ],
+        "ask_questions": [
+          "have_questions",
+          "no_questions"
+        ],
+        "confirm_application": [],
+        "exit_application": []
+      },
+      "user_utterances_examples": {
+        "initiate_loan": [
+          "I need a loan.",
+          "I'd like to apply for a loan."
+        ],
+        "choose_loan_type": [
+          "A personal loan, please.",
+          "I want an auto loan.",
+          "I'm interested in a home loan."
+        ],
+        "specify_amount": [
+          "I need $10,000.",
+          "I'd like $50,000."
+        ],
+        "provide_personal_info": [
+          "My name is John, income $60k, credit score around 700."
+        ],
+        "confirm_eligibility": [
+          "Okay, let me know if I qualify."
+        ],
+        "respond_interest_offer": [
+          "Sounds good, what's next?",
+          "I don't want to proceed right now."
+        ],
+        "ask_questions": [
+          "No questions, let's proceed.",
+          "But what if I repay early?"
+        ],
+        "confirm_application": [
+          "Yes, confirm my details."
+        ],
+        "exit_application": [
+          "I don't want to proceed right now."
+        ]
+      },
+      "required_slots": [
+        "loan_type",
+        "loan_amount",
+        "name",
+        "annual_income",
+        "credit_score"
+      ],
+      "bot_utterances_templates": {
+        "greet": [
+          "Welcome to the Bank Loan Application Bot. What type of loan are you interested in?"
+        ],
+        "ask_loan_type": [
+          "We offer personal loans, auto loans, and home loans. Which one suits your needs?"
+        ],
+        "ask_loan_amount": [
+          "How much are you looking to borrow?"
+        ],
+        "ask_personal_info": [
+          "I'll need some personal info: name, annual income, and credit score range."
+        ],
+        "check_eligibility": [
+          "Let me check if you qualify based on this information..."
+        ],
+        "offer_interest": [
+          "You qualify! The interest rate is X%. Would you like to proceed?"
+        ],
+        "ask_questions": [
+          "Do you have any questions about the loan terms or repayment schedule?"
+        ],
+        "misunderstanding": [
+          "I’m sorry, I didn’t understand that. Could you rephrase or specify what you need?"
+        ],
+        "accept_loan": [
+          "Great! I’ll start the final application process. Please confirm your details one last time."
+        ],
+        "exit": [
+          "Your loan application is submitted. We’ll get back to you soon!"
+        ]
+      },
+      "follow_up_questions": {
+        "loan_terms": [
+          "Can you explain the interest rate?",
+          "What are the repayment options?"
+        ],
+        "early_repayment": [
+          "Is there a fee for early repayment?"
+        ]
+      },
+      "closing_phrases": [
+        "Your loan application is submitted. We’ll get back to you soon!"
+      ],
+      "fallback_strategy": "ask_for_clarification",
+      "confirmation_needed": [
+        "accept_loan"
+      ],
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if user does not proceed after interest offer": "exit_application",
+        "if user has questions": "ask_questions"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "interest_rate": "X%"
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Philosophical discussions",
+      "sub_topic": [
+        "ethics",
+        "metaphysics",
+        "epistemology"
+      ],
+      "bot_goal": "facilitate a philosophical discussion",
+      "success_criteria": "user ends the conversation amicably",
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "formal",
+      "emotional_tone": [
+        "Professional",
+        "Approachable",
+        "Informative"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "yes",
+      "max_dialog_depth": 7,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "intro",
+        "topic_choice",
+        "ethics_path",
+        "metaphysics_path",
+        "epistemology_path",
+        "deep_discussion",
+        "farewell"
+      ],
+      "optional_nodes": [
+        "reflective_answer",
+        "branching_question",
+        "switch_branch"
+      ],
+      "start_node": "intro",
+      "user_intents": [
+        "express_interest_in_philosophy",
+        "choose_branch",
+        "discuss_ethics_topic",
+        "discuss_metaphysics_topic",
+        "discuss_epistemology_topic",
+        "provide_opinion_on_ethics",
+        "switch_branch",
+        "end_conversation"
+      ],
+      "intent_hierarchy": {
+        "express_interest_in_philosophy": [],
+        "choose_branch": [
+          "ethics",
+          "metaphysics",
+          "epistemology"
+        ],
+        "discuss_topic": [
+          "trolley_problem",
+          "nature_of_reality",
+          "knowledge"
+        ],
+        "provide_opinion": [
+          "cultural_influence_on_ethics",
+          "universal_morality"
+        ],
+        "switch_branch": [
+          "metaphysics"
+        ],
+        "end_conversation": []
+      },
+      "user_utterances_examples": {
+        "express_interest_in_philosophy": [
+          "Yes, I'd love to discuss philosophy."
+        ],
+        "choose_branch": [
+          "I'm curious about ethics.",
+          "Let's talk about metaphysics.",
+          "Epistemology sounds interesting."
+        ],
+        "discuss_ethics_topic": [
+          "The trolley problem always intrigues me."
+        ],
+        "discuss_metaphysics_topic": [
+          "I'm thinking about the nature of reality.",
+          "What about the nature of time?"
+        ],
+        "discuss_epistemology_topic": [
+          "I wonder how we can truly know anything."
+        ],
+        "provide_opinion_on_ethics": [
+          "I believe ethics are culturally influenced.",
+          "Maybe there's a universal basis for morality though."
+        ],
+        "switch_branch": [
+          "Let's shift to metaphysics."
+        ],
+        "end_conversation": [
+          "No, I'm good. Thanks for the chat."
+        ]
+      },
+      "required_slots": "unknown",
+      "bot_utterances_templates": {
+        "intro": [
+          "Hello! Shall we dive into a philosophical discussion today?"
+        ],
+        "topic_choice": [
+          "Which branch of philosophy interests you—ethics, metaphysics, or epistemology?"
+        ],
+        "ethics_path": [
+          "Ethics is fascinating. Any specific ethical dilemma or concept you’d like to talk about?"
+        ],
+        "metaphysics_path": [
+          "Metaphysics deals with existence and reality. Any particular concept on your mind?"
+        ],
+        "epistemology_path": [
+          "Epistemology deals with knowledge and belief. What would you like to explore there?"
+        ],
+        "deep_discussion": [
+          "That’s quite intriguing. Do you have a personal viewpoint on this?"
+        ],
+        "reflective_answer": [
+          "Interesting perspective. Care to elaborate or bring in another angle?"
+        ],
+        "branching_question": [
+          "Would you like to connect this to another philosophical branch or continue here?"
+        ],
+        "switch_branch": [
+          "All right, let's explore a different philosophical branch then."
+        ],
+        "farewell": [
+          "This was an enlightening discussion! Hope to talk philosophy again soon."
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "This was an enlightening discussion! Hope to talk philosophy again soon."
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if user wants to switch branch": "switch_branch",
+        "if user wants to end discussion": "farewell"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Art Discussion",
+      "sub_topic": [
+        "painting",
+        "sculpture",
+        "abstract art",
+        "styles",
+        "artists"
+      ],
+      "bot_goal": "engage in conversation about art",
+      "success_criteria": "unknown",
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Approachable"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "no",
+      "max_dialog_depth": 9,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "art_intro",
+        "ask_preference",
+        "farewell"
+      ],
+      "optional_nodes": [
+        "painting_discussion",
+        "sculpture_discussion",
+        "abstract_path",
+        "deep_dive",
+        "personal_story",
+        "compare_styles",
+        "expand_horizons"
+      ],
+      "start_node": "art_intro",
+      "user_intents": [
+        "express_interest_in_art",
+        "choose_art_form",
+        "discuss_favorite_art",
+        "share_personal_story",
+        "end_conversation"
+      ],
+      "intent_hierarchy": {
+        "express_interest_in_art": [
+          "start_conversation"
+        ],
+        "choose_art_form": [
+          "painting",
+          "sculpture",
+          "abstract_art"
+        ],
+        "discuss_favorite_art": [
+          "favorite_painters",
+          "favorite_sculptors",
+          "favorite_styles"
+        ],
+        "share_personal_story": [
+          "personal_inspiration"
+        ],
+        "end_conversation": [
+          "farewell"
+        ]
+      },
+      "user_utterances_examples": {
+        "express_interest_in_art": [
+          "I'd love to talk about art.",
+          "Yes, I'd love to talk about art."
+        ],
+        "choose_art_form": [
+          "I'm more into painting.",
+          "I actually enjoy sculptures.",
+          "I like abstract art."
+        ],
+        "discuss_favorite_art": [
+          "I love impressionist works like Monet.",
+          "Rodin's sculptures are amazing.",
+          "I appreciate the freedom abstract art offers."
+        ],
+        "share_personal_story": [
+          "I visited a gallery once that changed my perspective."
+        ],
+        "end_conversation": [
+          "I'm done for now, thanks!"
+        ]
+      },
+      "required_slots": "unknown",
+      "bot_utterances_templates": {
+        "art_intro": [
+          "Hello! Interested in talking about art today—painting, sculpture, or something else?"
+        ],
+        "ask_preference": [
+          "Which form of art do you enjoy the most?"
+        ],
+        "painting_discussion": [
+          "Painting can be so expressive. Any favorite painters or styles?"
+        ],
+        "sculpture_discussion": [
+          "Sculptures have a tangible presence. Any sculptors or pieces you admire?"
+        ],
+        "abstract_path": [
+          "Abstract art can be quite subjective. What do you think about non-representational pieces?"
+        ],
+        "deep_dive": [
+          "That’s fascinating. Would you say art should evoke emotion or convey a clear message?"
+        ],
+        "personal_story": [
+          "Do you have a personal story of how you got inspired by this art form?"
+        ],
+        "compare_styles": [
+          "Interesting! How would you compare this style to traditional realism?"
+        ],
+        "expand_horizons": [
+          "Feel like exploring another style or medium?"
+        ],
+        "farewell": [
+          "Thanks for sharing your art journey! Talk again soon."
+        ]
+      },
+      "follow_up_questions": {
+        "express_interest_in_art": [
+          "Which form of art do you enjoy the most?"
+        ],
+        "choose_art_form_painting": [
+          "Any favorite painters or styles?"
+        ],
+        "choose_art_form_sculpture": [
+          "Any sculptors or pieces you admire?"
+        ],
+        "choose_art_form_abstract_art": [
+          "What do you think about non-representational pieces?"
+        ],
+        "discuss_favorite_art": [
+          "Would you say art should evoke emotion or convey a clear message?"
+        ],
+        "share_personal_story": [
+          "Do you have a personal story of how you got inspired by this art form?"
+        ],
+        "compare_styles": [
+          "How would you compare this style to traditional realism?"
+        ],
+        "expand_horizons": [
+          "Feel like exploring another style or medium?"
+        ]
+      },
+      "closing_phrases": [
+        "Thanks for sharing your art journey! Talk again soon."
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 3,
+      "alternate_paths": {
+        "expand_horizons": "ask_preference",
+        "end_conversation": "farewell"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "relationships and friendships",
+      "sub_topic": [
+        "romantic relationships",
+        "friendships",
+        "family dynamics"
+      ],
+      "bot_goal": "provide support and advice on relationships and friendships",
+      "success_criteria": [
+        "user acknowledges receiving advice and ends the conversation"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "informal",
+      "emotional_tone": [
+        "Friendly",
+        "Supportive",
+        "Encouraging"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "no",
+      "max_dialog_depth": 7,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "intro",
+        "relationship_focus",
+        "romantic_path",
+        "friendship_path",
+        "family_path",
+        "advice_offered",
+        "farewell"
+      ],
+      "optional_nodes": "unknown",
+      "start_node": "intro",
+      "user_intents": [
+        "initiate_conversation",
+        "select_relationship_focus",
+        "describe_issue",
+        "seek_advice",
+        "request_additional_suggestions",
+        "exit_dialog"
+      ],
+      "intent_hierarchy": {
+        "initiate_conversation": [],
+        "select_relationship_focus": [
+          "romantic_relationships",
+          "friendships",
+          "family_dynamics"
+        ],
+        "describe_issue": [
+          "communication_issues",
+          "feeling_distant",
+          "family_argues"
+        ],
+        "seek_advice": [],
+        "request_additional_suggestions": [],
+        "exit_dialog": []
+      },
+      "user_utterances_examples": {
+        "initiate_conversation": [
+          "Sure, let's talk."
+        ],
+        "select_relationship_focus": [
+          "I'd like to talk about romantic relationships.",
+          "Friendships, please.",
+          "Family dynamics."
+        ],
+        "describe_issue": [
+          "My partner and I have communication issues.",
+          "I feel distant from my best friend recently.",
+          "We argue at family gatherings a lot."
+        ],
+        "seek_advice": [
+          "I think boundaries might help, but I'm unsure.",
+          "Yes, I've tried being direct, but it didn't work."
+        ],
+        "request_additional_suggestions": [
+          "Any other suggestions?"
+        ],
+        "exit_dialog": [
+          "I think I'm good for now.",
+          "Thanks, I'll consider those options."
+        ]
+      },
+      "required_slots": "unknown",
+      "bot_utterances_templates": {
+        "intro": [
+          "Hey! Up for a chat about relationships and friendships?"
+        ],
+        "relationship_focus": [
+          "Do you want to discuss romantic relationships, friendships, or family dynamics?"
+        ],
+        "romantic_path": [
+          "Romantic relationships can be complex. What's on your mind?"
+        ],
+        "friendship_path": [
+          "Friendships evolve over time. Do you have a specific concern or thought to share?"
+        ],
+        "family_path": [
+          "Family dynamics can be tricky. Care to elaborate?"
+        ],
+        "advice_offered": [
+          "Maybe communication is key, or setting boundaries. What do you think?"
+        ],
+        "user_reflection": [
+          "That's a thoughtful point. Any personal experiences you want to share?"
+        ],
+        "ask_different_angle": [
+          "Would you like to approach this topic from another angle or bring up a new scenario?"
+        ],
+        "open_suggestions": [
+          "You could try talking honestly with them, or perhaps seeking counseling. Which do you prefer?"
+        ],
+        "farewell": [
+          "It's been nice discussing relationships. Take care and best of luck!"
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "It's been nice discussing relationships. Take care and best of luck!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 15,
+      "alternate_paths": "unknown",
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Sports discussion",
+      "sub_topic": [
+        "soccer",
+        "basketball",
+        "tennis",
+        "leagues",
+        "teams",
+        "player statistics"
+      ],
+      "bot_goal": "engage in sports-related conversation with user",
+      "success_criteria": [
+        "user ends the conversation positively"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "informal",
+      "emotional_tone": [
+        "Friendly",
+        "Approachable"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 5,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "sports_intro",
+        "choose_sport",
+        "soccer_path",
+        "basketball_path",
+        "other_sport",
+        "team_discussion",
+        "farewell"
+      ],
+      "optional_nodes": [
+        "compare_teams",
+        "stats_talk",
+        "loop_back"
+      ],
+      "start_node": "sports_intro",
+      "user_intents": [
+        "choose_sport",
+        "discuss_team",
+        "compare_teams",
+        "discuss_statistics",
+        "change_topic",
+        "end_conversation"
+      ],
+      "intent_hierarchy": {
+        "choose_sport": [
+          "select_soccer",
+          "select_basketball",
+          "select_other"
+        ],
+        "discuss_team": [
+          "team_performance"
+        ],
+        "compare_teams": [],
+        "discuss_statistics": [
+          "player_stats"
+        ],
+        "change_topic": [],
+        "end_conversation": []
+      },
+      "user_utterances_examples": {
+        "choose_sport": [
+          "Yes, let's talk about sports.",
+          "Soccer for sure.",
+          "Basketball, please.",
+          "Actually, I'm into tennis."
+        ],
+        "discuss_team": [
+          "I follow the English Premier League, especially Manchester United.",
+          "The NBA is my favorite. I love the Warriors.",
+          "They're doing pretty well, but there's room for improvement."
+        ],
+        "compare_teams": [
+          "Yeah, let's compare them to their closest rivals."
+        ],
+        "discuss_statistics": [
+          "I think goals and assists are key metrics."
+        ],
+        "change_topic": [
+          "I'd like to switch to basketball now."
+        ],
+        "end_conversation": [
+          "No, I'm done. Thanks!"
+        ]
+      },
+      "required_slots": [
+        "sport",
+        "league",
+        "team",
+        "stat_type"
+      ],
+      "bot_utterances_templates": {
+        "sports_intro": [
+          "Hello! Want to chat about sports—soccer, basketball, or something else?"
+        ],
+        "choose_sport": [
+          "Which sport do you want to focus on?"
+        ],
+        "soccer_path": [
+          "Soccer is huge worldwide! Which leagues or teams do you follow?"
+        ],
+        "basketball_path": [
+          "Basketball is fast-paced. Do you have a favorite league or team?"
+        ],
+        "other_sport": [
+          "Cool! Which sport is on your mind?"
+        ],
+        "team_discussion": [
+          "That's a great team. How do you think they're performing this season?"
+        ],
+        "compare_teams": [
+          "Interesting take. Want to compare them with a rival team?"
+        ],
+        "stats_talk": [
+          "Which player stats do you find most significant—goals, assists, rebounds, or something else?"
+        ],
+        "loop_back": [
+          "Feel free to switch to another sport or keep going with this one."
+        ],
+        "farewell": [
+          "Great chatting about sports. Catch you next time!"
+        ]
+      },
+      "follow_up_questions": {
+        "choose_sport": [
+          "Which sport do you want to focus on?"
+        ],
+        "discuss_team": [
+          "How do you think they're performing this season?"
+        ],
+        "discuss_statistics": [
+          "Which player stats do you find most significant—goals, assists, rebounds, or something else?"
+        ]
+      },
+      "closing_phrases": [
+        "Great chatting about sports. Catch you next time!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if user wants to switch sport": "loop_back",
+        "if user wants to end conversation": "farewell"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Collaborative story creation",
+      "sub_topic": [
+        "genre selection",
+        "character development",
+        "plot development",
+        "ending choices"
+      ],
+      "bot_goal": "facilitate collaborative story creation",
+      "success_criteria": [
+        "story successfully completed"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "informal",
+      "emotional_tone": [
+        "Friendly",
+        "Encouraging"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "no",
+      "max_dialog_depth": 8,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "story_intro",
+        "genre_choice",
+        "fantasy_setup",
+        "sci_fi_setup",
+        "mystery_setup",
+        "character_details",
+        "plot_twist",
+        "resolution_path",
+        "finish"
+      ],
+      "optional_nodes": [
+        "alternate_ending"
+      ],
+      "start_node": "story_intro",
+      "user_intents": [
+        "agree_to_start",
+        "select_genre",
+        "define_main_character",
+        "describe_character_traits",
+        "introduce_plot_twist",
+        "resolve_conflict",
+        "choose_ending",
+        "complete_story"
+      ],
+      "intent_hierarchy": {
+        "agree_to_start": [],
+        "select_genre": [
+          "fantasy",
+          "sci_fi",
+          "mystery",
+          "other"
+        ],
+        "define_main_character": [],
+        "describe_character_traits": [],
+        "introduce_plot_twist": [],
+        "resolve_conflict": [
+          "gather_allies",
+          "find_secret_artifact"
+        ],
+        "choose_ending": [
+          "happy_ending",
+          "twist_ending",
+          "bittersweet_ending"
+        ],
+        "complete_story": []
+      },
+      "user_utterances_examples": {
+        "agree_to_start": [
+          "Yes, let's create a story!"
+        ],
+        "select_genre": [
+          "Let's go fantasy.",
+          "I want sci-fi.",
+          "Mystery, please."
+        ],
+        "define_main_character": [
+          "A young sorcerer searching for ancient spells.",
+          "A rogue AI traveling through galaxies.",
+          "A clever detective in a small town."
+        ],
+        "describe_character_traits": [
+          "They are brave but naive, and they stumble upon a hidden threat."
+        ],
+        "introduce_plot_twist": [
+          "They have to gather allies or find a secret artifact."
+        ],
+        "resolve_conflict": [
+          "They manage to overcome the challenge, but let's decide how it ends."
+        ],
+        "choose_ending": [
+          "Let's go with a happy ending!",
+          "Let's end with a twist."
+        ],
+        "complete_story": "unknown"
+      },
+      "required_slots": [
+        "genre",
+        "main_character",
+        "character_traits",
+        "plot_twist",
+        "resolution_method",
+        "ending_type"
+      ],
+      "bot_utterances_templates": {
+        "story_intro": [
+          "Hey! Let’s build a fun story together. Ready to begin?"
+        ],
+        "genre_choice": [
+          "Which genre should our story be—fantasy, sci-fi, mystery, or something else?"
+        ],
+        "fantasy_setup": [
+          "We’ll create a magical realm. Who should our main character be?"
+        ],
+        "sci_fi_setup": [
+          "Let’s set it in the far future. Who or what is our protagonist?"
+        ],
+        "mystery_setup": [
+          "A puzzling crime. Who is our detective or main character?"
+        ],
+        "character_details": [
+          "That’s a great main character. Describe their personality or special traits."
+        ],
+        "plot_twist": [
+          "Let’s introduce a twist or conflict. What challenge do they face?"
+        ],
+        "resolution_path": [
+          "How do you think they can resolve this conflict?"
+        ],
+        "alternate_ending": [
+          "Would you like a happy ending, a bittersweet one, or something unexpected?"
+        ],
+        "finish": [
+          "That was fun! Thanks for co-creating this story. Talk again soon."
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "That was fun! Thanks for co-creating this story. Talk again soon."
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 10,
+      "alternate_paths": "unknown",
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  }
+]

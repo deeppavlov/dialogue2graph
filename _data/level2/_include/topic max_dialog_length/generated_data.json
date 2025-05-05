@@ -1,0 +1,1187 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "AskCity",
+          "utterances": [
+            "Sure, I can help with that. Which city are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "ConfirmBooking",
+          "utterances": [
+            "I've booked your hotel. Thank you!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a hotel."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "New York."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your IT issues today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Identify Issue",
+          "utterances": [
+            "I'm sorry to hear that. Is your issue related to hardware or software?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Hardware Support",
+          "utterances": [
+            "Sure, let's troubleshoot your hardware issue. Can you please describe the problem?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Software Support",
+          "utterances": [
+            "Absolutely, let's address your software issue. Can you provide more details?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Hardware - Computer Not Starting",
+          "utterances": [
+            "Please ensure your computer is plugged in and the power is turned on. Is it still not starting?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Software - Application Crash",
+          "utterances": [
+            "Try reinstalling the application or updating it to the latest version. Did that resolve the issue?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Resolution",
+          "utterances": [
+            "Great! Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "End",
+          "utterances": [
+            "Thank you for contacting IT support. Have a nice day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I have an IT issue"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "It's a hardware issue"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "It's a software issue"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "My computer won't start"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "An application keeps crashing"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "Yes, it's still not starting"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Yes, that fixed it"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "No, that's all for now"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your grocery order today?",
+            "Hi there! Ready to order your groceries?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Order Initiation",
+          "utterances": [
+            "Sure! What items would you like to add to your cart?",
+            "Great! Please let me know which groceries you need."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Add Items",
+          "utterances": [
+            "Got it. Would you like to add anything else?",
+            "Items added. Do you want to add more?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Review Cart",
+          "utterances": [
+            "Here is your cart: {items}. Would you like to proceed to checkout?",
+            "Your current cart contains: {items}. Ready to checkout?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Choose Delivery Time",
+          "utterances": [
+            "When would you like your order to be delivered?",
+            "Please select a preferred delivery time."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Confirm Order",
+          "utterances": [
+            "Your order is confirmed and will be delivered on {delivery_time}.",
+            "Order placed successfully! Delivery is scheduled for {delivery_time}."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Help",
+          "utterances": [
+            "I can help you track your order, modify your cart, or answer any questions.",
+            "What would you like assistance with?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "End",
+          "utterances": [
+            "Thank you for shopping with us! Have a great day!",
+            "Your session has ended. Feel free to order again anytime."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to place an order.",
+            "I'd like to buy some groceries."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I need milk and eggs.",
+            "Add bread and butter to my cart."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 3,
+          "utterances": [
+            "Yes, also some fruits.",
+            "No, that's all for now."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "No, that's all.",
+            "Let's review my cart."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, proceed to checkout.",
+            "I'd like to choose a delivery time."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Tomorrow morning.",
+            "Next Monday afternoon."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 8,
+          "utterances": [
+            "Thank you.",
+            "That's all."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 7,
+          "utterances": [
+            "I need help.",
+            "Can you assist me?"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 2,
+          "utterances": [
+            "I want to place an order.",
+            "I'd like to modify my cart."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "No, thank you.",
+            "Nothing else."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our car rental service! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "IntentBooking",
+          "utterances": [
+            "Great! Let's get started with your car booking."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "PickupLocation",
+          "utterances": [
+            "Where would you like to pick up the car?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "PickupDateTime",
+          "utterances": [
+            "When and what time would you like to pick up the car?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "DropoffLocation",
+          "utterances": [
+            "Where will you be returning the car?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "DropoffDateTime",
+          "utterances": [
+            "When and what time will you drop off the car?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "CarType",
+          "utterances": [
+            "What type of car would you like to rent? We have Economy, SUV, and Luxury options."
+          ]
+        },
+        {
+          "id": 8,
+          "label": "Confirmation",
+          "utterances": [
+            "You have selected a {CarType} from {PickupLocation} on {PickupDateTime} to {DropoffLocation} by {DropoffDateTime}. Do you want to confirm the booking?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "ProvideDetails",
+          "utterances": [
+            "Please provide your full name, driver's license number, and contact information to complete the booking."
+          ]
+        },
+        {
+          "id": 10,
+          "label": "BookingComplete",
+          "utterances": [
+            "Your booking is confirmed! You will receive an email with all the details. Thank you for choosing our service."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a car",
+            "I'd like to rent a vehicle"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Sure",
+            "Let's do that"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Pickup location is New York",
+            "I'll pick up the car from Los Angeles"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Pickup on July 20th at 10 AM",
+            "I need the car from August 1st, 9 AM"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Drop off in Boston",
+            "I will return it in Miami"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Drop off on July 25th at 5 PM",
+            "I'll return the car on August 5th at 11 AM"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "I'd like an SUV",
+            "Please reserve an Economy car"
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "Yes, confirm",
+            "That sounds good"
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "Here is my information: John Doe, D1234567, john@example.com",
+            "My details are Jane Smith, S7654321, jane@domain.com"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our Bank Loan Application service. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Choose Loan Type",
+          "utterances": [
+            "We offer personal loans, home loans, and auto loans. Which one are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Information",
+          "utterances": [
+            "Please provide the necessary information such as your income, employment status, and credit score."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Review Application",
+          "utterances": [
+            "Thank you for the information. Let me review your application."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Approval",
+          "utterances": [
+            "Good news! Your loan application has been approved. Would you like to proceed with the disbursement?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Rejection",
+          "utterances": [
+            "I'm sorry, but your loan application has been declined. Would you like to receive more information on why?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Disbursement Details",
+          "utterances": [
+            "Please provide your bank account details for the loan disbursement."
+          ]
+        },
+        {
+          "id": 8,
+          "label": "Thank You",
+          "utterances": [
+            "Thank you for using our loan application service. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to apply for a loan",
+            "I'd like to get a loan"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I am interested in a personal loan",
+            "I want a home loan",
+            "Looking to apply for an auto loan"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Here is my information",
+            "I have submitted my details"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Great",
+            "Sounds good"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Oh no",
+            "That's disappointing"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "Yes, please proceed",
+            "I'd like to proceed"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 8,
+          "utterances": [
+            "No, thank you",
+            "I'd like more information"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Here are my bank details",
+            "My account information is..."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's engage in a philosophical discussion. What topic interests you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Existentialism",
+          "utterances": [
+            "Existentialism explores the meaning of existence. What do you believe gives life its meaning?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Ethics",
+          "utterances": [
+            "Ethics deals with moral principles. How do you determine what is right or wrong?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Epistemology",
+          "utterances": [
+            "Epistemology is the study of knowledge. What do you consider as true knowledge?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Metaphysics",
+          "utterances": [
+            "Metaphysics explores the nature of reality. How do you perceive the reality around you?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Conclusion",
+          "utterances": [
+            "Thank you for the engaging discussion! Feel free to explore more topics anytime."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'm interested in existentialism."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Let's discuss ethics."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Can we talk about epistemology?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I'd like to explore metaphysics."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I think ethics is closely related."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "How does knowledge influence ethics?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Understanding reality is crucial."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "This has been a deep discussion."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "I'd like to conclude here."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Thank you, let's finish up."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's talk about art. What's your favorite art period?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Renaissance Discussion",
+          "utterances": [
+            "Renaissance art is fascinating! What is your favorite Renaissance artist?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Da Vinci Discussion",
+          "utterances": [
+            "Leonardo da Vinci was a master of many disciplines. Do you have a favorite of his works?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I love Renaissance art."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Leonardo da Vinci."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hi there! How can I assist you with your relationships and friendships today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Making Friends",
+          "utterances": [
+            "Making new friends can be exciting! Would you like tips on where to meet people or how to start conversations?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Maintaining Friendships",
+          "utterances": [
+            "Maintaining friendships is important. Do you need advice on communication or resolving conflicts?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Where to Meet People",
+          "utterances": [
+            "You can meet new people through hobbies, classes, networking events, or social media groups. Which area interests you the most?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Starting Conversations",
+          "utterances": [
+            "Starting conversations can be easier by asking open-ended questions, showing genuine interest, or sharing something about yourself. Would you like some examples?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Communication Tips",
+          "utterances": [
+            "Effective communication involves active listening, expressing yourself clearly, and being empathetic. Would you like strategies to improve these skills?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Resolving Conflicts",
+          "utterances": [
+            "Resolving conflicts requires understanding the other person's perspective, finding common ground, and compromising when necessary. Need more detailed steps?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "Examples of Conversations",
+          "utterances": [
+            "Sure! For example, you could start with 'What do you enjoy doing in your free time?' or 'Have you read any good books lately?'"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "Meeting Through Hobbies",
+          "utterances": [
+            "Engaging in hobbies like sports, art classes, or volunteering can connect you with like-minded individuals. Which hobby are you interested in?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "Improving Communication Skills",
+          "utterances": [
+            "Practice active listening by nodding and summarizing what others say, use 'I' statements to express your feelings, and try to empathize with others' viewpoints."
+          ]
+        },
+        {
+          "id": 11,
+          "label": "Detailed Conflict Resolution",
+          "utterances": [
+            "Start by staying calm, clearly express your feelings, listen to the other person without interrupting, identify the root cause, and work together to find a mutually acceptable solution."
+          ]
+        },
+        {
+          "id": 12,
+          "label": "Choosing a Hobby",
+          "utterances": [
+            "Great choice! Participating regularly and being open to conversations can help you form new friendships through your hobby."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to make new friends."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need help maintaining my friendships."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Where can I meet new people?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "How do I start a conversation?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "I need advice on communication."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 7,
+          "utterances": [
+            "How can I resolve conflicts?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 9,
+          "utterances": [
+            "I’m interested in hobbies."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 8,
+          "utterances": [
+            "Can you give me some examples?"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 10,
+          "utterances": [
+            "Yes, I'd like strategies."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 11,
+          "utterances": [
+            "Please provide detailed steps."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 12,
+          "utterances": [
+            "I’m interested in art classes."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! What sports are you interested in today?",
+            "Hi there! Let's talk about sports. Which one do you like?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Football Discussion",
+          "utterances": [
+            "Awesome! Which football team is your favorite?",
+            "Great choice! Tell me your favorite football team."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Basketball Discussion",
+          "utterances": [
+            "Nice! Who's your favorite basketball player?",
+            "Cool! Which basketball team do you support?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Favorite Team Response",
+          "utterances": [
+            "That's a great team! They've had an impressive season.",
+            "I agree, your favorite team is doing well this year."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Favorite Player Response",
+          "utterances": [
+            "Excellent choice! They're really talented.",
+            "Great player! They've been performing exceptionally."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Goodbye",
+          "utterances": [
+            "It was great talking about sports with you! Have a nice day!",
+            "Thanks for the chat! Enjoy watching your favorite sports."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I love football",
+            "Let's talk about football"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I enjoy basketball",
+            "Let's discuss basketball"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "My favorite team is Manchester United",
+            "I support the New England Patriots"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "LeBron James is my favorite",
+            "I really like Steph Curry"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "That's awesome!",
+            "I agree!"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Absolutely!",
+            "Couldn't agree more!"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start Node",
+          "is_start": true,
+          "utterances": [
+            "Let's create a story together. What's the setting you'd like?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask for Main Character",
+          "utterances": [
+            "Great! Who is the main character in our story?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Ask for Challenge",
+          "utterances": [
+            "Interesting! What challenge does the main character face?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Ask for Motivation",
+          "utterances": [
+            "What is the motivation behind the main character's quest?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Ask for Conclusion",
+          "utterances": [
+            "Finally, how does the story conclude?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End Node",
+          "utterances": [
+            "Fantastic! Here's your collaborative story: [story summary]."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "A haunted house in the countryside."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "A brave knight."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Rescuing a captured villager."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "To protect the village and loved ones."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "The knight successfully rescues the villager and returns home as a hero."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "max_dialog_length"
+    ]
+  }
+]

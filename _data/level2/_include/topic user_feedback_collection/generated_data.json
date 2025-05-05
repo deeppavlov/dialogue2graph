@@ -1,0 +1,928 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Welcome to our hotel booking service. How can I assist you today?",
+            "Hi there! Ready to book a hotel room?",
+            "Welcome! I'd be happy to help you book a hotel."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "CollectDestination",
+          "utterances": [
+            "Great! Where would you like to stay?",
+            "Sure! What's your destination?",
+            "Which city are you planning to visit?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "CollectDates",
+          "utterances": [
+            "What are your check-in and check-out dates?",
+            "Could you provide your stay dates?",
+            "When would you like to check in and out?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "CollectGuests",
+          "utterances": [
+            "How many guests will be staying?",
+            "Please let me know the number of guests.",
+            "How many people will be staying with you?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "ConfirmBooking",
+          "utterances": [
+            "Thank you! Let me confirm your booking details.",
+            "Got it! I'll summarize your booking.",
+            "Perfect! Here's the summary of your reservation."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "BookingConfirmed",
+          "utterances": [
+            "Your booking is confirmed! Have a great stay.",
+            "All set! Your reservation is complete.",
+            "You're all booked! Enjoy your stay."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a hotel",
+            "I'd like to reserve a room",
+            "Help me book a hotel"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Paris",
+            "New York",
+            "Tokyo"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "From June 1 to June 5",
+            "Next weekend",
+            "July 10 to July 15"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Two adults",
+            "Three guests",
+            "Just myself"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, that's correct",
+            "Looks good",
+            "Confirm"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today with your IT issues?",
+            "Hi! What hardware or software problem are you experiencing?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Hardware Support",
+          "utterances": [
+            "I'm sorry to hear you're having hardware issues. Can you please specify the device?",
+            "Let's troubleshoot your hardware. Which device is causing trouble?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Software Support",
+          "utterances": [
+            "I'm here to help with your software problems. Which application are you having trouble with?",
+            "Let's address your software issues. Please let me know which program is affected."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Device Specification",
+          "utterances": [
+            "Thank you. Let's start with some basic checks.",
+            "Got it. I'll guide you through the troubleshooting steps."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Application Issue",
+          "utterances": [
+            "Understood. We'll work on resolving the application problem.",
+            "Alright. Let's fix the issue with your software."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Troubleshooting",
+          "utterances": [
+            "Please restart your device and let me know if the issue persists.",
+            "Try reinstalling the application and see if that helps."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Resolution",
+          "utterances": [
+            "I'm glad we could resolve your issue. Is there anything else I can help you with?",
+            "The problem should be fixed now. Let me know if you need further assistance."
+          ]
+        },
+        {
+          "id": 8,
+          "label": "End",
+          "utterances": [
+            "Thank you for contacting IT Support. Have a great day!",
+            "Goodbye! Feel free to reach out if you have more issues."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I have a hardware issue",
+            "It's a hardware problem"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I have a software issue",
+            "It's a software problem"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "My laptop is not starting",
+            "The printer is malfunctioning"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Microsoft Word is crashing",
+            "I'm unable to install the software"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Sure",
+            "Let's do that"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, please",
+            "Proceed"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "It worked, thank you",
+            "The issue is resolved"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "No, that's all",
+            "Thank you"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the Online Grocery Store! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Browse Products",
+          "utterances": [
+            "Here are the categories you can browse: Fruits, Vegetables, Dairy, Beverages. Which would you like to see?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "View Cart",
+          "utterances": [
+            "Your cart contains X items. Would you like to proceed to checkout or continue shopping?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Checkout",
+          "utterances": [
+            "Proceeding to checkout. Please provide your shipping information."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to browse products",
+            "Browse products"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "View my cart",
+            "Check cart"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I want to select this category",
+            "Proceed to checkout"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Proceed to checkout"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our car rental service. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Collect Booking Details",
+          "utterances": [
+            "Sure, I can help you book a car. Could you please provide the pick-up location and date?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Confirm Booking",
+          "utterances": [
+            "Thank you. Your car has been booked. You will receive a confirmation email shortly."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "End",
+          "utterances": [
+            "Is there anything else I can help you with?",
+            "Thank you for choosing our service. Goodbye!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a car",
+            "Book a car"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Pick up at New York on July 20",
+            "I need a sedan from Los Angeles starting tomorrow"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, confirm",
+            "Alright, thank you"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?",
+            "Hi! Welcome to our bank. How can I help you with your loan today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Loan Type Selection",
+          "utterances": [
+            "What type of loan are you interested in? We offer personal loans, home loans, and auto loans."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Collect Personal Details",
+          "utterances": [
+            "Please provide your personal details to proceed with the loan application.",
+            "Can you please share your personal information for the loan application?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Request Documents",
+          "utterances": [
+            "Please submit the necessary documents to continue.",
+            "Kindly provide the required documents for your loan application."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Confirmation",
+          "utterances": [
+            "Your application has been submitted successfully.",
+            "Thank you! Your loan application is now complete."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Thank you for using our service. Have a great day!",
+            "If you have any other questions, feel free to ask. Goodbye!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to apply for a loan",
+            "I need a loan",
+            "I'd like to apply for a loan"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want a personal loan",
+            "I need a home loan",
+            "I would like an auto loan"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Here are my details",
+            "I have provided my information",
+            "Sure, here is my personal information"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I have submitted the documents",
+            "Documents sent",
+            "Here are the documents"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Thank you",
+            "Great",
+            "Thanks"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our Philosophical Discussions! What topic would you like to explore today?",
+            "Hello! Let's dive into some philosophical questions. What are you interested in discussing?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Existentialism Discussion",
+          "utterances": [
+            "Existentialism focuses on individual freedom and choice. What aspect intrigues you the most?",
+            "Let's talk about Existentialism. Do you have any specific questions or thoughts on this topic?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Ethics Discussion",
+          "utterances": [
+            "Ethics explores moral principles and values. What ethical dilemma are you interested in?",
+            "Let's delve into Ethics. Do you want to discuss a particular moral issue or theory?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Conclusion",
+          "utterances": [
+            "Thank you for the discussion! If you have more topics in mind, feel free to ask anytime.",
+            "It was great discussing with you. Let me know if you'd like to explore another philosophical topic."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to discuss Existentialism",
+            "Let's talk about Existentialism"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I'm interested in Ethics",
+            "Let's discuss Ethics"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "That's all for now",
+            "Thank you, that's helpful"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "That's all for now",
+            "Thank you, that's helpful"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the art discussion. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Discuss Painting",
+          "utterances": [
+            "Paintings are artistic expressions using various mediums like oils, acrylics, and watercolors. Would you like to know more about a specific type of painting?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Discuss Sculpture",
+          "utterances": [
+            "Sculptures are three-dimensional art forms created by shaping materials like stone, metal, or clay. Would you like to explore a particular style of sculpture?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "End Conversation",
+          "utterances": [
+            "Glad I could help with your art queries. Feel free to reach out if you have more questions!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Tell me about paintings",
+            "I would like to know more about painting"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Tell me about sculptures",
+            "I would like to know more about sculpture"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "No, that's all for now",
+            "Thanks, I have no more questions"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "No, that's all for now",
+            "Thanks, I have no more questions"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your relationships or friendships today?",
+            "Hi there! What would you like to talk about regarding your relationships or friendships?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Information Gathering",
+          "utterances": [
+            "Can you tell me more about your situation?",
+            "Could you provide more details on the issue?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Advice Offer",
+          "utterances": [
+            "I'm sorry you're experiencing this. Would you like some advice?",
+            "I understand. Would you like me to provide some guidance?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Provide Advice",
+          "utterances": [
+            "Here's some advice that might help...",
+            "Based on what you've told me, I suggest..."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Offer Further Help",
+          "utterances": [
+            "Is there anything else I can assist you with?",
+            "Do you need help with anything else?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "User describes the issue"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "User provides more details"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "User wants advice"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "User doesn't want advice"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hi! Let's talk about sports. What's your favorite sport?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Favorite Sport Response",
+          "utterances": [
+            "I love soccer.",
+            "I'm a big basketball fan.",
+            "I enjoy tennis."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Soccer Discussion",
+          "utterances": [
+            "Soccer is a great sport! Do you support any particular team?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Basketball Discussion",
+          "utterances": [
+            "Basketball is exciting! Who's your favorite player?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Tennis Discussion",
+          "utterances": [
+            "Tennis requires a lot of skill. Do you play regularly?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "User responds with favorite sport."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "User mentions soccer."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "User mentions basketball."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "User mentions tennis."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's create a story together. What genre are you interested in?",
+            "Hi there! Ready to collaborate on a story? Let me know your preferred genre."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Gather Genre",
+          "utterances": [
+            "Great choice! Do you have a specific theme or setting in mind?",
+            "Awesome! Would you like to specify a theme or setting for our story?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Develop Plot",
+          "utterances": [
+            "Interesting! Let's develop the main plot. What should happen first?",
+            "Sounds good! How should our story begin?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Add Characters",
+          "utterances": [
+            "Perfect. Let's add some characters. Who is our protagonist?",
+            "Great! Who will be the main character in our story?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Conclude Story",
+          "utterances": [
+            "Excellent! Here's a summary of our story. Would you like to add anything else?",
+            "We've built a nice story together. Do you want to make any additions or changes?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Thank you for collaborating! I hope you enjoyed creating the story.",
+            "It was great working with you on the story! Have a wonderful day."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'm interested in fantasy.",
+            "Let's go with a mystery genre."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "A magical kingdom.",
+            "A small town with secrets."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The hero discovers a hidden power.",
+            "The protagonist finds a mysterious map."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Our hero is a brave knight.",
+            "The main character is a clever detective."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "No, that's all.",
+            "Everything looks good."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "user_feedback_collection"
+    ]
+  }
+]

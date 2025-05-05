@@ -1,0 +1,853 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our hotel booking service. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask Dates",
+          "utterances": [
+            "Please provide your check-in and check-out dates."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Confirm Booking",
+          "utterances": [
+            "Your booking from {check-in} to {check-out} is confirmed. Would you like to proceed?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Offer Modification",
+          "utterances": [
+            "I'm sorry the booking was declined. Would you like to modify your dates or preferences?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Offer Upsell",
+          "utterances": [
+            "Would you like to add any upgrades or additional services to your booking?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Offer Cancellation",
+          "utterances": [
+            "Would you like to cancel your booking or consider other options?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Booking Confirmed",
+          "utterances": [
+            "Thank you! Your booking is confirmed."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a hotel"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Here are your dates"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 2,
+          "utterances": [
+            "Invalid dates provided"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 7,
+          "utterances": [
+            "Yes, proceed"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "No, decline"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 2,
+          "utterances": [
+            "I want to modify my booking"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I want to add upgrades"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "I want to cancel my booking"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your IT issues today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Hardware Support",
+          "utterances": [
+            "Let's help you with your hardware issue. Please describe the problem."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Software Support",
+          "utterances": [
+            "Let's help you with your software issue. Please describe the problem."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Alternative Solutions",
+          "utterances": [
+            "Here are some alternative solutions you might try."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Request Information",
+          "utterances": [
+            "Could you please provide more details about the issue?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Resolution",
+          "utterances": [
+            "I'm glad I could help resolve your issue. Is there anything else I can assist you with?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "hardware",
+            "Hardware issues",
+            "It's a hardware problem"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "software",
+            "Software issues",
+            "It's a software problem"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "Issue resolved",
+            "Yes, it worked"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "Need more information",
+            "Can you provide more details?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Issue not resolved",
+            "Still having problems"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Issue resolved",
+            "Yes, it worked"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Need more information",
+            "Can you provide more details?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Issue not resolved",
+            "Still having problems"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Alternative solution worked"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Here are more details about the hardware issue"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 3,
+          "utterances": [
+            "Here are more details about the software issue"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Welcome",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our online grocery store! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Select Items",
+          "utterances": [
+            "Please select the items you want to purchase."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Confirm Cart",
+          "utterances": [
+            "Here is your cart. Would you like to add more items or proceed to checkout?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Checkout",
+          "utterances": [
+            "Proceeding to checkout. Please provide your payment information."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to order groceries",
+            "Start shopping"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I have selected my items",
+            "I'm ready to review my cart"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Proceed to checkout",
+            "Let's check out"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 2,
+          "utterances": [
+            "I need to add more items",
+            "Add more to my cart"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "utterances": [
+            "Welcome to our car rental service. How can I assist you today?"
+          ],
+          "is_start": true
+        },
+        {
+          "id": 2,
+          "label": "collect_booking_details",
+          "utterances": [
+            "Please provide your rental details, such as pickup location, dates, and car type."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "ask_discount",
+          "utterances": [
+            "Do you have a discount code?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "apply_discount",
+          "utterances": [
+            "Discount code applied. Your total is updated accordingly."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "final_confirmation",
+          "utterances": [
+            "Your booking is confirmed. Thank you for choosing our service!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a car",
+            "Book a car"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Here are my booking details"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, I have a discount code"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "No, I don't have a discount code"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Proceed to confirmation"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to XYZ Bank! How can I assist you with your loan application today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "collect_information",
+          "utterances": [
+            "Great! Let's start by gathering some information. What type of loan are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "offer_interest",
+          "utterances": [
+            "Based on your information, we can offer you an interest rate of 5%. Would you like to proceed?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "exit_application",
+          "utterances": [
+            "I understand. If you have any questions in the future, feel free to reach out. Have a great day!"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "ask_questions",
+          "utterances": [
+            "Sure, feel free to ask any questions you have about the loan application process."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "successful_application",
+          "utterances": [
+            "Thank you for proceeding. Your loan application is being processed. You'll hear from us soon."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to apply for a loan"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in a personal loan"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Yes, I would like to proceed"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "No, I need to think about it"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I have some questions about the interest rate"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's dive into some philosophical topics. What would you like to discuss today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "discussion",
+          "utterances": [
+            "That's an interesting point. Can you elaborate?",
+            "I see. What's your perspective on that?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "switch_branch",
+          "utterances": [
+            "Sure, what topic would you like to switch to?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "farewell",
+          "utterances": [
+            "Thank you for the discussion. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to discuss the meaning of life."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 2,
+          "utterances": [
+            "Let's talk more about this.",
+            "I have another thought on that."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to change the topic.",
+            "Can we discuss something else?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I'm done discussing.",
+            "Let's end the conversation."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's discuss art. How would you like to start?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_preference",
+          "utterances": [
+            "Sure! What type of art are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "farewell",
+          "utterances": [
+            "Alright, maybe next time! Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to expand my horizons"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I'd like to end the conversation"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your relationships or friendships today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Seeking Advice",
+          "utterances": [
+            "Sure, I'd be happy to provide advice on relationships. What's on your mind?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Making New Friends",
+          "utterances": [
+            "Making new friends can be challenging. Would you like some tips on how to approach it?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Dealing with Conflict",
+          "utterances": [
+            "I'm sorry to hear you're dealing with conflict. How can I help you navigate this situation?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need advice",
+            "Can you help me with relationship advice?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to make new friends",
+            "How can I meet new people?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I'm dealing with a conflict",
+            "I have a fight with my friend"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's talk about sports. What's your favorite sport?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Sports Discussion",
+          "utterances": [
+            "That's great! Tell me more about your favorite team."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Farewell",
+          "utterances": [
+            "Goodbye! It was nice talking to you about sports."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I love soccer",
+            "I'm a basketball fan",
+            "Tennis is my favorite sport",
+            "Other sports"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 2,
+          "utterances": [
+            "I want to talk about another sport",
+            "Let's switch to a different sport",
+            "Change the topic"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to end the conversation",
+            "Goodbye",
+            "I'm done talking"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Introduction",
+          "is_start": true,
+          "utterances": [
+            "Welcome! Let's create a story together. What's your story idea?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Idea Gathering",
+          "utterances": [
+            "That's a great idea! Can you tell me more about the main characters?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Character Development",
+          "utterances": [
+            "Interesting characters! What kind of setting would you like for your story?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Setting Development",
+          "utterances": [
+            "Excellent! Let's start crafting the story based on your inputs."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Story Completion",
+          "utterances": [
+            "Your collaborative story is ready! Thank you for working with me."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I have an idea about a space adventure."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "The main character is an astronaut."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The story is set on Mars."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Let's start the story."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  }
+]

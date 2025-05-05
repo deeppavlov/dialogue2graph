@@ -1,0 +1,943 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your travel today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Confirm Itinerary",
+          "utterances": [
+            "Your itinerary is now finalized. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Payment Completed",
+          "utterances": [
+            "Your payment has been completed successfully. Is there anything else I can help you with?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to finalize my itinerary"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to make a payment"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Welcome",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our store! How can I assist you today?",
+            "Hello! Looking to buy something special today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Product Selection",
+          "utterances": [
+            "Sure, what kind of product are you interested in?",
+            "Great! Let me show you some categories. What are you looking for?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Show Products",
+          "utterances": [
+            "Here are some options available. Let me know which one you like.",
+            "These are the products we have in this category. Feel free to choose."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Add to Cart",
+          "utterances": [
+            "Would you like to add this item to your cart?",
+            "Do you want to add this product to your shopping basket?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "View Cart",
+          "utterances": [
+            "Your item has been added to the cart. Would you like to proceed to checkout?",
+            "The product is now in your cart. Do you want to view your cart or continue shopping?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Checkout",
+          "utterances": [
+            "Let's proceed to checkout. Please provide your shipping information.",
+            "Great! Let's get your order details to complete the purchase."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Payment Information",
+          "utterances": [
+            "Please enter your payment details to finalize the purchase.",
+            "Kindly provide your payment information to complete the order."
+          ]
+        },
+        {
+          "id": 8,
+          "label": "Order Confirmation",
+          "utterances": [
+            "Your order has been placed successfully! Thank you for shopping with us.",
+            "Thank you! Your purchase is complete and has been confirmed."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to buy something",
+            "I'm looking to purchase a product"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in electronics",
+            "Show me clothing options"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'll take this one",
+            "Add this to my cart"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, please",
+            "Sure, proceed"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Let's checkout",
+            "Proceed to payment"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Here is my address",
+            "My shipping details are..."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Payment done",
+            "Completed my payment"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?",
+            "Hi there! What can I do for you?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Schedule Appointment",
+          "utterances": [
+            "Sure, I can help you schedule a medical appointment. When would you like to come in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Confirm Appointment",
+          "utterances": [
+            "Your appointment is set for {date} at {time}. Is this correct?",
+            "I've scheduled your appointment for {date} at {time}. Does that work for you?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Appointment Confirmed",
+          "utterances": [
+            "Great! Your appointment has been confirmed.",
+            "Your appointment is set. See you then!"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Appointment Canceled",
+          "utterances": [
+            "Your appointment has been canceled.",
+            "Alright, I've canceled your appointment."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to schedule a medical appointment",
+            "I'd like to book an appointment",
+            "Schedule appointment"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Schedule for tomorrow at 10 AM",
+            "I would like to come on June 5th at 3 PM",
+            "Next Monday morning"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, that's correct",
+            "Confirm",
+            "Yes"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "No, I need to change the time",
+            "Cancel",
+            "I can't make it"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your university admissions today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Provide Application Information",
+          "utterances": [
+            "Sure, I can help you with the application process, requirements, deadlines, or program details. What would you like to know?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Explain Application Process",
+          "utterances": [
+            "To apply, you'll need to submit your transcripts, letters of recommendation, a personal statement, and complete the online application form by the deadline."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Provide Program Details",
+          "utterances": [
+            "We offer a variety of programs including Computer Science, Business Administration, and Psychology. Which program are you interested in?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Confirm Admission",
+          "utterances": [
+            "Congratulations! Your admission to the university has been confirmed."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End Conversation",
+          "utterances": [
+            "Is there anything else I can help you with today?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need help with admissions",
+            "Can you assist me with applying to the university?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Tell me about the application process",
+            "What do I need to apply?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I want information about programs",
+            "What programs do you offer?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I've submitted all the required documents",
+            "Is my application complete?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I'm interested in Computer Science",
+            "Tell me more about the Business program"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Thank you",
+            "Great, thanks for your help!"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your event planning today?",
+            "Hi there! Ready to plan your event?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Gather Event Details",
+          "utterances": [
+            "Great! Let's start with some details. What type of event are you planning?",
+            "Could you provide some details about your event?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Select Date and Venue",
+          "utterances": [
+            "What date are you planning for the event?",
+            "Do you have a preferred venue for your event?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Review Event Plan",
+          "utterances": [
+            "Here are the details you've provided. Would you like to proceed with the payment to finalize your event plan?",
+            "Please confirm the event details and proceed to payment."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Process Payment",
+          "utterances": [
+            "Please provide your payment information to complete the booking.",
+            "Let's proceed to payment to finalize your event plan."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Completion",
+          "utterances": [
+            "Your event has been successfully planned and payment received. Thank you!",
+            "Event planning is complete. We've received your payment. Looking forward to your event!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to plan an event",
+            "I'd like help organizing an event"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm planning a wedding",
+            "It's a corporate conference"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The date is June 20th and the Grand Hall",
+            "We prefer September and the Riverside Venue"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, proceed with payment",
+            "Everything looks good, let's finalize"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Here is my payment information",
+            "Payment completed"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'd love to talk about global cultures and traditions. Which culture would you like to explore?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Japanese Culture",
+          "utterances": [
+            "Japan has a rich culture with traditions like tea ceremonies, cherry blossom festivals, and more."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Italian Traditions",
+          "utterances": [
+            "Italy is known for its cuisine, festivals, art, and historical traditions."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Indian Festivals",
+          "utterances": [
+            "India celebrates a variety of festivals such as Diwali, Holi, and Navratri, each with unique traditions."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Wrap Up",
+          "utterances": [
+            "It was great discussing cultures and traditions with you. Have a wonderful day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Tell me about Japanese culture"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Tell me about Italian traditions"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Tell me about Indian festivals"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 1,
+          "utterances": [
+            "Tell me about another culture"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I want to wrap up"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 1,
+          "utterances": [
+            "Tell me about another tradition"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I want to wrap up"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Tell me about another festival"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I want to wrap up"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'm here to help you with music composition and songwriting. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "ask_project",
+          "utterances": [
+            "Can you tell me about your current music project?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "provide_tips",
+          "utterances": [
+            "Here are some songwriting tips...",
+            "Consider starting with a strong melody..."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "discuss_process",
+          "utterances": [
+            "Let's discuss your composition process...",
+            "How do you approach writing lyrics?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "offer_resources",
+          "utterances": [
+            "I can recommend some tools and resources...",
+            "Would you like information on music composition software?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "end_discussion",
+          "utterances": [
+            "It was great talking with you about music composition. Feel free to reach out if you need more assistance!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want help with writing lyrics",
+            "I'd like to compose a new song"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Sure, I'm working on a pop song",
+            "I'm composing for a rock band"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I'm looking for tips",
+            "Can you suggest some ideas?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Thanks for the tips",
+            "That helps a lot"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Let's discuss tools",
+            "I need resources for composition"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Thank you",
+            "That's all for now"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the Movie Critique and Discussion. Which movie would you like to discuss?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Discuss Plot",
+          "utterances": [
+            "What did you think about the plot of the movie?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Discuss Acting",
+          "utterances": [
+            "How did you feel about the acting in the movie?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Ending",
+          "utterances": [
+            "Thank you for the discussion. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Let's talk about the plot."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I'd like to discuss the acting."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I want to end the discussion."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Can we wrap this up?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Welcome",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the gaming support chat!",
+            "Hi! How can I assist you with video gaming today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Game Recommendations",
+          "utterances": [
+            "Sure, I can recommend some games. What genre are you interested in?",
+            "I'd be happy to suggest some games. Do you have a preferred genre?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Troubleshooting",
+          "utterances": [
+            "I'm sorry you're having trouble. Can you describe the issue?",
+            "Let's troubleshoot the problem. What seems to be the issue?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Goodbye",
+          "utterances": [
+            "Thank you for chatting! Have a great day.",
+            "Goodbye! If you need further assistance, feel free to reach out."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need game recommendations",
+            "Can you suggest some games?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I'm having issues with my game",
+            "I need help troubleshooting"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Thank you, that's all",
+            "No more, thanks"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The issue is resolved",
+            "Thanks, that fixed it"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the Fantasy World-Building session! How would you like to start?",
+            "Let's create your fantasy world together. What would you like to focus on first?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Setting",
+          "utterances": [
+            "Great! Let's discuss the setting. What's the geography like in your world?",
+            "Tell me about the landscapes and environments that make up your fantasy world."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Characters",
+          "utterances": [
+            "Sure! Let's create some characters. Who are the main heroes in your story?",
+            "Describe the key characters that inhabit your fantasy world."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Conclusion",
+          "utterances": [
+            "Alright, if you'd like to wrap up the world-building session, we've made great progress!",
+            "Thank you for building your fantasy world with me. Feel free to return anytime you want to continue."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Let's talk about the setting",
+            "I want to discuss the geography and landscapes"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Let's talk about the characters",
+            "I want to create some characters for my world"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I want to conclude the session",
+            "Let's wrap up the world-building"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I've provided all setting details",
+            "That's all for the geography"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I've provided all character details",
+            "That's all for the characters"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "success_criteria"
+    ]
+  }
+]
