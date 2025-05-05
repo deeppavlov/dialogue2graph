@@ -1,8 +1,8 @@
-# Graph based generation and augmentation of the synthetic dialogues
+# Graph based generation and augmentation of the synthetic dialogs
 
 ### Issues and goals
 
-Metrics were not satisfying enough and when generating a huge batches of data it is almost impossible to verify generated dialogues and texts by hand.
+Metrics were not satisfying enough and when generating a huge batches of data it is almost impossible to verify generated dialogs and texts by hand.
 So we will try to increase robustness of the generated synthetic data using approach similar in some sense to the [Skeleton of Thought](https://arxiv.org/abs/2307.15337).
 
 ## Hypothesises and steps

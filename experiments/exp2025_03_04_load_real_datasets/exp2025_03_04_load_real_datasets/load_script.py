@@ -29,7 +29,7 @@ datasets.disable_caching()
 
 _CITATION = """\
 @InProceedings{huggingface:dataset,
-title = {Dialogue dataset for dialogue2graph task},
+title = {Dialog dataset for dialog2graph task},
 author={DeepPavlov.
 },
 year={2025}
@@ -46,11 +46,11 @@ MULTIWOZ2_2: Salesforce/dialogstudio:MULTIWOZ2_2,
 TaskMaster3: google-research-datasets/taskmaster3,
 Frames: https://download.microsoft.com/download/4/b/f/4bf15895-4152-4008-8e68-605912cf7a65/Frames-dataset.zip,
 MSR-E2E: https://github.com/xiul-msr/e2e_dialog_challenge/tree/master/data,
-WOZ: PolyAI/woz_dialogue:en.
-This dataset is designed to develop dialogue 2 graph solution.
+WOZ: PolyAI/woz_dialog:en.
+This dataset is designed to develop dialog 2 graph solution.
 """
 
-_HOMEPAGE = "https://huggingface.co/datasets/DeepPavlov/d2g_real_dialogues"
+_HOMEPAGE = "https://huggingface.co/datasets/DeepPavlov/d2g_real_dialogs"
 
 # TODO: Add the licence for the dataset here if you can find it
 _LICENSE = ""
@@ -60,14 +60,14 @@ _LICENSE = ""
 
 
 def split2json(split: pd.DataFrame, domain: str) -> list[dict]:
-    """Processes pandas dataframe into JSON with dialogues in necessary format"""
+    """Processes pandas dataframe into JSON with dialogs in necessary format"""
 
     new_data = []
     session = split["session.ID"][0]
     cur = [{"text": "Hello! How can I help you?", "participant": "assistant"}]
     for idx, row in split.iterrows():
         if row["session.ID"] != session:
-            new_data.append({"domain": domain, "dialogue": cur})
+            new_data.append({"domain": domain, "dialog": cur})
             cur = [{"text": "Hello! How can I help you?", "participant": "assistant"}]
         if row["Message.From"] == "agent":
             cur.append({"text": row["Message.Text"], "participant": "assistant"})
@@ -108,7 +108,7 @@ def load_frames(path_to_file):
     data = []
     for d in [el["turns"] for el in json_data]:
         exist = {
-            "dialogue": [
+            "dialog": [
                 {"text": "Hello! How can I help you?", "participant": "assistant"}
             ]
             + [
@@ -122,7 +122,7 @@ def load_frames(path_to_file):
     return data
 
 
-class d2gRealDialogues(datasets.GeneratorBasedBuilder):
+class d2gRealDialogs(datasets.GeneratorBasedBuilder):
     """Dataset compiled to test d2g task"""
 
     VERSION = datasets.Version("0.1.0")
@@ -152,7 +152,7 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
         datasets.BuilderConfig(
             "MSR-E2E",
             version=VERSION,
-            description="This part of my dataset covers Microsoft Dialogue Challenge: Building End-to-End Task-Completion Dialogue Systems",
+            description="This part of my dataset covers Microsoft Dialog Challenge: Building End-to-End Task-Completion Dialog Systems",
         ),
         datasets.BuilderConfig(
             "Frames",
@@ -167,7 +167,7 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
         datasets.BuilderConfig(
             "WOZ",
             version=VERSION,
-            description="This part of my dataset covers WOZ dialogue state tracking dataset",
+            description="This part of my dataset covers WOZ dialog state tracking dataset",
         ),
     ]
 
@@ -179,8 +179,8 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
         features = datasets.Features(
             {
                 "domain": [datasets.Value("string")],
-                "dialogue_id": datasets.Value("string"),
-                "dialogue": [
+                "dialog_id": datasets.Value("string"),
+                "dialog": [
                     {
                         "text": datasets.Value("string"),
                         "participant": datasets.Value("string"),
@@ -283,7 +283,7 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                 valid_test_dataset["train"].to_json(my_dir.joinpath("dev.jsonl"))
                 valid_test_dataset["test"].to_json(my_dir.joinpath("test.jsonl"))
             elif self.config.name == "WOZ":
-                dataset = datasets.load_dataset("PolyAI/woz_dialogue", "en")
+                dataset = datasets.load_dataset("PolyAI/woz_dialog", "en")
                 print(dataset)
                 dataset["train"].to_json(my_dir.joinpath("train.jsonl"))
                 dataset["validation"].to_json(my_dir.joinpath("dev.jsonl"))
@@ -353,14 +353,14 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                             "text": u["data"]["utterance"],
                             "participant": "assistant",
                         }
-                        for u in data["dialogue"]
+                        for u in data["dialog"]
                     ]
                     yield (
                         key,
                         {
                             "domain": [data["scenario"]["task"]["intent"]],
-                            "dialogue_id": f"SMD--{split}--{self.COUNTER[split]}",
-                            "dialogue": exist,
+                            "dialog_id": f"SMD--{split}--{self.COUNTER[split]}",
+                            "dialog": exist,
                         },
                     )
                 elif self.config.name == "MULTIWOZ2_2":
@@ -383,8 +383,8 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                             "domain": ast.literal_eval(data["original dialog info"])[
                                 "services"
                             ],
-                            "dialogue_id": data["new dialog id"],
-                            "dialogue": log,
+                            "dialog_id": data["new dialog id"],
+                            "dialog": log,
                         },
                     )
                 elif self.config.name == "META_WOZ":
@@ -400,8 +400,8 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                         key,
                         {
                             "domain": [data["domain"]],
-                            "dialogue_id": data["id"],
-                            "dialogue": log,
+                            "dialog_id": data["id"],
+                            "dialog": log,
                         },
                     )
                 elif self.config.name == "SCHEMA":
@@ -435,8 +435,8 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                         key,
                         {
                             "domain": [data["service"]],
-                            "dialogue_id": data["gem_id"],
-                            "dialogue": log,
+                            "dialog_id": data["gem_id"],
+                            "dialog": log,
                         },
                     )
                 elif self.config.name == "TaskMaster3":
@@ -453,8 +453,8 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                         key,
                         {
                             "domain": [data["vertical"]],
-                            "dialogue_id": data["conversation_id"],
-                            "dialogue": exist,
+                            "dialog_id": data["conversation_id"],
+                            "dialog": exist,
                         },
                     )
                 elif self.config.name == "MSR-E2E":
@@ -462,8 +462,8 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                         key,
                         {
                             "domain": [data["domain"]],
-                            "dialogue_id": f"MSR-E2E--{split}--{self.COUNTER[split]}",
-                            "dialogue": data["dialogue"],
+                            "dialog_id": f"MSR-E2E--{split}--{self.COUNTER[split]}",
+                            "dialog": data["dialog"],
                         },
                     )
                 elif self.config.name == "Frames":
@@ -471,8 +471,8 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                         key,
                         {
                             "domain": ["vacation"],
-                            "dialogue_id": f"Frames--{split}--{self.COUNTER[split]}",
-                            "dialogue": data["dialogue"],
+                            "dialog_id": f"Frames--{split}--{self.COUNTER[split]}",
+                            "dialog": data["dialog"],
                         },
                     )
                 elif self.config.name == "WOZ":
@@ -491,14 +491,14 @@ class d2gRealDialogues(datasets.GeneratorBasedBuilder):
                                 "participant": "assistant",
                             },
                         ]
-                        for u, a in zip(data["dialogue"][0:-1], data["dialogue"][1:])
+                        for u, a in zip(data["dialog"][0:-1], data["dialog"][1:])
                     ]
                     log = [x for xs in exist for x in xs]
                     yield (
                         key,
                         {
                             "domain": ["restaurant"],
-                            "dialogue_id": data["dialogue_idx"],
-                            "dialogue": log,
+                            "dialog_id": data["dialog_idx"],
+                            "dialog": log,
                         },
                     )

@@ -38,13 +38,13 @@ pipeline = GraphGenerationPipeline(
 )
 
 for idx, d in enumerate(data):
-    print("Sampling dialogues...", idx)
+    print("Sampling dialogs...", idx)
     graph = Graph(d["graph"])
-    sampled_dialogues = pipeline.dialogue_sampler.invoke(graph, 15)
-    print(f"Sampled {len(sampled_dialogues)} dialogues")
-    if not all_utterances_present(graph, sampled_dialogues):
-        print("Failed to sample valid dialogues - not all utterances are present ", idx)
+    sampled_dialogs = pipeline.dialog_sampler.invoke(graph, 15)
+    print(f"Sampled {len(sampled_dialogs)} dialogs")
+    if not all_utterances_present(graph, sampled_dialogs):
+        print("Failed to sample valid dialogs - not all utterances are present ", idx)
         break
-    data[idx]["dialogues"] = [d.model_dump() for d in sampled_dialogues]
+    data[idx]["dialogs"] = [d.model_dump() for d in sampled_dialogs]
 
 save_json(data=data, filename="generated.json")

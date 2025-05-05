@@ -1,15 +1,30 @@
+import os
 import json
 import pytest
 import dotenv
-from dialogue2graph import metrics
-from dialogue2graph import Dialogue
-from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
-from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
-from dialogue2graph.pipelines.model_storage import ModelStorage
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLAlchemyMd5Cache
+from langchain_community.cache import InMemoryCache
+from sqlalchemy import create_engine
+
+from dialog2graph import Dialog
+from dialog2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
+from dialog2graph.pipelines.helpers.parse_data import PipelineRawDataType
+from dialog2graph.pipelines.model_storage import ModelStorage
+from dialog2graph.utils.logger import Logger
 
 dotenv.load_dotenv()
 if not dotenv.find_dotenv():
     pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
+
+logger = Logger(__file__)
+
+try:
+    engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+    set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
+except Exception:
+    logger.warning("SQLAlchemyMd5Cache is not available")
+    set_llm_cache(InMemoryCache())
 
 ms = ModelStorage()
 
@@ -20,7 +35,7 @@ def test_data():
     Read JSON data once per pytest session
     (scope="session") to avoid re-reading the file.
     """
-    with open("tests/test_metrics_data.json", encoding="utf-8") as f:
+    with open("tests/test_pipelines_data.json", encoding="utf-8") as f:
         data = json.load(f)
     return data
 
@@ -42,98 +57,54 @@ def graph_negative(test_data):
 
 
 @pytest.fixture
-def dialogues_positive(test_data):
+def dialogs_positive(test_data):
     """
-    Dialogues for the positive scenario (from data[0]).
+    Dialogs for the positive scenario (from data[0]).
     """
-    raw_dialogues = test_data[0]["dialogues"]
-    return [Dialogue(**dlg) for dlg in raw_dialogues]
+    raw_dialogs = test_data[0]["dialogs"]
+    return [Dialog(**dlg) for dlg in raw_dialogs]
 
 
 @pytest.fixture
-def dialogues_negative(test_data):
+def dialogs_negative(test_data):
     """
-    Dialogues for the negative scenario (from data[2]).
+    Dialogs for the negative scenario (from data[2]).
     """
-    raw_dialogues = test_data[2]["dialogues"]
-    return [Dialogue(**dlg) for dlg in raw_dialogues]
+    raw_dialogs = test_data[2]["dialogs"]
+    return [Dialog(**dlg) for dlg in raw_dialogs]
 
 
-def test_d2g_light_positive(dialogues_positive, graph_positive_1):
-    """Test that d2g_algo pipeline returns True for GT=graph_positive_1
-    and input=dialogues_positive"""
-
-    ms.add(
-        key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1},
-        model_type="llm",
-    )
-    ms.add(
-        key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0},
-        model_type="llm",
-    )
-    ms.add(
-        key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "device": "cuda:0"},
-        model_type="emb",
-    )
+def test_d2g_light_positive(dialogs_positive, graph_positive_1):
+    """Test that d2g_light pipeline returns True for GT=graph_positive_1
+    and input=dialogs_positive"""
 
     pipeline = D2GLightPipeline(
-        name="d2g_light",
+        name="three_stages_light",
         model_storage=ms,
-        filling_llm="filling_llm",
-        formatting_llm="formatting_llm",
-        sim_model="sim_model",
-        step2_evals=metrics.DGEvalBase,
-        end_evals=metrics.DGEvalBase,
     )
 
     raw_data = PipelineRawDataType(
-        dialogs=dialogues_positive, true_graph=graph_positive_1
+        dialogs=dialogs_positive, true_graph=graph_positive_1
     )
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert report.properties["complex_graph_comparison"]["value"] is True, (
-        f"Expected value=True, but got: {report.properties['complex_graph_comparison']['description']}"
+    assert report.properties["complex_graph_comparison"]["similarity_avg"] > 0.99, (
+        f"Expected similarity_avg > 0.99, but got: {report.properties['complex_graph_comparison']['similarity_avg']}"
     )
 
 
-def test_d2g_light_negative(dialogues_negative, graph_negative):
-    """Test that d2g_algo pipeline returns False for GT=graph_negative
-    and input=dialogues_negative"""
-
-    ms.add(
-        key="filling_llm",
-        config={"name": "o3-mini", "temperature": 1},
-        model_type="llm",
-    )
-    ms.add(
-        key="formatting_llm",
-        config={"name": "gpt-4o-mini", "temperature": 0},
-        model_type="llm",
-    )
-    ms.add(
-        key="sim_model",
-        config={"model_name": "BAAI/bge-m3", "device": "cpu"},
-        model_type="emb",
-    )
+def test_d2g_light_negative(dialogs_negative, graph_negative):
+    """Test that d2g_light pipeline returns False for GT=graph_negative
+    and input=dialogs_negative"""
 
     pipeline = D2GLightPipeline(
-        name="d2g_light",
+        name="three_stages_light",
         model_storage=ms,
-        filling_llm="filling_llm",
-        formatting_llm="formatting_llm",
-        sim_model="sim_model",
-        step2_evals=metrics.DGEvalBase,
-        end_evals=metrics.DGEvalBase,
     )
 
-    raw_data = PipelineRawDataType(
-        dialogs=dialogues_negative, true_graph=graph_negative
-    )
+    raw_data = PipelineRawDataType(dialogs=dialogs_negative, true_graph=graph_negative)
     _, report = pipeline.invoke(raw_data, enable_evals=True)
 
-    assert report.properties["complex_graph_comparison"]["value"] is False, (
-        "Expected value=False in the negative scenario."
+    assert report.properties["complex_graph_comparison"]["similarity_avg"] <= 0.99, (
+        "Expected similarity_avg <= 0.99 in the negative scenario."
     )
