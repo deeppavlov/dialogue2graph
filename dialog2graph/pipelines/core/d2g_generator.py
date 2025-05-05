@@ -1,5 +1,4 @@
-""" Dialog2Graph base generator to reuse evaluate method in different algorithms
-"""
+"""Dialog2Graph base generator to reuse evaluate method in different algorithms"""
 
 from pydantic import Field
 

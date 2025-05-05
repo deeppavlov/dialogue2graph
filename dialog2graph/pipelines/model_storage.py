@@ -1,6 +1,7 @@
-""" ModelStorage module for managing and storing models.
-    This module provides classes and functions for managing and storing models, including loading configurations.    
+"""ModelStorage module for managing and storing models.
+This module provides classes and functions for managing and storing models, including loading configurations.
 """
+
 import yaml
 import re
 import dotenv
@@ -29,6 +30,7 @@ class GetModelInstance:
         instantiate(class_name):
             Instantiates a model based on the provided class name and configuration.
     """
+
     config: dict
 
     def __init__(self, config: dict):
@@ -40,7 +42,7 @@ class GetModelInstance:
         """
         self.config = config
 
-    def instantiate(self, class_name) -> BaseChatModel|HuggingFaceEmbeddings:
+    def instantiate(self, class_name) -> BaseChatModel | HuggingFaceEmbeddings:
         """
         Instantiates a model based on the provided class name and configuration.
 
@@ -184,10 +186,8 @@ class ModelStorage(BaseModel):
             if "name" in config:
                 raise KeyError(
                     f"Instead of 'name' parameter for model {key} of type {model_type} please use 'model_name'"
-                )                
-            if not all(
-                p in model_type.model_fields.keys() for p in config
-            ):
+                )
+            if not all(p in model_type.model_fields.keys() for p in config):
                 raise KeyError(
                     f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
                 )

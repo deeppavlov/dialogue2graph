@@ -188,7 +188,10 @@ class LLMGraphExtender(DGBaseGenerator):
             dialogs_text += f"\nDialog_{idx}: {dial}"
 
         prompt = PromptTemplate.from_template(
-            extending_prompt_part_1 + "{graph}. " + extending_prompt_part_2 + dialogs_text
+            extending_prompt_part_1
+            + "{graph}. "
+            + extending_prompt_part_2
+            + dialogs_text
         )
 
         fixed_output_parser = OutputFixingParser.from_llm(

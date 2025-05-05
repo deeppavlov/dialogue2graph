@@ -1,5 +1,5 @@
-""" Module to generate graphs using the d2g_light pipeline from CLI.
-"""
+"""Module to generate graphs using the d2g_light pipeline from CLI."""
+
 import os
 import json
 from pathlib import Path
@@ -36,8 +36,6 @@ def generate_light(
     graph_path: str,
     report_path: str,
 ):
-
-
     """
     Generates a graph from dialog data using the d2g_light pipeline and saves the results.
 

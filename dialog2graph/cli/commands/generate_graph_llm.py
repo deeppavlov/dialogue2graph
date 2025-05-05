@@ -1,5 +1,5 @@
-""" Module for generating graphs using the D2GLLMPipeline from CLI.
-"""
+"""Module for generating graphs using the D2GLLMPipeline from CLI."""
+
 import os
 import json
 from pathlib import Path
@@ -35,7 +35,6 @@ def generate_llm(
     graph_path: str,
     report_path: str,
 ):
-
     """
     Generates a graph from dialog data using the d2g_llm pipeline and saves the results.
 

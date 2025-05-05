@@ -5,7 +5,6 @@ Generation
 The module provides graph generator capable of creating complex validated graphs.
 """
 
-import os
 from enum import Enum
 from typing import Optional, Dict, Any, Union
 from datetime import datetime
@@ -179,10 +178,9 @@ class GenerationPipeline(BaseModel):
         max_fix_attempts: int = 2,
         seed: Optional[int] = None,
     ):
-        
         """
         Initialize the GenerationPipeline with the given parameters.
-        
+
         Parameters:
         model_storage (ModelStorage): Storage for models to use in the pipeline.
         generation_llm (str): Name of the model to use for graph generation.
@@ -261,7 +259,6 @@ class GenerationPipeline(BaseModel):
         except Exception as e:
             logger.error(f"❌ Validation error: {str(e)}")
             raise
-
 
     def check_and_fix_transitions(
         self, graph: BaseGraph, max_attempts: int = 3
@@ -610,22 +607,22 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         # TODO: add docs
         """
         Generates a dialog graph for a given topic using the configured pipeline.
-    
+
         This method utilizes the pipeline to generate a dialog graph based on the
         specified topic. It logs the process and handles potential errors during
         generation. The method returns a list containing dictionaries with details
         of successfully generated graphs.
-    
+
         Args:
             topic (str): The topic for which the dialog graph is to be generated.
             seed (int, optional): A seed value to ensure reproducibility of the graph
                 generation process. Defaults to 42.
-    
+
         Returns:
             list[dict]: A list of dictionaries containing the graph, metadata, topic,
             and dialogs for successfully generated graphs.
         """
-    
+
         logger.info(f"\n{'=' * 50}")
         logger.info("Generating graph for topic: %s", topic)
         logger.info(f"{'=' * 50}")

@@ -1,5 +1,5 @@
-""" Logger class
-"""
+"""Logger class"""
+
 import logging
 
 
