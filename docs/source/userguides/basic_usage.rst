@@ -43,8 +43,8 @@ Or you can visualise the graph in a more schematic way to see its general struct
     graph_title = "Schematic graph view"
     graph.visualise_short(graph_title)
 
-Create dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create RecursiveDialogueSampler
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 :py:class:`~dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler` is a class that helps to sample dialogs from existing dialog graphs. 
 It uses recursion to get all possible dialogs from the graph.
