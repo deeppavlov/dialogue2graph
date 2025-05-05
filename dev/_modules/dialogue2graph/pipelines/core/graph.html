@@ -397,6 +397,7 @@
 <span class="sd">The module contains base class for graphs.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Any</span>
@@ -405,7 +406,27 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.utils.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Metadata">
+<a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.Metadata">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Metadata</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Metadata class for storing additional information related to a graph.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">            &quot;generator_name&quot;: name of the graph generator used to create the graph.</span>
+<span class="sd">            &quot;models_config&quot;: configuration parameters for the models used in the graph generation process.</span>
+<span class="sd">            &quot;schema_version&quot;: version of the schema used to represent the graph.</span>
+<span class="sd">            &quot;timestamp&quot;: timestamp indicating when the metadata was created.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">generator_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">models_config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">schema_version</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;v1&quot;</span>
+    <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="BaseGraph">
@@ -423,6 +444,9 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">graph_dict</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">metadata</span><span class="p">:</span> <span class="n">Metadata</span> <span class="o">=</span> <span class="n">Metadata</span><span class="p">(</span>
+        <span class="n">generator_name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">models_config</span><span class="o">=</span><span class="p">{},</span> <span class="n">schema_version</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">timestamp</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+    <span class="p">)</span>
     <span class="n">graph</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">node_mapping</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -435,107 +459,107 @@
 <div class="viewcode-block" id="BaseGraph.load_graph">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.load_graph">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.visualise">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.visualise">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">visualise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.find_nodes_by_utterance">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.find_nodes_by_utterance">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_nodes_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_nodes_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.find_edges_by_utterance">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.find_edges_by_utterance">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_edges_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_edges_by_utterance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.get_nodes_by_id">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_nodes_by_id">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.match_edges_nodes">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.match_edges_nodes">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">match_edges_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">match_edges_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.check_edges">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.check_edges">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">check_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.remove_duplicated_edges">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.remove_duplicated_edges">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.remove_duplicated_nodes">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.remove_duplicated_nodes">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">remove_duplicated_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.find_paths">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.find_paths">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">find_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">find_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.get_all_paths">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_all_paths">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_all_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.get_edges_by_source">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_edges_by_source">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.get_edges_by_target">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_edges_by_target">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_edges_by_target</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.get_nodes_by_source">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_nodes_by_source">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_nodes_by_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.get_list_from_nodes">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_list_from_nodes">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseGraph.get_list_from_graph">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.BaseGraph.get_list_from_graph">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_list_from_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -553,14 +577,16 @@
 <span class="sd">        Inherits all attributes from BaseGraph.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">graph_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="n">Metadata</span> <span class="o">=</span> <span class="n">Metadata</span><span class="p">(),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span>
+    <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Graph instance.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            graph_dict (dict): Dictionary containing the graph structure.</span>
 <span class="sd">            **kwargs: Additional keyword arguments passed to parent class.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">graph_dict</span><span class="o">=</span><span class="n">graph_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">graph_dict</span><span class="o">=</span><span class="n">graph_dict</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">graph_dict</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">load_graph</span><span class="p">()</span>
 
@@ -847,7 +873,7 @@
             <span class="o">+</span> <span class="n">new_edges</span><span class="p">,</span>
             <span class="s2">&quot;nodes&quot;</span><span class="p">:</span> <span class="n">graph</span><span class="p">[</span><span class="s2">&quot;nodes&quot;</span><span class="p">],</span>
         <span class="p">}</span>
-        <span class="k">return</span> <span class="n">Graph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">Graph</span><span class="p">(</span><span class="n">graph_dict</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">graph_dict</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Graph.remove_duplicated_nodes">

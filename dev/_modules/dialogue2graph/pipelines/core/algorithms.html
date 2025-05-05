@@ -418,14 +418,16 @@
 <div class="viewcode-block" id="BaseAlgorithm.invoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.BaseAlgorithm.invoke">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="BaseAlgorithm.ainvoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.BaseAlgorithm.ainvoke">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
@@ -434,7 +436,7 @@
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">report_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="s2">&quot;dataframe&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;dict&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">DataFrame</span><span class="p">]:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -462,7 +464,7 @@
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.DialogueGenerator.invoke">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span> <span class="n">start_node</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end_node</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dialogue</span><span class="p">]:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dialogue</span><span class="p">]:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -484,13 +486,17 @@
 
 <div class="viewcode-block" id="DialogAugmentation.invoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.DialogAugmentation.invoke">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dialogue</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dialogue</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="DialogAugmentation.ainvoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.DialogAugmentation.ainvoke">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dialogue</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dialogue</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -507,13 +513,15 @@
 
 <div class="viewcode-block" id="GraphAugmentation.invoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.GraphAugmentation.invoke">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="GraphAugmentation.ainvoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.GraphAugmentation.ainvoke">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -526,13 +534,13 @@
 
 <div class="viewcode-block" id="TopicGraphGenerator.invoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.TopicGraphGenerator.invoke">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="TopicGraphGenerator.ainvoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.TopicGraphGenerator.ainvoke">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">topic</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -545,13 +553,13 @@
 
 <div class="viewcode-block" id="GraphGenerator.invoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.GraphGenerator.invoke">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="GraphGenerator.ainvoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.GraphGenerator.ainvoke">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -564,13 +572,17 @@
 
 <div class="viewcode-block" id="GraphExtender.invoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.GraphExtender.invoke">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="GraphExtender.ainvoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.GraphExtender.ainvoke">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">dialogue</span><span class="p">:</span> <span class="n">Dialogue</span><span class="p">,</span> <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseGraph</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 
@@ -583,13 +595,13 @@
 
 <div class="viewcode-block" id="RawDataParser.invoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.RawDataParser.invoke">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">invoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 
 
 <div class="viewcode-block" id="RawDataParser.ainvoke">
 <a class="viewcode-back" href="../../../../autoapi/dialogue2graph/pipelines/core/algorithms/index.html#dialogue2graph.pipelines.core.algorithms.RawDataParser.ainvoke">[docs]</a>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">ainvoke</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>  <span class="c1"># pragma: no cover</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
 </div>
 

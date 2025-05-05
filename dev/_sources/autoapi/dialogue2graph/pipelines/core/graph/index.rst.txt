@@ -25,6 +25,7 @@ Classes
 
 .. autoapisummary::
 
+   dialogue2graph.pipelines.core.graph.Metadata
    dialogue2graph.pipelines.core.graph.BaseGraph
    dialogue2graph.pipelines.core.graph.Graph
 
@@ -33,6 +34,50 @@ Module Contents
 ---------------
 
 .. py:data:: logger
+
+.. py:class:: Metadata(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Metadata class for storing additional information related to a graph.
+
+   .. attribute:: "generator_name"
+
+      name of the graph generator used to create the graph.
+
+   .. attribute:: "models_config"
+
+      configuration parameters for the models used in the graph generation process.
+
+   .. attribute:: "schema_version"
+
+      version of the schema used to represent the graph.
+
+   .. attribute:: "timestamp"
+
+      timestamp indicating when the metadata was created.
+
+
+   .. py:attribute:: generator_name
+      :type:  str
+      :value: ''
+
+
+
+   .. py:attribute:: models_config
+      :type:  dict
+
+
+   .. py:attribute:: schema_version
+      :type:  str
+      :value: 'v1'
+
+
+
+   .. py:attribute:: timestamp
+      :type:  str
+
 
 .. py:class:: BaseGraph(/, **data: Any)
 
@@ -65,6 +110,10 @@ Module Contents
 
    .. py:attribute:: graph_dict
       :type:  dict
+
+
+   .. py:attribute:: metadata
+      :type:  Metadata
 
 
    .. py:attribute:: graph
@@ -167,7 +216,7 @@ Module Contents
 
 
 
-.. py:class:: Graph(graph_dict: dict, **kwargs: Any)
+.. py:class:: Graph(graph_dict: dict, metadata: Metadata = Metadata(), **kwargs: Any)
 
    Bases: :py:obj:`BaseGraph`
 

@@ -27,7 +27,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: D2GLLMPipeline(name: str, model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, grouping_llm: str = 'three_stages_grouping_llm:v1', filling_llm: str = 'three_stages_filling_llm:v1', formatting_llm: str = 'three_stages_formatting_llm:v1', sim_model: str = 'three_stages_sim_model:v1', step2_evals: list[Callable] = None, end_evals: list[Callable] = None)
+.. py:class:: D2GLLMPipeline(name: str, model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, grouping_llm: str = 'three_stages_llm_grouping_llm:v1', filling_llm: str = 'three_stages_llm_filling_llm:v1', formatting_llm: str = 'three_stages_llm_formatting_llm:v1', sim_model: str = 'three_stages_llm_sim_model:v1', step2_evals: list[Callable] = metrics.DGEvalBase, end_evals: list[Callable] = metrics.DGEvalBase)
 
    Bases: :py:obj:`dialogue2graph.pipelines.core.pipeline.BasePipeline`
 
@@ -83,9 +83,9 @@ Package Contents
       :type: list[Callable], optional
 
 
-.. py:class:: LLMGraphGenerator(model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, grouping_llm: str = 'three_stages_grouping_llm:v1', filling_llm: str = 'three_stages_filling_llm:v1', formatting_llm: str = 'three_stages_formatting_llm:v1', sim_model: str = 'three_stages_sim_model:v1', step2_evals: list[Callable] | None = None, end_evals: list[Callable] | None = None)
+.. py:class:: LLMGraphGenerator(model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, grouping_llm: str = 'three_stages_llm_grouping_llm:v1', filling_llm: str = 'three_stages_llm_filling_llm:v1', formatting_llm: str = 'three_stages_llm_formatting_llm:v1', sim_model: str = 'three_stages_llm_sim_model:v1', step2_evals: list[Callable] | None = None, end_evals: list[Callable] | None = None)
 
-   Bases: :py:obj:`dialogue2graph.pipelines.core.algorithms.GraphGenerator`
+   Bases: :py:obj:`dialogue2graph.pipelines.core.d2g_generator.DGBaseGenerator`
 
 
    Graph generator from list of dialogues. Based on LLM.
@@ -196,8 +196,5 @@ Package Contents
    .. py:method:: ainvoke(*args, **kwargs)
       :async:
 
-
-
-   .. py:method:: evaluate(graph, gt_graph, eval_stage: str) -> dialogue2graph.metrics.DGReportType
 
 

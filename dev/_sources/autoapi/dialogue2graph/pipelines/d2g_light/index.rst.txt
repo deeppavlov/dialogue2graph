@@ -27,7 +27,7 @@ Classes
 Package Contents
 ----------------
 
-.. py:class:: D2GLightPipeline(name: str, model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, filling_llm: str = 'three_stages_light_filling_llm:v1', formatting_llm: str = 'three_stages_light_formatting_llm:v1', sim_model: str = 'three_stages_light_sim_model:v1', step2_evals: list[Callable] = None, end_evals: list[Callable] = None)
+.. py:class:: D2GLightPipeline(name: str, model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, filling_llm: str = 'three_stages_light_filling_llm:v1', formatting_llm: str = 'three_stages_light_formatting_llm:v1', sim_model: str = 'three_stages_light_sim_model:v1', step2_evals: list[Callable] = metrics.DGEvalBase, end_evals: list[Callable] = metrics.DGEvalBase)
 
    Bases: :py:obj:`dialogue2graph.pipelines.core.pipeline.BasePipeline`
 
@@ -37,7 +37,7 @@ Package Contents
 
 .. py:class:: LightGraphGenerator(model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, filling_llm: str = 'three_stages_light_filling_llm:v1', formatting_llm: str = 'three_stages_light_formatting_llm:v1', sim_model: str = 'three_stages_light_sim_model:v1', step2_evals: list[Callable] | None = [], end_evals: list[Callable] | None = [])
 
-   Bases: :py:obj:`dialogue2graph.pipelines.core.algorithms.GraphGenerator`
+   Bases: :py:obj:`dialogue2graph.pipelines.core.d2g_generator.DGBaseGenerator`
 
 
    Graph generator from list of dialogues. Based on algorithm with embedding similarity usage.
@@ -120,19 +120,6 @@ Package Contents
 
    .. py:method:: ainvoke(*args, **kwargs)
       :async:
-
-
-
-   .. py:method:: evaluate(graph, true_graph, eval_stage: str) -> dialogue2graph.metrics.DGReportType
-
-      Call metrics and return report
-
-      :param graph: generated graph
-      :param true_graph: expected graph
-      :param eval_stage: string defining eval stage, like step2 or end
-
-      :returns: result}
-      :rtype: dictionary with report like {"metric_name"
 
 
 

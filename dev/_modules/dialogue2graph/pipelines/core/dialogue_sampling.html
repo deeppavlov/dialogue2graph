@@ -412,7 +412,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.utils.logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
 
-<span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">_DialogPathsCounter</span><span class="p">:</span>
@@ -431,7 +431,7 @@
         <span class="n">graph</span><span class="p">:</span> <span class="n">BaseGraph</span><span class="p">,</span>
         <span class="n">cycle_ends_model</span><span class="p">:</span> <span class="n">BaseChatModel</span><span class="p">,</span>
         <span class="n">upper_limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-        <span class="n">sampling_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">,</span>
+        <span class="n">sampling_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000000</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Dialogue</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Extract all the dialogues from the graph</span>
 
@@ -458,14 +458,25 @@
         <span class="k">while</span> <span class="n">repeats</span> <span class="o">&lt;=</span> <span class="n">upper_limit</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">dialogues</span> <span class="o">=</span> <span class="n">get_dialogues</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">repeats</span><span class="p">,</span> <span class="n">finish_nodes</span><span class="p">,</span> <span class="n">sampling_max</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Error occurred in get_dialogues: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
                 <span class="n">dialogues</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">if</span> <span class="n">dialogues</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">match_dg_triplets</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">dialogues</span><span class="p">)[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
+                <span class="n">match_result</span> <span class="o">=</span> <span class="n">match_dg_triplets</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">dialogues</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">match_result</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]:</span>
                     <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">match_result</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;absent_triplets&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">}</span>
             <span class="n">repeats</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">repeats</span> <span class="o">&gt;</span> <span class="n">upper_limit</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not all utterances present&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Not all utterances present in dialogs after </span><span class="si">%d</span><span class="s2"> repeats, </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                <span class="o">%</span> <span class="p">(</span>
+                    <span class="n">repeats</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                    <span class="n">match_result</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">],</span>
+                    <span class="n">match_result</span><span class="p">[</span><span class="s2">&quot;absent_triplets&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">dialogues</span></div>
 
 
@@ -573,8 +584,8 @@
         <span class="n">path_counter</span><span class="o">.</span><span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">path_counter</span><span class="o">.</span><span class="n">counter</span> <span class="o">==</span> <span class="n">sampling_max</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Sampling Max exceeded&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">path_counter</span><span class="o">.</span><span class="n">counter</span> <span class="o">%</span> <span class="mi">10000000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Number of found combinations: &quot;</span><span class="p">,</span> <span class="n">path_counter</span><span class="o">.</span><span class="n">counter</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">path_counter</span><span class="o">.</span><span class="n">counter</span> <span class="o">%</span> <span class="mi">1000000</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Number of found combinations: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">path_counter</span><span class="o">.</span><span class="n">counter</span><span class="p">)</span>
     <span class="n">dialogues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">visited_messages</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dialogues</span></div>
 

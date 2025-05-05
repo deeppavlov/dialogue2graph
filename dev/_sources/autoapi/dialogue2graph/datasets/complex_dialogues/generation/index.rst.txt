@@ -51,8 +51,8 @@ Module Contents
 
 
 
-   .. py:attribute:: TOO_MANY_CYCLES
-      :value: 'too_many_cycles'
+   .. py:attribute:: TOO_FEW_CYCLES
+      :value: 'too_few_cycles'
 
 
 
@@ -103,6 +103,12 @@ Module Contents
 
 
 
+   .. py:attribute:: model_storage
+      :type:  dialogue2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
    .. py:class:: Config
 
       .. py:attribute:: arbitrary_types_allowed
@@ -116,7 +122,7 @@ Module Contents
 
 
 
-   .. py:method:: invoke(model: langchain_core.language_models.chat_models.BaseChatModel, prompt: langchain.prompts.PromptTemplate, seed=None, **kwargs) -> dialogue2graph.pipelines.core.graph.BaseGraph
+   .. py:method:: invoke(generation_llm: str, prompt: langchain.prompts.PromptTemplate, seed=None, **kwargs) -> dialogue2graph.pipelines.core.graph.BaseGraph
 
       Generate a cyclic dialogue graph based on the topic input.
 
@@ -133,7 +139,7 @@ Module Contents
    .. py:method:: evaluate(*args, report_type='dict', **kwargs)
 
 
-.. py:class:: GenerationPipeline(generation_model: langchain_core.language_models.chat_models.BaseChatModel, theme_validation_model: langchain_core.language_models.chat_models.BaseChatModel, validation_model: langchain_core.language_models.chat_models.BaseChatModel, cycle_ends_model: langchain_core.language_models.chat_models.BaseChatModel, generation_prompt: Optional[langchain.prompts.PromptTemplate], repair_prompt: Optional[langchain.prompts.PromptTemplate], min_cycles: int = 2, max_fix_attempts: int = 2, seed: Optional[int] = None)
+.. py:class:: GenerationPipeline(model_storage: dialogue2graph.pipelines.model_storage.ModelStorage, generation_llm: str, validation_llm: str, cycle_ends_llm: str, theme_validation_llm: str, generation_prompt: Optional[langchain.prompts.PromptTemplate], repair_prompt: Optional[langchain.prompts.PromptTemplate], min_cycles: int = 2, max_fix_attempts: int = 2, seed: Optional[int] = None)
 
    Bases: :py:obj:`pydantic.BaseModel`
 
@@ -147,20 +153,24 @@ Module Contents
 
 
 
-   .. py:attribute:: generation_model
-      :type:  langchain_core.language_models.chat_models.BaseChatModel
+   .. py:attribute:: model_storage
+      :type:  dialogue2graph.pipelines.model_storage.ModelStorage
 
 
-   .. py:attribute:: theme_validation_model
-      :type:  langchain_core.language_models.chat_models.BaseChatModel
+   .. py:attribute:: generation_llm
+      :type:  str
 
 
-   .. py:attribute:: validation_model
-      :type:  langchain_core.language_models.chat_models.BaseChatModel
+   .. py:attribute:: validation_llm
+      :type:  str
 
 
-   .. py:attribute:: cycle_ends_model
-      :type:  langchain_core.language_models.chat_models.BaseChatModel
+   .. py:attribute:: cycle_ends_llm
+      :type:  str
+
+
+   .. py:attribute:: theme_validation_llm
+      :type:  str
 
 
    .. py:attribute:: graph_generator

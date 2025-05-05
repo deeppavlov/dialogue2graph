@@ -1,0 +1,48 @@
+dialogue2graph.metrics.no_llm_metrics.keys2graph.model_interactions
+===================================================================
+
+.. py:module:: dialogue2graph.metrics.no_llm_metrics.keys2graph.model_interactions
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.no_llm_metrics.keys2graph.model_interactions.generate_annotation
+   dialogue2graph.metrics.no_llm_metrics.keys2graph.model_interactions.fix_json_with_gpt35
+   dialogue2graph.metrics.no_llm_metrics.keys2graph.model_interactions.regenerate_annotation
+   dialogue2graph.metrics.no_llm_metrics.keys2graph.model_interactions.build_dynamic_graph_prompt
+   dialogue2graph.metrics.no_llm_metrics.keys2graph.model_interactions.generate_dialog_graph_by_keys
+
+
+Module Contents
+---------------
+
+.. py:function:: generate_annotation(dialog_graph: Dict[str, Any], prompt_instructions: str, model_name: str, temperature: float, supports_user_role: bool = True) -> str
+
+   Generates annotation JSON from a dialogue graph by calling LLM.
+   Uses environment for API key/base unless explicitly set.
+
+
+.. py:function:: fix_json_with_gpt35(broken_json: str, model_name: str = 'gpt-3.5-turbo', temperature: float = 0.0) -> str
+
+   Fix broken JSON using GPT-3.5 with a specialized prompt.
+
+
+.. py:function:: regenerate_annotation(dialog_graph: Dict[str, Any], prompt_instructions: str, model_name: str, temperature: float, api_key: str = '', base_url: str = '', supports_user_role: bool = True) -> str
+
+   Attempt to regenerate a brand new annotation if repeated fixes fail.
+
+
+.. py:function:: build_dynamic_graph_prompt(keys_dict: Dict[str, Any]) -> str
+
+   Формирует динамический промпт для генерации диалогового графа
+   на основе только тех ключей, которые переданы в keys_dict.
+
+
+.. py:function:: generate_dialog_graph_by_keys(keys_dict: Dict[str, Any], model_name: str, temperature: float, api_key: str = '', base_url: str = '') -> str
+
+   Generate a new dialogue graph from a dict of keys using LLM.
+
+

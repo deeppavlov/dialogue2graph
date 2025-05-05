@@ -466,10 +466,13 @@
 <h2>Classes<a class="headerlink" href="#classes" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.graph.BaseGraph" title="dialogue2graph.pipelines.core.graph.BaseGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseGraph</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.graph.Metadata" title="dialogue2graph.pipelines.core.graph.Metadata"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Metadata</span></code></a></p></td>
+<td><p>Metadata class for storing additional information related to a graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.graph.BaseGraph" title="dialogue2graph.pipelines.core.graph.BaseGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseGraph</span></code></a></p></td>
 <td><p>Base abstract class for graph representations of dialogues.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.graph.Graph" title="dialogue2graph.pipelines.core.graph.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#dialogue2graph.pipelines.core.graph.Graph" title="dialogue2graph.pipelines.core.graph.Graph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Graph</span></code></a></p></td>
 <td><p>Implementation of BaseGraph for dialogue graph operations.</p></td>
 </tr>
 </tbody>
@@ -482,6 +485,62 @@
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.logger">
 <span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.core.graph.</span></span><span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.logger" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.Metadata">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.core.graph.</span></span><span class="sig-name descname"><span class="pre">Metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**data:</span> <span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/dialogue2graph/pipelines/core/graph.html#Metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.Metadata" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-obj docutils literal notranslate"><span class="pre">pydantic.BaseModel</span></code></p>
+<p>Metadata class for storing additional information related to a graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>Any</em>)</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&quot;generator_name&quot;</span></span></dt>
+<dd><p>name of the graph generator used to create the graph.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&quot;models_config&quot;</span></span></dt>
+<dd><p>configuration parameters for the models used in the graph generation process.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&quot;schema_version&quot;</span></span></dt>
+<dd><p>version of the schema used to represent the graph.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">&quot;timestamp&quot;</span></span></dt>
+<dd><p>timestamp indicating when the metadata was created.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.Metadata.generator_name">
+<span class="sig-name descname"><span class="pre">generator_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.Metadata.generator_name" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.Metadata.models_config">
+<span class="sig-name descname"><span class="pre">models_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.Metadata.models_config" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.Metadata.schema_version">
+<span class="sig-name descname"><span class="pre">schema_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'v1'</span></em><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.Metadata.schema_version" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.Metadata.timestamp">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.Metadata.timestamp" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.BaseGraph">
@@ -531,6 +590,11 @@ It inherits from both BaseModel for data validation and ABC for abstract methods
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id0">
 <span class="sig-name descname"><span class="pre">graph_dict</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.BaseGraph.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#dialogue2graph.pipelines.core.graph.Metadata" title="dialogue2graph.pipelines.core.graph.Metadata"><span class="pre">Metadata</span></a></em><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.BaseGraph.metadata" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -637,7 +701,7 @@ It inherits from both BaseModel for data validation and ABC for abstract methods
 
 <dl class="py class">
 <dt class="sig sig-object py" id="dialogue2graph.pipelines.core.graph.Graph">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.core.graph.</span></span><span class="sig-name descname"><span class="pre">Graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/dialogue2graph/pipelines/core/graph.html#Graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.Graph" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dialogue2graph.pipelines.core.graph.</span></span><span class="sig-name descname"><span class="pre">Graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">graph_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#dialogue2graph.pipelines.core.graph.Metadata" title="dialogue2graph.pipelines.core.graph.Metadata"><span class="pre">Metadata</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Metadata()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../../../_modules/dialogue2graph/pipelines/core/graph.html#Graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#dialogue2graph.pipelines.core.graph.Graph" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#dialogue2graph.pipelines.core.graph.BaseGraph" title="dialogue2graph.pipelines.core.graph.BaseGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseGraph</span></code></a></p>
 <p>Implementation of BaseGraph for dialogue graph operations.</p>
 <p>This class provides concrete implementations for graph operations including
@@ -646,6 +710,7 @@ loading, visualization, path finding, and graph manipulation methods.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>graph_dict</strong> (<em>dict</em>)</p></li>
+<li><p><strong>metadata</strong> (<a class="reference internal" href="#dialogue2graph.pipelines.core.graph.Metadata" title="dialogue2graph.pipelines.core.graph.Metadata"><em>Metadata</em></a>)</p></li>
 <li><p><strong>kwargs</strong> (<em>Any</em>)</p></li>
 </ul>
 </dd>
@@ -982,11 +1047,19 @@ Uses pygraphviz layout if available, falls back to kamada_kawai_layout.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#classes">Classes</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module Contents</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.logger"><code class="docutils literal notranslate"><span class="pre">logger</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.Metadata"><code class="docutils literal notranslate"><span class="pre">Metadata</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.Metadata.generator_name"><code class="docutils literal notranslate"><span class="pre">Metadata.generator_name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.Metadata.models_config"><code class="docutils literal notranslate"><span class="pre">Metadata.models_config</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.Metadata.schema_version"><code class="docutils literal notranslate"><span class="pre">Metadata.schema_version</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.Metadata.timestamp"><code class="docutils literal notranslate"><span class="pre">Metadata.timestamp</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.BaseGraph"><code class="docutils literal notranslate"><span class="pre">BaseGraph</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.BaseGraph.graph_dict"><code class="docutils literal notranslate"><span class="pre">BaseGraph.graph_dict</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.BaseGraph.graph"><code class="docutils literal notranslate"><span class="pre">BaseGraph.graph</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.BaseGraph.node_mapping"><code class="docutils literal notranslate"><span class="pre">BaseGraph.node_mapping</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">BaseGraph.graph_dict</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.BaseGraph.metadata"><code class="docutils literal notranslate"><span class="pre">BaseGraph.metadata</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">BaseGraph.graph</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">BaseGraph.node_mapping</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#dialogue2graph.pipelines.core.graph.BaseGraph.Config"><code class="docutils literal notranslate"><span class="pre">BaseGraph.Config</span></code></a><ul class="nav section-nav flex-column">

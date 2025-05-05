@@ -49,7 +49,7 @@ Functions
 Package Contents
 ----------------
 
-.. py:class:: Graph(graph_dict: dict, **kwargs: Any)
+.. py:class:: Graph(graph_dict: dict, metadata: Metadata = Metadata(), **kwargs: Any)
 
    Bases: :py:obj:`BaseGraph`
 
@@ -365,5 +365,32 @@ Package Contents
 
 .. py:function:: compare_graphs_light(graph: dialogue2graph.pipelines.core.graph.Graph, data: dialogue2graph.pipelines.helpers.parse_data.PipelineDataType) -> bool
 
-.. py:function:: compare_graphs_full(graph: dialogue2graph.pipelines.core.graph.Graph, data: dialogue2graph.pipelines.helpers.parse_data.PipelineDataType) -> dialogue2graph.pipelines.core.schemas.CompareResponse
+   Compares a generated Graph with the true Graph using two metrics:
+
+   1. `match_dg_triplets`: checks if the generated graph matches the triplets from the dialogs.
+   2. `is_same_structure`: checks if the generated graph has the same structure as the true graph.
+
+   :param graph: The generated graph to compare with the true graph.
+   :type graph: Graph
+   :param data: Contains the true graph and the dialogs.
+   :type data: PipelineDataType
+
+   :returns: True if both metrics return True, False otherwise.
+   :rtype: bool
+
+
+.. py:function:: compare_graphs_full(model: langchain_community.embeddings.HuggingFaceInferenceAPIEmbeddings | langchain_huggingface.HuggingFaceEmbeddings, graph: dialogue2graph.pipelines.core.graph.Graph, data: dialogue2graph.pipelines.helpers.parse_data.PipelineDataType) -> dialogue2graph.pipelines.core.schemas.CompareResponse
+
+   Compares a generated Graph with the true Graph using the triplet comparison metric.
+
+   :param model: The model to use for computing the embeddings.
+   :type model: HuggingFaceEmbeddings
+   :param graph: The generated graph to compare with the true graph.
+   :type graph: Graph
+   :param data: Contains the true graph and the dialogs.
+   :type data: PipelineDataType
+
+   :returns: A dictionary with a "value" key that is True if the graphs match, and a "description" key with a description of the comparison result.
+   :rtype: CompareResponse
+
 

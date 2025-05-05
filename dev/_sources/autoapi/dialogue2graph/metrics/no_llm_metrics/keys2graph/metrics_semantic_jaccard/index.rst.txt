@@ -1,0 +1,43 @@
+dialogue2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic_jaccard
+=========================================================================
+
+.. py:module:: dialogue2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic_jaccard
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialogue2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic_jaccard.evaluate_graph_lists
+
+
+Module Contents
+---------------
+
+.. py:function:: evaluate_graph_lists(original_graphs: List[Dict[str, Any]], generated_graphs: List[Dict[str, Any]], output_path: str, model_name: str = 'o1-mini') -> Tuple[List[Dict[str, Any]], float, float]
+
+   Сравнивает пары графов (original_graphs[i], generated_graphs[i]) по Semantic-Jaccard метрике,
+   но не через эмбеддинги, а через большую языковую модель (LLM).
+
+   Модель получает пару графов, внутри промпта ей даётся задание сопоставить ноды
+   и рёбра по смыслу. На выходе модель должна вернуть JSON с полями:
+     {
+       "matched_nodes": [
+         [node1_id, node2_id],
+         ...
+       ],
+       "matched_edges": [
+         [src1, tgt1, src2, tgt2],
+         ...
+       ]
+     }
+
+   По этим сопоставлениям мы считаем Semantic-Jaccard:
+     jaccard_nodes  = intersection_nodes / union_nodes
+     jaccard_edges  = intersection_edges / union_edges
+
+   Результаты сохраняются в `output_path` (JSON), а также возвращаются:
+     (результат_по_каждой_паре, средний_j_nodes, средний_j_edges).
+
+

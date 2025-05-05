@@ -390,20 +390,42 @@
                 <article class="bd-article">
                   
   <h1>Source code for dialogue2graph.metrics</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Graph</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_huggingface</span><span class="w"> </span><span class="kn">import</span> <span class="n">HuggingFaceEmbeddings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_community.embeddings</span><span class="w"> </span><span class="kn">import</span> <span class="n">HuggingFaceInferenceAPIEmbeddings</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Graph</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompareResponse</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">llm_metrics</span>
+
+<span class="c1"># from dialogue2graph.metrics import llm_metrics</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">no_llm_metrics</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.helpers.parse_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineDataType</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.metrics.no_llm_metrics.keys2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">graph_triplet_comparison</span>
 
 <span class="n">PreDGEvalBase</span> <span class="o">=</span> <span class="p">[</span><span class="n">no_llm_metrics</span><span class="o">.</span><span class="n">is_same_structure</span><span class="p">]</span>
-<span class="n">DGEvalBase</span> <span class="o">=</span> <span class="p">[</span><span class="n">llm_metrics</span><span class="o">.</span><span class="n">compare_graphs</span><span class="p">,</span> <span class="n">no_llm_metrics</span><span class="o">.</span><span class="n">is_same_structure</span><span class="p">]</span>
+<span class="c1"># DGEvalBase = [llm_metrics.compare_graphs, no_llm_metrics.is_same_structure]</span>
+<span class="n">DGEvalBase</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">graph_triplet_comparison</span><span class="o">.</span><span class="n">compare_two_graphs</span><span class="p">,</span>
+    <span class="n">no_llm_metrics</span><span class="o">.</span><span class="n">is_same_structure</span><span class="p">,</span>
+<span class="p">]</span>
 <span class="n">DGReportType</span> <span class="o">=</span> <span class="nb">dict</span>
 
 
 <div class="viewcode-block" id="compare_graphs_light">
 <a class="viewcode-back" href="../../autoapi/dialogue2graph/metrics/index.html#dialogue2graph.metrics.compare_graphs_light">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">compare_graphs_light</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">PipelineDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compares a generated Graph with the true Graph using two metrics:</span>
+
+<span class="sd">    1. `match_dg_triplets`: checks if the generated graph matches the triplets from the dialogs.</span>
+<span class="sd">    2. `is_same_structure`: checks if the generated graph has the same structure as the true graph.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        graph (Graph): The generated graph to compare with the true graph.</span>
+<span class="sd">        data (PipelineDataType): Contains the true graph and the dialogs.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        bool: True if both metrics return True, False otherwise.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">true_graph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
     <span class="k">return</span> <span class="n">no_llm_metrics</span><span class="o">.</span><span class="n">match_dg_triplets</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">dialogs</span><span class="p">)[</span>
@@ -412,12 +434,33 @@
 
 
 
+<span class="c1"># def compare_graphs_full(graph: Graph, data: PipelineDataType) -&gt; CompareResponse:</span>
+<span class="c1">#     if data.true_graph is None:</span>
+<span class="c1">#         return {&quot;value&quot;: False, &quot;description&quot;: &quot;No true graph given&quot;}</span>
+<span class="c1"># return llm_metrics.compare_graphs(graph, data.true_graph)</span>
+
+
 <div class="viewcode-block" id="compare_graphs_full">
 <a class="viewcode-back" href="../../autoapi/dialogue2graph/metrics/index.html#dialogue2graph.metrics.compare_graphs_full">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">compare_graphs_full</span><span class="p">(</span><span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">PipelineDataType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompareResponse</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">compare_graphs_full</span><span class="p">(</span>
+    <span class="n">model</span><span class="p">:</span> <span class="n">HuggingFaceInferenceAPIEmbeddings</span> <span class="o">|</span> <span class="n">HuggingFaceEmbeddings</span><span class="p">,</span>
+    <span class="n">graph</span><span class="p">:</span> <span class="n">Graph</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">PipelineDataType</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CompareResponse</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compares a generated Graph with the true Graph using the triplet comparison metric.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        model (HuggingFaceEmbeddings): The model to use for computing the embeddings.</span>
+<span class="sd">        graph (Graph): The generated graph to compare with the true graph.</span>
+<span class="sd">        data (PipelineDataType): Contains the true graph and the dialogs.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        CompareResponse: A dictionary with a &quot;value&quot; key that is True if the graphs match, and a &quot;description&quot; key with a description of the comparison result.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">true_graph</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;No true graph given&quot;</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">llm_metrics</span><span class="o">.</span><span class="n">compare_graphs</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">true_graph</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">graph_triplet_comparison</span><span class="o">.</span><span class="n">compare_two_graphs</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">true_graph</span><span class="p">,</span> <span class="n">graph</span><span class="p">,</span> <span class="n">model</span><span class="p">)</span></div>
 
 </pre></div>
 
