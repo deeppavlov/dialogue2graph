@@ -44,7 +44,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
     "sphinx_autodoc_typehints",
-    "sphinx.ext.graphviz"
+    "sphinx.ext.graphviz",
 ]
 
 autodoc_default_options = {
