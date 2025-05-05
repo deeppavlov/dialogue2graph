@@ -97,14 +97,15 @@ def _get_triplets_from_graph(g):
 
     def _ensure(node_id):
         """Create empty slots for nodes missing in the *nodes* list."""
-        if node_id not in inc:   # значит узла нет в nodes[]
+        if node_id not in inc:
             print("Warning: node id referenced in edges but absent in nodes.")
             inc[node_id] = []
             out[node_id] = []
 
     for e in edges:
         src, tgt = e["source"], e["target"]
-        _ensure(src); _ensure(tgt)          # ← NEW
+        _ensure(src)
+        _ensure(tgt)
         out[src].append(tgt)
         inc[tgt].append(src)
 

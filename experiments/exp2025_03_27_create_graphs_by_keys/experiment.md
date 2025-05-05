@@ -52,7 +52,7 @@ Predictably, very large cyclic graphs suffer more when information is pruned, bu
 
 ## 6  Conclusions  
 
-* Six keys – **topic**, **mandatory_nodes**, **intent_hierarchy**, **dynamic_content**, **follow_up_questions**, **required_slots** – are **necessary and sufficient** to reproduce graph topology with < 3 % loss in similarity relative to the full 26-key annotation.  
+* Six keys – **topic**, **mandatory_nodes**, **intent_hierarchy**, **dynamic_content**, **follow_up_questions**, **required_slots** – are **necessary and sufficient** to reproduce graph topology relative to the full 26-key annotation.  
 * The savings translate to dramatically shorter prompts and faster generation without hurting fidelity, even for complex cyclic graphs.  
 
 ---
