@@ -29,7 +29,7 @@ def coverage():
     test_coverage_threshold = 80
 
     args = [
-        "--cov=dialogue2graph",
+        "--cov=dialog2graph",
         f"--cov-fail-under={test_coverage_threshold}",
         "--cov-report=html",
         "--cov-report=term",

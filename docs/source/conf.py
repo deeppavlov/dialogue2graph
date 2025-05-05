@@ -9,7 +9,7 @@
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath("../../dialogue2graph"))
+sys.path.insert(0, os.path.abspath("../../dialog2graph"))
 
 project = "Dialog2Graph"
 copyright = "2025, Denis Kuznetsov, Anastasia Voznyuk, Andrey Chirkin, Anna Mikhailova, Maria Molchanova, Yuri Peshkichev"
@@ -20,7 +20,7 @@ on_github = os.environ.get("GITHUB_ACTIONS") == "true"
 
 # Configure URLs for GitHub Pages
 if on_github:
-    html_baseurl = "/dialogue2graph/dev/"
+    html_baseurl = "/dialog2graph/dev/"
     html_context = {
         "display_github": True,
         "github_user": "deeppavlov",
@@ -44,7 +44,7 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
     "sphinx_autodoc_typehints",
-    "sphinx.ext.graphviz"
+    "sphinx.ext.graphviz",
 ]
 
 autodoc_default_options = {
@@ -58,7 +58,7 @@ autodoc_default_options = {
 
 autodoc_typehints = "both"
 
-autoapi_dirs = ["../../dialogue2graph"]
+autoapi_dirs = ["../../dialog2graph"]
 autoapi_options = [
     "members",
     "undoc-members",

@@ -1,11 +1,11 @@
-# Dialogue2Graph
+# Dialog2Graph
 
-Dialogue2Graph allows you to effortlessly create *chatsky flows* and scripts from dialogues using Large Language Models.
+Dialog2Graph allows you to effortlessly create *chatsky flows* and scripts from dialogs using Large Language Models.
 
 ## Contents
 
 ```
-./dialogue2graph - source code
+./dialog2graph - source code
 ./examples - usage scenarios
 ./experiments - test field for conducting experiments
 ./prompt_cache - utils for LLM output caching
@@ -36,8 +36,8 @@ pipx install poetry==1.8.4
 Clone this repo and install project dependencies
 
 ```bash
-git clone https://github.com/deeppavlov/dialogue2graph.git
-cd dialogue2graph
+git clone https://github.com/deeppavlov/dialog2graph.git
+cd dialog2graph
 poetry install
 ```
 
@@ -61,10 +61,10 @@ Create `.env` file to store credentials
 
 ### Generate synthetic graph on certain topic
 
-Choose LLMs for generating and validating dialogue graph and invoke graph generation
+Choose LLMs for generating and validating dialog graph and invoke graph generation
 
 ```python
-from dialogue2graph.datasets.complex_dialogues.generation import LoopedGraphGenerator
+from dialog2graph.datasets.complex_dialogs.generation import LoopedGraphGenerator
 from langchain_community.chat_models import ChatOpenAI
 
 
@@ -88,20 +88,20 @@ pipeline = LoopedGraphGenerator(
 generated_graph = pipeline.invoke(topic="restaurant reservation")
 ```
 
-### Sample dialogues from existing dialogue graph
+### Sample dialogs from existing dialog graph
 
-Create graph instance and invoke sampler to get dialogue list
+Create graph instance and invoke sampler to get dialog list
 
 ```python
-from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.pipelines.core.graph import Graph
+from dialog2graph.pipelines.core.dialog_sampling import RecursiveDialogSampler
+from dialog2graph.pipelines.core.graph import Graph
 
 G = Graph(graph_dict={...})
 
-sampler = RecursiveDialogueSampler()
-sampler.invoke(graph=G) #-> list of Dialogue objects
+sampler = RecursiveDialogSampler()
+sampler.invoke(graph=G) #-> list of Dialog objects
 ```
 
 ## How to Contribute
 
-See contribution guideline [CONTRIBUTING.md](https://github.com/deeppavlov/dialogue2graph/blob/dev/CONTRIBUTING.md)
+See contribution guideline [CONTRIBUTING.md](https://github.com/deeppavlov/dialog2graph/blob/dev/CONTRIBUTING.md)

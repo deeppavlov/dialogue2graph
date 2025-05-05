@@ -1,6 +1,7 @@
 About us
 =========
 
+Dialog2Graph is developed by `DeepPavlov <https://deeppavlov.ai>`_.
 .. |deeppavlov| image:: _static/images/logo-deeppavlov.svg
     :align: middle
     :width: 40 

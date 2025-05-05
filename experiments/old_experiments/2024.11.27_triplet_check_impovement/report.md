@@ -1,7 +1,7 @@
 # Triplet Validator Comparison Report
 
 ## Overview
-This report compares the performance of two dialogue triplet validation functions: the original validator (`are_triplets_valid`) and the new implementation (`are_triplets_valid_new`). The analysis is based on testing both validators against multiple datasets containing valid and invalid dialogue graphs.
+This report compares the performance of two dialog triplet validation functions: the original validator (`are_triplets_valid`) and the new implementation (`are_triplets_valid_new`). The analysis is based on testing both validators against multiple datasets containing valid and invalid dialog graphs.
 
 ## Test Results
 
@@ -22,7 +22,7 @@ This report compares the performance of two dialogue triplet validation function
 ## Key Findings
 
 1. **Consistency in Valid Cases**
-   - Both validators showed perfect accuracy (100%) in identifying valid dialogue graphs
+   - Both validators showed perfect accuracy (100%) in identifying valid dialog graphs
    - This indicates high reliability for positive cases
 
 2. **Invalid Case Detection**
@@ -32,7 +32,7 @@ This report compares the performance of two dialogue triplet validation function
 
 3. **Overall Performance**
    - The new validator demonstrates more balanced performance across both valid and invalid cases
-   - Shows particular strength in identifying problematic dialogue transitions
+   - Shows particular strength in identifying problematic dialog transitions
 
 ## Technical Analysis
 
@@ -44,7 +44,7 @@ This report compares the performance of two dialogue triplet validation function
    - Better handles edge cases and transition logic
 
 2. **Enhanced Error Detection**
-   - More granular checking of dialogue coherence
+   - More granular checking of dialog coherence
    - Improved validation of context maintenance between utterances
    - Better detection of logical breaks in conversation flow
 
@@ -61,4 +61,4 @@ This report compares the performance of two dialogue triplet validation function
 
 ## Conclusion
 
-The new triplet validator demonstrates substantial improvements over the original implementation, particularly in identifying invalid dialogue patterns. Its balanced performance across both valid and invalid cases makes it a more reliable tool for dialogue graph validation.
+The new triplet validator demonstrates substantial improvements over the original implementation, particularly in identifying invalid dialog patterns. Its balanced performance across both valid and invalid cases makes it a more reliable tool for dialog graph validation.

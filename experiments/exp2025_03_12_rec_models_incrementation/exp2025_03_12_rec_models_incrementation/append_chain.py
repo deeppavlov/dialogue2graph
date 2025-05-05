@@ -1,9 +1,9 @@
 from settings import EnvSettings
 
-from dialogue2graph.pipelines.core.algorithms import GraphExtender
-from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
-from dialogue2graph.pipelines.core.schemas import DialogueGraph
-from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialog2graph.pipelines.core.algorithms import GraphExtender
+from dialog2graph.pipelines.core.graph import BaseGraph, Graph
+from dialog2graph.pipelines.core.schemas import DialogGraph
+from dialog2graph.pipelines.core.dialog import Dialog
 
 from langchain.prompts import PromptTemplate
 from langchain_community.chat_models import ChatOpenAI
@@ -17,20 +17,20 @@ from utils import call_llm_api
 #     compare_graphs
 # )
 
-from dialogue2graph.metrics.no_llm_metrics import is_same_structure
-from dialogue2graph.metrics.llm_metrics import compare_graphs
+from dialog2graph.metrics.no_llm_metrics import is_same_structure
+from dialog2graph.metrics.llm_metrics import compare_graphs
 
 env_settings = EnvSettings()
 
 
-# @AlgorithmRegistry.register(input_type=list[Dialogue], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
+# @AlgorithmRegistry.register(input_type=list[Dialog], path_to_result=env_settings.GENERATION_SAVE_PATH, output_type=BaseGraph)
 class AppendChain(GraphExtender):
     """
-    Attaches an additional dialogue to an existing original dialogue graph.
+    Attaches an additional dialog to an existing original dialog graph.
 
     Parameters:
-        dialogues (list[Dialogue]): The list of 2 dialogues, the first one is an original dialogue and the second one is an additional dialogue.
-        graph (Graph): Original dialogue graph.
+        dialogs (list[Dialog]): The list of 2 dialogs, the first one is an original dialog and the second one is an additional dialog.
+        graph (Graph): Original dialog graph.
 
     Returns:
         graph
@@ -42,9 +42,7 @@ class AppendChain(GraphExtender):
         super().__init__()
         self.prompt = PromptTemplate.from_template(prompt_dialogs_and_graph)
 
-    def invoke(
-        self, dialogues: list[Dialogue] = None, graph: Graph = None
-    ) -> BaseGraph:
+    def invoke(self, dialogs: list[Dialog] = None, graph: Graph = None) -> BaseGraph:
         print("model:  ", env_settings.GENERATION_MODEL_NAME)
         base_model = ChatOpenAI(
             model=env_settings.GENERATION_MODEL_NAME,
@@ -52,10 +50,10 @@ class AppendChain(GraphExtender):
             base_url=env_settings.OPENAI_BASE_URL,
             temperature=0,
         )
-        model = base_model | PydanticOutputParser(pydantic_object=DialogueGraph)
+        model = base_model | PydanticOutputParser(pydantic_object=DialogGraph)
 
         final_prompt = self.prompt.format(
-            orig_dial=dialogues[0], orig_graph=graph.graph_dict, new_dial=dialogues[1]
+            orig_dial=dialogs[0], orig_graph=graph.graph_dict, new_dial=dialogs[1]
         )
 
         result = call_llm_api(final_prompt, model, temp=0)
@@ -73,8 +71,8 @@ class AppendChain(GraphExtender):
     async def ainvoke(self, *args, **kwargs):
         return self.invoke(*args, **kwargs)
 
-    async def evaluate(self, dialogues, graph, target_graph):
-        result_graph = self.invoke(dialogues, graph)
+    async def evaluate(self, dialogs, graph, target_graph):
+        result_graph = self.invoke(dialogs, graph)
         report = {
             "is_same_structure": is_same_structure(result_graph, target_graph),
             "graph_match": compare_graphs(result_graph, target_graph),

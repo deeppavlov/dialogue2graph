@@ -8,7 +8,7 @@ from chatsky_llm_autoconfig.settings import EnvSettings
 env_settings = EnvSettings()
 
 
-class DialogueStore:
+class DialogStore:
     assistant_store: Chroma
     user_store: Chroma
     assistant_size: int
@@ -21,7 +21,7 @@ class DialogueStore:
     #             docs = self.assistant_store.similarity_search_with_relevance_scores(d.page_content, score_threshold=env_settings.EMBEDDER_THRESHOLD)
     #             ids = [str(d[0].metadata['id']) for d in docs]
 
-    def _load_dialogue(self, dialogue: list, embeddings: HuggingFaceEmbeddings):
+    def _load_dialog(self, dialog: list, embeddings: HuggingFaceEmbeddings):
         self.assistant_store = Chroma(
             collection_name=str(uuid.uuid4()), embedding_function=embeddings
         )
@@ -31,12 +31,12 @@ class DialogueStore:
         assistant = [
             Document(page_content=d["text"], id=id, metadata={"id": id})
             for id, d in enumerate(
-                [d for d in dialogue if d["participant"] == "assistant"]
+                [d for d in dialog if d["participant"] == "assistant"]
             )
         ]
         user = [
             Document(page_content=d["text"], id=id, metadata={"id": id})
-            for id, d in enumerate(d for d in dialogue if d["participant"] == "user")
+            for id, d in enumerate(d for d in dialog if d["participant"] == "user")
         ]
         self.assistant_size = len(assistant)
         self.user_size = len(user)
@@ -45,8 +45,8 @@ class DialogueStore:
         self.user_store.add_documents(documents=user)
         print("USER_STORE: ", self.user_store.get())
 
-    def __init__(self, dialogue: list, embeddings: HuggingFaceEmbeddings):
-        self._load_dialogue(dialogue, embeddings)
+    def __init__(self, dialog: list, embeddings: HuggingFaceEmbeddings):
+        self._load_dialog(dialog, embeddings)
 
     def search_assistant(self, utterance):
         docs = self.assistant_store.similarity_search_with_relevance_scores(
@@ -61,7 +61,7 @@ class DialogueStore:
         return res
 
     # def search_user(self, utterance):
-    #     docs = self.user_store.similarity_search_with_relevance_scores(utterance, k=env_settings.DIALOGUE_MAX, score_threshold=env_settings.EMBEDDER_TYPO)
+    #     docs = self.user_store.similarity_search_with_relevance_scores(utterance, k=env_settings.DIALOG_MAX, score_threshold=env_settings.EMBEDDER_TYPO)
     #     res = [d[0].metadata['id'] for d in docs]
     #     res.sort()
     #     res = [str(r) for r in res]

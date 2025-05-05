@@ -1,8 +1,8 @@
-# Getting started with synthetic dialogue augmentation
+# Getting started with synthetic dialog augmentation
 
 ## Experiment setup
 
-The basic approach to dialogue augmentation was tested using a prompt tested in earlier experiments (naive augmentation of the type "one original phrase - one augmented phrase"). The gpt-4o-mini model was used for augmentation.
+The basic approach to dialog augmentation was tested using a prompt tested in earlier experiments (naive augmentation of the type "one original phrase - one augmented phrase"). The gpt-4o-mini model was used for augmentation.
 
 The following checks have been developed to assess the quality of augmentation: 
 - checking for duplicates among dialogs related to the same graph;
@@ -13,7 +13,7 @@ Augmentation in the one-shot approach was also briefly tested. Rejected due to a
 
 ## Results and observations
 
-The biggest problem according to the results of the checks is the large number of duplicates of both cross-dialogue and intra-dialogue types. 
+The biggest problem according to the results of the checks is the large number of duplicates of both cross-dialog and intra-dialog types. 
 
 ## Future plans
 
