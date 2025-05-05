@@ -68,17 +68,18 @@ to generate the embeddings for the nodes in the graph.
     model_storage.add(
         "my_formatting_model",
         config={
-            "model": "gpt-4.1-mini"
+            "model_name": "gpt-4.1-mini"
         },
-        model_type="llm",
+        model_type=ChatOpenAI,
     )
 
     model_storage.add(
         "my_embedding_model",
         config={
-            "model_name": "sentence-transformers/all-MiniLM-L6-v2"
+            "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+            "model_kwargs": {"device": "cpu"}
         },
-        model_type="emb",
+        model_type=HuggingFaceEmbeddings,
     )
 
 Now we can create the :py:class:`~dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator` object. This object will be used to generate the graph. 

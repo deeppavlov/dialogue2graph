@@ -13,6 +13,7 @@ from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
 
+from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
@@ -44,6 +45,8 @@ class DialogueNodes(BaseModel):
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
+logger = Logger(__file__)
+
 dialogue_sampler = RecursiveDialogueSampler()
 
 

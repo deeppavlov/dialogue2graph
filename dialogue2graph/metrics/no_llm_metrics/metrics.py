@@ -13,6 +13,9 @@ import networkx as nx
 
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.dialogue import Dialogue
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__file__)
 
 
 logging.basicConfig(level=logging.INFO)

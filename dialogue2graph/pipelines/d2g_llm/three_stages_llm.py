@@ -19,8 +19,7 @@ from dialogue2graph.pipelines.core.algorithms import GraphGenerator
 from dialogue2graph.pipelines.core.graph import BaseGraph
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.model_storage import ModelStorage
-
-
+from dialogue2graph.utils.logger import Logger
 from dialogue2graph.utils.dg_helper import connect_nodes, get_helpers
 from dialogue2graph.pipelines.helpers.parse_data import PipelineDataType
 from dialogue2graph.pipelines.helpers.prompts.missing_edges_prompt import (
@@ -33,9 +32,6 @@ from dialogue2graph.pipelines.d2g_llm.prompts import (
     grouping_prompt_2,
 )
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 class DialogueNodes(BaseModel):
     """Class for dialog nodes"""
@@ -45,6 +41,7 @@ class DialogueNodes(BaseModel):
 
 
 logging.getLogger("langchain_core.vectorstores.base").setLevel(logging.ERROR)
+logger = Logger(__file__)
 
 
 class LLMGraphGenerator(GraphGenerator):
@@ -97,7 +94,6 @@ class LLMGraphGenerator(GraphGenerator):
         filling_llm: str = "three_stages_filling_llm:v1",
         formatting_llm: str = "three_stages_formatting_llm:v1",
         sim_model: str = "three_stages_sim_model:v1",
-
         step2_evals: list[Callable] | None = None,
         end_evals: list[Callable] | None = None,
     ):
