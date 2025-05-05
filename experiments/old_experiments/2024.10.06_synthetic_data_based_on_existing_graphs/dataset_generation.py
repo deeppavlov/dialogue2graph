@@ -45,7 +45,7 @@ model = ChatOpenAI(
 )
 
 
-async def generate_dialogue_graphs_from_templates(graph_templates: dict, retries: int):
+async def generate_dialog_graphs_from_templates(graph_templates: dict, retries: int):
     data = {}
     for graph_type in tqdm(graph_templates):
         success = False
@@ -88,7 +88,7 @@ async def augment_data(graph: dict, themes: set, amount: int = 5) -> list[dict]:
     return res
 
 
-def dialogues_from_graph(graph, include_readable: bool = False):
+def dialogs_from_graph(graph, include_readable: bool = False):
     # Create a directed graph from the JSON input
     G = nx.DiGraph()
 
@@ -105,7 +105,7 @@ def dialogues_from_graph(graph, include_readable: bool = False):
     for edge in graph["edges"]:
         G.add_edge(edge["source"], edge["target"], utterances=edge["utterances"])
 
-    # Start the dialogue from the starting node
+    # Start the dialog from the starting node
     start_nodes = [node for node in G.nodes if G.nodes[node].get("is_start", True)]
     if not start_nodes:
         raise ValueError("No starting node found in the graph.")
@@ -113,15 +113,15 @@ def dialogues_from_graph(graph, include_readable: bool = False):
     current_node = random.choice(
         start_nodes
     )  # Randomly select one of the starting nodes
-    dialogue = []
+    dialog = []
     visited_nodes = set()  # Track visited nodes to prevent cycles
 
-    # Generate a dialogue by traversing the graph
+    # Generate a dialog by traversing the graph
     while True:
         # Get the current node's utterances
         node_utterances = G.nodes[current_node]["utterances"]
         # print("NODE:", node_utterances)
-        dialogue.append(random.choice(node_utterances))  # Randomly select an utterance
+        dialog.append(random.choice(node_utterances))  # Randomly select an utterance
 
         # Mark the current node as visited
         visited_nodes.add(current_node)
@@ -141,25 +141,25 @@ def dialogues_from_graph(graph, include_readable: bool = False):
         # Get the edge utterances between the current node and the next node
         edge_utterances = G[current_node][next_node]["utterances"]
         # print("EDGE:", edge_utterances)
-        dialogue.append(random.choice(edge_utterances))
+        dialog.append(random.choice(edge_utterances))
         # Randomly select the next node to traverse
         current_node = next_node
 
     if include_readable:
         out = ""
-        for i in range(len(dialogue)):
+        for i in range(len(dialog)):
             if i % 2 == 0:
-                out += f"ASSISTANT: {dialogue[i]}\n"
+                out += f"ASSISTANT: {dialog[i]}\n"
             else:
-                out += f"USER: {dialogue[i]}\n"
-        return (out, dialogue)
-    return dialogue
+                out += f"USER: {dialog[i]}\n"
+        return (out, dialog)
+    return dialog
 
 
 async def pipeline():
-    dataset = {"graph_type": [], "graph": [], "dialogue_str": [], "dialogue_list": []}
+    dataset = {"graph_type": [], "graph": [], "dialog_str": [], "dialog_list": []}
 
-    raw_results = await generate_dialogue_graphs_from_templates(graph_templates, 5)
+    raw_results = await generate_dialog_graphs_from_templates(graph_templates, 5)
     for g_type in tqdm(raw_results):
         base_graph = raw_results[g_type]
         variants = await augment_data(
@@ -176,7 +176,7 @@ async def pipeline():
         for i in variants:
             dataset["graph_type"].append(g_type)
             dataset["graph"] = i
-            dataset["dialogue_str"], dataset["dialogue_list"] = dialogues_from_graph(
+            dataset["dialog_str"], dataset["dialog_list"] = dialogs_from_graph(
                 i, include_readable=True
             )
 

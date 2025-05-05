@@ -1,5 +1,5 @@
 # Experiment name
-Dialogue to graph generation old algorithm based on embeddings
+Dialog to graph generation old algorithm based on embeddings
 
 ## Hypotheses and steps
 
@@ -10,7 +10,7 @@ Three stages algorithm:
 
 ## Results
 
-Previous results were reported in old experiment 2024.11.14_dialogue2graph
+Previous results were reported in old experiment 2024.11.14_dialog2graph
 In new notebook another graph was generated from topic, and dia2graph results are compared
 for embedding grouper (current), algo grouper and llm grouper
 Embedding grouper fails, another two workk fine

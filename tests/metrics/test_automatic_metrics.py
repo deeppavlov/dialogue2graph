@@ -4,10 +4,10 @@ import json
 import pytest
 
 # Remove the unused import to fix F401
-# from dialogue2graph.metrics.no_llm_metrics.metrics import match_graph_triplets  # <-- DELETED because it's unused
+# from dialog2graph.metrics.no_llm_metrics.metrics import match_graph_triplets  # <-- DELETED because it's unused
 
-from dialogue2graph import Graph, Dialogue
-from dialogue2graph.metrics.no_llm_metrics.metrics import (
+from dialog2graph import Graph, Dialog
+from dialog2graph.metrics.no_llm_metrics.metrics import (
     is_same_structure,
     match_dg_triplets,
     are_paths_valid,
@@ -55,21 +55,21 @@ def graph_negative(test_data):
 
 
 @pytest.fixture
-def dialogues_positive(test_data):
+def dialogs_positive(test_data):
     """
-    Dialogues for the positive scenario (from data[0]).
+    Dialogs for the positive scenario (from data[0]).
     """
-    raw_dialogues = test_data[0]["dialogues"]
-    return [Dialogue(**dlg) for dlg in raw_dialogues]
+    raw_dialogs = test_data[0]["dialogs"]
+    return [Dialog(**dlg) for dlg in raw_dialogs]
 
 
 @pytest.fixture
-def dialogues_negative(test_data):
+def dialogs_negative(test_data):
     """
-    Dialogues for the negative scenario (from data[2]).
+    Dialogs for the negative scenario (from data[2]).
     """
-    raw_dialogues = test_data[2]["dialogues"]
-    return [Dialogue(**dlg) for dlg in raw_dialogues]
+    raw_dialogs = test_data[2]["dialogs"]
+    return [Dialog(**dlg) for dlg in raw_dialogs]
 
 
 # -------------------------------
@@ -77,12 +77,12 @@ def dialogues_negative(test_data):
 # -------------------------------
 
 
-def test_all_utterances_present_positive(graph_positive_1, dialogues_positive):
+def test_all_utterances_present_positive(graph_positive_1, dialogs_positive):
     """
     Check that all utterances (from nodes and edges) of the first graph
-    appear in the positive dialogues.
+    appear in the positive dialogs.
     """
-    result = all_utterances_present(graph_positive_1, dialogues_positive)
+    result = all_utterances_present(graph_positive_1, dialogs_positive)
     assert result is True, f"Expected value=True, but got: {result}"
 
 
@@ -95,48 +95,48 @@ def test_is_same_structure_positive(graph_positive_1, graph_positive_2):
     )
 
 
-def test_match_dg_triplets_positive(graph_positive_1, dialogues_positive):
+def test_match_dg_triplets_positive(graph_positive_1, dialogs_positive):
     """
-    Check that all (assistant-user-assistant) triplets in the dialogues
+    Check that all (assistant-user-assistant) triplets in the dialogs
     match the triplets in the graph (match_dg_triplets).
     """
-    result = match_dg_triplets(graph_positive_1, dialogues_positive)
+    result = match_dg_triplets(graph_positive_1, dialogs_positive)
     assert result["value"] is True, f"Expected value=True, but got: {result}"
 
 
-def test_are_paths_valid_positive(graph_positive_1, dialogues_positive):
+def test_are_paths_valid_positive(graph_positive_1, dialogs_positive):
     """
-    Check that the dialogues form valid paths in the first graph (are_paths_valid).
+    Check that the dialogs form valid paths in the first graph (are_paths_valid).
     """
-    result = are_paths_valid(graph_positive_1, dialogues_positive)
+    result = are_paths_valid(graph_positive_1, dialogs_positive)
     assert result["value"] is True, f"Not all paths are valid: {result}"
 
 
-def test_match_roles_positive(dialogues_positive):
+def test_match_roles_positive(dialogs_positive):
     """
-    Check that the first two positive dialogues have matching roles (assistant/user).
+    Check that the first two positive dialogs have matching roles (assistant/user).
     """
-    if len(dialogues_positive) < 2:
-        pytest.skip("Not enough dialogues to test match_roles in positive data.")
+    if len(dialogs_positive) < 2:
+        pytest.skip("Not enough dialogs to test match_roles in positive data.")
 
-    d1 = dialogues_positive[0]
-    d2 = dialogues_positive[1]
+    d1 = dialogs_positive[0]
+    d2 = dialogs_positive[1]
     assert match_roles(d1, d2) is True, (
-        "Expected the roles to match completely between dialogues."
+        "Expected the roles to match completely between dialogs."
     )
 
 
-def test_is_correct_length_positive(dialogues_positive):
+def test_is_correct_length_positive(dialogs_positive):
     """
-    Check that the first two positive dialogues have the same number of messages.
+    Check that the first two positive dialogs have the same number of messages.
     """
-    if len(dialogues_positive) < 2:
-        pytest.skip("Not enough dialogues to test is_correct_length in positive data.")
+    if len(dialogs_positive) < 2:
+        pytest.skip("Not enough dialogs to test is_correct_length in positive data.")
 
-    d1 = dialogues_positive[0]
-    d2 = dialogues_positive[1]
+    d1 = dialogs_positive[0]
+    d2 = dialogs_positive[1]
     assert is_correct_length(d1, d2) is True, (
-        "Expected the dialogues to have the same length."
+        "Expected the dialogs to have the same length."
     )
 
 
@@ -174,14 +174,14 @@ def test_compute_graph_metrics_positive(graph_positive_1, graph_positive_2):
 # -------------------------------
 
 
-def test_all_utterances_present_negative(graph_negative, dialogues_negative):
+def test_all_utterances_present_negative(graph_negative, dialogs_negative):
     """
-    Check that not all utterances of the graph are present in the negative dialogues.
+    Check that not all utterances of the graph are present in the negative dialogs.
     We expect the function to return NOT True but a set of missing phrases.
     """
-    result = all_utterances_present(graph_negative, dialogues_negative)
+    result = all_utterances_present(graph_negative, dialogs_negative)
     assert isinstance(result, set) and len(result) > 0, (
-        "Expected some utterances to be missing in the dialogues."
+        "Expected some utterances to be missing in the dialogs."
     )
 
 
@@ -194,37 +194,37 @@ def test_is_same_structure_negative(graph_positive_1, graph_negative):
     )
 
 
-def test_match_dg_triplets_negative(graph_negative, dialogues_negative):
+def test_match_dg_triplets_negative(graph_negative, dialogs_negative):
     """
     Check match_dg_triplets for the negative scenario.
     We expect the result to have value=False (since there are missing triplets).
     """
-    result = match_dg_triplets(graph_negative, dialogues_negative)
+    result = match_dg_triplets(graph_negative, dialogs_negative)
     assert result["value"] is False, "Expected value=False in the negative scenario."
     assert "absent_triplets" in result, "Expected 'absent_triplets' key in the result."
 
 
-def test_are_paths_valid_negative(graph_negative, dialogues_negative):
+def test_are_paths_valid_negative(graph_negative, dialogs_negative):
     """
     In the negative example, the paths might still be valid or partially invalid.
     """
-    result = are_paths_valid(graph_negative, dialogues_negative)
+    result = are_paths_valid(graph_negative, dialogs_negative)
     assert result["value"] is True, (
         "Expected value=True in negative data; adjust checks if needed."
     )
 
 
-def test_is_correct_length_negative(dialogues_negative):
+def test_is_correct_length_negative(dialogs_negative):
     """
-    In the negative scenario, one of the tests shows that the dialogues have different lengths.
+    In the negative scenario, one of the tests shows that the dialogs have different lengths.
     """
-    if len(dialogues_negative) < 2:
-        pytest.skip("Not enough dialogues to test is_correct_length in negative data.")
+    if len(dialogs_negative) < 2:
+        pytest.skip("Not enough dialogs to test is_correct_length in negative data.")
 
-    d1 = dialogues_negative[0]
-    d2 = dialogues_negative[1]
+    d1 = dialogs_negative[0]
+    d2 = dialogs_negative[1]
     assert is_correct_length(d1, d2) is False, (
-        "Expected the dialogues to have different lengths, so is_correct_length should be False."
+        "Expected the dialogs to have different lengths, so is_correct_length should be False."
     )
 
 
