@@ -1,0 +1,2398 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your flight booking today?",
+            "Hi there! Ready to book your flight?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "GatherDestination",
+          "utterances": [
+            "Great! Where would you like to fly to?",
+            "Sure! What is your destination?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "GatherDates",
+          "utterances": [
+            "When would you like to depart?",
+            "Please provide your departure date."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "ConfirmBooking",
+          "utterances": [
+            "Your flight to {destination} on {date} has been booked. Is there anything else I can help with?",
+            "All set! Your flight to {destination} on {date} is confirmed. Do you need anything else?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "Sorry, I didn't catch that. Can you please clarify?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a flight",
+            "Book a flight",
+            "I'd like to reserve a flight"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to go to New York",
+            "Destination: Los Angeles",
+            "Flying to Chicago"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Next Monday",
+            "July 20th",
+            "Departing on 15th August"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Yes, I need something else",
+            "No, thank you",
+            "That's all for now"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Blah blah",
+            "Random input"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "???",
+            "@#$%"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "asdf",
+            "1234"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Invalid response"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 1,
+          "utterances": []
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Pizza Place! How can I help you today?",
+            "Hi! Welcome to Pizza Place. What would you like to do today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Show Menu",
+          "utterances": [
+            "Here is our menu: Margherita, Pepperoni, Hawaiian. Which one would you like?",
+            "We offer Margherita, Pepperoni, and Hawaiian pizzas. Which one are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Take Order",
+          "utterances": [
+            "Great! What pizza would you like to order?",
+            "Sure, which pizza would you like to have?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Confirm Order",
+          "utterances": [
+            "You have ordered a {pizza}. Is that correct?",
+            "Confirming your order: {pizza}. Is this correct?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Can you please rephrase?",
+            "Sorry, I didn't catch that. Could you say it differently?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Thank you for your order! Have a great day!",
+            "Your order has been placed successfully. Enjoy your pizza!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Show me the menu",
+            "I want to see the menu"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to order a pizza",
+            "I'd like to order"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Blah",
+            "Random unclear input"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'll have a Pepperoni",
+            "I choose Margherita"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I don't know",
+            "Not sure"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'd like a Hawaiian",
+            "One veggie pizza please"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Yes, that's correct",
+            "Yes, please"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "No, I want a different pizza",
+            "That's not right"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 1,
+          "utterances": [
+            "Can you repeat that?",
+            "Let me rephrase my request."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with technical support today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Issue Inquiry",
+          "utterances": [
+            "Please describe the technical issue you're experiencing."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Clarification",
+          "utterances": [
+            "I'm sorry, I didn't catch that. Could you please provide more details?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "User initiates conversation"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 2,
+          "utterances": [
+            "User describes issue"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "User input not understood"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 2,
+          "utterances": [
+            "User clarifies issue"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome! How can I assist you with paying your bills today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Select Bill",
+          "utterances": [
+            "Which bill would you like to pay? We have Electricity, Water, Internet, and Gas."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Confirm Payment",
+          "utterances": [
+            "Your payment for {bill} has been processed successfully. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "I'm having trouble understanding. Can you try again?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to pay a bill",
+            "Pay a bill",
+            "I'd like to pay my bill"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Electricity",
+            "Water",
+            "Internet",
+            "Gas"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Other",
+            "None of the above",
+            "I don't know"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Help",
+            "Support",
+            "I need assistance"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the bank. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Initiate Fund Transfer",
+          "utterances": [
+            "Sure, I can help you transfer funds. Which account would you like to transfer from?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Specify Transfer Details",
+          "utterances": [
+            "How much would you like to transfer and to which account?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Confirm Transfer",
+          "utterances": [
+            "You are transferring $X to account Y. Do you want to proceed?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Transfer Successful",
+          "utterances": [
+            "Your transfer has been completed successfully."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to transfer funds",
+            "Transfer money",
+            "I'd like to make a fund transfer"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "From account A"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "$100 to account B"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes",
+            "Proceed",
+            "Confirm"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 2,
+          "utterances": [
+            "No",
+            "Cancel",
+            "Go back"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "I need help",
+            "Can you assist me?",
+            "Hello"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "Not sure",
+            "I don't know"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Can't specify",
+            "Not telling"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Maybe later",
+            "I'm unsure"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Welcome to our restaurant. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Book Table",
+          "utterances": [
+            "Sure, I can help you book a table. For what date and time?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Specify Number of People",
+          "utterances": [
+            "How many people will be in your party?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Confirmation",
+          "utterances": [
+            "Your table is booked for {number} people on {date} at {time}. Is this correct?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Thank you! Your reservation is confirmed. We look forward to serving you."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I would like to book a table",
+            "Can I reserve a table?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to book for tomorrow at 7 PM",
+            "Make a reservation for June 5th at 8"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "For 4 people",
+            "We are a party of 2"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Yes, that's correct",
+            "Yes, please confirm"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "No, I need to change the time",
+            "That's not correct"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Let me try again",
+            "I want to make a reservation"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our online store!",
+            "Hello! How can I assist you with your shopping today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Browse Products",
+          "utterances": [
+            "Here are our available products.",
+            "You can browse our products here."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Add to Cart",
+          "utterances": [
+            "I've added the item to your cart.",
+            "The product has been added to your shopping cart."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Checkout",
+          "utterances": [
+            "Let's proceed to checkout.",
+            "Would you like to review your order and pay?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Order Confirmation",
+          "utterances": [
+            "Your order has been placed successfully!",
+            "Thank you for your purchase. Your order is confirmed."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to browse products",
+            "Show me your products",
+            "Can I see what you have for sale?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Add this to my cart",
+            "I want to buy this product",
+            "Please add this item to my shopping cart"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Proceed to checkout",
+            "I want to checkout",
+            "Let's finalize my purchase"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Confirm my order",
+            "Place the order",
+            "Yes, complete the purchase"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "I need help",
+            "Can you assist me?",
+            "Something went wrong"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "I have a question",
+            "Need assistance with browsing"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Issue adding to cart",
+            "Cannot add this item"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Payment failed",
+            "Problem during checkout"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your vehicle today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Service Inquiry",
+          "utterances": [
+            "What type of service do you need?",
+            "Are you looking for maintenance or repair?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Maintenance Details",
+          "utterances": [
+            "Sure, I can help with maintenance. What specific service do you require?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Repair Details",
+          "utterances": [
+            "I'm sorry to hear you need a repair. What seems to be the problem?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Schedule Appointment",
+          "utterances": [
+            "Let's schedule an appointment. When would you like to come in?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Provide Vehicle Information",
+          "utterances": [
+            "Please provide your vehicle's make, model, and year."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please clarify?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "End",
+          "utterances": [
+            "Thank you! We've scheduled your service. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need vehicle maintenance",
+            "I have an issue with my car"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I need regular maintenance",
+            "I'd like to perform a routine check"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "My car is making a strange noise",
+            "I need to fix a brake issue"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I'd like to schedule a maintenance appointment",
+            "Can I set up a time for service?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Let's schedule a repair",
+            "I want to book a repair service"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Next Monday at 10 AM",
+            "Anytime this weekend"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 8,
+          "utterances": [
+            "Here is my vehicle information",
+            "Make: Toyota, Model: Camry, Year: 2020"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 7,
+          "utterances": [
+            "I need something else",
+            "Not sure what I need"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 7,
+          "utterances": [
+            "I don't know the details",
+            "Can you help me decide?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 7,
+          "utterances": [
+            "I'm not sure what's wrong",
+            "It's hard to describe the issue"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "I can't decide on a time",
+            "What are my options?"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "I don't have that information",
+            "Let me get back to you"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Insurance Claim Processing. How can I assist you today?",
+            "Hello! How can I help you with your insurance claims today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "File a Claim",
+          "utterances": [
+            "I can help you file a new claim. Please provide your policy number.",
+            "Let's start the claim filing process. Could you give me your policy details?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Check Claim Status",
+          "utterances": [
+            "Sure, I can help you check the status of your claim. Please provide your claim ID.",
+            "Let's check your claim status. Could you provide your claim number?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "Sorry, I didn't catch that. Can you try saying it differently?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Provide Policy Information",
+          "utterances": [
+            "Please enter your policy number to proceed.",
+            "Kindly provide your policy number."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Provide Claim Information",
+          "utterances": [
+            "Please enter your claim ID to proceed.",
+            "Kindly provide your claim number."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "End",
+          "utterances": [
+            "Thank you for using our service. Have a great day!",
+            "If you need further assistance, feel free to ask. Goodbye!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to file a claim",
+            "I need to submit a new claim"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to check my claim status",
+            "Can you tell me the status of my claim?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Other",
+            "Nothing",
+            "I have a different request"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "Sure",
+            "Let's do that",
+            "Proceed"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Sure",
+            "Let's check",
+            "Proceed"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I don't want to file a claim",
+            "Nevermind"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I don't want to check status",
+            "Nevermind"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "Here is my policy number",
+            "My policy number is ..."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Here is my claim ID",
+            "My claim number is ..."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Retry",
+            "Go back"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your weekend travel plans today?",
+            "Hi there! Ready to plan your weekend getaway?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "choose_destination",
+          "utterances": [
+            "Sure! What destination are you interested in?",
+            "Great! Do you have a destination in mind?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "provide_suggestions",
+          "utterances": [
+            "Based on your preferences, I suggest visiting Paris, New York, or Tokyo. Which one do you prefer?",
+            "Here are some great weekend destinations: Paris, New York, Tokyo. Let me know which one interests you."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "select_travel_options",
+          "utterances": [
+            "Would you like information on flights, hotels, or both?",
+            "Do you need assistance with flights, accommodations, or both?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "confirm_plan",
+          "utterances": [
+            "All set! Enjoy your weekend trip.",
+            "Your travel plan is confirmed. Have a great trip!"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "Sorry, could you clarify your request?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to plan a trip",
+            "I need help with travel",
+            "Let's plan my weekend travel"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "Can you help me?",
+            "I have a question",
+            "Tell me something"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I have a destination in mind",
+            "My destination is Paris",
+            "I want to go to New York"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I need suggestions",
+            "Suggest some destinations",
+            "What are some good places to visit?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I choose Paris",
+            "I like New York",
+            "Tokyo sounds good"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I need both flights and hotels",
+            "Just flights, please",
+            "Only accommodations"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 1,
+          "utterances": [
+            "Could you repeat that?",
+            "I didn't catch that",
+            "Can you say it again?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hi! Let's talk about movies. What's your favorite film?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Favorite Movie Response",
+          "utterances": [
+            "That's a great movie! Do you have another favorite?",
+            "I love that one too! What else do you like?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "Sorry, could you clarify that?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I love Inception",
+            "My favorite movie is The Matrix"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Blah blah",
+            "asdfghj"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 2,
+          "utterances": [
+            "Another movie I like is Titanic",
+            "I also enjoy The Godfather"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Random text",
+            "I don't know"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with the weather today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Current Weather",
+          "utterances": [
+            "The current weather is sunny with a temperature of 25°C."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Weather Forecast",
+          "utterances": [
+            "The forecast for the next few days is as follows..."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "What's the current weather?",
+            "current weather",
+            "Tell me the weather now"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "What's the weather forecast?",
+            "weather forecast",
+            "Tell me the forecast"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Blah blah",
+            "I need something else",
+            "Can you help with something different?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "What is the weather today?",
+            "Can you tell me the current weather?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'm here to help you with book discussions and recommendations. What genre are you interested in?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Genre Selection",
+          "utterances": [
+            "Great choice! Do you have a specific book or author in mind?",
+            "Awesome! Would you like me to recommend a book or discuss a particular one?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Book Recommendation",
+          "utterances": [
+            "I recommend 'The Great Gatsby' by F. Scott Fitzgerald. It's a classic!",
+            "You might enjoy '1984' by George Orwell. It's thought-provoking!"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Book Discussion",
+          "utterances": [
+            "Sure, let's discuss! What did you think about the main character?",
+            "I'd love to hear your thoughts on the plot development."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't quite catch that. Could you please rephrase?",
+            "I'm not sure I understand. Can you elaborate?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Thank you for the chat! If you need more recommendations, feel free to ask.",
+            "Happy reading! Let me know if you'd like to discuss another book."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'm interested in fiction.",
+            "I love mystery novels.",
+            "Science fiction is my favorite."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like a recommendation.",
+            "Surprise me with a good book."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Let's discuss 'To Kill a Mockingbird'.",
+            "I want to talk about 'The Hobbit'."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "That sounds great, thank you!",
+            "I'll check it out."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "I've finished the book and loved it.",
+            "I have some thoughts to share."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Blah blah",
+            "Random input"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I don't know",
+            "Random text"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Not interested",
+            "That's not what I wanted"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I disagree",
+            "Can we change the topic?"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Sure, let's try again.",
+            "Can you help me with something else?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'm here to chat about your music preferences."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask Genre",
+          "utterances": [
+            "What's your favorite music genre?",
+            "Which genre do you like the most?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Ask Artist",
+          "utterances": [
+            "Who is your favorite artist?",
+            "Which artist do you enjoy listening to?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Provide Recommendations",
+          "utterances": [
+            "Based on your preferences, I recommend these songs...",
+            "Here are some artists you might like..."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't catch that. Could you please repeat?",
+            "Can you please clarify that?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End Conversation",
+          "utterances": [
+            "It was great talking to you about music! Have a nice day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Let's talk about your music preferences."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I love [genre]."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "[artist] is my favorite."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Thank you!"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I don't understand."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I don't understand."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I don't understand."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Let's try that again."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our cooking assistant! How can I help you today?",
+            "Hi! What would you like to know about cooking?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Cooking Preferences",
+          "utterances": [
+            "Sure, let's talk about your cooking preferences. Do you prefer vegetarian dishes?",
+            "What are your favorite ingredients or cuisines?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Cooking Techniques",
+          "utterances": [
+            "I can help you with cooking techniques. Are you interested in grilling, baking, or something else?",
+            "Which cooking techniques would you like to learn about?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "Sorry, I didn't get that. Can you please clarify?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to discuss my cooking preferences",
+            "Let's talk about preferences"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to learn cooking techniques",
+            "Tell me about cooking techniques"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I have a different request",
+            "Blah blah"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Not sure",
+            "Other"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I don't know",
+            "Something else"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! What are your hobbies?",
+            "Hi there! I'd love to hear about your hobbies."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Hobby Response",
+          "utterances": [
+            "That's interesting! How did you get into that?",
+            "Cool! What do you enjoy most about it?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't catch that. Could you please rephrase?",
+            "Oops, I didn't understand. Can you tell me more?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I enjoy painting.",
+            "I'm really into hiking."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Blah blah",
+            "Random unrelated input"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 1,
+          "utterances": [
+            "I started when I was a child.",
+            "It's been a passion of mine for years."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I don't want to say.",
+            "That's private."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 1,
+          "utterances": [
+            "I enjoy reading novels.",
+            "I'm into cycling."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hi! Let's talk about your favorite sports. What's your favorite sport?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Favorite Sport - Football",
+          "utterances": [
+            "That's great! Football is exciting."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Favorite Sport - Basketball",
+          "utterances": [
+            "Awesome! Basketball is fun to watch."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Football",
+            "Soccer"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Basketball"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Unknown",
+            "I don't know",
+            "Other"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Vacation Planner! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Book Flight",
+          "utterances": [
+            "Sure, I can help you book a flight. Where are you traveling to?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Book Hotel",
+          "utterances": [
+            "I can help you book a hotel. What city are you interested in?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please clarify?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a flight",
+            "Book a flight",
+            "Flight"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to book a hotel",
+            "Book a hotel",
+            "Hotel"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I'm not sure",
+            "Other",
+            "Help"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": []
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's discuss the latest tech gadgets. What are you interested in?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Smartphones",
+          "utterances": [
+            "Smartphones are evolving rapidly with features like foldable screens and advanced cameras. Do you have a favorite brand?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Wearables",
+          "utterances": [
+            "Wearable tech includes smartwatches, fitness trackers, and AR glasses. Which wearable device are you curious about?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't catch that. Could you please clarify or ask something else about tech gadgets?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Tell me about smartphones",
+            "I want to discuss smartphones"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Let's talk about wearables",
+            "I'm interested in wearable technology"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Random unrelated message",
+            "Blah blah"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I don't know much about brands",
+            "Can you explain more?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Not sure what you mean",
+            "Tell me something else"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I can help you find book recommendations or e-Books. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask Genre",
+          "utterances": [
+            "What genre are you interested in?",
+            "Which type of books do you like?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Recommendations",
+          "utterances": [
+            "Based on your preference, I recommend the following books...",
+            "Here are some books you might like..."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Offer e-Book Options",
+          "utterances": [
+            "Would you like to download the e-Book version?",
+            "Do you want to get the e-Book for any of these books?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Fallback - Ask for Clarification",
+          "utterances": [
+            "I'm sorry, I didn't quite understand that. Could you please clarify?",
+            "Could you please rephrase that?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want book recommendations",
+            "Looking for a book"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I like mystery",
+            "I'm interested in sci-fi"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Thanks",
+            "Great"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Yes, please",
+            "No, thanks"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I'm not sure what you mean"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "Can you help?",
+            "I don't understand"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "That's confusing",
+            "I need help"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "What do you mean?",
+            "I'm confused"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "I like romance",
+            "I'm interested in fantasy"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Random Trivia! Would you like a question?",
+            "Hello! Ready to test your trivia knowledge?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "AskQuestion",
+          "utterances": [
+            "Here's your trivia question: What is the capital of France?",
+            "Let's get started! Trivia question: Who wrote 'Romeo and Juliet'?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "CorrectAnswer",
+          "utterances": [
+            "Correct! Well done.",
+            "That's right! You're good at this."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "IncorrectAnswer",
+          "utterances": [
+            "Incorrect. The correct answer is Paris.",
+            "Oops, that's not right. The answer is William Shakespeare."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "AnotherQuestion",
+          "utterances": [
+            "Would you like another question?",
+            "Do you want to try another trivia question?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Thanks for playing! Goodbye.",
+            "Hope you enjoyed the trivia. See you next time!"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that.",
+            "Could you please rephrase?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "yes",
+            "sure",
+            "let's go"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "no",
+            "not now",
+            "maybe later"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Paris",
+            "William Shakespeare"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "wrong answer",
+            "I don't know",
+            "Another response"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "yes",
+            "another one",
+            "sure"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "yes",
+            "another question",
+            "try again"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "yes",
+            "sure",
+            "let's go"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "no",
+            "thanks",
+            "that's all"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 7,
+          "utterances": [
+            "I don't understand",
+            "blah blah",
+            "random text"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 7,
+          "utterances": [
+            "I don't understand",
+            "blah blah",
+            "random text"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 7,
+          "utterances": [
+            "I don't understand",
+            "blah blah",
+            "random text"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 7,
+          "utterances": [
+            "I don't understand",
+            "blah blah",
+            "random text"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "I don't understand",
+            "blah blah",
+            "random text"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's talk about your holiday plans. What are you planning to do?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "HolidayPlans",
+          "utterances": [
+            "That sounds exciting! When are you planning to go?",
+            "Enjoy your holidays! Do you have any special activities planned?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "Can you please provide more details?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I am planning to go to the beach.",
+            "I want to visit my family.",
+            "I'm thinking of traveling abroad."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Blah blah",
+            "Random text"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Not sure what to say.",
+            "I don't have any plans."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "fallback_strategy"
+    ]
+  }
+]

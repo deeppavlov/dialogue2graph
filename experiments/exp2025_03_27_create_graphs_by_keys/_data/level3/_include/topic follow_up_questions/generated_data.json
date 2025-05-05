@@ -1,0 +1,889 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I help you with your travel today?",
+            "Hi! What can I do for your travel needs today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Book a Flight",
+          "utterances": [
+            "Sure, I can help you book a flight. Where would you like to go?",
+            "Let's get started with booking your flight. What's your destination?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Book a Hotel",
+          "utterances": [
+            "Absolutely, I can assist with hotel bookings. Which city are you traveling to?",
+            "I'd be happy to help you find a hotel. What's your destination?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Travel Insurance",
+          "utterances": [
+            "I can help you with travel insurance. What coverage are you interested in?",
+            "Let's set up your travel insurance. What kind of coverage do you need?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "End",
+          "utterances": [
+            "Thank you for using our travel services. Have a great day!",
+            "Glad I could help with your travel plans. Safe travels!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a flight",
+            "Book flight"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need a hotel",
+            "Book hotel"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I need travel insurance",
+            "Insurance"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "That's all",
+            "Thank you"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "That's all",
+            "Thank you"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "That's all",
+            "Thank you"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Welcome to our E-commerce store! How can I assist you today?",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our E-commerce store! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Sure, what type of product are you interested in?",
+          "utterances": [
+            "Sure, what type of product are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Here are some top-rated products in that category. Do you need further assistance?",
+          "utterances": [
+            "Here are some top-rated products in that category. Do you need further assistance?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Great! Please provide your budget or any specific requirements.",
+          "utterances": [
+            "Great! Please provide your budget or any specific requirements."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Thank you for the information. Processing your purchase now.",
+          "utterances": [
+            "Thank you for the information. Processing your purchase now."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to buy a product",
+            "I'm looking to purchase something",
+            "I need help selecting a product"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in electronics",
+            "I'd like to buy a laptop",
+            "Looking for a new smartphone"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, please",
+            "Can you help me choose?",
+            "I'd like some recommendations"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "$1000 is my budget",
+            "I need it by next week",
+            "Looking for something lightweight"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?",
+            "Hi there! Do you need help scheduling a medical appointment?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "request_date",
+          "utterances": [
+            "Sure, I can help with that. When would you like to schedule your appointment?",
+            "Please let me know the date you prefer for your appointment."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "request_time",
+          "utterances": [
+            "What time works best for you?",
+            "At what time would you like to come in?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "confirmation",
+          "utterances": [
+            "Your appointment is scheduled for [date] at [time]. Is there anything else I can help with?",
+            "Got it. You're set for [date] at [time]."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "goodbye",
+          "utterances": [
+            "Thank you! Have a great day.",
+            "You're welcome. Take care!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to schedule an appointment",
+            "I'd like to book a medical appointment"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Next Monday",
+            "July 20th",
+            "Tomorrow"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "10 AM",
+            "2 PM",
+            "Evening"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, that's all",
+            "No, thank you"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "University Admissions Assistance",
+          "is_start": true,
+          "utterances": [
+            "Welcome to University Admissions Assistance. How can I help you today?"
+          ]
+        }
+      ],
+      "edges": []
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Event Planning! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Info Confusion",
+          "utterances": [
+            "Could you clarify your event details?",
+            "Please rephrase your request or provide more information."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'm not sure what you mean.",
+            "Can you provide more details?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Let's explore global cultures and traditions. What would you like to discuss?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Festivals",
+          "utterances": [
+            "Any you’re curious about?",
+            "Want to explore major celebrations like Diwali, Chinese New Year, or Oktoberfest?",
+            "Which cultural festivals fascinate you the most?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Food Traditions",
+          "utterances": [
+            "Shall we talk about food?",
+            "Interested in discussing traditional meals or dining etiquette?",
+            "Food can be a window into culture. Shall we dive into that?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Language Aspects",
+          "utterances": [
+            "Interested in discussing linguistic differences?",
+            "We can also touch upon how language shapes culture if you'd like.",
+            "Shall we explore dialects, writing systems, or language families?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Cultural Challenges",
+          "utterances": [
+            "Some travelers face culture shock. Thoughts on dealing with that?",
+            "Have you encountered any challenges adapting to new customs?",
+            "We can chat about navigating cultural differences. Interested?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to talk about festivals",
+            "Let's discuss festivals",
+            "Festivals"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I'd like to talk about food traditions",
+            "Let's discuss food",
+            "Food traditions"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I'd like to talk about language aspects",
+            "Let's discuss language",
+            "Language aspects"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I'd like to talk about cultural challenges",
+            "Let's discuss cultural challenges",
+            "Cultural challenges"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the Music Composition Assistant. How can I help you today? Please choose a topic: mixing, mastering, writer's block, technical limitations, creative direction."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Mixing",
+          "utterances": [
+            "Are you having trouble with EQ settings or compression levels?",
+            "Have you tried using reference tracks for your mixes?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Mastering",
+          "utterances": [
+            "Are you familiar with loudness standards?",
+            "Do you have access to mastering software or services?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Writer's Block",
+          "utterances": [
+            "When do you usually feel stuck in your songwriting process?",
+            "Have you tried taking breaks or changing your environment?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Technical Limitations",
+          "utterances": [
+            "Is your DAW causing issues?",
+            "Do you need hardware upgrades or new plugins?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Creative Direction",
+          "utterances": [
+            "What direction do you want your music to take?",
+            "Have you discussed your creative ideas with collaborators?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "mixing"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "mastering"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "writer's block"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "technical limitations"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "creative direction"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the Movie Discussion Bot! Which movie would you like to talk about today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Movie Selection",
+          "utterances": [
+            "Great choice! What are your thoughts on the movie's plot?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Discuss Plot",
+          "utterances": [
+            "Interesting perspective! How did you find the performances of the actors?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Discuss Acting",
+          "utterances": [
+            "Thanks for sharing your thoughts! Would you like to discuss another movie or explore a different aspect of this one?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to discuss Inception.",
+            "Let's talk about The Godfather."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I thought the plot was intricate and engaging.",
+            "The storyline was a bit confusing for me."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The lead actor delivered an outstanding performance.",
+            "I wasn't impressed with the supporting cast."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 2,
+          "utterances": [
+            "Let's discuss another aspect of this movie.",
+            "I'd like to talk about a different movie."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hi! Let's talk about video gaming. What aspect are you interested in?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Strategy Tips",
+          "utterances": [
+            "How often do you seek strategy tips?",
+            "Do you prefer written guides or video tutorials?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Multiplayer vs Single Player",
+          "utterances": [
+            "What do you like about multiplayer modes?",
+            "Do you enjoy competitive play?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Community Interaction",
+          "utterances": [
+            "Do you participate in any gaming communities?",
+            "Are you a streamer or spectator?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Tech Specs",
+          "utterances": [
+            "What hardware do you use for gaming?",
+            "Are you interested in upgrading your setup?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Wishlist Future",
+          "utterances": [
+            "Which upcoming game are you most excited about?",
+            "Do you have a favorite developer you follow?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Gear Talk",
+          "utterances": [
+            "What gaming accessories do you use?",
+            "Is comfort important in your gaming setup?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want strategy tips",
+            "Let's discuss strategy tips"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Tell me about multiplayer vs single player",
+            "I'd like to discuss multiplayer games"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Let's talk about community interaction",
+            "I want to discuss gaming communities"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Can we talk about tech specs?",
+            "I'd like to discuss gaming hardware"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "What's on your wishlist for future games?",
+            "I'd like to talk about upcoming games"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 7,
+          "utterances": [
+            "Let's discuss gaming gear",
+            "I want to talk about gaming accessories"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Fantasy World-building and Role-playing",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Fantasy World-building and Role-playing! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "World Building",
+          "utterances": [
+            "What kind of fantasy world intrigues you? Medieval, steampunk, or high-magic?",
+            "Let's outline the setting: ancient kingdom, space-fantasy, or mystical forest?",
+            "We can shape a realm. Any starting concept in mind—elves, dragons, or clockwork robots?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Character Creation",
+          "utterances": [
+            "Who is our protagonist—knight, mage, rogue, or something else?",
+            "Want to design a unique hero or a band of adventurers?",
+            "Shall we outline a solitary warrior, or a party of misfits with special skills?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Magic System",
+          "utterances": [
+            "Is magic abundant or rare? Are there any costs or risks to using it?",
+            "We can define if spells require components, incantations, or inherent power.",
+            "How structured is magic? Rigidly studied or wild and chaotic?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Quest Discussion",
+          "utterances": [
+            "What sparks our hero’s journey—an evil overlord, a lost relic, or political intrigue?",
+            "Shall we create a grand quest or smaller episodic adventures?",
+            "Any plot catalysts you envision for this fantasy story?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Villain Creation",
+          "utterances": [
+            "Every quest needs opposition. Who’s the antagonist—dark sorcerer, cunning warlord, or cursed deity?",
+            "Is the villain sympathetic or purely evil? Motivations matter.",
+            "Let’s craft a memorable villain. Cruel tyrant or tragic antihero?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Factions and Lore",
+          "utterances": [
+            "Are there different kingdoms or guilds with unique goals?",
+            "We can add factions: thieves’ guilds, knightly orders, or merchant clans. Thoughts?",
+            "Would politics or alliances be a big factor in this world?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "Side Stories",
+          "utterances": [
+            "Shall we add side quests or subplots, like a dragon’s curse or a haunted forest?",
+            "We can create personal arcs for supporting characters. Interested?",
+            "Any secondary storyline to enrich the world?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "Role Play Loop",
+          "utterances": [
+            "We can continue expanding this story or role-play scenarios. Ready?",
+            "Want to delve deeper into a specific story arc or keep building the setting?",
+            "Shall we role-play as the hero or NPCs, or refine the lore more?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to work on world building",
+            "Let's focus on world building",
+            "Can we develop the world first?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to create characters",
+            "Let's design the protagonists",
+            "Can we work on character creation?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "How about we define the magic system",
+            "Let's discuss magic in our world",
+            "Can we set up the magic rules?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I'd like to talk about quests",
+            "Let's plan the main quest",
+            "Can we discuss the hero's journey?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "Let's create a villain",
+            "Can we design the antagonist",
+            "I want to develop the main villain"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 7,
+          "utterances": [
+            "I'd like to explore factions and lore",
+            "Let's add different guilds and kingdoms",
+            "Can we work on the world's lore?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 8,
+          "utterances": [
+            "Let's add some side stories",
+            "Can we develop subplots",
+            "I'd like to include side quests"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 9,
+          "utterances": [
+            "Can we enter a role-playing loop",
+            "Let's continue with role-playing scenarios",
+            "I'd like to engage in role play"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "follow_up_questions"
+    ]
+  }
+]

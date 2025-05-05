@@ -1,0 +1,958 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your travel today?",
+            "Hi there! What can I help you with regarding your travel?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Book Flight",
+          "utterances": [
+            "Sure, I can help you book a flight. Where would you like to go?",
+            "I'd be happy to help with booking a flight. What's your destination?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Book Hotel",
+          "utterances": [
+            "Of course, I can assist with hotel bookings. Where would you like to stay?",
+            "I'd be glad to help you find a hotel. What's your destination?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?",
+            "I didn't catch that. Can you please provide more details?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a flight",
+            "Book a flight",
+            "Flight booking"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to book a hotel",
+            "Book a hotel",
+            "Hotel booking"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I have a different request",
+            "Something else",
+            "Other"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Nevermind",
+            "Cancel"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Nevermind",
+            "Cancel"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Start over",
+            "Help me again"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Welcome",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our store! How can I assist you today?",
+            "Hello! Ready to find something great? Let me help you."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Browse Products",
+          "utterances": [
+            "Sure, what kind of products are you interested in?",
+            "You can browse our categories. What would you like to see?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Product Details",
+          "utterances": [
+            "Here are the details of the product.",
+            "Would you like to add this to your cart?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Make a Purchase",
+          "utterances": [
+            "Great! Let's proceed to checkout.",
+            "Please provide your payment information."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Escalation",
+          "utterances": [
+            "I'm transferring you to a support agent.",
+            "Let me connect you with a human representative."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to browse products",
+            "Show me your products"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Tell me more about this product",
+            "I want details on this item"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Add to cart",
+            "I want to buy this"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I need help",
+            "Can you assist me further?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I can't find what I'm looking for",
+            "I need to speak to someone"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I have an issue with this product",
+            "Help me with my order"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I need assistance with payment",
+            "There's a problem with checkout"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Schedule Appointment",
+          "utterances": [
+            "Sure, I can help you schedule a medical appointment. When would you like to come in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Ask for Details",
+          "utterances": [
+            "Please provide your name and contact number."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Confirmation",
+          "utterances": [
+            "Your appointment has been scheduled for [date] at [time]. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Escalate to Agent",
+          "utterances": [
+            "I’m transferring you to a human agent for further assistance."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to schedule an appointment",
+            "I need to book a medical appointment"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like to come in on Monday at 10 AM",
+            "I want to book for Friday afternoon"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "My name is John Doe, and my contact number is 1234567890",
+            "Jane Smith, 0987654321"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "No, that's all, thank you",
+            "Nothing else"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I need to speak to a human",
+            "Can I talk to a representative?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I need help beyond scheduling",
+            "Can I talk to a human instead?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I have an issue",
+            "I want to talk to an agent"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I need further assistance",
+            "Please connect me to a human"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with university admissions today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Application Requirements",
+          "utterances": [
+            "To apply, you'll need to submit your transcripts, letters of recommendation, and a personal statement."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Deadlines",
+          "utterances": [
+            "The application deadlines are January 15 for the fall semester and June 1 for the spring semester."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Escalation",
+          "utterances": [
+            "I'm transferring you to a representative for further assistance."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to know about application requirements",
+            "Tell me about requirements"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "What are the deadlines?",
+            "Tell me about deadlines"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I need to speak to an advisor",
+            "Transfer me to an agent"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 1,
+          "utterances": [
+            "Thank you",
+            "Back"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 1,
+          "utterances": [
+            "Thank you",
+            "Back"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with event planning today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Set Event Date",
+          "utterances": [
+            "Great, let's set a date for your event. When would you like it to be?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Choose Location",
+          "utterances": [
+            "Where would you like to hold the event?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Invite Guests",
+          "utterances": [
+            "How many guests are you planning to invite?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Confirm Details",
+          "utterances": [
+            "Here are the details of your event. Would you like to make any changes or confirm?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to plan an event",
+            "Help me set up an event"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Next",
+            "Continue"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Next",
+            "Continue"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Next",
+            "Continue"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 1,
+          "utterances": [
+            "Confirm",
+            "Finish"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'm here to help you explore global cultures and traditions. Which culture are you interested in?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "CultureInfo",
+          "utterances": [
+            "Japanese culture is rich with traditions such as tea ceremonies, cherry blossom festivals, and martial arts.",
+            "Italian culture is known for its art, architecture, and culinary traditions like pasta and pizza.",
+            "Brazilian culture is vibrant with its carnivals, music, and diverse culinary dishes."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I don't understand. Could you please rephrase your question?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Tell me about Japanese culture.",
+            "I want to know about Italian traditions.",
+            "Can you share information on Brazilian customs?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Blah blah",
+            "Random message",
+            "I need help with something else."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I have another question.",
+            "Maybe later.",
+            "Thanks, that's all."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with music composition today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Choose Aspect",
+          "utterances": [
+            "Sure! What aspect of music composition would you like help with? Melody, harmony, rhythm, or lyrics?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Melody Help",
+          "utterances": [
+            "Great! Let's talk about melody. Are you looking for advice on creating a catchy tune or developing a specific motif?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Harmony Help",
+          "utterances": [
+            "Sure! Harmony is essential. Do you need help with chord progressions or arranging harmonies for your song?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Rhythm Help",
+          "utterances": [
+            "Absolutely! Rhythm can make or break a song. Are you looking to create a new beat or improve an existing rhythm pattern?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Lyrics Help",
+          "utterances": [
+            "Lyrics are the heart of a song. Do you need help with writing lyrics or finding the right theme for your song?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't quite understand that. Could you please clarify or choose one of the options?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need help with composing music",
+            "I want to compose a song",
+            "Help me with songwriting"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Melody"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Harmony"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "Rhythm"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "Lyrics"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 7,
+          "utterances": [
+            "Other",
+            "I'm not sure",
+            "None of the above"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 7,
+          "utterances": [
+            "Not sure",
+            "I need something else"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 7,
+          "utterances": [
+            "Not sure",
+            "I need something else"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "Not sure",
+            "I need something else"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Not sure",
+            "I need something else"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's talk about movies. What would you like to discuss?",
+            "Hi there! Interested in movie critiques or recommendations?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Movie Critique",
+          "utterances": [
+            "Sure! Which movie would you like me to critique?",
+            "I'd be happy to discuss a movie. Which one do you have in mind?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Movie Recommendation",
+          "utterances": [
+            "I'd be glad to recommend a movie. What genre are you interested in?",
+            "Looking for a recommendation? Let me know your favorite genre!"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Escalation",
+          "utterances": [
+            "I'm sorry, I can't assist with that. Let me transfer you to an agent.",
+            "I don't have the information you need. Let me connect you to support."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to critique a movie",
+            "Let's discuss movie critiques"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need a movie recommendation",
+            "Recommend me a movie"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I don't like this topic",
+            "Cannot help"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Nevermind",
+            "I don't need a recommendation"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hi there! How can I assist you with video gaming today?",
+            "Hello! What can I help you with regarding video gaming?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "GameSelection",
+          "utterances": [
+            "Which game are you having trouble with?",
+            "Please specify the video game you need assistance with."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "ProvideHelp",
+          "utterances": [
+            "Sure, here's some information about {game}. How else can I help?",
+            "I can help you with {game}. What do you need assistance with?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Unresolved",
+          "utterances": [
+            "I'm sorry, I couldn't resolve your issue.",
+            "Apologies, I couldn't help with that."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need help with a game.",
+            "I'm having an issue with a video game."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm having trouble with {game}.",
+            "I need assistance with {game}."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I still can't resolve this.",
+            "This issue persists."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your fantasy world today?",
+            "Hi there! Ready to build your fantasy realm?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Create Character",
+          "utterances": [
+            "Let's create a character. What race are you interested in?",
+            "Tell me about the character you'd like to build."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Design Geography",
+          "utterances": [
+            "Let's design the geography. Do you have specific land features in mind?",
+            "Tell me about the lands in your world."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Provide Resources",
+          "utterances": [
+            "Here are some resources to help with world-building.",
+            "Check out these guides for your role-playing game."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "End Conversation",
+          "utterances": [
+            "Good luck with your world-building!",
+            "Feel free to ask if you need more help."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to create a character",
+            "Let's make a character"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to design the geography",
+            "Let's work on the land features"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I need more help",
+            "Show me resources"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I need more help",
+            "Show me resources"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Thank you",
+            "That's all for now"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Goodbye",
+            "Thanks, that's all"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  }
+]

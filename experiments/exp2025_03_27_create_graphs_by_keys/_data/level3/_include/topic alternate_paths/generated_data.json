@@ -1,0 +1,974 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Travel Management. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Manage Travel",
+          "utterances": [
+            "What would you like to do? You can book a destination, arrange a car rental, or exit."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Select Destination",
+          "utterances": [
+            "Please select your destination from the available options."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Car Rental",
+          "utterances": [
+            "Let's arrange a car rental for your trip."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Exit",
+          "utterances": [
+            "Thank you for using Travel Management. Goodbye!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to manage my travel."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "The destination is not clear.",
+            "I need help selecting a destination."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "The car rental details are not clear.",
+            "I need assistance with car rental."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I want to exit.",
+            "Exit the Travel Management."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our store! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Product Selection",
+          "utterances": [
+            "Sure, what product are you looking for?",
+            "Here are some products you might like."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Purchase Confirmation",
+          "utterances": [
+            "Would you like to proceed to checkout?",
+            "Do you want to purchase these items?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Browse More",
+          "utterances": [
+            "What else would you like to add?",
+            "You can browse more products here."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Error Handling",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please clarify?",
+            "Can you please provide more details?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Thank you for your purchase!",
+            "Thank you for visiting! Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to buy something",
+            "I'm looking for a product"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "This is what I want",
+            "I'll take this"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Yes, proceed to checkout",
+            "Confirm purchase"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I want to add more items",
+            "Browse more"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I'm not sure what I want",
+            "Can you help me decide?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I need more options",
+            "Can you show me different products?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 2,
+          "utterances": [
+            "Sure, show me more",
+            "I'd like to see additional products"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 1,
+          "utterances": [
+            "I need help",
+            "Please assist me"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 0,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the medical appointment scheduler. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 1,
+          "label": "Schedule Appointment",
+          "utterances": [
+            "Sure, I can help you schedule a medical appointment. Please provide your preferred date and time."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Info Clarification",
+          "utterances": [
+            "I'm sorry, I didn't understand your request. Could you please clarify or provide more details?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Cancel Appointment",
+          "utterances": [
+            "Your appointment has been cancelled. Let me know if you need to schedule another one."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Confirm Appointment",
+          "utterances": [
+            "Your appointment has been scheduled for [date and time]. Is there anything else I can help you with?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 0,
+          "target": 1,
+          "utterances": [
+            "I want to schedule an appointment",
+            "Schedule a medical appointment"
+          ]
+        },
+        {
+          "source": 0,
+          "target": 2,
+          "utterances": [
+            "I need help",
+            "Something"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Here is my preferred date and time",
+            "I'd like to book for next Monday at 10 AM"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need to cancel my appointment",
+            "Cancel my booking"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 1,
+          "utterances": [
+            "Let me rephrase",
+            "I want to schedule an appointment"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 0,
+          "utterances": [
+            "Thanks",
+            "No, that's all"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 0,
+          "utterances": [
+            "No, that's all",
+            "Thank you"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to University Admissions Assistant. How can I help you today?",
+            "Hello! How can I assist you with university admissions?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Program Selection",
+          "utterances": [
+            "Which program are you interested in?",
+            "Please select a program you're interested in."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Information",
+          "utterances": [
+            "Here is information about the program.",
+            "Let me provide details about this program."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Restart Program Selection",
+          "utterances": [
+            "Let's restart the program selection process.",
+            "Okay, let's choose a program again."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to apply",
+            "Help me with admissions"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Program A",
+            "Program B"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I am confused",
+            "I'm not sure"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 2,
+          "utterances": [
+            "Let's try again",
+            "Restart selection"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Event Planning! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "info_confusion",
+          "utterances": [
+            "I'm sorry for the confusion. Let me provide more information about our services."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "extra_services",
+          "utterances": [
+            "Sure, we offer additional services such as catering and entertainment. What would you like to add?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "change_requests",
+          "utterances": [
+            "Understood. What changes would you like to make to your event plan?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "collect_event_details",
+          "utterances": [
+            "Great! Let's gather some details about your event."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "confirmation",
+          "utterances": [
+            "Thank you! Your event has been successfully planned."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I want to plan an event",
+            "Need help with an event"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "I'm confused about the options",
+            "Not sure what to do"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 3,
+          "utterances": [
+            "I want extra services",
+            "Can I add more features?"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 4,
+          "utterances": [
+            "I need to make changes",
+            "Can I modify my event?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "Thanks for the info",
+            "That clarifies things"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I'd like to add catering",
+            "Please include entertainment"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Change the date",
+            "Update the guest list"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "That's all",
+            "No further changes"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to exploring global cultures and traditions! What would you like to learn about today?",
+            "Hello! I'm here to help you explore global cultures and traditions. What interests you the most?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Festivals Dive",
+          "utterances": [
+            "Let's dive into various festivals around the world! Which festival would you like to know more about?",
+            "Festivals are a vibrant part of cultures. Do you want to explore a specific one?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Food Traditions",
+          "utterances": [
+            "Exploring food traditions is delicious! Which cuisine are you interested in?",
+            "Food is a key part of any culture. What traditional dishes would you like to learn about?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Language Aspect",
+          "utterances": [
+            "Languages shape cultures. Which language aspect would you like to explore?",
+            "Understanding language can provide deep cultural insights. What would you like to discuss?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Tell me about festivals",
+            "I want to learn about festivals"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Tell me about food traditions",
+            "I want to learn about traditional foods"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Tell me about language aspects",
+            "I want to learn about languages"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Welcome",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's talk about music composition and songwriting. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Create Melody",
+          "utterances": [
+            "Would you like help creating a melody?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Write Lyrics",
+          "utterances": [
+            "Do you need assistance with writing lyrics?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Loop Topics",
+          "utterances": [
+            "Sure, let's revisit the topics. What would you like to discuss?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Goodbye",
+          "utterances": [
+            "Goodbye! Feel free to come back if you have more questions about music composition."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to create a melody"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need help writing lyrics"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I'm done",
+            "No, thanks"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I want to revisit topics"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I want to revisit topics"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Sure",
+            "Let's go back"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's discuss movies. Which movie would you like to talk about today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Movie Discussion",
+          "utterances": [
+            "Great choice! What did you think about the plot?",
+            "I see you want to discuss this movie. What's your take on it?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Topic Loop",
+          "utterances": [
+            "Sure, let's revisit that topic.",
+            "What else would you like to discuss about the movie?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Close Chat",
+          "utterances": [
+            "Thanks for the discussion! Feel free to come back anytime.",
+            "Goodbye! Hope you enjoyed the conversation."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to discuss a movie",
+            "Let's talk about a film"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to revisit the topic",
+            "Let's discuss this again"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I want to end the discussion",
+            "Close the chat"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 2,
+          "utterances": [
+            "Continue discussing",
+            "Let's keep talking about the movie"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Introduction",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the Video Gaming assistance! How can I help you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Strategy Tips",
+          "utterances": [
+            "Would you like some strategy tips for your favorite games?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Multiplayer vs Single",
+          "utterances": [
+            "Do you prefer single-player or multiplayer games?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Community Interaction",
+          "utterances": [
+            "Let's talk about community interactions in single-player games."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Discuss E-sports",
+          "utterances": [
+            "Let's discuss e-sports and multiplayer gaming."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Topic Return",
+          "utterances": [
+            "Sure, let's change the topic. What would you like to discuss?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want strategy tips",
+            "Sure, I need some strategy advice"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "skip strategy tips",
+            "No thanks, move on"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "I want to change topic",
+            "Let's talk about something else"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "single-player",
+            "I prefer single-player games"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "multiplayer",
+            "I prefer multiplayer games"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our Fantasy World! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Main Conversation",
+          "utterances": [
+            "Let's dive into your fantasy world. Would you like to discuss the magic system, the quest, or character creation?",
+            "What aspect of your fantasy world would you like to explore?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Magic System",
+          "utterances": [
+            "Let's revisit the magic system. What details would you like to discuss?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Quest Discussion",
+          "utterances": [
+            "Let's talk about the quest. What part are you interested in?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Character Creation",
+          "utterances": [
+            "Let's work on character creation. What character details would you like to create or modify?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End Conversation",
+          "utterances": [
+            "Thank you for chatting about your fantasy world. If you need more assistance, feel free to reach out!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Start conversation",
+            "Proceed"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to revisit magic system",
+            "Talk about magic"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I want to revisit quest",
+            "Talk about quest"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "I want to revisit character creation",
+            "Talk about character creation"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "I want to end the conversation",
+            "End chat"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 2,
+          "utterances": [
+            "Back to main conversation"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 2,
+          "utterances": [
+            "Back to main conversation"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Back to main conversation"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "alternate_paths"
+    ]
+  }
+]

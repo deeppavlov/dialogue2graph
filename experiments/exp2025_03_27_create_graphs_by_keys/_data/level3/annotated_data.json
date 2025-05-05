@@ -1,0 +1,2422 @@
+[
+  {
+    "annotation": {
+      "topic": "Travel Management",
+      "sub_topic": [
+        "Destination Selection",
+        "Flight Booking",
+        "Hotel Booking",
+        "Car Rental",
+        "Tour Selection",
+        "Itinerary Review",
+        "Payment"
+      ],
+      "bot_goal": "plan and book travel itinerary",
+      "success_criteria": [
+        "user confirms itinerary is finalized",
+        "payment is completed"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Approachable"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "start",
+        "select_destination",
+        "flight_booking",
+        "hotel_booking",
+        "car_rental",
+        "tour_selection",
+        "review_itinerary",
+        "confirmation",
+        "payment",
+        "exit"
+      ],
+      "optional_nodes": [
+        "change_request"
+      ],
+      "start_node": "start",
+      "user_intents": [
+        "plan_trip",
+        "select_destination",
+        "book_flight",
+        "book_hotel",
+        "rent_car",
+        "select_tours",
+        "review_itinerary",
+        "make_changes",
+        "confirm_itinerary",
+        "make_payment",
+        "exit",
+        "handle_error"
+      ],
+      "intent_hierarchy": {
+        "plan_trip": [
+          "select_destination",
+          "book_flight",
+          "book_hotel",
+          "rent_car",
+          "select_tours"
+        ],
+        "review_itinerary": [
+          "make_changes",
+          "confirm_itinerary"
+        ],
+        "make_payment": [],
+        "exit": [],
+        "handle_error": []
+      },
+      "user_utterances_examples": {
+        "plan_trip": [
+          "I want to plan an international trip.",
+          "Yes, I need to book flights, hotels, and more."
+        ],
+        "select_destination": [
+          "I want to go to Japan first.",
+          "I'd like to start in Paris.",
+          "I'll clarify: I'm traveling to Tokyo next month."
+        ],
+        "book_flight": [
+          "I'll pick a budget airline.",
+          "I prefer direct flights with premium airlines.",
+          "Uh, just get me a seat somewhere?"
+        ],
+        "book_hotel": [
+          "I'll need a 4-star hotel near the city center.",
+          "I'm okay with a hostel for budget reasons.",
+          "I actually want to pick a different hotel category."
+        ],
+        "rent_car": [
+          "I'll rent a small car for convenience.",
+          "I don’t need a car, I'll use public transport.",
+          "Sorry for confusion, let's rent a car."
+        ],
+        "select_tours": [
+          "Yes, I'd like a day tour to the countryside.",
+          "No tours for me, I'll explore on my own."
+        ],
+        "review_itinerary": [
+          "Everything looks good, let's proceed.",
+          "I'm fine with this plan."
+        ],
+        "make_changes": [
+          "I need to change my hotel dates.",
+          "I want a different city as my second stop."
+        ],
+        "confirm_itinerary": [
+          "Everything looks good, let's proceed.",
+          "I'm fine with this plan."
+        ],
+        "make_payment": [
+          "I'll pay by credit card. Done.",
+          "Payment via PayPal confirmed."
+        ],
+        "exit": [
+          "Actually, I've changed my mind. I'll do this later."
+        ],
+        "handle_error": [
+          "Uh, just get me a seat somewhere?",
+          "Wait, I'm not sure about my details.",
+          "Actually, I've changed my mind. I'll do this later."
+        ]
+      },
+      "required_slots": [
+        "destination",
+        "flight_preference",
+        "hotel_preference",
+        "car_rental_preference",
+        "tour_preferences",
+        "payment_method"
+      ],
+      "bot_utterances_templates": {
+        "start": [
+          "Hello, welcome to the Travel Management Bot!",
+          "Hi there, ready to arrange your multi-part trip?",
+          "Greetings! Let’s build your perfect travel itinerary."
+        ],
+        "select_destination": [
+          "Which country or city would you like to visit first?",
+          "Any specific destination in mind?",
+          "Where is your dream spot for this journey?"
+        ],
+        "flight_booking": [
+          "Let’s handle flight options. Do you have a preferred airline?",
+          "We can search for budget or premium airlines. Any preference?",
+          "Would you like direct flights or are layovers acceptable?"
+        ],
+        "hotel_booking": [
+          "Next, let's consider accommodation. Looking for a hotel, hostel, or vacation rental?",
+          "We offer different lodging options: 3-star, 5-star, or boutique? Which suits you?",
+          "Let’s secure a place to stay. What’s your price range or preference?"
+        ],
+        "car_rental": [
+          "Would you like to rent a car or rely on public transportation?",
+          "Car rentals available: economy, SUV, or luxury. Any choice?",
+          "If you prefer not to rent a car, we can arrange local transit passes."
+        ],
+        "tour_selection": [
+          "We also have local tours available. Interested in guided tours?",
+          "Cultural excursions or nature trips, which do you prefer?",
+          "We can arrange day trips. Any must-see attractions you'd like to book?"
+        ],
+        "review_itinerary": [
+          "Here’s a summary of your planned itinerary so far. Would you like to review or change anything?",
+          "Take a look at the schedule: flights, lodging, car rental. Any adjustments?",
+          "Let’s confirm your day-to-day plan. Need any edits before we finalize?"
+        ],
+        "change_request": [
+          "Sure, what would you like to change?",
+          "No problem, which part of your plan needs updating?",
+          "Absolutely, I'm here to help you modify any details. Let me know."
+        ],
+        "confirmation": [
+          "Your itinerary is all set. Would you like to confirm now?",
+          "We’re almost done. Ready to finalize?",
+          "I can finalize your reservations. Shall I proceed?"
+        ],
+        "payment": [
+          "How would you like to pay? Credit card, PayPal, or bank transfer?",
+          "We accept multiple payment methods. Which do you prefer?",
+          "Let’s process payment. What’s your payment option?"
+        ],
+        "info_error": [
+          "I’m sorry, I didn’t catch that. Could you clarify your request?",
+          "Hmm, that doesn’t seem right. Please restate or check your details.",
+          "I'm unsure how to proceed with that info. Can you confirm or rephrase?"
+        ],
+        "exit": [
+          "All done! Your trip is confirmed. Bon voyage!",
+          "Great! Your travel arrangements have been finalized. Have a wonderful journey!",
+          "Everything is booked. Safe travels and enjoy your trip!"
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "All done! Your trip is confirmed. Bon voyage!",
+        "Great! Your travel arrangements have been finalized. Have a wonderful journey!",
+        "Everything is booked. Safe travels and enjoy your trip!"
+      ],
+      "fallback_strategy": "ask_for_clarification",
+      "confirmation_needed": [
+        "confirmation",
+        "payment"
+      ],
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if destination not clear": "select_destination",
+        "if car rental not clear": "car_rental",
+        "if user wants to exit": "exit"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "destination_options": [
+          "list of available destinations"
+        ],
+        "flight_options": [
+          "budget airlines",
+          "premium airlines",
+          "direct flights",
+          "layovers"
+        ],
+        "hotel_options": [
+          "hotel",
+          "hostel",
+          "vacation rental",
+          "3-star",
+          "5-star",
+          "boutique"
+        ],
+        "car_rental_options": [
+          "economy",
+          "SUV",
+          "luxury"
+        ],
+        "tour_options": [
+          "guided tours",
+          "cultural excursions",
+          "nature trips",
+          "day trips",
+          "must-see attractions"
+        ],
+        "payment_methods": [
+          "Credit card",
+          "PayPal",
+          "bank transfer"
+        ]
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "E-commerce Product Selection and Purchase",
+      "sub_topic": [
+        "Product Category Selection",
+        "Product Customization",
+        "Cart Management",
+        "Discounts",
+        "Shipping Options",
+        "Checkout Process",
+        "Payment Methods",
+        "Order Confirmation",
+        "Error Handling"
+      ],
+      "bot_goal": "assist users in selecting, customizing, and purchasing products online",
+      "success_criteria": [
+        "user successfully completes purchase",
+        "user confirms order placement"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Professional",
+        "Polite"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "no",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "welcome",
+        "category_select",
+        "product_detail",
+        "custom_options",
+        "add_to_cart",
+        "additional_items",
+        "apply_discounts",
+        "shipping_options",
+        "checkout_confirmation",
+        "payment_process",
+        "order_complete"
+      ],
+      "optional_nodes": [
+        "error_handling",
+        "browse_more"
+      ],
+      "start_node": "welcome",
+      "user_intents": [
+        "initiate_shopping",
+        "select_category",
+        "provide_product_details",
+        "customize_product",
+        "add_to_cart",
+        "decide_shopping_flow",
+        "apply_discount",
+        "choose_shipping",
+        "confirm_order",
+        "select_payment_method",
+        "complete_purchase",
+        "handle_error"
+      ],
+      "intent_hierarchy": {
+        "initiate_shopping": [],
+        "select_product_category": [],
+        "provide_product_details": [],
+        "customize_product": [
+          "color_selection",
+          "size_selection",
+          "feature_selection"
+        ],
+        "add_to_cart": [],
+        "decide_shopping_flow": [
+          "continue_shopping",
+          "proceed_to_checkout"
+        ],
+        "apply_discount": [
+          "enter_discount_code",
+          "skip_discount"
+        ],
+        "choose_shipping": [],
+        "confirm_order": [],
+        "select_payment_method": [
+          "credit_card",
+          "paypal",
+          "other"
+        ],
+        "complete_purchase": [],
+        "handle_error": [
+          "request_clarification",
+          "cancel_order"
+        ]
+      },
+      "user_utterances_examples": {
+        "initiate_shopping": [
+          "Yes, I'd like to shop.",
+          "I'm looking for some items."
+        ],
+        "select_product_category": [
+          "I'd like a new smartphone.",
+          "I'm looking for a nice jacket.",
+          "I need new kitchen utensils."
+        ],
+        "provide_product_details": [
+          "I want the S-Model phone with 128GB storage.",
+          "I prefer a medium-sized jacket in black.",
+          "A set of stainless steel utensils, 20-piece."
+        ],
+        "customize_product": [
+          "Yes, I'd like the blue color option.",
+          "Give me the standard size, no engraving."
+        ],
+        "add_to_cart": [
+          "Yes, add to cart please.",
+          "No, let me think more about it.",
+          "No, I don't want to add it yet. I'll keep browsing."
+        ],
+        "decide_shopping_flow": [
+          "I want to keep shopping in electronics.",
+          "Let me pick something from clothing as well.",
+          "I'm ready to check out.",
+          "Wait, I'd like to add more items before finalizing."
+        ],
+        "apply_discount": [
+          "Yes, I have a 10% off code: SAVE10.",
+          "No discount code to apply."
+        ],
+        "choose_shipping": [
+          "I'll pick express shipping.",
+          "Let’s do standard shipping."
+        ],
+        "confirm_order": [
+          "Yes, I'm ready to pay.",
+          "Let's finalize the purchase."
+        ],
+        "select_payment_method": [
+          "Paying by credit card now.",
+          "PayPal is good for me."
+        ],
+        "complete_purchase": [
+          "Paying by credit card now.",
+          "PayPal is good for me."
+        ],
+        "handle_error": [
+          "Just get me something random. (Ambiguous request)",
+          "Actually, I'm confused about what's available.",
+          "I need a better phone detail. Let me specify again.",
+          "Never mind, I won't buy anything right now."
+        ]
+      },
+      "required_slots": [
+        "product_category",
+        "product_details",
+        "customization_options",
+        "discount_code",
+        "shipping_option",
+        "payment_method"
+      ],
+      "bot_utterances_templates": {
+        "welcome": [
+          "Hello, welcome to SuperShop Online! Ready to customize your purchase?",
+          "Hi there! Let’s build your personalized shopping cart.",
+          "Greetings! Let’s find the perfect products for you."
+        ],
+        "category_select": [
+          "Which product category are you interested in first—electronics, clothing, or home goods?",
+          "What type of items are you looking for today?",
+          "We have many categories: tech gadgets, fashion, kitchenware. Pick one to start."
+        ],
+        "product_detail": [
+          "Great choice. Which specific product model or item would you like?",
+          "Any brand or style preference in that category?",
+          "We have multiple options. Please specify what interests you."
+        ],
+        "custom_options": [
+          "Would you like to customize color, size, or other features?",
+          "We offer multiple colorways and sizes. Which would you prefer?",
+          "You can personalize aspects like engraving, color, or dimensions. Interested?"
+        ],
+        "add_to_cart": [
+          "Shall I add this product to your cart?",
+          "Would you like to proceed with adding it to your shopping bag?",
+          "Ready to add it to your cart now?"
+        ],
+        "additional_items": [
+          "Would you like to shop for more items or proceed to checkout?",
+          "Keep browsing or go to checkout?",
+          "Add more to your cart or finalize your order now?"
+        ],
+        "apply_discounts": [
+          "Do you have any discount codes, gift cards, or loyalty points to apply?",
+          "We can apply coupons or promotional codes. Any you’d like to use?",
+          "Any special discount code you want to redeem?"
+        ],
+        "shipping_options": [
+          "Choose shipping: standard, express, or same-day if available?",
+          "We have multiple shipping speeds. Which do you prefer?",
+          "Select shipping: free standard, paid express, or same-day (extra cost)."
+        ],
+        "checkout_confirmation": [
+          "Reviewing your cart: Are you ready to place the order?",
+          "Everything looks good? Shall we finalize the purchase?",
+          "Ready to check out and confirm payment?"
+        ],
+        "payment_process": [
+          "How would you like to pay—credit, PayPal, or other methods?",
+          "Payment method preference? We accept credit/debit cards, PayPal, store credit.",
+          "Ready for payment? Let me know your method of choice."
+        ],
+        "error_handling": [
+          "I’m not sure I understood. Could you clarify your request?",
+          "Something seems off. Please confirm your selection or discount code.",
+          "Let’s try that again. I need more specific information."
+        ],
+        "order_complete": [
+          "Your order is confirmed! Thank you for shopping with us.",
+          "Purchase complete. We'll notify you once it ships!",
+          "Success! Your items are on the way soon."
+        ],
+        "browse_more": [
+          "Sure, let’s keep browsing. Back to categories or a different route?",
+          "What else would you like to look at?",
+          "No problem, let’s explore more products."
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "Your order is confirmed! Thank you for shopping with us.",
+        "Purchase complete. We'll notify you once it ships!",
+        "Success! Your items are on the way soon."
+      ],
+      "fallback_strategy": "ask_for_clarification",
+      "confirmation_needed": [
+        "add_to_cart",
+        "checkout_confirmation"
+      ],
+      "max_dialog_length": 15,
+      "alternate_paths": {
+        "if user request is ambiguous": "error_handling",
+        "if user wants to add more items": "browse_more"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "product_categories": [
+          "electronics",
+          "clothing",
+          "home goods"
+        ],
+        "discount_codes": [
+          "SAVE10"
+        ],
+        "shipping_options": [
+          "standard",
+          "express",
+          "same-day"
+        ]
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Scheduling medical appointments",
+      "sub_topic": [
+        "appointment booking",
+        "doctor selection",
+        "time scheduling",
+        "contact information",
+        "confirmation",
+        "rescheduling",
+        "cancellation",
+        "follow-up services"
+      ],
+      "bot_goal": "schedule a medical appointment",
+      "success_criteria": [
+        "user confirms appointment is set",
+        "user cancels appointment"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "professional",
+      "emotional_tone": [
+        "Professional"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "intro",
+        "reason_for_visit",
+        "doctor_type",
+        "schedule_options",
+        "confirm_availability",
+        "contact_info",
+        "confirmation",
+        "appointment_done"
+      ],
+      "optional_nodes": [
+        "reschedule_loop",
+        "cancel_appointment",
+        "follow_up_services",
+        "info_clarification"
+      ],
+      "start_node": "intro",
+      "user_intents": [
+        "schedule_appointment",
+        "reschedule_appointment",
+        "cancel_appointment",
+        "provide_contact_info",
+        "confirm_appointment",
+        "express_interest_in_follow_up_services"
+      ],
+      "intent_hierarchy": {
+        "schedule_appointment": [
+          "provide_reason_for_visit",
+          "choose_doctor_type",
+          "select_time",
+          "provide_contact_info",
+          "confirm_appointment"
+        ],
+        "reschedule_appointment": [
+          "select_new_time"
+        ],
+        "cancel_appointment": [],
+        "express_interest_in_follow_up_services": []
+      },
+      "user_utterances_examples": {
+        "schedule_appointment": [
+          "I need to see a doctor.",
+          "I'd like to book an appointment."
+        ],
+        "provide_reason_for_visit": [
+          "I have a stomach issue, maybe a GP first.",
+          "I have a skin problem, so dermatologist."
+        ],
+        "choose_doctor_type": [
+          "I have a stomach issue, maybe a GP first.",
+          "I have a skin problem, so dermatologist."
+        ],
+        "select_time": [
+          "I need the earliest slot you have.",
+          "Evenings are better for me.",
+          "I'll take a weekday morning slot.",
+          "Weekend if possible.",
+          "Tuesday 10 AM is fine.",
+          "Friday morning works for me."
+        ],
+        "provide_contact_info": [
+          "Here's my name and phone number: John Doe, 555-1234.",
+          "Email is johndoe@example.com, name is Anna."
+        ],
+        "confirm_appointment": [
+          "Yes, confirm it.",
+          "All good, finalize."
+        ],
+        "reschedule_appointment": [
+          "Need a different time?",
+          "Let's try Thursday afternoon."
+        ],
+        "cancel_appointment": [
+          "Actually, cancel it.",
+          "You know what, just cancel altogether.",
+          "Never mind, cancel the entire appointment."
+        ],
+        "express_interest_in_follow_up_services": [
+          "Yes, I'd like telehealth next time or some follow-up calls."
+        ]
+      },
+      "required_slots": [
+        "reason_for_visit",
+        "doctor_type",
+        "appointment_time",
+        "user_name",
+        "contact_info"
+      ],
+      "bot_utterances_templates": {
+        "intro": [
+          "Hello, this is the Medical Appointment Bot. How can I help you today?",
+          "Hi, you’ve reached the Health Clinic Assistant. Need an appointment?",
+          "Welcome to our healthcare scheduling service! Ready to book or manage an appointment?"
+        ],
+        "reason_for_visit": [
+          "What brings you in? Are you scheduling a checkup, consultation, or a specific concern?",
+          "Could you specify the nature of your visit—general or specialized?",
+          "Tell me more about your medical need: routine check or specialized service?"
+        ],
+        "doctor_type": [
+          "We have GPs, pediatricians, and specialists. Which do you need?",
+          "Do you require a general practitioner or a specialist like a dermatologist, cardiologist, etc.?",
+          "Let’s figure out the right doctor type for your visit. Any preference?"
+        ],
+        "schedule_options": [
+          "We have slots this week and next. Any preferred day or time?",
+          "Morning, afternoon, or evening slots available. When are you free?",
+          "Would you prefer a weekday or weekend appointment?"
+        ],
+        "confirm_availability": [
+          "We have an opening on Tuesday at 10 AM. Does that work?",
+          "There's a slot on Thursday afternoon or Friday morning. Which do you prefer?",
+          "How about an appointment next Monday at 9 AM or 3 PM?"
+        ],
+        "contact_info": [
+          "I’ll need your full name and contact details to finalize the appointment.",
+          "Could you provide your phone number and email for confirmation?",
+          "Please share your name, and a phone or email to send appointment details."
+        ],
+        "confirmation": [
+          "Your appointment is almost set. Ready to confirm?",
+          "Shall I confirm your chosen time slot now?",
+          "Let’s finalize. Confirm your appointment details?"
+        ],
+        "reschedule_loop": [
+          "Need a different time? Let’s look at other available slots.",
+          "Okay, we can pick another day. When else are you free?",
+          "No worries, we can try a new schedule. Let me check more openings."
+        ],
+        "cancel_appointment": [
+          "Alright, I've canceled the appointment. Let us know if you need help again.",
+          "Your appointment request is canceled. Feel better soon!",
+          "Cancellation is done. We're here if you change your mind."
+        ],
+        "follow_up_services": [
+          "We also offer telehealth consultations. Interested?",
+          "Would you like to sign up for a reminder or follow-up call?",
+          "Any additional services you’d like to explore, like lab tests or prescriptions?"
+        ],
+        "info_clarification": [
+          "I’m having trouble with those details. Could you clarify or re-enter them?",
+          "Not sure I understood. Can you re-check your info or specify differently?",
+          "I didn't catch that. Please confirm your request or detail."
+        ],
+        "appointment_done": [
+          "Your appointment is confirmed! We'll see you soon.",
+          "Great! Appointment details have been emailed. Take care.",
+          "All set. A confirmation message is on its way. Have a healthy day!"
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "Alright, I've canceled the appointment. Let us know if you need help again.",
+        "Your appointment is confirmed! We'll see you soon.",
+        "Great! Appointment details have been emailed. Take care.",
+        "All set. A confirmation message is on its way. Have a healthy day!",
+        "Cancellation is done. We're here if you change your mind."
+      ],
+      "fallback_strategy": "ask_for_clarification",
+      "confirmation_needed": [
+        "confirm_appointment",
+        "cancel_appointment"
+      ],
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if request_unclear": "info_clarification",
+        "if user cancels": "cancel_appointment"
+      },
+      "escalation_policy": "transfer to agent",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "doctor_types": [
+          "GPs",
+          "pediatricians",
+          "specialists",
+          "dermatologist",
+          "cardiologist"
+        ],
+        "appointment_slots": [
+          "Tuesday at 10 AM",
+          "Thursday afternoon",
+          "Friday morning",
+          "next Monday at 9 AM or 3 PM"
+        ]
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "University Admissions Assistance",
+      "sub_topic": [
+        "Program Selection",
+        "Application Requirements",
+        "Document Upload",
+        "Payment Processing",
+        "Scholarship Inquiry",
+        "Eligibility Check",
+        "Offer Confirmation",
+        "Alternative Options"
+      ],
+      "bot_goal": "Assist user with university enrollment application",
+      "success_criteria": [
+        "user confirms admission"
+      ],
+      "context_info": "unknown",
+      "language": "English",
+      "formality_level": "formal",
+      "emotional_tone": [
+        "Professional",
+        "Supportive"
+      ],
+      "lexical_diversity": "moderate",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "intro_university",
+        "program_select",
+        "entry_level",
+        "requirements",
+        "document_upload",
+        "payment_fees",
+        "eligibility_check",
+        "offer_letter",
+        "no_eligibility",
+        "confirmation"
+      ],
+      "optional_nodes": [
+        "scholarship_inquiry",
+        "aid_process",
+        "explore_other_options",
+        "info_loop"
+      ],
+      "start_node": "intro_university",
+      "user_intents": [
+        "apply_program",
+        "select_program",
+        "choose_entry_level",
+        "provide_requirements",
+        "upload_documents",
+        "make_payment",
+        "inquire_scholarship",
+        "fill_financial_aid",
+        "confirm_admission",
+        "decline_admission",
+        "explore_other_options",
+        "dispute_application"
+      ],
+      "intent_hierarchy": {
+        "apply_program": [
+          "select_program",
+          "choose_entry_level"
+        ],
+        "provide_requirements": [
+          "upload_documents"
+        ],
+        "make_payment": [
+          "payment_method_selection"
+        ],
+        "inquire_scholarship": [
+          "merit_based",
+          "need_based"
+        ],
+        "confirm_admission": [
+          "accept_admission",
+          "decline_admission"
+        ],
+        "explore_other_options": [
+          "alternative_programs",
+          "reapply"
+        ],
+        "dispute_application": [
+          "recheck_eligibility"
+        ]
+      },
+      "user_utterances_examples": {
+        "select_program": [
+          "I want to apply for a bachelor's degree.",
+          "I'm interested in a master's program in Engineering."
+        ],
+        "choose_entry_level": [
+          "I want an undergraduate program.",
+          "It’s a Master’s program for me."
+        ],
+        "provide_requirements": [
+          "Yes, I have my transcripts ready.",
+          "I'm missing some recommendation letters, but I'll proceed."
+        ],
+        "upload_documents": [
+          "Alright, let’s upload the documents.",
+          "Yes, I'll attach them now."
+        ],
+        "make_payment": [
+          "I’ll pay by credit card. Payment done.",
+          "Fee paid via bank transfer."
+        ],
+        "inquire_scholarship": [
+          "Yes, I want scholarship details.",
+          "I do need financial aid."
+        ],
+        "fill_financial_aid": [
+          "I've filled the aid form. Let's proceed."
+        ],
+        "confirm_admission": [
+          "Yes, I accept the offer!",
+          "Absolutely, I'm in!"
+        ],
+        "decline_admission": [
+          "I'm not sure if I'll accept. Do you have other programs?"
+        ],
+        "explore_other_options": [
+          "Okay, I'd like to see alternative options."
+        ],
+        "dispute_application": [
+          "But I do meet them, let's check again. (User disputes)."
+        ]
+      },
+      "required_slots": [
+        "program_choice",
+        "entry_level",
+        "transcripts",
+        "test_scores",
+        "references",
+        "documents",
+        "payment_method",
+        "scholarship_type",
+        "financial_aid_info"
+      ],
+      "bot_utterances_templates": {
+        "intro_university": [
+          "Welcome to the University Admissions Bot!",
+          "Hi there, ready to apply to our university?",
+          "Greetings! Let’s start your enrollment process."
+        ],
+        "program_select": [
+          "Which program or major are you interested in?",
+          "We have various faculties: Arts, Science, Engineering, Business. Your choice?",
+          "Select your intended field of study: any preference?"
+        ],
+        "entry_level": [
+          "Are you applying for an undergraduate or graduate program?",
+          "Which level suits you: Bachelor’s or Master’s/PhD?",
+          "Undergrad or postgrad application?"
+        ],
+        "requirements": [
+          "We’ll need your transcripts, test scores, and references. Ready to upload or share them?",
+          "Have you prepared your academic records and letters of recommendation?",
+          "We require certain documents. Do you have them on hand?"
+        ],
+        "document_upload": [
+          "Please upload or confirm your document references here.",
+          "You can provide your documents in PDF format. Need help with that?",
+          "This is where you attach your transcripts and recommendation letters."
+        ],
+        "payment_fees": [
+          "An application fee of $50 applies. How would you like to pay?",
+          "We require a processing fee. Credit card or bank transfer?",
+          "Application fee needed to proceed. Payment method?"
+        ],
+        "scholarship_inquiry": [
+          "Interested in applying for scholarships or financial aid?",
+          "We have merit-based and need-based scholarships. Would you like details?",
+          "Need financial assistance or are you self-funded?"
+        ],
+        "aid_process": [
+          "Please fill out the financial aid form. Are you ready to do that?",
+          "We’ll need additional info like family income, etc. to apply for scholarships.",
+          "To apply for financial aid, complete the relevant form. Shall we do that now?"
+        ],
+        "eligibility_check": [
+          "We’re checking your eligibility based on your documents. One moment.",
+          "Reviewing your transcripts and scores. Please wait...",
+          "We’ll evaluate your application credentials now. Stand by."
+        ],
+        "offer_letter": [
+          "Congratulations, you're conditionally accepted! Would you like to confirm admission?",
+          "We’d like to offer you a place. Ready to accept?",
+          "Good news, we can offer you a seat. Confirm or decline?"
+        ],
+        "no_eligibility": [
+          "I'm sorry, but it seems your application doesn’t meet the requirements.",
+          "Unfortunately, we cannot offer admission at this time. Would you like alternative options?",
+          "We can’t admit you right now. Let me know if you want to explore other pathways."
+        ],
+        "confirmation": [
+          "Your admission is confirmed! Welcome aboard.",
+          "Excellent! We’ll send official admission documents soon.",
+          "Congrats, you’re officially enrolled now!"
+        ],
+        "explore_other_options": [
+          "We have other diploma programs if you’re interested.",
+          "You can consider reapplying next semester with updated documents.",
+          "We can guide you to related certificates or short courses."
+        ],
+        "info_loop": [
+          "I’m not sure I understood. Could you clarify your application details?",
+          "That seems unclear. Please restate your question or upload the correct docs.",
+          "I didn't catch that. Let’s revisit the program or document requirements."
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": "unknown",
+      "fallback_strategy": "ask_for_clarification",
+      "confirmation_needed": [
+        "confirm_admission"
+      ],
+      "max_dialog_length": 15,
+      "alternate_paths": {
+        "if confused": "restart program selection"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "application_fee": "$50",
+        "programs": [
+          "Arts",
+          "Science",
+          "Engineering",
+          "Business"
+        ]
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Event Planning",
+      "sub_topic": [
+        "event type",
+        "venue selection",
+        "catering",
+        "entertainment",
+        "budget",
+        "extra services"
+      ],
+      "bot_goal": "help with event planning",
+      "success_criteria": [
+        "user finalizes event plan and completes payment"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Informative",
+        "Supportive"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 12,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "greet_planner",
+        "event_type",
+        "guest_count",
+        "venue_options",
+        "catering_details",
+        "entertainment",
+        "budget_range",
+        "draft_plan",
+        "confirm_plan",
+        "payment_schedule",
+        "final_arrangements"
+      ],
+      "optional_nodes": [
+        "extra_services",
+        "change_requests"
+      ],
+      "start_node": "greet_planner",
+      "user_intents": [
+        "specify_event_type",
+        "provide_guest_count",
+        "select_venue",
+        "choose_catering",
+        "choose_entertainment",
+        "set_budget",
+        "request_extra_services",
+        "review_plan",
+        "request_changes",
+        "confirm_plan",
+        "make_payment",
+        "express_confusion"
+      ],
+      "intent_hierarchy": {
+        "specify_event_type": [
+          "wedding",
+          "conference",
+          "birthday",
+          "other"
+        ],
+        "request_changes": [
+          "change_date",
+          "change_location",
+          "change_catering"
+        ],
+        "express_confusion": [
+          "unclear_requirements"
+        ]
+      },
+      "user_utterances_examples": {
+        "specify_event_type": [
+          "I'm planning a wedding.",
+          "It's a corporate conference."
+        ],
+        "provide_guest_count": [
+          "Around 200 guests.",
+          "Could be 50-70 people."
+        ],
+        "select_venue": [
+          "I'd like an outdoor garden.",
+          "Let's do an elegant indoor hall."
+        ],
+        "choose_catering": [
+          "A full buffet with international cuisine.",
+          "Simple finger foods, nothing too fancy."
+        ],
+        "choose_entertainment": [
+          "A DJ would be nice.",
+          "Maybe a live band if budget allows."
+        ],
+        "set_budget": [
+          "My budget is around $10,000.",
+          "I can go up to $5,000 maximum."
+        ],
+        "request_extra_services": [
+          "I'd also like to discuss decorations.",
+          "I want a full floral setup with custom centerpieces.",
+          "No additional services, I'll handle decor myself."
+        ],
+        "review_plan": [
+          "Okay, let's see the draft plan.",
+          "Looks good. I'm happy with this plan."
+        ],
+        "request_changes": [
+          "I need to change the date or location.",
+          "That’s great, but I'd like different catering.",
+          "Wait, I'd like more changes again."
+        ],
+        "confirm_plan": [
+          "Looks good. I'm happy with this plan."
+        ],
+        "make_payment": [
+          "Yes, let's pay the deposit and finalize.",
+          "I'm ready to proceed with payment.",
+          "Paying deposit now, let's do it!",
+          "Full payment done, let's confirm everything."
+        ],
+        "express_confusion": [
+          "I'm not sure, it's a mix of a party and a workshop? (confusing).",
+          "Actually, I'm not sure how to change it. (unclear)."
+        ]
+      },
+      "required_slots": [
+        "event_type",
+        "guest_count",
+        "venue_options",
+        "catering_details",
+        "entertainment",
+        "budget_range",
+        "extra_services"
+      ],
+      "bot_utterances_templates": {
+        "greet_planner": [
+          "Hello, welcome to the Event Planning Bot!",
+          "Hi, let's organize your special event today.",
+          "Greetings! Ready to plan your upcoming event?"
+        ],
+        "event_type": [
+          "What kind of event are you hosting—wedding, conference, birthday, or something else?",
+          "We handle corporate events, private parties, and more. Which is yours?",
+          "Could you specify the type of gathering you’re planning?"
+        ],
+        "guest_count": [
+          "Approximately how many guests are you expecting?",
+          "We need a headcount estimate. Do you have one?",
+          "What's your guest list size, roughly?"
+        ],
+        "venue_options": [
+          "We can suggest venues: indoor halls, outdoor gardens, or a beach setting. Preferences?",
+          "Would you like an open-air location or an indoor venue?",
+          "We have multiple venue types. Which suits your theme?"
+        ],
+        "catering_details": [
+          "Time to choose catering. Are you thinking buffet, plated dinner, or finger foods?",
+          "What type of cuisine or catering style do you prefer?",
+          "We offer various menu packages. Any dietary restrictions or preferences?"
+        ],
+        "entertainment": [
+          "Would you like live music, a DJ, or maybe a photo booth for entertainment?",
+          "We can arrange a band, DJ, or other activities. Interested?",
+          "Entertainment options: live performance, DJ, games. Any preference?"
+        ],
+        "budget_range": [
+          "What’s your overall budget range for this event?",
+          "We need to consider costs. Do you have a rough budget in mind?",
+          "Knowing your budget helps us finalize the plan. Any figure to start with?"
+        ],
+        "draft_plan": [
+          "Here’s a preliminary plan with chosen venue, catering, and entertainment. Review it?",
+          "Draft proposal is ready. Would you like to see or modify it?",
+          "We’ve compiled a plan. Time to review or adjust?"
+        ],
+        "change_requests": [
+          "What changes do you want to make?",
+          "Sure, let’s adjust anything you’d like.",
+          "No worries, we can tweak the plan. Which parts need an update?"
+        ],
+        "confirm_plan": [
+          "Shall we confirm and proceed with booking the vendors?",
+          "Everything looks good? Ready to finalize and sign contracts?",
+          "Let's lock in the plan. Confirm your event arrangement now?"
+        ],
+        "payment_schedule": [
+          "We’ll require a deposit. Would you like to pay now?",
+          "A down payment secures the venue and caterer. Ready to handle payment?",
+          "We can set up a payment plan. Interested, or pay in full?"
+        ],
+        "final_arrangements": [
+          "All set! We’ll coordinate with vendors and keep you posted.",
+          "Your event plan is finalized. We’ll send updates as the date approaches.",
+          "Congratulations, your event is planned! We’ll follow up with details soon."
+        ],
+        "info_confusion": [
+          "I'm not entirely sure what you mean. Could you clarify?",
+          "That request is unclear. Please specify your event details again.",
+          "We need more clarity on your instructions. Please rephrase or confirm."
+        ],
+        "extra_services": [
+          "Would you like any additional services like decorations, invitation design, or photography?",
+          "We also provide decor, floral arrangements, and photography. Interested?",
+          "Any extra services to add, such as event branding, lighting, or custom invites?"
+        ]
+      },
+      "follow_up_questions": {
+        "info_confusion": [
+          "Could you clarify your event details?",
+          "Please rephrase your request or provide more information."
+        ]
+      },
+      "closing_phrases": [
+        "All set! We’ll coordinate with vendors and keep you posted.",
+        "Your event plan is finalized. We’ll send updates as the date approaches.",
+        "Congratulations, your event is planned! We’ll follow up with details soon."
+      ],
+      "fallback_strategy": "ask_for_clarification",
+      "confirmation_needed": [
+        "confirm_plan",
+        "payment_schedule"
+      ],
+      "max_dialog_length": 12,
+      "alternate_paths": {
+        "if user expresses confusion": "info_confusion",
+        "if user requests extra services": "extra_services",
+        "if user requests changes": "change_requests"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Exploring global cultures and traditions",
+      "sub_topic": [
+        "festivals",
+        "food traditions",
+        "language aspects",
+        "cultural challenges"
+      ],
+      "bot_goal": "Engage users in conversations about different cultures and traditions",
+      "success_criteria": [
+        "user chooses to wrap up the conversation"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "informal",
+      "emotional_tone": [
+        "Friendly",
+        "Approachable"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "no",
+      "max_dialog_depth": 8,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "culture_greeting",
+        "region_focus",
+        "festivals_dive",
+        "food_traditions",
+        "language_aspect",
+        "cultural_challenges",
+        "wrap_up",
+        "farewell"
+      ],
+      "optional_nodes": [
+        "discussion_loop",
+        "compare_cultures",
+        "cycle_topic"
+      ],
+      "start_node": "culture_greeting",
+      "user_intents": [
+        "express_interest_in_culture",
+        "select_region_or_country",
+        "discuss_festivals",
+        "discuss_food_traditions",
+        "discuss_language_aspects",
+        "discuss_cultural_challenges",
+        "compare_cultures",
+        "cycle_topic",
+        "wrap_up"
+      ],
+      "intent_hierarchy": {
+        "express_interest_in_culture": [],
+        "select_region_or_country": [],
+        "discuss_cultural_aspects": [
+          "festivals",
+          "food_traditions",
+          "language_aspects",
+          "cultural_challenges"
+        ],
+        "compare_cultures": [],
+        "cycle_topic": [],
+        "wrap_up": []
+      },
+      "user_utterances_examples": {
+        "express_interest_in_culture": [
+          "Yes, I'd like to learn about different traditions.",
+          "Sure, let's talk about cultures."
+        ],
+        "select_region_or_country": [
+          "I'm curious about Asian festivals.",
+          "What about European cultural celebrations?"
+        ],
+        "discuss_festivals": [
+          "Tell me more about Diwali celebrations.",
+          "How do people celebrate Chinese New Year?"
+        ],
+        "discuss_food_traditions": [
+          "Explain typical Asian food customs.",
+          "I love how Mediterranean diet differs from others."
+        ],
+        "compare_cultures": [
+          "Yes, let's compare with my culture.",
+          "I have some experiences to share."
+        ],
+        "cycle_topic": [
+          "Actually, I'd like to revisit festivals or food.",
+          "Maybe let's jump back to food traditions for a moment."
+        ],
+        "wrap_up": [
+          "We can wrap up now, thanks!",
+          "Okay, let's conclude."
+        ]
+      },
+      "required_slots": [
+        "selected_region",
+        "selected_topic"
+      ],
+      "bot_utterances_templates": {
+        "culture_greeting": [
+          "Hey! Let’s explore different cultures and traditions. Interested?",
+          "Hi, want to chat about global cultures or your own background?",
+          "Hello! Let’s discuss cultural customs, festivals, and more."
+        ],
+        "region_focus": [
+          "Which region or country piques your interest?",
+          "Any specific culture you’d like to learn about?",
+          "We can talk about Asian, European, African, or any region’s traditions."
+        ],
+        "festivals_dive": [
+          "Festivals are a big part of culture. Any you’re curious about?",
+          "Want to explore major celebrations like Diwali, Chinese New Year, or Oktoberfest?",
+          "Which cultural festivals fascinate you the most?"
+        ],
+        "food_traditions": [
+          "Cuisines and eating habits differ widely. Shall we talk about food?",
+          "Interested in discussing traditional meals or dining etiquette?",
+          "Food can be a window into culture. Shall we dive into that?"
+        ],
+        "discussion_loop": [
+          "That’s quite interesting. Would you like to compare with your own culture?",
+          "Have you experienced these customs personally?",
+          "Any personal anecdotes or viewpoints you’d like to share?"
+        ],
+        "compare_cultures": [
+          "How does this differ from traditions in your region?",
+          "Comparing cultures can be enlightening. Any specific contrasts you notice?",
+          "It’s fascinating to see both differences and similarities among cultures."
+        ],
+        "language_aspect": [
+          "Language is another key aspect. Interested in discussing linguistic differences?",
+          "We can also touch upon how language shapes culture if you'd like.",
+          "Shall we explore dialects, writing systems, or language families?"
+        ],
+        "cultural_challenges": [
+          "Some travelers face culture shock. Thoughts on dealing with that?",
+          "Have you encountered any challenges adapting to new customs?",
+          "We can chat about navigating cultural differences. Interested?"
+        ],
+        "wrap_up": [
+          "This has been a deep dive into cultural traditions. Shall we continue or wrap up?",
+          "We've covered quite a bit about cultures. Want to talk more or end here?",
+          "Ready to conclude our cultural chat or keep exploring?"
+        ],
+        "farewell": [
+          "Thank you for this cultural conversation. Feel free to chat again anytime!",
+          "It was lovely exploring global traditions with you. Take care!",
+          "Great discussion! Keep discovering new cultures!"
+        ],
+        "cycle_topic": [
+          "We can jump back to festivals, food, or language. Which do you prefer now?",
+          "Want to cycle back to a previous topic or pick a new cultural facet?",
+          "We can revisit any cultural aspect you find most intriguing."
+        ]
+      },
+      "follow_up_questions": {
+        "festivals": [
+          "Any you’re curious about?",
+          "Want to explore major celebrations like Diwali, Chinese New Year, or Oktoberfest?",
+          "Which cultural festivals fascinate you the most?"
+        ],
+        "food_traditions": [
+          "Shall we talk about food?",
+          "Interested in discussing traditional meals or dining etiquette?",
+          "Food can be a window into culture. Shall we dive into that?"
+        ],
+        "language_aspects": [
+          "Interested in discussing linguistic differences?",
+          "We can also touch upon how language shapes culture if you'd like.",
+          "Shall we explore dialects, writing systems, or language families?"
+        ],
+        "cultural_challenges": [
+          "Some travelers face culture shock. Thoughts on dealing with that?",
+          "Have you encountered any challenges adapting to new customs?",
+          "We can chat about navigating cultural differences. Interested?"
+        ]
+      },
+      "closing_phrases": [
+        "Thank you for this cultural conversation. Feel free to chat again anytime!",
+        "It was lovely exploring global traditions with you. Take care!",
+        "Great discussion! Keep discovering new cultures!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 8,
+      "alternate_paths": {
+        "if user wants to revisit festivals": "festivals_dive",
+        "if user wants to revisit food traditions": "food_traditions",
+        "if user wants to revisit language aspects": "language_aspect"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "music composition and songwriting",
+      "sub_topic": [
+        "genre",
+        "instrumentation",
+        "lyrics",
+        "song structure",
+        "collaboration",
+        "production tools",
+        "challenges"
+      ],
+      "bot_goal": "discuss and explore the user's approach to making music",
+      "success_criteria": [
+        "conversation reaches end_discussion node"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "informal",
+      "emotional_tone": [
+        "Friendly",
+        "Approachable",
+        "Supportive",
+        "Informative"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 3,
+      "mandatory_nodes": [
+        "music_intro",
+        "genre_focus",
+        "instrumentation",
+        "lyric_discussion",
+        "song_structure",
+        "collaboration",
+        "production_tools",
+        "challenge_discussion",
+        "advice_loop",
+        "end_discussion"
+      ],
+      "optional_nodes": [
+        "loop_topics"
+      ],
+      "start_node": "music_intro",
+      "user_intents": [
+        "start_discussion",
+        "specify_genre",
+        "specify_instrumentation",
+        "discuss_lyrics",
+        "discuss_song_structure",
+        "collaborate",
+        "specify_production_tools",
+        "discuss_challenges",
+        "request_advice",
+        "end_conversation",
+        "loop_topics"
+      ],
+      "intent_hierarchy": {
+        "start_discussion": [],
+        "specify_genre": [
+          "rock",
+          "pop",
+          "classical",
+          "hip-hop",
+          "other"
+        ],
+        "specify_instrumentation": [
+          "acoustic",
+          "electronic",
+          "blend"
+        ],
+        "discuss_lyrics": [
+          "theme",
+          "style"
+        ],
+        "discuss_song_structure": [
+          "verse-chorus",
+          "ABAB",
+          "free_form",
+          "progressive"
+        ],
+        "collaborate": [
+          "solo",
+          "with_others"
+        ],
+        "specify_production_tools": [
+          "Ableton",
+          "Logic",
+          "FL Studio",
+          "other"
+        ],
+        "discuss_challenges": [
+          "mixing",
+          "mastering",
+          "creative_direction",
+          "technical_limitations"
+        ],
+        "request_advice": [
+          "overcoming_obstacles",
+          "fresh_ideas"
+        ],
+        "end_conversation": [],
+        "loop_topics": []
+      },
+      "user_utterances_examples": {
+        "start_discussion": [
+          "Yes, I'd love to talk about making music.",
+          "Sure, let's discuss composition."
+        ],
+        "specify_genre": [
+          "I'm into pop music.",
+          "I mostly compose orchestral pieces."
+        ],
+        "specify_instrumentation": [
+          "I use a guitar and a DAW for layering.",
+          "I love using synths for an electronic feel."
+        ],
+        "discuss_song_structure": [
+          "I'd like to talk about structure more than instrumentation.",
+          "Yes, let's discuss verse-chorus forms.",
+          "I prefer instrumentals, so let's talk structure anyway."
+        ],
+        "collaborate": [
+          "I usually collaborate with a friend who sings.",
+          "I create everything solo, from start to finish."
+        ],
+        "specify_production_tools": [
+          "We use Ableton for everything.",
+          "I prefer Logic Pro with some live instruments."
+        ],
+        "discuss_challenges": [
+          "Mixing is tough. I'm learning about EQ and compression.",
+          "I struggle with finalizing a polished sound."
+        ],
+        "request_advice": [
+          "Yes, I'd like some tips.",
+          "I need advice on this."
+        ],
+        "end_conversation": [
+          "Thanks, that’s really helpful. Let's wrap up.",
+          "Got it, I think I'm good for now."
+        ],
+        "loop_topics": [
+          "Actually, let's go back to structure or lyrics.",
+          "I still want to revisit another aspect of composition."
+        ]
+      },
+      "required_slots": [
+        "genre",
+        "instrumentation",
+        "song_structure",
+        "collaboration",
+        "production_tools",
+        "challenges"
+      ],
+      "bot_utterances_templates": {
+        "music_intro": [
+          "Hey! Let’s chat about music composition and songwriting. Sound good?",
+          "Hi, want to discuss your approach to making music or analyzing it?",
+          "Hello! Ready to talk about creating and exploring music?"
+        ],
+        "genre_focus": [
+          "Which genre do you primarily compose or listen to?",
+          "Do you have a preferred music style: rock, pop, classical, hip-hop, or something else?",
+          "Let’s start with the genre that interests you most."
+        ],
+        "instrumentation": [
+          "Are you focusing on acoustic instruments, electronic production, or a blend?",
+          "Do you use real instruments, virtual software, or a mix when composing?",
+          "What's your typical setup—guitar, piano, DAW, or something else?"
+        ],
+        "lyric_discussion": [
+          "Do you write lyrics? If so, any theme or style you gravitate to?",
+          "Interested in discussing lyric writing techniques or do you focus on instrumentals?",
+          "How important are words in your music, or is it mostly instrumental?"
+        ],
+        "song_structure": [
+          "Song structures vary: verse-chorus, ABAB, free form. Which do you prefer?",
+          "Do you follow typical pop structures or experiment with progressive forms?",
+          "Shall we explore different structural approaches in composition?"
+        ],
+        "collaboration": [
+          "Do you collaborate with others or produce solo?",
+          "How do you feel about co-writing or jamming with bandmates?",
+          "Ever tried remote collaboration with other musicians or is it purely a solo process?"
+        ],
+        "production_tools": [
+          "Which software or hardware do you find essential for music production?",
+          "Do you use professional DAWs like Ableton, Logic, FL Studio, or something else?",
+          "Any favorite plugins or synthesizers you rely on?"
+        ],
+        "challenge_discussion": [
+          "What challenges do you face in composition or production?",
+          "Any hurdles like writer's block or technical limitations you want to talk about?",
+          "Struggling with mixing, mastering, or creative direction? Let’s delve into it."
+        ],
+        "advice_loop": [
+          "Would you like tips on overcoming these obstacles?",
+          "Need advice or fresh ideas for your creative process?",
+          "We can brainstorm solutions or new techniques. Shall we?"
+        ],
+        "end_discussion": [
+          "Alright, thanks for chatting about music creation!",
+          "Hope our discussion inspired your next composition. Take care!",
+          "Good luck with your songwriting and production. Keep creating!"
+        ],
+        "loop_topics": [
+          "We can go back to lyrics, instrumentation, or structure. Which do you want to revisit?",
+          "Feel free to jump to any other aspect of music composition again.",
+          "Want to circle back or move to a new area of composition?"
+        ]
+      },
+      "follow_up_questions": {
+        "mixing": [
+          "Are you having trouble with EQ settings or compression levels?",
+          "Have you tried using reference tracks for your mixes?"
+        ],
+        "mastering": [
+          "Are you familiar with loudness standards?",
+          "Do you have access to mastering software or services?"
+        ],
+        "writer's_block": [
+          "When do you usually feel stuck in your songwriting process?",
+          "Have you tried taking breaks or changing your environment?"
+        ],
+        "technical_limitations": [
+          "Is your DAW causing issues?",
+          "Do you need hardware upgrades or new plugins?"
+        ],
+        "creative_direction": [
+          "What direction do you want your music to take?",
+          "Have you discussed your creative ideas with collaborators?"
+        ]
+      },
+      "closing_phrases": [
+        "Alright, thanks for chatting about music creation!",
+        "Hope our discussion inspired your next composition. Take care!",
+        "Good luck with your songwriting and production. Keep creating!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if user wants to revisit topics": "loop_topics"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Movie Critique and Discussion",
+      "sub_topic": [
+        "genre selection",
+        "director analysis",
+        "plot analysis",
+        "character development",
+        "cinematography",
+        "soundtrack",
+        "critic rating",
+        "film comparison"
+      ],
+      "bot_goal": "facilitate movie critique discussion",
+      "success_criteria": [
+        "user chooses to end the discussion"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Approachable"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "yes",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "movie_intro",
+        "genre_pick",
+        "close_chat"
+      ],
+      "optional_nodes": [
+        "director_focus",
+        "plot_analysis",
+        "character_dev",
+        "cinematography",
+        "soundtrack",
+        "critic_rating",
+        "compare_films",
+        "topic_loop"
+      ],
+      "start_node": "movie_intro",
+      "user_intents": [
+        "discuss_genre",
+        "discuss_director",
+        "discuss_plot",
+        "discuss_character",
+        "discuss_cinematography",
+        "discuss_soundtrack",
+        "discuss_critic_rating",
+        "compare_films",
+        "close_discussion"
+      ],
+      "intent_hierarchy": {
+        "discuss_genre": [],
+        "discuss_director": [],
+        "discuss_plot": [],
+        "discuss_character": [],
+        "discuss_cinematography": [],
+        "discuss_soundtrack": [],
+        "discuss_critic_rating": [],
+        "compare_films": [],
+        "close_discussion": []
+      },
+      "user_utterances_examples": {
+        "discuss_genre": [
+          "I like sci-fi. Let's discuss that.",
+          "Comedy is my preference."
+        ],
+        "discuss_director": [
+          "I love Christopher Nolan's style, for example.",
+          "Quentin Tarantino's direction intrigues me."
+        ],
+        "discuss_plot": [
+          "Let’s skip directors. I'd like to talk plot directly.",
+          "Plot was strong, but I'd like to talk about characters next.",
+          "It was a complex storyline with time jumps."
+        ],
+        "discuss_character": [
+          "The hero's arc was great, let's discuss cinematography now.",
+          "I found the antagonist interesting, but let's move on to visuals.",
+          "I want to discuss the plot again or revisit characters.",
+          "Let’s circle back to characters or direction once more."
+        ],
+        "discuss_cinematography": [
+          "Beautiful camera work! What about the soundtrack?",
+          "The color grading was unique, let's see how the music complements it.",
+          "Let's re-explore the plot."
+        ],
+        "discuss_soundtrack": [
+          "Loved the OST. I'm curious about critic opinions too.",
+          "Sound design was immersive. Let’s see how critics rated it.",
+          "I want to talk about critics' views more."
+        ],
+        "discuss_critic_rating": [
+          "Critics gave it high marks. I'd like to see how it compares to a similar film.",
+          "Personal rating is 8/10. Let’s compare it to the director's past work."
+        ],
+        "compare_films": [
+          "After comparing, I'm done. Thanks!",
+          "It stands out well. I'm ready to wrap up the discussion."
+        ],
+        "close_discussion": [
+          "No, I'm done. Let's finish."
+        ]
+      },
+      "required_slots": "unknown",
+      "bot_utterances_templates": {
+        "movie_intro": [
+          "Hello! Up for a movie critique discussion?",
+          "Hi, let's dive into film analysis and talk about our favorite or disliked movies.",
+          "Welcome to the Film Chat Bot. Ready to dissect some cinematic works?"
+        ],
+        "genre_pick": [
+          "Which movie genre are you most interested in discussing?",
+          "Horror, comedy, drama, action—what's your pick?",
+          "Let’s start by choosing a genre or film you want to analyze."
+        ],
+        "director_focus": [
+          "Any particular director's style intrigues you?",
+          "We can talk about famous directors or underrated ones. Which interests you?",
+          "Shall we examine the directing style of someone specific?"
+        ],
+        "plot_analysis": [
+          "How do you feel about the storyline or plot pacing?",
+          "Discussing plot structures: do you enjoy nonlinear narratives or a classic approach?",
+          "Plot analysis: what stands out in the story?"
+        ],
+        "character_dev": [
+          "Character arcs can make or break a movie. Thoughts?",
+          "How about the protagonist and antagonist development?",
+          "Are the characters well-rounded or flat in your opinion?"
+        ],
+        "cinematography": [
+          "Cinematography is vital. Any shots or angles you found memorable?",
+          "We can explore color palettes, camera movements. Interested?",
+          "Let’s talk about the visual storytelling aspect."
+        ],
+        "soundtrack": [
+          "A film's score or soundtrack can truly elevate it. Any notable examples?",
+          "How does music or sound design impact your viewing experience?",
+          "Shall we discuss the composer or the use of background music?"
+        ],
+        "critic_rating": [
+          "Do you align with critics’ opinions or do you have a different take?",
+          "Rotten Tomatoes vs personal taste: how do you compare them?",
+          "How do you rate this film personally? Any star rating you’d give?"
+        ],
+        "compare_films": [
+          "We could compare this to similar films in the genre. Interested?",
+          "Want to see how it stacks up against other movies by the same director?",
+          "Comparisons can reveal strengths and weaknesses. Shall we do that?"
+        ],
+        "close_chat": [
+          "This was a fun movie chat! Any last thoughts before we end?",
+          "Thanks for sharing your cinematic perspectives. Ready to finish?",
+          "All set. Hope you enjoyed analyzing films with me!"
+        ],
+        "topic_loop": [
+          "Shall we circle back to plot, characters, or cinematography?",
+          "We can revisit any element—soundtrack, direction, or comparing films. What next?",
+          "If you want to discuss another angle of the movie, we can loop back."
+        ]
+      },
+      "follow_up_questions": "unknown",
+      "closing_phrases": [
+        "This was a fun movie chat! Any last thoughts before we end?",
+        "Thanks for sharing your cinematic perspectives. Ready to finish?",
+        "All set. Hope you enjoyed analyzing films with me!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if user wants to revisit a topic": "topic_loop",
+        "if user chooses to close discussion early": "close_chat"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": "unknown"
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Video gaming",
+      "sub_topic": [
+        "platform choice",
+        "genre discussion",
+        "favorite titles",
+        "strategy tips",
+        "multiplayer vs single-player",
+        "community interaction",
+        "tech specs",
+        "future wishlist",
+        "gear talk"
+      ],
+      "bot_goal": "engage in gaming-related discussion",
+      "success_criteria": [
+        "user ends the chat"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "informal",
+      "emotional_tone": [
+        "Friendly",
+        "Approachable"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "gaming_hello",
+        "platform_choice",
+        "genre_discussion",
+        "favorite_title",
+        "end_chat"
+      ],
+      "optional_nodes": [
+        "strategy_tips",
+        "multiplayer_vs_single",
+        "community_interaction",
+        "tech_specs",
+        "wishlist_future",
+        "gear_talk",
+        "topic_return"
+      ],
+      "start_node": "gaming_hello",
+      "user_intents": [
+        "choose_platform",
+        "choose_genre",
+        "mention_favorite_game",
+        "request_strategy_tips",
+        "share_strategy_tips",
+        "prefer_multiplayer",
+        "prefer_single_player",
+        "discuss_e-sports",
+        "discuss_tech_specs",
+        "discuss_future_titles",
+        "end_chat",
+        "revisit_topic"
+      ],
+      "intent_hierarchy": {
+        "choose_platform": [],
+        "choose_genre": [],
+        "mention_favorite_game": [],
+        "strategy_tips": [
+          "request_strategy_tips",
+          "share_strategy_tips"
+        ],
+        "prefer_mode": [
+          "prefer_multiplayer",
+          "prefer_single_player"
+        ],
+        "discuss_community": [
+          "discuss_e-sports"
+        ],
+        "discuss_tech_specs": [],
+        "discuss_future_titles": [],
+        "end_chat": [],
+        "revisit_topic": []
+      },
+      "user_utterances_examples": {
+        "choose_platform": [
+          "Sure, I'm on PC mostly.",
+          "Yes, console gaming for me."
+        ],
+        "choose_genre": [
+          "I love RPGs.",
+          "Shooters are my jam."
+        ],
+        "mention_favorite_game": [
+          "I'm really into The Witcher series.",
+          "Overwatch is my current obsession."
+        ],
+        "request_strategy_tips": [
+          "Yes, I'd like some tips on boss fights."
+        ],
+        "share_strategy_tips": [
+          "I have good strategies to share."
+        ],
+        "prefer_multiplayer": [
+          "Multiplayer is amazing for e-sports, I'd love to chat about that."
+        ],
+        "prefer_single_player": [
+          "It's actually a great single-player game, let’s discuss that aspect."
+        ],
+        "discuss_e-sports": [
+          "E-sports are cool, but I'm also into high-end gaming tech."
+        ],
+        "discuss_tech_specs": [
+          "E-sports are cool, but I'm also into high-end gaming tech.",
+          "Interested in graphics or VR experiences?"
+        ],
+        "discuss_future_titles": [
+          "I can't wait for the new Elder Scrolls. Let's end chat now though.",
+          "Looking forward to any sequels or brand-new franchises?"
+        ],
+        "end_chat": [
+          "I can't wait for the new Elder Scrolls. Let's end chat now though.",
+          "Lots of upcoming games, but I'm done for now. Thank you!"
+        ],
+        "revisit_topic": [
+          "Let me jump to game wishlist or new releases.",
+          "No, I'd rather talk about single-player story arcs again.",
+          "Alright, done with gear talk, let's revisit another topic."
+        ]
+      },
+      "required_slots": [
+        "platform",
+        "genre",
+        "favorite_game",
+        "strategy_tips",
+        "mode_preference",
+        "community_interest",
+        "tech_specs",
+        "future_titles"
+      ],
+      "bot_utterances_templates": {
+        "gaming_hello": [
+          "Hey, let’s talk about gaming! What are you playing these days?",
+          "Hi, ready to discuss video games, strategies, and more?",
+          "Hello! Interested in chatting about your favorite games?"
+        ],
+        "platform_choice": [
+          "Which platform do you usually game on—PC, console, or mobile?",
+          "Do you prefer PlayStation, Xbox, Nintendo, or PC gaming?",
+          "We can talk about platform-specific titles or multi-platform games. What’s your go-to?"
+        ],
+        "genre_discussion": [
+          "What genre do you enjoy—RPG, FPS, strategy, or something else?",
+          "Interested in open-world adventures, competitive shooters, or casual puzzle games?",
+          "Which gaming genre holds your attention the most?"
+        ],
+        "favorite_title": [
+          "Any all-time favorite games you'd like to discuss?",
+          "Which specific title do you love or are currently obsessed with?",
+          "Let’s pick a game to dive deeper into. Name one you adore."
+        ],
+        "strategy_tips": [
+          "Want to share or receive strategy tips for that game?",
+          "We can talk about advanced tactics, leveling up, or boss fights. Interested?",
+          "Need help or have advice for conquering certain parts of the game?"
+        ],
+        "multiplayer_vs_single": [
+          "Do you prefer multiplayer experiences or single-player campaigns?",
+          "Which do you find more fulfilling—online coop/competitive modes or solo story arcs?",
+          "Let’s discuss the pros and cons of multiplayer vs single-player. Thoughts?"
+        ],
+        "community_interaction": [
+          "How important is community or e-sports in your gaming experience?",
+          "Are you into streaming, watching pro tournaments, or discussing games online?",
+          "Let’s talk about gaming culture and communities if you’d like."
+        ],
+        "tech_specs": [
+          "Do you keep an eye on hardware specs or console generations?",
+          "Interested in next-gen performance, graphics, or VR experiences?",
+          "We can talk about building a gaming PC or optimizing console setup. Up for it?"
+        ],
+        "wishlist_future": [
+          "Any upcoming titles you’re excited for?",
+          "Looking forward to any sequels or brand-new franchises?",
+          "We can discuss your gaming wishlist for future releases."
+        ],
+        "end_chat": [
+          "Thanks for the gaming chat! Let’s play again soon.",
+          "Great talking about games with you. Catch you next time!",
+          "Hope you enjoy your next gaming session. Until next time!"
+        ],
+        "topic_return": [
+          "Want to revisit or expand on another aspect of gaming—strategy, community, or new releases?",
+          "We can jump back to a previous topic if you like. Which one?",
+          "Feel free to cycle back to any gaming theme that interests you."
+        ],
+        "gear_talk": [
+          "We can also talk about controllers, accessories, or gaming chairs if you’re interested.",
+          "Hardware includes not just consoles or PCs, but also gear. Ready to discuss that?",
+          "Some gamers focus on comfort and gear. Want to go there?"
+        ]
+      },
+      "follow_up_questions": {
+        "strategy_tips": [
+          "How often do you seek strategy tips?",
+          "Do you prefer written guides or video tutorials?"
+        ],
+        "multiplayer_vs_single": [
+          "What do you like about multiplayer modes?",
+          "Do you enjoy competitive play?"
+        ],
+        "community_interaction": [
+          "Do you participate in any gaming communities?",
+          "Are you a streamer or spectator?"
+        ],
+        "tech_specs": [
+          "What hardware do you use for gaming?",
+          "Are you interested in upgrading your setup?"
+        ],
+        "wishlist_future": [
+          "Which upcoming game are you most excited about?",
+          "Do you have a favorite developer you follow?"
+        ],
+        "gear_talk": [
+          "What gaming accessories do you use?",
+          "Is comfort important in your gaming setup?"
+        ]
+      },
+      "closing_phrases": [
+        "Thanks for the gaming chat! Let’s play again soon.",
+        "Great talking about games with you. Catch you next time!",
+        "Hope you enjoy your next gaming session. Until next time!"
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 10,
+      "alternate_paths": {
+        "if strategy tips are skipped": "multiplayer_vs_single",
+        "if user prefers single-player": "community_interaction",
+        "if user prefers multiplayer": "discuss_e-sports",
+        "if user wants to change topic": "topic_return"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": "unknown",
+      "dynamic_content": {
+        "game_titles": [
+          "The Witcher series",
+          "Overwatch",
+          "Elder Scrolls"
+        ]
+      }
+    }
+  },
+  {
+    "annotation": {
+      "topic": "Fantasy world-building and role-playing",
+      "sub_topic": [
+        "World Building",
+        "Character Creation",
+        "Magic System",
+        "Quest Development",
+        "Villain Creation",
+        "Factions and Lore",
+        "Side Stories",
+        "Role-Playing"
+      ],
+      "bot_goal": "Collaborate on creating a fantasy world and storyline",
+      "success_criteria": [
+        "user concludes the world-building session"
+      ],
+      "context_info": "unknown",
+      "language": "english",
+      "formality_level": "neutral",
+      "emotional_tone": [
+        "Friendly",
+        "Enthusiastic",
+        "Approachable"
+      ],
+      "lexical_diversity": "high",
+      "use_of_jargon": "moderate",
+      "max_dialog_depth": 10,
+      "max_branching_factor": 2,
+      "mandatory_nodes": [
+        "world_building",
+        "character_creation",
+        "magic_system",
+        "quest_discussion",
+        "end_fantasy"
+      ],
+      "optional_nodes": [
+        "villain_creation",
+        "factions_and_lore",
+        "side_stories",
+        "lore_loop",
+        "role_play_loop"
+      ],
+      "start_node": "fantasy_start",
+      "user_intents": [
+        "start_conversation",
+        "define_setting",
+        "create_character",
+        "define_magic",
+        "outline_quest",
+        "create_villain",
+        "add_factions",
+        "add_side_stories",
+        "continue_building",
+        "role_play_scenario",
+        "conclude_conversation"
+      ],
+      "intent_hierarchy": {
+        "start_conversation": [
+          "initiate_world_building"
+        ],
+        "define_setting": [
+          "choose_world_type"
+        ],
+        "create_character": [
+          "protagonist_type",
+          "adventuring_party"
+        ],
+        "define_magic": [
+          "magic_abundance",
+          "magic_costs",
+          "magic_structure"
+        ],
+        "outline_quest": [
+          "quest_type",
+          "quest_goal"
+        ],
+        "create_villain": [
+          "villain_type",
+          "villain_motivation"
+        ],
+        "add_factions": [
+          "faction_types"
+        ],
+        "add_side_stories": [
+          "side_story_types"
+        ],
+        "role_play_scenario": [
+          "simulate_quest",
+          "role_play_characters"
+        ],
+        "conclude_conversation": []
+      },
+      "user_utterances_examples": {
+        "start_conversation": [
+          "Yes, I'd love to build a fantasy setting!",
+          "Sure, let's create a magical world!"
+        ],
+        "define_setting": [
+          "Let's do a medieval high-fantasy realm.",
+          "A steampunk wizard realm sounds fun."
+        ],
+        "create_character": [
+          "I imagine a mage with unique powers.",
+          "A band of adventurers with different classes is good."
+        ],
+        "define_magic": [
+          "Magic is somewhat rare and dangerous.",
+          "Abundant magic, but requires focusing crystals."
+        ],
+        "outline_quest": [
+          "They must stop an ancient evil overlord from rising.",
+          "A lost relic threatens the realm."
+        ],
+        "create_villain": [
+          "There's also a rival warlord.",
+          "A cunning warlord with a hidden tragic backstory."
+        ],
+        "add_factions": [
+          "Let’s add more kingdoms or factions to make it complex.",
+          "A thieves' guild that meddles in the main quest."
+        ],
+        "add_side_stories": [
+          "Yes, I'd like side quests.",
+          "Maybe a haunted forest subplot."
+        ],
+        "role_play_scenario": [
+          "I'd like to role-play a scenario.",
+          "Let's simulate a short quest now."
+        ],
+        "modify_world_elements": [
+          "Wait, I'd like to go back to magic details or character creation.",
+          "Maybe let's refine the factions again."
+        ],
+        "conclude_conversation": [
+          "I think we've built enough. Let's conclude.",
+          "Yes, let's finish the discussion now.",
+          "No, we can stop here. Thanks!"
+        ]
+      },
+      "required_slots": [
+        "world_type",
+        "protagonist_role",
+        "magic_abundance",
+        "magic_costs",
+        "magic_structure",
+        "quest_type",
+        "villain_type",
+        "villain_motivation",
+        "faction_details",
+        "side_story_details"
+      ],
+      "bot_utterances_templates": {
+        "fantasy_start": [
+          "Greetings, traveler! Care to embark on a fantasy role-playing discussion?",
+          "Hail, adventurer! Shall we craft a quest or chat about imaginary worlds?",
+          "Welcome to the Realm of Imagination. Ready for a fantasy-themed conversation?"
+        ],
+        "world_building": [
+          "What kind of fantasy world intrigues you? Medieval, steampunk, or high-magic?",
+          "Let's outline the setting: ancient kingdom, space-fantasy, or mystical forest?",
+          "We can shape a realm. Any starting concept in mind—elves, dragons, or clockwork robots?"
+        ],
+        "character_creation": [
+          "Who is our protagonist—knight, mage, rogue, or something else?",
+          "Want to design a unique hero or a band of adventurers?",
+          "Shall we outline a solitary warrior, or a party of misfits with special skills?"
+        ],
+        "magic_system": [
+          "Is magic abundant or rare? Are there any costs or risks to using it?",
+          "We can define if spells require components, incantations, or inherent power.",
+          "How structured is magic? Rigidly studied or wild and chaotic?"
+        ],
+        "quest_discussion": [
+          "What sparks our hero’s journey—an evil overlord, a lost relic, or political intrigue?",
+          "Shall we create a grand quest or smaller episodic adventures?",
+          "Any plot catalysts you envision for this fantasy story?"
+        ],
+        "villain_creation": [
+          "Every quest needs opposition. Who’s the antagonist—dark sorcerer, cunning warlord, or cursed deity?",
+          "Is the villain sympathetic or purely evil? Motivations matter.",
+          "Let’s craft a memorable villain. Cruel tyrant or tragic antihero?"
+        ],
+        "factions_and_lore": [
+          "Are there different kingdoms or guilds with unique goals?",
+          "We can add factions: thieves’ guilds, knightly orders, or merchant clans. Thoughts?",
+          "Would politics or alliances be a big factor in this world?"
+        ],
+        "side_stories": [
+          "Shall we add side quests or subplots, like a dragon’s curse or a haunted forest?",
+          "We can create personal arcs for supporting characters. Interested?",
+          "Any secondary storyline to enrich the world?"
+        ],
+        "role_play_loop": [
+          "We can continue expanding this story or role-play scenarios. Ready?",
+          "Want to delve deeper into a specific story arc or keep building the setting?",
+          "Shall we role-play as the hero or NPCs, or refine the lore more?"
+        ],
+        "end_fantasy": [
+          "Our grand tapestry is woven. Thanks for crafting this fantasy world!",
+          "Farewell, adventurer! May your story flourish!",
+          "Our journey ends here, but the realm lives on in your imagination."
+        ],
+        "lore_loop": [
+          "We can revisit the magic system, the quest, or the villain. Which do you choose?",
+          "Ready to circle back and elaborate on an earlier point—magic, factions, or story arcs?",
+          "Shall we refine the world building or jump to side stories again?"
+        ]
+      },
+      "follow_up_questions": {
+        "world_building": [
+          "What kind of fantasy world intrigues you? Medieval, steampunk, or high-magic?",
+          "Let's outline the setting: ancient kingdom, space-fantasy, or mystical forest?",
+          "We can shape a realm. Any starting concept in mind—elves, dragons, or clockwork robots?"
+        ],
+        "character_creation": [
+          "Who is our protagonist—knight, mage, rogue, or something else?",
+          "Want to design a unique hero or a band of adventurers?",
+          "Shall we outline a solitary warrior, or a party of misfits with special skills?"
+        ],
+        "magic_system": [
+          "Is magic abundant or rare? Are there any costs or risks to using it?",
+          "We can define if spells require components, incantations, or inherent power.",
+          "How structured is magic? Rigidly studied or wild and chaotic?"
+        ],
+        "quest_discussion": [
+          "What sparks our hero’s journey—an evil overlord, a lost relic, or political intrigue?",
+          "Shall we create a grand quest or smaller episodic adventures?",
+          "Any plot catalysts you envision for this fantasy story?"
+        ],
+        "villain_creation": [
+          "Every quest needs opposition. Who’s the antagonist—dark sorcerer, cunning warlord, or cursed deity?",
+          "Is the villain sympathetic or purely evil? Motivations matter.",
+          "Let’s craft a memorable villain. Cruel tyrant or tragic antihero?"
+        ],
+        "factions_and_lore": [
+          "Are there different kingdoms or guilds with unique goals?",
+          "We can add factions: thieves’ guilds, knightly orders, or merchant clans. Thoughts?",
+          "Would politics or alliances be a big factor in this world?"
+        ],
+        "side_stories": [
+          "Shall we add side quests or subplots, like a dragon’s curse or a haunted forest?",
+          "We can create personal arcs for supporting characters. Interested?",
+          "Any secondary storyline to enrich the world?"
+        ],
+        "role_play_loop": [
+          "We can continue expanding this story or role-play scenarios. Ready?",
+          "Want to delve deeper into a specific story arc or keep building the setting?",
+          "Shall we role-play as the hero or NPCs, or refine the lore more?"
+        ]
+      },
+      "closing_phrases": [
+        "Our grand tapestry is woven. Thanks for crafting this fantasy world!",
+        "Farewell, adventurer! May your story flourish!",
+        "Our journey ends here, but the realm lives on in your imagination."
+      ],
+      "fallback_strategy": "unknown",
+      "confirmation_needed": "unknown",
+      "max_dialog_length": 15,
+      "alternate_paths": {
+        "if user wants to revisit magic system": "magic_system",
+        "if user wants to revisit quest": "quest_discussion",
+        "if user wants to revisit character creation": "character_creation",
+        "if user wants to end the conversation": "end_fantasy"
+      },
+      "escalation_policy": "unknown",
+      "user_feedback_collection": "unknown",
+      "user_persona": [
+        "fantasy enthusiast"
+      ],
+      "dynamic_content": {
+        "world_types": [
+          "Medieval",
+          "steampunk",
+          "high-magic",
+          "ancient kingdom",
+          "space-fantasy",
+          "mystical forest"
+        ],
+        "protagonist_roles": [
+          "knight",
+          "mage",
+          "rogue",
+          "something else",
+          "unique hero",
+          "band of adventurers",
+          "solitary warrior",
+          "party of misfits"
+        ],
+        "villain_types": [
+          "dark sorcerer",
+          "cunning warlord",
+          "cursed deity",
+          "sympathetic villain",
+          "purely evil",
+          "cruel tyrant",
+          "tragic antihero"
+        ],
+        "faction_types": [
+          "kingdoms",
+          "guilds",
+          "thieves’ guilds",
+          "knightly orders",
+          "merchant clans"
+        ],
+        "side_story_types": [
+          "dragon’s curse",
+          "haunted forest",
+          "personal arcs for supporting characters",
+          "secondary storylines"
+        ],
+        "quest_triggers": [
+          "evil overlord",
+          "lost relic",
+          "political intrigue"
+        ],
+        "magic_attributes": [
+          "abundant",
+          "rare",
+          "costs or risks",
+          "components",
+          "incantations",
+          "inherent power",
+          "rigidly studied",
+          "wild and chaotic"
+        ]
+      }
+    }
+  }
+]

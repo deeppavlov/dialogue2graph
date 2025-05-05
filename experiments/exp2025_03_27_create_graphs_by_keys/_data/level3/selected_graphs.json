@@ -1,0 +1,2587 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "start",
+          "is_start": true,
+          "utterances": [
+            "Hello, welcome to the Travel Management Bot!",
+            "Hi there, ready to arrange your multi-part trip?",
+            "Greetings! Let’s build your perfect travel itinerary."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "select_destination",
+          "is_start": false,
+          "utterances": [
+            "Which country or city would you like to visit first?",
+            "Any specific destination in mind?",
+            "Where is your dream spot for this journey?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "flight_booking",
+          "is_start": false,
+          "utterances": [
+            "Let’s handle flight options. Do you have a preferred airline?",
+            "We can search for budget or premium airlines. Any preference?",
+            "Would you like direct flights or are layovers acceptable?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "hotel_booking",
+          "is_start": false,
+          "utterances": [
+            "Next, let's consider accommodation. Looking for a hotel, hostel, or vacation rental?",
+            "We offer different lodging options: 3-star, 5-star, or boutique? Which suits you?",
+            "Let’s secure a place to stay. What’s your price range or preference?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "car_rental",
+          "is_start": false,
+          "utterances": [
+            "Would you like to rent a car or rely on public transportation?",
+            "Car rentals available: economy, SUV, or luxury. Any choice?",
+            "If you prefer not to rent a car, we can arrange local transit passes."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "tour_selection",
+          "is_start": false,
+          "utterances": [
+            "We also have local tours available. Interested in guided tours?",
+            "Cultural excursions or nature trips, which do you prefer?",
+            "We can arrange day trips. Any must-see attractions you'd like to book?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "review_itinerary",
+          "is_start": false,
+          "utterances": [
+            "Here’s a summary of your planned itinerary so far. Would you like to review or change anything?",
+            "Take a look at the schedule: flights, lodging, car rental. Any adjustments?",
+            "Let’s confirm your day-to-day plan. Need any edits before we finalize?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "change_request",
+          "is_start": false,
+          "utterances": [
+            "Sure, what would you like to change?",
+            "No problem, which part of your plan needs updating?",
+            "Absolutely, I'm here to help you modify any details. Let me know."
+          ]
+        },
+        {
+          "id": 9,
+          "label": "confirmation",
+          "is_start": false,
+          "utterances": [
+            "Your itinerary is all set. Would you like to confirm now?",
+            "We’re almost done. Ready to finalize?",
+            "I can finalize your reservations. Shall I proceed?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "payment",
+          "is_start": false,
+          "utterances": [
+            "How would you like to pay? Credit card, PayPal, or bank transfer?",
+            "We accept multiple payment methods. Which do you prefer?",
+            "Let’s process payment. What’s your payment option?"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "info_error",
+          "is_start": false,
+          "utterances": [
+            "I’m sorry, I didn’t catch that. Could you clarify your request?",
+            "Hmm, that doesn’t seem right. Please restate or check your details.",
+            "I'm unsure how to proceed with that info. Can you confirm or rephrase?"
+          ]
+        },
+        {
+          "id": 12,
+          "label": "exit",
+          "is_start": false,
+          "utterances": [
+            "All done! Your trip is confirmed. Bon voyage!",
+            "Great! Your travel arrangements have been finalized. Have a wonderful journey!",
+            "Everything is booked. Safe travels and enjoy your trip!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to plan an international trip.",
+            "Yes, I need to book flights, hotels, and more."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to go to Japan first.",
+            "I'd like to start in Paris."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'll pick a budget airline.",
+            "I prefer direct flights with premium airlines."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I'll need a 4-star hotel near the city center.",
+            "I'm okay with a hostel for budget reasons."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 11,
+          "utterances": [
+            "Uh, just get me a seat somewhere? (vague request)."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "I'll rent a small car for convenience.",
+            "I don’t need a car, I'll use public transport."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Yes, I'd like a day tour to the countryside.",
+            "No tours for me, I'll explore on my own."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "I need to change my hotel dates.",
+            "I want a different city as my second stop."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 9,
+          "utterances": [
+            "Everything looks good, let's proceed.",
+            "I'm fine with this plan."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 7,
+          "utterances": [
+            "Okay, I'm done making changes now."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 4,
+          "utterances": [
+            "I actually want to pick a different hotel category."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "Yes, please finalize and let me pay.",
+            "Let's confirm now."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "Wait, I'm not sure about my details. (unclear info)."
+          ]
+        },
+        {
+          "source": 10,
+          "target": 12,
+          "utterances": [
+            "I'll pay by credit card. Done.",
+            "Payment via PayPal confirmed."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 2,
+          "utterances": [
+            "I'll clarify: I'm traveling to Tokyo next month."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 5,
+          "utterances": [
+            "Sorry for confusion, let's rent a car."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 12,
+          "utterances": [
+            "Actually, I've changed my mind. I'll do this later."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "welcome",
+          "is_start": true,
+          "utterances": [
+            "Hello, welcome to SuperShop Online! Ready to customize your purchase?",
+            "Hi there! Let’s build your personalized shopping cart.",
+            "Greetings! Let’s find the perfect products for you."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "category_select",
+          "is_start": false,
+          "utterances": [
+            "Which product category are you interested in first—electronics, clothing, or home goods?",
+            "What type of items are you looking for today?",
+            "We have many categories: tech gadgets, fashion, kitchenware. Pick one to start."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "product_detail",
+          "is_start": false,
+          "utterances": [
+            "Great choice. Which specific product model or item would you like?",
+            "Any brand or style preference in that category?",
+            "We have multiple options. Please specify what interests you."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "custom_options",
+          "is_start": false,
+          "utterances": [
+            "Would you like to customize color, size, or other features?",
+            "We offer multiple colorways and sizes. Which would you prefer?",
+            "You can personalize aspects like engraving, color, or dimensions. Interested?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "add_to_cart",
+          "is_start": false,
+          "utterances": [
+            "Shall I add this product to your cart?",
+            "Would you like to proceed with adding it to your shopping bag?",
+            "Ready to add it to your cart now?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "additional_items",
+          "is_start": false,
+          "utterances": [
+            "Would you like to shop for more items or proceed to checkout?",
+            "Keep browsing or go to checkout?",
+            "Add more to your cart or finalize your order now?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "apply_discounts",
+          "is_start": false,
+          "utterances": [
+            "Do you have any discount codes, gift cards, or loyalty points to apply?",
+            "We can apply coupons or promotional codes. Any you’d like to use?",
+            "Any special discount code you want to redeem?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "shipping_options",
+          "is_start": false,
+          "utterances": [
+            "Choose shipping: standard, express, or same-day if available?",
+            "We have multiple shipping speeds. Which do you prefer?",
+            "Select shipping: free standard, paid express, or same-day (extra cost)."
+          ]
+        },
+        {
+          "id": 9,
+          "label": "checkout_confirmation",
+          "is_start": false,
+          "utterances": [
+            "Reviewing your cart: Are you ready to place the order?",
+            "Everything looks good? Shall we finalize the purchase?",
+            "Ready to check out and confirm payment?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "payment_process",
+          "is_start": false,
+          "utterances": [
+            "How would you like to pay—credit, PayPal, or other methods?",
+            "Payment method preference? We accept credit/debit cards, PayPal, store credit.",
+            "Ready for payment? Let me know your method of choice."
+          ]
+        },
+        {
+          "id": 11,
+          "label": "error_handling",
+          "is_start": false,
+          "utterances": [
+            "I’m not sure I understood. Could you clarify your request?",
+            "Something seems off. Please confirm your selection or discount code.",
+            "Let’s try that again. I need more specific information."
+          ]
+        },
+        {
+          "id": 12,
+          "label": "order_complete",
+          "is_start": false,
+          "utterances": [
+            "Your order is confirmed! Thank you for shopping with us.",
+            "Purchase complete. We'll notify you once it ships!",
+            "Success! Your items are on the way soon."
+          ]
+        },
+        {
+          "id": 13,
+          "label": "browse_more",
+          "is_start": false,
+          "utterances": [
+            "Sure, let’s keep browsing. Back to categories or a different route?",
+            "What else would you like to look at?",
+            "No problem, let’s explore more products."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes, I'd like to shop.",
+            "I'm looking for some items."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like a new smartphone.",
+            "I'm looking for a nice jacket.",
+            "I need new kitchen utensils."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I want the S-Model phone with 128GB storage.",
+            "I prefer a medium-sized jacket in black.",
+            "A set of stainless steel utensils, 20-piece."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 11,
+          "utterances": [
+            "Just get me something random. (Ambiguous request)"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, I'd like the blue color option.",
+            "Give me the standard size, no engraving."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, add to cart please.",
+            "No, let me think more about it."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 2,
+          "utterances": [
+            "I want to keep shopping in electronics.",
+            "Let me pick something from clothing as well."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "I'm ready to check out."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Yes, I have a 10% off code: SAVE10.",
+            "No discount code to apply."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "I'll pick express shipping.",
+            "Let’s do standard shipping."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "Yes, I'm ready to pay.",
+            "Let's finalize the purchase."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 13,
+          "utterances": [
+            "Wait, I'd like to add more items before finalizing."
+          ]
+        },
+        {
+          "source": 10,
+          "target": 12,
+          "utterances": [
+            "Paying by credit card now.",
+            "PayPal is good for me."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 13,
+          "utterances": [
+            "No, I don't want to add it yet. I'll keep browsing."
+          ]
+        },
+        {
+          "source": 13,
+          "target": 2,
+          "utterances": [
+            "Let’s go back to the categories."
+          ]
+        },
+        {
+          "source": 13,
+          "target": 11,
+          "utterances": [
+            "Actually, I'm confused about what's available."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 3,
+          "utterances": [
+            "I need a better phone detail. Let me specify again."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 12,
+          "utterances": [
+            "Never mind, I won't buy anything right now."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "intro",
+          "is_start": true,
+          "utterances": [
+            "Hello, this is the Medical Appointment Bot. How can I help you today?",
+            "Hi, you’ve reached the Health Clinic Assistant. Need an appointment?",
+            "Welcome to our healthcare scheduling service! Ready to book or manage an appointment?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "reason_for_visit",
+          "is_start": false,
+          "utterances": [
+            "What brings you in? Are you scheduling a checkup, consultation, or a specific concern?",
+            "Could you specify the nature of your visit—general or specialized?",
+            "Tell me more about your medical need: routine check or specialized service?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "doctor_type",
+          "is_start": false,
+          "utterances": [
+            "We have GPs, pediatricians, and specialists. Which do you need?",
+            "Do you require a general practitioner or a specialist like a dermatologist, cardiologist, etc.?",
+            "Let’s figure out the right doctor type for your visit. Any preference?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "schedule_options",
+          "is_start": false,
+          "utterances": [
+            "We have slots this week and next. Any preferred day or time?",
+            "Morning, afternoon, or evening slots available. When are you free?",
+            "Would you prefer a weekday or weekend appointment?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "confirm_availability",
+          "is_start": false,
+          "utterances": [
+            "We have an opening on Tuesday at 10 AM. Does that work?",
+            "There's a slot on Thursday afternoon or Friday morning. Which do you prefer?",
+            "How about an appointment next Monday at 9 AM or 3 PM?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "contact_info",
+          "is_start": false,
+          "utterances": [
+            "I’ll need your full name and contact details to finalize the appointment.",
+            "Could you provide your phone number and email for confirmation?",
+            "Please share your name, and a phone or email to send appointment details."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "confirmation",
+          "is_start": false,
+          "utterances": [
+            "Your appointment is almost set. Ready to confirm?",
+            "Shall I confirm your chosen time slot now?",
+            "Let’s finalize. Confirm your appointment details?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "reschedule_loop",
+          "is_start": false,
+          "utterances": [
+            "Need a different time? Let’s look at other available slots.",
+            "Okay, we can pick another day. When else are you free?",
+            "No worries, we can try a new schedule. Let me check more openings."
+          ]
+        },
+        {
+          "id": 9,
+          "label": "cancel_appointment",
+          "is_start": false,
+          "utterances": [
+            "Alright, I've canceled the appointment. Let us know if you need help again.",
+            "Your appointment request is canceled. Feel better soon!",
+            "Cancellation is done. We're here if you change your mind."
+          ]
+        },
+        {
+          "id": 10,
+          "label": "follow_up_services",
+          "is_start": false,
+          "utterances": [
+            "We also offer telehealth consultations. Interested?",
+            "Would you like to sign up for a reminder or follow-up call?",
+            "Any additional services you’d like to explore, like lab tests or prescriptions?"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "info_clarification",
+          "is_start": false,
+          "utterances": [
+            "I’m having trouble with those details. Could you clarify or re-enter them?",
+            "Not sure I understood. Can you re-check your info or specify differently?",
+            "I didn't catch that. Please confirm your request or detail."
+          ]
+        },
+        {
+          "id": 12,
+          "label": "appointment_done",
+          "is_start": false,
+          "utterances": [
+            "Your appointment is confirmed! We'll see you soon.",
+            "Great! Appointment details have been emailed. Take care.",
+            "All set. A confirmation message is on its way. Have a healthy day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need to see a doctor.",
+            "Yes, I'd like to book an appointment."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I have a stomach issue, maybe a GP first.",
+            "I have a skin problem, so dermatologist."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I need the earliest slot you have.",
+            "Evenings are better for me."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I'll take a weekday morning slot.",
+            "Weekend if possible."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 11,
+          "utterances": [
+            "I'm not sure, just whenever. (unclear request)"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Tuesday 10 AM is fine.",
+            "Friday morning works for me."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 8,
+          "utterances": [
+            "No, that doesn't fit my schedule."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Here's my name and phone number: John Doe, 555-1234.",
+            "Email is [email protected], name is Anna."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 12,
+          "utterances": [
+            "Yes, confirm it.",
+            "All good, finalize."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 9,
+          "utterances": [
+            "Actually, cancel it."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 5,
+          "utterances": [
+            "Let's try Thursday afternoon."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "You know what, just cancel altogether."
+          ]
+        },
+        {
+          "source": 12,
+          "target": 10,
+          "utterances": [
+            "Yes, I'd like telehealth next time or some follow-up calls."
+          ]
+        },
+        {
+          "source": 10,
+          "target": 12,
+          "utterances": [
+            "No, I'm good for now. Thanks!"
+          ]
+        },
+        {
+          "source": 11,
+          "target": 4,
+          "utterances": [
+            "Let me see, I'd prefer next Monday morning."
+          ]
+        },
+        {
+          "source": 10,
+          "target": 9,
+          "utterances": [
+            "Never mind, cancel the entire appointment."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "intro_university",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the University Admissions Bot!",
+            "Hi there, ready to apply to our university?",
+            "Greetings! Let’s start your enrollment process."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "program_select",
+          "is_start": false,
+          "utterances": [
+            "Which program or major are you interested in?",
+            "We have various faculties: Arts, Science, Engineering, Business. Your choice?",
+            "Select your intended field of study: any preference?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "entry_level",
+          "is_start": false,
+          "utterances": [
+            "Are you applying for an undergraduate or graduate program?",
+            "Which level suits you: Bachelor’s or Master’s/PhD?",
+            "Undergrad or postgrad application?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "requirements",
+          "is_start": false,
+          "utterances": [
+            "We’ll need your transcripts, test scores, and references. Ready to upload or share them?",
+            "Have you prepared your academic records and letters of recommendation?",
+            "We require certain documents. Do you have them on hand?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "document_upload",
+          "is_start": false,
+          "utterances": [
+            "Please upload or confirm your document references here.",
+            "You can provide your documents in PDF format. Need help with that?",
+            "This is where you attach your transcripts and recommendation letters."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "payment_fees",
+          "is_start": false,
+          "utterances": [
+            "An application fee of $50 applies. How would you like to pay?",
+            "We require a processing fee. Credit card or bank transfer?",
+            "Application fee needed to proceed. Payment method?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "scholarship_inquiry",
+          "is_start": false,
+          "utterances": [
+            "Interested in applying for scholarships or financial aid?",
+            "We have merit-based and need-based scholarships. Would you like details?",
+            "Need financial assistance or are you self-funded?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "aid_process",
+          "is_start": false,
+          "utterances": [
+            "Please fill out the financial aid form. Are you ready to do that?",
+            "We’ll need additional info like family income, etc. to apply for scholarships.",
+            "To apply for financial aid, complete the relevant form. Shall we do that now?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "eligibility_check",
+          "is_start": false,
+          "utterances": [
+            "We’re checking your eligibility based on your documents. One moment.",
+            "Reviewing your transcripts and scores. Please wait...",
+            "We’ll evaluate your application credentials now. Stand by."
+          ]
+        },
+        {
+          "id": 10,
+          "label": "offer_letter",
+          "is_start": false,
+          "utterances": [
+            "Congratulations, you're conditionally accepted! Would you like to confirm admission?",
+            "We’d like to offer you a place. Ready to accept?",
+            "Good news, we can offer you a seat. Confirm or decline?"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "no_eligibility",
+          "is_start": false,
+          "utterances": [
+            "I'm sorry, but it seems your application doesn’t meet the requirements.",
+            "Unfortunately, we cannot offer admission at this time. Would you like alternative options?",
+            "We can’t admit you right now. Let me know if you want to explore other pathways."
+          ]
+        },
+        {
+          "id": 12,
+          "label": "confirmation",
+          "is_start": false,
+          "utterances": [
+            "Your admission is confirmed! Welcome aboard.",
+            "Excellent! We’ll send official admission documents soon.",
+            "Congrats, you’re officially enrolled now!"
+          ]
+        },
+        {
+          "id": 13,
+          "label": "explore_other_options",
+          "is_start": false,
+          "utterances": [
+            "We have other diploma programs if you’re interested.",
+            "You can consider reapplying next semester with updated documents.",
+            "We can guide you to related certificates or short courses."
+          ]
+        },
+        {
+          "id": 14,
+          "label": "info_loop",
+          "is_start": false,
+          "utterances": [
+            "I’m not sure I understood. Could you clarify your application details?",
+            "That seems unclear. Please restate your question or upload the correct docs.",
+            "I didn't catch that. Let’s revisit the program or document requirements."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to apply for a bachelor's degree.",
+            "I'm interested in a master's program in Engineering."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want an undergraduate program.",
+            "It’s a Master’s program for me."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 14,
+          "utterances": [
+            "I want something in between? (Confusing statement)."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, I have my transcripts ready.",
+            "I'm missing some recommendation letters, but I'll proceed."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Alright, let’s upload the documents.",
+            "Yes, I'll attach them now."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "All docs uploaded. Next step?",
+            "Done uploading. Ready for the fee."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 14,
+          "utterances": [
+            "How do I upload an .exe file? (Invalid document type)."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "I’ll pay by credit card. Payment done.",
+            "Fee paid via bank transfer."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Yes, I want scholarship details.",
+            "I do need financial aid."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 9,
+          "utterances": [
+            "I'm self-funded, no financial aid needed."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "I've filled the aid form. Let's proceed."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "Thank you, I'm hoping for a positive outcome."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "Oh no, I might not meet the criteria. Checking anyway."
+          ]
+        },
+        {
+          "source": 10,
+          "target": 12,
+          "utterances": [
+            "Yes, I accept the offer!",
+            "Absolutely, I'm in!"
+          ]
+        },
+        {
+          "source": 10,
+          "target": 13,
+          "utterances": [
+            "I'm not sure if I'll accept. Do you have other programs?"
+          ]
+        },
+        {
+          "source": 11,
+          "target": 13,
+          "utterances": [
+            "Okay, I'd like to see alternative options."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 14,
+          "utterances": [
+            "But I do meet them, let's check again. (User disputes)."
+          ]
+        },
+        {
+          "source": 14,
+          "target": 2,
+          "utterances": [
+            "Let’s start over with program selection."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "greet_planner",
+          "is_start": true,
+          "utterances": [
+            "Hello, welcome to the Event Planning Bot!",
+            "Hi, let's organize your special event today.",
+            "Greetings! Ready to plan your upcoming event?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "event_type",
+          "is_start": false,
+          "utterances": [
+            "What kind of event are you hosting—wedding, conference, birthday, or something else?",
+            "We handle corporate events, private parties, and more. Which is yours?",
+            "Could you specify the type of gathering you’re planning?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "guest_count",
+          "is_start": false,
+          "utterances": [
+            "Approximately how many guests are you expecting?",
+            "We need a headcount estimate. Do you have one?",
+            "What's your guest list size, roughly?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "venue_options",
+          "is_start": false,
+          "utterances": [
+            "We can suggest venues: indoor halls, outdoor gardens, or a beach setting. Preferences?",
+            "Would you like an open-air location or an indoor venue?",
+            "We have multiple venue types. Which suits your theme?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "catering_details",
+          "is_start": false,
+          "utterances": [
+            "Time to choose catering. Are you thinking buffet, plated dinner, or finger foods?",
+            "What type of cuisine or catering style do you prefer?",
+            "We offer various menu packages. Any dietary restrictions or preferences?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "entertainment",
+          "is_start": false,
+          "utterances": [
+            "Would you like live music, a DJ, or maybe a photo booth for entertainment?",
+            "We can arrange a band, DJ, or other activities. Interested?",
+            "Entertainment options: live performance, DJ, games. Any preference?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "budget_range",
+          "is_start": false,
+          "utterances": [
+            "What’s your overall budget range for this event?",
+            "We need to consider costs. Do you have a rough budget in mind?",
+            "Knowing your budget helps us finalize the plan. Any figure to start with?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "draft_plan",
+          "is_start": false,
+          "utterances": [
+            "Here’s a preliminary plan with chosen venue, catering, and entertainment. Review it?",
+            "Draft proposal is ready. Would you like to see or modify it?",
+            "We’ve compiled a plan. Time to review or adjust?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "change_requests",
+          "is_start": false,
+          "utterances": [
+            "What changes do you want to make?",
+            "Sure, let’s adjust anything you’d like.",
+            "No worries, we can tweak the plan. Which parts need an update?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "confirm_plan",
+          "is_start": false,
+          "utterances": [
+            "Shall we confirm and proceed with booking the vendors?",
+            "Everything looks good? Ready to finalize and sign contracts?",
+            "Let's lock in the plan. Confirm your event arrangement now?"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "payment_schedule",
+          "is_start": false,
+          "utterances": [
+            "We’ll require a deposit. Would you like to pay now?",
+            "A down payment secures the venue and caterer. Ready to handle payment?",
+            "We can set up a payment plan. Interested, or pay in full?"
+          ]
+        },
+        {
+          "id": 12,
+          "label": "final_arrangements",
+          "is_start": false,
+          "utterances": [
+            "All set! We’ll coordinate with vendors and keep you posted.",
+            "Your event plan is finalized. We’ll send updates as the date approaches.",
+            "Congratulations, your event is planned! We’ll follow up with details soon."
+          ]
+        },
+        {
+          "id": 13,
+          "label": "info_confusion",
+          "is_start": false,
+          "utterances": [
+            "I'm not entirely sure what you mean. Could you clarify?",
+            "That request is unclear. Please specify your event details again.",
+            "We need more clarity on your instructions. Please rephrase or confirm."
+          ]
+        },
+        {
+          "id": 14,
+          "label": "extra_services",
+          "is_start": false,
+          "utterances": [
+            "Would you like any additional services like decorations, invitation design, or photography?",
+            "We also provide decor, floral arrangements, and photography. Interested?",
+            "Any extra services to add, such as event branding, lighting, or custom invites?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'm planning a wedding.",
+            "It's a corporate conference."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Around 200 guests.",
+            "Could be 50-70 people."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 13,
+          "utterances": [
+            "I'm not sure, it's a mix of a party and a workshop? (confusing)."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'd like an outdoor garden.",
+            "Let's do an elegant indoor hall."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "A full buffet with international cuisine.",
+            "Simple finger foods, nothing too fancy."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "A DJ would be nice.",
+            "Maybe a live band if budget allows."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "My budget is around $10,000.",
+            "I can go up to $5,000 maximum."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 14,
+          "utterances": [
+            "I'd also like to discuss decorations."
+          ]
+        },
+        {
+          "source": 14,
+          "target": 7,
+          "utterances": [
+            "I want a full floral setup with custom centerpieces.",
+            "No additional services, I'll handle decor myself."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Okay, let's see the draft plan."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "I need to change the date or location.",
+            "That’s great, but I'd like different catering."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 10,
+          "utterances": [
+            "Looks good. I'm happy with this plan."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 8,
+          "utterances": [
+            "Done with changes, let's finalize the new plan."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 13,
+          "utterances": [
+            "Actually, I'm not sure how to change it. (unclear)."
+          ]
+        },
+        {
+          "source": 10,
+          "target": 11,
+          "utterances": [
+            "Yes, let's pay the deposit and finalize.",
+            "I'm ready to proceed with payment."
+          ]
+        },
+        {
+          "source": 10,
+          "target": 9,
+          "utterances": [
+            "Wait, I'd like more changes again."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 12,
+          "utterances": [
+            "Paying deposit now, let's do it!",
+            "Full payment done, let's confirm everything."
+          ]
+        },
+        {
+          "source": 13,
+          "target": 2,
+          "utterances": [
+            "Let me clarify: It's a small corporate event."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "culture_greeting",
+          "is_start": true,
+          "utterances": [
+            "Hey! Let’s explore different cultures and traditions. Interested?",
+            "Hi, want to chat about global cultures or your own background?",
+            "Hello! Let’s discuss cultural customs, festivals, and more."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "region_focus",
+          "is_start": false,
+          "utterances": [
+            "Which region or country piques your interest?",
+            "Any specific culture you’d like to learn about?",
+            "We can talk about Asian, European, African, or any region’s traditions."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "festivals_dive",
+          "is_start": false,
+          "utterances": [
+            "Festivals are a big part of culture. Any you’re curious about?",
+            "Want to explore major celebrations like Diwali, Chinese New Year, or Oktoberfest?",
+            "Which cultural festivals fascinate you the most?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "food_traditions",
+          "is_start": false,
+          "utterances": [
+            "Cuisines and eating habits differ widely. Shall we talk about food?",
+            "Interested in discussing traditional meals or dining etiquette?",
+            "Food can be a window into culture. Shall we dive into that?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "discussion_loop",
+          "is_start": false,
+          "utterances": [
+            "That’s quite interesting. Would you like to compare with your own culture?",
+            "Have you experienced these customs personally?",
+            "Any personal anecdotes or viewpoints you’d like to share?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "compare_cultures",
+          "is_start": false,
+          "utterances": [
+            "How does this differ from traditions in your region?",
+            "Comparing cultures can be enlightening. Any specific contrasts you notice?",
+            "It’s fascinating to see both differences and similarities among cultures."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "language_aspect",
+          "is_start": false,
+          "utterances": [
+            "Language is another key aspect. Interested in discussing linguistic differences?",
+            "We can also touch upon how language shapes culture if you'd like.",
+            "Shall we explore dialects, writing systems, or language families?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "cultural_challenges",
+          "is_start": false,
+          "utterances": [
+            "Some travelers face culture shock. Thoughts on dealing with that?",
+            "Have you encountered any challenges adapting to new customs?",
+            "We can chat about navigating cultural differences. Interested?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "wrap_up",
+          "is_start": false,
+          "utterances": [
+            "This has been a deep dive into cultural traditions. Shall we continue or wrap up?",
+            "We've covered quite a bit about cultures. Want to talk more or end here?",
+            "Ready to conclude our cultural chat or keep exploring?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "farewell",
+          "is_start": false,
+          "utterances": [
+            "Thank you for this cultural conversation. Feel free to chat again anytime!",
+            "It was lovely exploring global traditions with you. Take care!",
+            "Great discussion! Keep discovering new cultures!"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "cycle_topic",
+          "is_start": false,
+          "utterances": [
+            "We can jump back to festivals, food, or language. Which do you prefer now?",
+            "Want to cycle back to a previous topic or pick a new cultural facet?",
+            "We can revisit any cultural aspect you find most intriguing."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes, I'd like to learn about different traditions.",
+            "Sure, let's talk about cultures."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm curious about Asian festivals.",
+            "What about European cultural celebrations?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I want to know about traditional cuisines."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Tell me more about Diwali celebrations.",
+            "How do people celebrate Chinese New Year?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Explain typical Asian food customs.",
+            "I love how Mediterranean diet differs from others."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, let's compare with my culture.",
+            "I have some experiences to share."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Language differences are interesting too.",
+            "I'd like to discuss how people greet each other in different languages."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 11,
+          "utterances": [
+            "Actually, I'd like to revisit festivals or food."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Yes, let's talk about culture shock next.",
+            "I'm curious about difficulties travelers face."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 11,
+          "utterances": [
+            "Maybe let's jump back to food traditions for a moment."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "Interesting points. I think I'm ready to wrap up soon.",
+            "Let’s see if we should continue or finish."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "We can wrap up now, thanks!",
+            "Okay, let's conclude."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "I’d like to explore more about language or traditions."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 3,
+          "utterances": [
+            "Let's talk about festivals again."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 4,
+          "utterances": [
+            "I want more details on food cultures."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 7,
+          "utterances": [
+            "Let's discuss language in depth now."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "music_intro",
+          "is_start": true,
+          "utterances": [
+            "Hey! Let’s chat about music composition and songwriting. Sound good?",
+            "Hi, want to discuss your approach to making music or analyzing it?",
+            "Hello! Ready to talk about creating and exploring music?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "genre_focus",
+          "is_start": false,
+          "utterances": [
+            "Which genre do you primarily compose or listen to?",
+            "Do you have a preferred music style: rock, pop, classical, hip-hop, or something else?",
+            "Let’s start with the genre that interests you most."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "instrumentation",
+          "is_start": false,
+          "utterances": [
+            "Are you focusing on acoustic instruments, electronic production, or a blend?",
+            "Do you use real instruments, virtual software, or a mix when composing?",
+            "What's your typical setup—guitar, piano, DAW, or something else?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "lyric_discussion",
+          "is_start": false,
+          "utterances": [
+            "Do you write lyrics? If so, any theme or style you gravitate to?",
+            "Interested in discussing lyric writing techniques or do you focus on instrumentals?",
+            "How important are words in your music, or is it mostly instrumental?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "song_structure",
+          "is_start": false,
+          "utterances": [
+            "Song structures vary: verse-chorus, ABAB, free form. Which do you prefer?",
+            "Do you follow typical pop structures or experiment with progressive forms?",
+            "Shall we explore different structural approaches in composition?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "collaboration",
+          "is_start": false,
+          "utterances": [
+            "Do you collaborate with others or produce solo?",
+            "How do you feel about co-writing or jamming with bandmates?",
+            "Ever tried remote collaboration with other musicians or is it purely a solo process?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "production_tools",
+          "is_start": false,
+          "utterances": [
+            "Which software or hardware do you find essential for music production?",
+            "Do you use professional DAWs like Ableton, Logic, FL Studio, or something else?",
+            "Any favorite plugins or synthesizers you rely on?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "challenge_discussion",
+          "is_start": false,
+          "utterances": [
+            "What challenges do you face in composition or production?",
+            "Any hurdles like writer's block or technical limitations you want to talk about?",
+            "Struggling with mixing, mastering, or creative direction? Let’s delve into it."
+          ]
+        },
+        {
+          "id": 9,
+          "label": "advice_loop",
+          "is_start": false,
+          "utterances": [
+            "Would you like tips on overcoming these obstacles?",
+            "Need advice or fresh ideas for your creative process?",
+            "We can brainstorm solutions or new techniques. Shall we?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "end_discussion",
+          "is_start": false,
+          "utterances": [
+            "Alright, thanks for chatting about music creation!",
+            "Hope our discussion inspired your next composition. Take care!",
+            "Good luck with your songwriting and production. Keep creating!"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "loop_topics",
+          "is_start": false,
+          "utterances": [
+            "We can go back to lyrics, instrumentation, or structure. Which do you want to revisit?",
+            "Feel free to jump to any other aspect of music composition again.",
+            "Want to circle back or move to a new area of composition?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes, I'd love to talk about making music.",
+            "Sure, let's discuss composition."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm into pop music.",
+            "I mostly compose orchestral pieces."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I use a guitar and a DAW for layering.",
+            "I love using synths for an electronic feel."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 11,
+          "utterances": [
+            "I'd like to talk about structure more than instrumentation."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, let's discuss verse-chorus forms.",
+            "I prefer instrumentals, so let's talk structure anyway."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "I usually collaborate with a friend who sings.",
+            "I create everything solo, from start to finish."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 11,
+          "utterances": [
+            "I want to jump back to lyrics now."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "We use Ableton for everything.",
+            "I prefer Logic Pro with some live instruments."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Mixing is tough. I'm learning about EQ and compression.",
+            "I struggle with finalizing a polished sound."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 11,
+          "utterances": [
+            "Actually, let's go back to structure or lyrics."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "Yes, I'd like some tips.",
+            "I need advice on this."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 11,
+          "utterances": [
+            "Let me talk about an earlier topic, like instrumentation."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "Thanks, that’s really helpful. Let's wrap up.",
+            "Got it, I think I'm good for now."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "I still want to revisit another aspect of composition."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 4,
+          "utterances": [
+            "Let's chat about lyrics again."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 5,
+          "utterances": [
+            "Song structure is on my mind now."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 10,
+          "utterances": [
+            "No, let's finish. Thanks!"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "movie_intro",
+          "is_start": true,
+          "utterances": [
+            "Hello! Up for a movie critique discussion?",
+            "Hi, let's dive into film analysis and talk about our favorite or disliked movies.",
+            "Welcome to the Film Chat Bot. Ready to dissect some cinematic works?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "genre_pick",
+          "is_start": false,
+          "utterances": [
+            "Which movie genre are you most interested in discussing?",
+            "Horror, comedy, drama, action—what's your pick?",
+            "Let’s start by choosing a genre or film you want to analyze."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "director_focus",
+          "is_start": false,
+          "utterances": [
+            "Any particular director's style intrigues you?",
+            "We can talk about famous directors or underrated ones. Which interests you?",
+            "Shall we examine the directing style of someone specific?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "plot_analysis",
+          "is_start": false,
+          "utterances": [
+            "How do you feel about the storyline or plot pacing?",
+            "Discussing plot structures: do you enjoy nonlinear narratives or a classic approach?",
+            "Plot analysis: what stands out in the story?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "character_dev",
+          "is_start": false,
+          "utterances": [
+            "Character arcs can make or break a movie. Thoughts?",
+            "How about the protagonist and antagonist development?",
+            "Are the characters well-rounded or flat in your opinion?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "cinematography",
+          "is_start": false,
+          "utterances": [
+            "Cinematography is vital. Any shots or angles you found memorable?",
+            "We can explore color palettes, camera movements. Interested?",
+            "Let’s talk about the visual storytelling aspect."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "soundtrack",
+          "is_start": false,
+          "utterances": [
+            "A film's score or soundtrack can truly elevate it. Any notable examples?",
+            "How does music or sound design impact your viewing experience?",
+            "Shall we discuss the composer or the use of background music?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "critic_rating",
+          "is_start": false,
+          "utterances": [
+            "Do you align with critics’ opinions or do you have a different take?",
+            "Rotten Tomatoes vs personal taste: how do you compare them?",
+            "How do you rate this film personally? Any star rating you’d give?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "compare_films",
+          "is_start": false,
+          "utterances": [
+            "We could compare this to similar films in the genre. Interested?",
+            "Want to see how it stacks up against other movies by the same director?",
+            "Comparisons can reveal strengths and weaknesses. Shall we do that?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "close_chat",
+          "is_start": false,
+          "utterances": [
+            "This was a fun movie chat! Any last thoughts before we end?",
+            "Thanks for sharing your cinematic perspectives. Ready to finish?",
+            "All set. Hope you enjoyed analyzing films with me!"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "topic_loop",
+          "is_start": false,
+          "utterances": [
+            "Shall we circle back to plot, characters, or cinematography?",
+            "We can revisit any element—soundtrack, direction, or comparing films. What next?",
+            "If you want to discuss another angle of the movie, we can loop back."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes, I'd love to chat about movies!",
+            "Sure, let's talk film critique."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I like sci-fi. Let's discuss that.",
+            "Comedy is my preference."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Let’s skip directors. I'd like to talk plot directly."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I love Christopher Nolan's style, for example.",
+            "Quentin Tarantino's direction intrigues me."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Plot was strong, but I'd like to talk about characters next.",
+            "It was a complex storyline with time jumps."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "The hero's arc was great, let's discuss cinematography now.",
+            "I found the antagonist interesting, but let's move on to visuals."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 11,
+          "utterances": [
+            "Wait, I'd like to revisit the plot or direction."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Beautiful camera work! What about the soundtrack?",
+            "The color grading was unique, let's see how the music complements it."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 11,
+          "utterances": [
+            "Actually, I'd rather compare it with other films now."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Loved the OST. I'm curious about critic opinions too.",
+            "Sound design was immersive. Let’s see how critics rated it."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 11,
+          "utterances": [
+            "Let's go back to cinematography again or maybe character arcs."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "Critics gave it high marks. I'd like to see how it compares to a similar film.",
+            "Personal rating is 8/10. Let’s compare it to the director's past work."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 11,
+          "utterances": [
+            "I want to discuss the plot again or revisit characters."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "After comparing, I'm done. Thanks!",
+            "It stands out well. I'm ready to wrap up the discussion."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "Let’s circle back to characters or direction once more."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 4,
+          "utterances": [
+            "Let's re-explore the plot."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 8,
+          "utterances": [
+            "I want to talk about critics' views more."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 10,
+          "utterances": [
+            "No, I'm done. Let's finish."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "gaming_hello",
+          "is_start": true,
+          "utterances": [
+            "Hey, let’s talk about gaming! What are you playing these days?",
+            "Hi, ready to discuss video games, strategies, and more?",
+            "Hello! Interested in chatting about your favorite games?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "platform_choice",
+          "is_start": false,
+          "utterances": [
+            "Which platform do you usually game on—PC, console, or mobile?",
+            "Do you prefer PlayStation, Xbox, Nintendo, or PC gaming?",
+            "We can talk about platform-specific titles or multi-platform games. What’s your go-to?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "genre_discussion",
+          "is_start": false,
+          "utterances": [
+            "What genre do you enjoy—RPG, FPS, strategy, or something else?",
+            "Interested in open-world adventures, competitive shooters, or casual puzzle games?",
+            "Which gaming genre holds your attention the most?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "favorite_title",
+          "is_start": false,
+          "utterances": [
+            "Any all-time favorite games you'd like to discuss?",
+            "Which specific title do you love or are currently obsessed with?",
+            "Let’s pick a game to dive deeper into. Name one you adore."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "strategy_tips",
+          "is_start": false,
+          "utterances": [
+            "Want to share or receive strategy tips for that game?",
+            "We can talk about advanced tactics, leveling up, or boss fights. Interested?",
+            "Need help or have advice for conquering certain parts of the game?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "multiplayer_vs_single",
+          "is_start": false,
+          "utterances": [
+            "Do you prefer multiplayer experiences or single-player campaigns?",
+            "Which do you find more fulfilling—online coop/competitive modes or solo story arcs?",
+            "Let’s discuss the pros and cons of multiplayer vs single-player. Thoughts?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "community_interaction",
+          "is_start": false,
+          "utterances": [
+            "How important is community or e-sports in your gaming experience?",
+            "Are you into streaming, watching pro tournaments, or discussing games online?",
+            "Let’s talk about gaming culture and communities if you’d like."
+          ]
+        },
+        {
+          "id": 8,
+          "label": "tech_specs",
+          "is_start": false,
+          "utterances": [
+            "Do you keep an eye on hardware specs or console generations?",
+            "Interested in next-gen performance, graphics, or VR experiences?",
+            "We can talk about building a gaming PC or optimizing console setup. Up for it?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "wishlist_future",
+          "is_start": false,
+          "utterances": [
+            "Any upcoming titles you’re excited for?",
+            "Looking forward to any sequels or brand-new franchises?",
+            "We can discuss your gaming wishlist for future releases."
+          ]
+        },
+        {
+          "id": 10,
+          "label": "end_chat",
+          "is_start": false,
+          "utterances": [
+            "Thanks for the gaming chat! Let’s play again soon.",
+            "Great talking about games with you. Catch you next time!",
+            "Hope you enjoy your next gaming session. Until next time!"
+          ]
+        },
+        {
+          "id": 11,
+          "label": "topic_return",
+          "is_start": false,
+          "utterances": [
+            "Want to revisit or expand on another aspect of gaming—strategy, community, or new releases?",
+            "We can jump back to a previous topic if you like. Which one?",
+            "Feel free to cycle back to any gaming theme that interests you."
+          ]
+        },
+        {
+          "id": 12,
+          "label": "gear_talk",
+          "is_start": false,
+          "utterances": [
+            "We can also talk about controllers, accessories, or gaming chairs if you’re interested.",
+            "Hardware includes not just consoles or PCs, but also gear. Ready to discuss that?",
+            "Some gamers focus on comfort and gear. Want to go there?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Sure, I'm on PC mostly.",
+            "Yes, console gaming for me."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I love RPGs.",
+            "Shooters are my jam."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'm really into The Witcher series.",
+            "Overwatch is my current obsession."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, I'd like some tips on boss fights.",
+            "I have good strategies to share."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "It's actually a great single-player game, let’s discuss that aspect."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Now let's discuss multiplayer vs single-player in that game."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 11,
+          "utterances": [
+            "I want to talk about hardware or future releases now."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Multiplayer is amazing for e-sports, I'd love to chat about that.",
+            "I'm a big fan of single-player narratives, but let's see about the community too."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 11,
+          "utterances": [
+            "Let me jump to game wishlist or new releases."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "E-sports are cool, but I'm also into high-end gaming tech.",
+            "Community is big, but let's talk hardware next."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "Yes, I'm excited for upcoming next-gen games.",
+            "I want to talk about new releases indeed."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 12,
+          "utterances": [
+            "Let’s also discuss gaming chairs or accessories."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "I can't wait for the new Elder Scrolls. Let's end chat now though.",
+            "Lots of upcoming games, but I'm done for now. Thank you!"
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "Actually, I'd like to revisit strategy tips or hardware talk."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 11,
+          "utterances": [
+            "No, I'd rather talk about single-player story arcs again."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 3,
+          "utterances": [
+            "Let’s go back to genre discussion."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 10,
+          "utterances": [
+            "No more, let's finish the chat."
+          ]
+        },
+        {
+          "source": 12,
+          "target": 11,
+          "utterances": [
+            "Alright, done with gear talk, let's revisit another topic."
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "fantasy_start",
+          "is_start": true,
+          "utterances": [
+            "Greetings, traveler! Care to embark on a fantasy role-playing discussion?",
+            "Hail, adventurer! Shall we craft a quest or chat about imaginary worlds?",
+            "Welcome to the Realm of Imagination. Ready for a fantasy-themed conversation?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "world_building",
+          "is_start": false,
+          "utterances": [
+            "What kind of fantasy world intrigues you? Medieval, steampunk, or high-magic?",
+            "Let's outline the setting: ancient kingdom, space-fantasy, or mystical forest?",
+            "We can shape a realm. Any starting concept in mind—elves, dragons, or clockwork robots?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "character_creation",
+          "is_start": false,
+          "utterances": [
+            "Who is our protagonist—knight, mage, rogue, or something else?",
+            "Want to design a unique hero or a band of adventurers?",
+            "Shall we outline a solitary warrior, or a party of misfits with special skills?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "magic_system",
+          "is_start": false,
+          "utterances": [
+            "Is magic abundant or rare? Are there any costs or risks to using it?",
+            "We can define if spells require components, incantations, or inherent power.",
+            "How structured is magic? Rigidly studied or wild and chaotic?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "quest_discussion",
+          "is_start": false,
+          "utterances": [
+            "What sparks our hero’s journey—an evil overlord, a lost relic, or political intrigue?",
+            "Shall we create a grand quest or smaller episodic adventures?",
+            "Any plot catalysts you envision for this fantasy story?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "villain_creation",
+          "is_start": false,
+          "utterances": [
+            "Every quest needs opposition. Who’s the antagonist—dark sorcerer, cunning warlord, or cursed deity?",
+            "Is the villain sympathetic or purely evil? Motivations matter.",
+            "Let’s craft a memorable villain. Cruel tyrant or tragic antihero?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "factions_and_lore",
+          "is_start": false,
+          "utterances": [
+            "Are there different kingdoms or guilds with unique goals?",
+            "We can add factions: thieves’ guilds, knightly orders, or merchant clans. Thoughts?",
+            "Would politics or alliances be a big factor in this world?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "side_stories",
+          "is_start": false,
+          "utterances": [
+            "Shall we add side quests or subplots, like a dragon’s curse or a haunted forest?",
+            "We can create personal arcs for supporting characters. Interested?",
+            "Any secondary storyline to enrich the world?"
+          ]
+        },
+        {
+          "id": 9,
+          "label": "role_play_loop",
+          "is_start": false,
+          "utterances": [
+            "We can continue expanding this story or role-play scenarios. Ready?",
+            "Want to delve deeper into a specific story arc or keep building the setting?",
+            "Shall we role-play as the hero or NPCs, or refine the lore more?"
+          ]
+        },
+        {
+          "id": 10,
+          "label": "end_fantasy",
+          "is_start": false,
+          "utterances": [
+            "Our grand tapestry is woven. Thanks for crafting this fantasy world!",
+            "Farewell, adventurer! May your story flourish!",
+            "Our journey ends here, but the realm lives on in your imagination."
+          ]
+        },
+        {
+          "id": 11,
+          "label": "lore_loop",
+          "is_start": false,
+          "utterances": [
+            "We can revisit the magic system, the quest, or the villain. Which do you choose?",
+            "Ready to circle back and elaborate on an earlier point—magic, factions, or story arcs?",
+            "Shall we refine the world building or jump to side stories again?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes, I'd love to build a fantasy setting!",
+            "Sure, let's create a magical world!"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Let's do a medieval high-fantasy realm.",
+            "A steampunk wizard realm sounds fun."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I imagine a mage with unique powers.",
+            "A band of adventurers with different classes is good."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Magic is somewhat rare and dangerous. Now, let's define the quest.",
+            "Abundant magic, but requires focusing crystals. Next, the quest!"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "They must stop an ancient evil overlord from rising.",
+            "A lost relic threatens the realm. There's also a rival warlord."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 11,
+          "utterances": [
+            "Wait, I'd like to go back to magic details or character creation."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "Let’s add more kingdoms or factions to make it complex.",
+            "A cunning warlord with a hidden tragic backstory. Next, factions?"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 8,
+          "utterances": [
+            "Yes, I'd like side quests. Maybe a haunted forest subplot.",
+            "We can have a thieves' guild that meddles in the main quest."
+          ]
+        },
+        {
+          "source": 7,
+          "target": 11,
+          "utterances": [
+            "I want to revisit the villain or the main quest again."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 9,
+          "utterances": [
+            "Let's continue building. I'd like to role-play a scenario.",
+            "More side stories are good, but let's see if we can simulate a short quest now."
+          ]
+        },
+        {
+          "source": 8,
+          "target": 11,
+          "utterances": [
+            "Maybe let's refine the factions again."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 10,
+          "utterances": [
+            "I think we've built enough. Let's conclude.",
+            "Yes, let's finish the discussion now."
+          ]
+        },
+        {
+          "source": 9,
+          "target": 11,
+          "utterances": [
+            "Actually, I'd like to revisit the magic system or the quest one more time."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 4,
+          "utterances": [
+            "I want to detail the magic system further."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 5,
+          "utterances": [
+            "We should refine the main quest next."
+          ]
+        },
+        {
+          "source": 11,
+          "target": 10,
+          "utterances": [
+            "No, we can stop here. Thanks!"
+          ]
+        }
+      ]
+    }
+  }
+]

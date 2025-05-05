@@ -1,0 +1,1209 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Welcome",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your travel today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Book a Trip",
+          "utterances": [
+            "Sure, I can help you book a trip. Where would you like to go?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Modify Reservation",
+          "utterances": [
+            "I can help you modify your reservation. Please provide your reservation number."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Travel Information",
+          "utterances": [
+            "What information do you need regarding your travel?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Goodbye",
+          "utterances": [
+            "Goodbye! Have a great trip!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a trip",
+            "Book a trip"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to modify my reservation",
+            "Modify reservation"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I need travel information",
+            "Travel info"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Goodbye",
+            "No, thanks"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our store! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Product Selection",
+          "utterances": [
+            "Here are some products you might like.",
+            "Feel free to browse our selection."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Product Details",
+          "utterances": [
+            "Here are the details of the product.",
+            "Would you like to add this to your cart?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Add to Cart",
+          "utterances": [
+            "The product has been added to your cart.",
+            "Would you like to continue shopping or proceed to checkout?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Checkout",
+          "utterances": [
+            "Let's proceed to checkout. Please provide your shipping details.",
+            "Ready to place your order?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Confirmation",
+          "utterances": [
+            "Your order has been placed successfully! Thank you for shopping with us.",
+            "We've sent a confirmation email to you."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to browse products",
+            "Show me your products"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Tell me more about this product",
+            "I want details on this item"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Add to cart",
+            "I'd like to buy this"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Proceed to checkout",
+            "I'm ready to buy"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Confirm purchase",
+            "Place my order"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?",
+            "Hi! What would you like to do today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Initiate Appointment Scheduling",
+          "utterances": [
+            "Sure, I can help you schedule a medical appointment. What date would you prefer?",
+            "I'd be happy to help you schedule an appointment. When would you like to come in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Confirm Appointment Date",
+          "utterances": [
+            "Great, you've chosen {date}. What time works best for you?",
+            "Understood. Please provide a suitable time on {date}."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Confirm Appointment Time",
+          "utterances": [
+            "Thank you. What type of appointment is this for?",
+            "Got it. Could you please specify the type of medical appointment?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Review Appointment Details",
+          "utterances": [
+            "You've scheduled a {appointment_type} on {date} at {time}. Is this correct?",
+            "To confirm, your {appointment_type} is set for {date} at {time}. Would you like to proceed?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End Confirmation",
+          "utterances": [
+            "Your appointment has been successfully scheduled. Thank you!",
+            "All set! Your {appointment_type} appointment is confirmed for {date} at {time}."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to schedule a medical appointment",
+            "I'd like to make an appointment",
+            "Can you help me book a doctor's visit?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like to come on April 25th",
+            "Next Monday works for me",
+            "Can I schedule it for May 5th?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Let's do 10 AM",
+            "How about 2 PM?",
+            "Morning is better, maybe 9?"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "It's for a general check-up",
+            "I need a dental appointment",
+            "I'd like to see a specialist"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, that's correct",
+            "Everything looks good",
+            "Please confirm"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to University Admissions Assistance. How can I help you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Application Process",
+          "utterances": [
+            "You can apply by filling out the online application form on our website.",
+            "The application process involves submitting your academic records, personal statement, and recommendation letters."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Deadlines",
+          "utterances": [
+            "The application deadline for Fall intake is September 1st.",
+            "Please ensure all your application materials are submitted by the deadline to avoid any delays."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Requirements",
+          "utterances": [
+            "Applicants need to have a completed high school diploma or equivalent.",
+            "You are required to submit standardized test scores and proof of English proficiency."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Check Application Status",
+          "utterances": [
+            "Please provide your application ID to check the status.",
+            "You can check your application status by logging into your account on our admissions portal."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Contact Support",
+          "utterances": [
+            "You can contact our support team at admissions@university.edu.",
+            "Feel free to call us at (123) 456-7890 for any further assistance."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Tell me about the application process",
+            "How do I apply?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "What are the deadlines?",
+            "When is the application due?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "What are the requirements?",
+            "What do I need to apply?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Check my application status",
+            "Where is my application?"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "I need to contact support",
+            "Can I speak to someone?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 1,
+          "utterances": [
+            "Thank you",
+            "Back to main menu"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 1,
+          "utterances": [
+            "Got it",
+            "Back to main menu"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Understood",
+            "Back to main menu"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 1,
+          "utterances": [
+            "Thanks",
+            "Back to main menu"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 1,
+          "utterances": [
+            "Thank you",
+            "Back to main menu"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hi! I'm here to help you plan your event. What type of event are you planning?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Choose Event Type",
+          "utterances": [
+            "Great! What kind of event are you planning?",
+            "Sure! Which event do you need assistance with?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Birthday Party Planning",
+          "utterances": [
+            "Let's plan your birthday party! Do you need help with venue, invitations, or activities?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Wedding Planning",
+          "utterances": [
+            "Congratulations on your upcoming wedding! Would you like assistance with the venue, catering, or guest list?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Conference Planning",
+          "utterances": [
+            "Planning a conference? I can help with the schedule, speakers, or venue. What do you need?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Venue Selection",
+          "utterances": [
+            "Sure, let's find the perfect venue for your event. What size are you expecting?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Invitations",
+          "utterances": [
+            "I'd be happy to help with invitations. Do you prefer digital or physical invitations?"
+          ]
+        },
+        {
+          "id": 8,
+          "label": "Activities",
+          "utterances": [
+            "Let's plan some fun activities! What type of activities are you interested in?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Start Planning"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Birthday Party"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Wedding"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "Conference"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Venue"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 7,
+          "utterances": [
+            "Invitations"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 8,
+          "utterances": [
+            "Activities"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Venue"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 7,
+          "utterances": [
+            "Catering"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 8,
+          "utterances": [
+            "Guest List"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Schedule"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "Speakers"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 8,
+          "utterances": [
+            "Venue"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome! Let's explore global cultures and traditions. What would you like to learn about today?",
+            "Hello! I'm excited to help you discover different cultures and traditions around the world. Where would you like to begin?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Cultural Festivals",
+          "utterances": [
+            "Cultural festivals are vibrant expressions of tradition. For example, the Japanese Cherry Blossom Festival celebrates the beauty of spring.",
+            "Festivals like India's Diwali illuminate rich cultural practices and bring communities together."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Traditional Clothing",
+          "utterances": [
+            "Traditional clothing varies widely, such as the colorful kimonos in Japan or the intricate sarees in India.",
+            "Each culture has unique attire, like the Scottish kilts or the Mexican charro suits, reflecting their heritage."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Cuisine",
+          "utterances": [
+            "Cuisine is a vital part of culture. Italian pasta, Japanese sushi, and Mexican tacos are just a few examples.",
+            "Exploring different cuisines can provide insight into a culture's history and values."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Traditional Music and Dance",
+          "utterances": [
+            "Music and dance are integral to cultural expression. Think of Brazilian samba or Irish folk music.",
+            "Traditional performances often tell stories and preserve the history of a community."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Conclusion",
+          "utterances": [
+            "I hope you enjoyed exploring global cultures and traditions! Is there anything else you'd like to learn?",
+            "Thank you for exploring with me. Feel free to ask about more cultures or other topics anytime!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Tell me about cultural festivals",
+            "I'm interested in festivals"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "What is traditional clothing like?",
+            "Tell me about traditional clothing"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Let's talk about cuisine",
+            "I'm curious about different foods"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Explain traditional music and dance",
+            "Tell me about music and dance traditions"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 6,
+          "utterances": [
+            "Thank you, that's all",
+            "That's interesting, thank you"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 6,
+          "utterances": [
+            "Thanks, that's all for now",
+            "Great, thank you"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Appreciate the info",
+            "Thank you"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Thanks for sharing",
+            "That's wonderful, thank you"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I can help you with music composition and songwriting. How would you like to begin?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Choose Genre",
+          "utterances": [
+            "Great choice! What genre are you interested in?",
+            "Which genre would you like to compose for?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Lyrics",
+          "utterances": [
+            "Sure, let's work on the lyrics. What's your theme?",
+            "I'd be happy to help with lyrics. What would you like them to be about?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Provide Melody",
+          "utterances": [
+            "Let's create a melody. Do you have any preferences?",
+            "I'd love to help with the melody. Any specific ideas in mind?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Review Composition",
+          "utterances": [
+            "Here's a preview of your song. Would you like to make any changes?",
+            "Your composition is ready. Do you want to review it?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "End",
+          "utterances": [
+            "Your song is ready! Is there anything else I can assist you with?",
+            "Happy composing! Let me know if you need further help."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to compose a new song",
+            "Let's start composing"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like to work on lyrics",
+            "Let's focus on the lyrics first"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I'd like to work on melody",
+            "Let's focus on the melody first"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Done with lyrics",
+            "Next step"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Done with melody",
+            "Next step"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "No changes needed",
+            "Looks good"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 3,
+          "utterances": [
+            "I'd like to revise the lyrics",
+            "Can we edit the lyrics?"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 4,
+          "utterances": [
+            "I'd like to revise the melody",
+            "Can we edit the melody?"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 1,
+          "utterances": [
+            "Yes, start another song",
+            "I'd like to compose another piece"
+          ]
+        },
+        {
+          "source": 6,
+          "target": null,
+          "utterances": [
+            "No, thank you",
+            "That's all for now"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'd love to discuss movies with you. What movie would you like to talk about?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Get Movie Title",
+          "utterances": [
+            "I'd like to hear your thoughts on {movie}.",
+            "What did you think of {movie}?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Get Rating",
+          "utterances": [
+            "How would you rate {movie} out of 5?",
+            "What rating would you give {movie}?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Discuss Aspects",
+          "utterances": [
+            "What did you think about the plot?",
+            "How did you find the acting?",
+            "What were your thoughts on the cinematography?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Another Movie",
+          "utterances": [
+            "Would you like to discuss another movie?",
+            "Is there another movie you'd like to talk about?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Goodbye",
+          "utterances": [
+            "Thanks for the discussion! Goodbye.",
+            "It was great talking about movies. See you next time!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to discuss a movie",
+            "Let's talk about movies"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "The movie is Inception",
+            "I want to talk about The Matrix"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I rate it 5 stars",
+            "It was okay, 3 out of 5"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I have nothing more to say",
+            "Goodbye"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 2,
+          "utterances": [
+            "Yes, another movie",
+            "Sure, let's discuss another one"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "No, thank you",
+            "That's all for now"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with video gaming today?",
+            "Hi there! What can I help you with in the gaming world?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Game Recommendation",
+          "utterances": [
+            "Sure! What type of games do you like?",
+            "I can help you find a game. What genres are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Gameplay Tips",
+          "utterances": [
+            "I'd be happy to help with gameplay tips. Which game are you playing?",
+            "Sure, what game do you need tips for?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Technical Support",
+          "utterances": [
+            "I'm sorry you're having trouble. Can you describe the issue?",
+            "How can I assist you with technical issues in your game?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Goodbye",
+          "utterances": [
+            "Goodbye! Enjoy your gaming!",
+            "Talk to you later! Have fun gaming!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need a game recommendation",
+            "Can you suggest a game?",
+            "Recommend a game for me"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need gameplay tips",
+            "Can you help me improve in my game?",
+            "Give me tips for my game"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I'm having technical issues",
+            "I need help with my game not working",
+            "Technical support for my game"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 5,
+          "utterances": [
+            "Thank you",
+            "That's all",
+            "No, thanks"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Thanks for the tips",
+            "That's helpful",
+            "Appreciate it"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Thank you for the help",
+            "Issue resolved, thanks",
+            "That's all for now"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Welcome, brave adventurer!",
+            "Greetings, traveler! How may I assist you in your journey today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "CharacterCreation",
+          "utterances": [
+            "Let's create your character. What is your character's name?",
+            "Tell me about your character. What's their name and role?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "QuestSelection",
+          "utterances": [
+            "Great! Would you like to embark on the Dragon Hunt or the Mystic Quest?",
+            "Choose your adventure: Dragon Hunt or Mystic Quest?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "DragonHuntDetails",
+          "utterances": [
+            "The Dragon Hunt is dangerous but rewarding. Are you sure you want to proceed?",
+            "Preparing for the Dragon Hunt. Do you have the necessary supplies?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "MysticQuestDetails",
+          "utterances": [
+            "The Mystic Quest will test your wisdom and courage. Ready to begin?",
+            "Entering the Mystic Quest. Do you seek knowledge or power?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Farewell",
+          "utterances": [
+            "Good luck on your adventure!",
+            "May your journey be prosperous. Farewell!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Hello",
+            "Hi",
+            "Greetings"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm ready",
+            "Let's go",
+            "Proceed"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Dragon Hunt",
+            "I choose the Dragon Hunt"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Mystic Quest",
+            "I choose the Mystic Quest"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "Yes",
+            "Proceed"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes",
+            "Begin"
+          ]
+        },
+        {
+          "source": 6,
+          "target": 1,
+          "utterances": [
+            "Restart",
+            "New Adventure"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "context_info"
+    ]
+  }
+]

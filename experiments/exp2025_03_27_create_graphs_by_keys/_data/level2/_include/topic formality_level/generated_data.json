@@ -1,0 +1,876 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I can help you book a hotel. Where would you like to stay?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Location Received",
+          "utterances": [
+            "Great choice. For which dates are you planning to stay?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Dates Received",
+          "utterances": [
+            "How many guests will be staying?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Guests Received",
+          "utterances": [
+            "Here are some available options. Which one do you prefer?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Option Selected",
+          "utterances": [
+            "Your booking is confirmed. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Booking Confirmed",
+          "utterances": [
+            "Thank you for booking with us! Have a great day."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a hotel in New York."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "From July 10 to July 15."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "For two guests."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I would like the Deluxe Suite."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, that's all."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to IT Support. How may I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Hardware Issues",
+          "utterances": [
+            "I’m sorry to hear that you're experiencing hardware issues. Can you please specify the problem?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Software Issues",
+          "utterances": [
+            "I apologize for the inconvenience with your software. Could you please provide more details about the issue?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Further Assistance",
+          "utterances": [
+            "Thank you for the information. I will escalate this issue to our technical team for further assistance."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Goodbye",
+          "utterances": [
+            "Thank you for contacting IT Support. Have a great day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I have a hardware issue."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I have a software issue."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "The computer is not turning on."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "The application crashes frequently."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Thank you."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Welcome to our online grocery store. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Browse Products",
+          "utterances": [
+            "Sure, what kind of products are you looking for?",
+            "I can help you find products. What do you need?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Add to Cart",
+          "utterances": [
+            "I've added that to your cart. Would you like to add anything else?",
+            "Item added to your cart. Do you want to continue shopping or proceed to checkout?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Checkout",
+          "utterances": [
+            "Great! Let's proceed to checkout. Can I have your delivery address?",
+            "All set for checkout. Please provide your delivery details."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "End",
+          "utterances": [
+            "Thank you for shopping with us! Have a great day.",
+            "Your order has been placed successfully. Thank you!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to buy groceries",
+            "I would like to order groceries"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I want to buy apples",
+            "Add milk to my cart"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 2,
+          "utterances": [
+            "I need more items",
+            "Yes, continue shopping"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'm done",
+            "Proceed to checkout"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Here is my address",
+            "My address is 123 Main Street"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Book Rental",
+          "utterances": [
+            "Sure, I can help you book a rental car. Where would you like to pick up the car?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Pickup Location",
+          "utterances": [
+            "Great. When would you like to pick up the car?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Pickup Date",
+          "utterances": [
+            "Understood. When will you be returning the car?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Drop-off Date",
+          "utterances": [
+            "What type of car would you prefer?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Car Type",
+          "utterances": [
+            "Your booking is confirmed. Thank you for choosing our service!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a rental car.",
+            "I'd like to rent a car."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "New York",
+            "Los Angeles",
+            "Chicago"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Tomorrow",
+            "Next Monday"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Two weeks",
+            "One month"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Economy",
+            "SUV",
+            "Luxury"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Welcome to XYZ Bank. How may I assist you with your loan application today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Loan Inquiry",
+          "utterances": [
+            "Certainly, I can help you with that. What type of loan are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Loan Details",
+          "utterances": [
+            "Please provide the necessary personal and financial information to proceed with your loan application."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Document Submission",
+          "utterances": [
+            "You will need to submit the following documents: proof of income, identification, and credit history."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Application Submission",
+          "utterances": [
+            "Your loan application has been successfully submitted. Our team will review your information and get back to you shortly."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Follow-Up",
+          "utterances": [
+            "Is there anything else I can assist you with regarding your loan application?"
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Goodbye",
+          "utterances": [
+            "Thank you for choosing XYZ Bank. Have a great day."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I would like to apply for a loan."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in a personal loan."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Here is my information."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I have submitted all the required documents."
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Thank you."
+          ]
+        },
+        {
+          "source": 6,
+          "target": 7,
+          "utterances": [
+            "No, that's all for now."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Good day. How may I assist you in your philosophical inquiry?",
+            "Hello. What philosophical topic would you like to discuss today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Existentialism Discussion",
+          "utterances": [
+            "Existentialism is a philosophy that emphasizes individual existence, freedom, and choice.",
+            "Would you like to delve into the concepts of existential freedom?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Ethics Discussion",
+          "utterances": [
+            "Ethics involves the principles of right and wrong behavior.",
+            "Shall we explore consequentialism or deontology?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Consequentialism Explanation",
+          "utterances": [
+            "Consequentialism is the doctrine that the morality of an action is contingent upon the action's outcome.",
+            "Would you like examples of consequentialist theories?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Deontology Explanation",
+          "utterances": [
+            "Deontology is an ethical theory that uses rules to distinguish right from wrong.",
+            "Shall we discuss the works of Immanuel Kant in deontological ethics?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I would like to discuss existentialism.",
+            "Let's talk about the nature of existence."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Can we talk about ethics?",
+            "I'd like to discuss moral philosophy."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Please explain consequentialism.",
+            "I'd like to understand the outcomes-based approach."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "Please explain deontology.",
+            "I'd like to understand the rule-based approach."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's talk about art. What would you like to discuss today?",
+            "Hi there! Interested in discussing art?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Art Movements",
+          "utterances": [
+            "Sure, we can discuss various art movements. Are you interested in Renaissance, Baroque, or Modern art?",
+            "Let's talk about art movements. Which one are you curious about: Renaissance, Baroque, or Modern?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Famous Artists",
+          "utterances": [
+            "We can talk about famous artists. Do you want to discuss Leonardo da Vinci, Pablo Picasso, or Vincent van Gogh?",
+            "Interested in discussing famous artists like Leonardo da Vinci, Pablo Picasso, or Vincent van Gogh?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Techniques",
+          "utterances": [
+            "Let's talk about art techniques like oil painting, watercolor, or sculpture. Which one interests you?",
+            "Which art technique would you like to discuss: oil painting, watercolor, or sculpture?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Let's talk about art movements",
+            "I'm interested in discussing art movements"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I'd like to discuss famous artists",
+            "Let's talk about famous artists"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I want to discuss art techniques",
+            "Let's talk about art techniques"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hey there! Let's chat about relationships and friendships. What’s on your mind?",
+            "Hi! I'm here to talk about friendships and relationships. How can I help you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Making Friends",
+          "utterances": [
+            "Making new friends can be challenging. What do you find difficult about it?",
+            "Looking to make new friends? Let's discuss some strategies!"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Resolving Conflicts",
+          "utterances": [
+            "Conflicts with friends can be tough. What's happening?",
+            "Having trouble with a friend? Let's work through it."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Relationship Advice",
+          "utterances": [
+            "Need some relationship advice? I'm here to help!",
+            "Let's talk about your relationship. What's on your mind?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to make new friends",
+            "Let's talk about making friends"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I'm having a conflict with a friend",
+            "Need help resolving a friendship issue"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I need relationship advice",
+            "Can you help me with my relationship?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hey! What's your favorite sport?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Basketball Response",
+          "utterances": [
+            "Nice! Basketball is awesome. Who's your favorite team?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Soccer Response",
+          "utterances": [
+            "Cool! Soccer has such passionate fans. Which team do you support?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Team Favorite",
+          "utterances": [
+            "Great choice! That's a fantastic team. Have you been to any of their games?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "End",
+          "utterances": [
+            "Sounds awesome! Let's catch a game sometime."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Basketball",
+            "I love basketball"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "Soccer",
+            "I'm into soccer"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "Lakers",
+            "Go Lakers!"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Manchester United",
+            "MUFC all the way!"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, I have",
+            "Not yet"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hey! Let’s create a story together. What’s the first sentence?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "User Provides First Sentence",
+          "utterances": [
+            "Awesome start! What happens next?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "User Continues Story",
+          "utterances": [
+            "Cool! Let’s keep it going. What’s the next part?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Story Conclusion",
+          "utterances": [
+            "Nice ending! Want to start another story or wrap up?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Sure!",
+            "Let’s do it!",
+            "Count me in!"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Here’s what happens next...",
+            "Then suddenly...",
+            "And so..."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "That’s awesome!",
+            "Great twist!",
+            "Interesting turn!"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Start a new story",
+            "Create another one",
+            "Let’s go again"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "formality_level"
+    ]
+  }
+]

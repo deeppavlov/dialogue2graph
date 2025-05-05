@@ -1,0 +1,1830 @@
+[
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your flight booking today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Departure City",
+          "utterances": [
+            "Great! From which city will you be departing?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Destination City",
+          "utterances": [
+            "Where would you like to fly to?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Travel Dates",
+          "utterances": [
+            "What are your travel dates?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Confirm Booking",
+          "utterances": [
+            "Your flight has been booked from [Departure City] to [Destination City] on [Travel Dates]. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Escalation",
+          "utterances": [
+            "I'm sorry, I couldn't handle that. Let me transfer you to a support agent."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a flight",
+            "Book a flight"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "[Departure City]"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "[Destination City]"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "[Travel Dates]"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 1,
+          "utterances": [
+            "Yes, another booking",
+            "No, thank you"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "I have an issue",
+            "Problem with booking"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our pizza ordering service! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Select Pizza",
+          "utterances": [
+            "Sure, what kind of pizza would you like to order?",
+            "What type of pizza are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Choose Size",
+          "utterances": [
+            "What size would you prefer? Small, Medium, or Large?",
+            "Please select the size of your pizza."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Choose Toppings",
+          "utterances": [
+            "Would you like to add any extra toppings?",
+            "Please let me know if you want additional toppings."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Review Order",
+          "utterances": [
+            "Here is your order summary. Would you like to confirm?",
+            "Please review your order details before confirming."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Order Confirmation",
+          "utterances": [
+            "Your order has been confirmed! It will be delivered shortly.",
+            "Thank you! Your pizza is on its way."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Escalation",
+          "utterances": [
+            "I'm sorry, I couldn't process your request. Let me connect you with a support agent.",
+            "Unfortunately, I can't assist with that. Transferring you to a human agent."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to order a pizza",
+            "I'd like to place an order"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'd like a pepperoni pizza",
+            "Can I have a vegetarian pizza?"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I'd like a large size",
+            "Please make it medium"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Yes, add extra cheese",
+            "No additional toppings, thanks"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Yes, confirm my order",
+            "That looks good, proceed"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 7,
+          "utterances": [
+            "I need to change my order",
+            "There's a mistake in my order"
+          ]
+        },
+        {
+          "source": 7,
+          "target": 7,
+          "utterances": [
+            "Please help me",
+            "I need assistance"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Cannot Resolve",
+          "utterances": [
+            "I'm sorry, I can't resolve this issue. Please contact support."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I have an issue",
+            "Help me with a problem",
+            "My device is not working"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to the bill payment service. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Make Payment",
+          "utterances": [
+            "Sure, I can help you make a payment. Please enter the payment amount."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Check Bill Status",
+          "utterances": [
+            "Certainly, I can help you check your bill status. Please provide your account number."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "End",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Would you like to make a payment or check your bill status?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to make a payment",
+            "Make a payment",
+            "I'd like to pay my bill"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I want to check my bill status",
+            "Check bill status",
+            "See my bill"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I need something else",
+            "Other",
+            "I have another request"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to your bank account management. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Initiate Fund Transfer",
+          "utterances": [
+            "I can help you transfer funds. Please provide the recipient's account number and the amount."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Confirm Transfer",
+          "utterances": [
+            "You are about to transfer $X to account Y. Would you like to proceed?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Transfer Successful",
+          "utterances": [
+            "Your transfer of $X to account Y has been completed successfully."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Escalation",
+          "utterances": [
+            "I'm unable to assist with that. Let me connect you to a support agent."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to transfer funds",
+            "Transfer money"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Provide account details",
+            "Next"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, proceed",
+            "Confirm"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "No, cancel",
+            "I need help"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "I have an issue",
+            "Assistance needed"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Welcome to our restaurant. How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask Date and Time",
+          "utterances": [
+            "Sure, for which date and time would you like to book a table?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Ask Number of People",
+          "utterances": [
+            "How many people will be in your party?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Confirm Reservation",
+          "utterances": [
+            "Great! I have reserved a table for {number} people on {date} at {time}. Is there anything else I can help you with?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Escalation",
+          "utterances": [
+            "I'm sorry, I can't assist with that. Let me connect you to a human agent for further assistance."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to book a table",
+            "Table booking"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "{date} {time}",
+            "Next Friday at 7 pm"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "{number}",
+            "4 people"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I need help",
+            "I have an issue",
+            "Can I speak to someone?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to our online store! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Browse Products",
+          "utterances": [
+            "Sure, what type of products are you interested in?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Add to Cart",
+          "utterances": [
+            "I've added that item to your cart. Would you like to checkout or continue shopping?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Checkout",
+          "utterances": [
+            "Great! Let's proceed to checkout. Please provide your shipping information."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Payment",
+          "utterances": [
+            "Please enter your payment details to complete the purchase."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Confirmation",
+          "utterances": [
+            "Thank you for your order! Your purchase has been confirmed."
+          ]
+        },
+        {
+          "id": 7,
+          "label": "Escalate",
+          "utterances": [
+            "I'm sorry, I can't assist with that. Let me transfer you to a support agent."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to browse products",
+            "Show me your products"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Add this to my cart",
+            "I'd like to purchase this"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Proceed to checkout",
+            "I want to buy it"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Here is my payment information",
+            "Proceed with payment"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "Complete purchase",
+            "Confirm order"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 7,
+          "utterances": [
+            "I have an issue",
+            "I need help"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your vehicle today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "AskMaintenanceType",
+          "utterances": [
+            "Sure, I can help you schedule a maintenance. What type of maintenance do you need?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "ConfirmScheduling",
+          "utterances": [
+            "Great, I have scheduled an oil change for your vehicle."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "EscalateToAgent",
+          "utterances": [
+            "I'm sorry, I can't assist with that. Let me connect you to a support agent."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need to schedule a maintenance.",
+            "Can you help with vehicle maintenance?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I need an oil change.",
+            "Schedule a brake inspection."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I have a different issue.",
+            "This maintenance type is not listed."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?",
+            "Hi there! What can I help you with?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "File Insurance Claim",
+          "utterances": [
+            "I want to file an insurance claim",
+            "I need to process a claim"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Policy Number",
+          "utterances": [
+            "Please provide your policy number.",
+            "Could you share your policy number?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Enter Claim Details",
+          "utterances": [
+            "Please provide details about your claim.",
+            "Could you give more information about the incident?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Confirmation",
+          "utterances": [
+            "Your claim has been submitted successfully.",
+            "Thank you. Your insurance claim has been filed."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Escalation",
+          "utterances": [
+            "I'm sorry, I can't process that. Let me connect you to a support agent.",
+            "Apologies, I'll transfer you to a human representative for further assistance."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to file an insurance claim",
+            "I need to process a claim"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Yes",
+            "Sure"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Here is my policy number: XXXX",
+            "My policy number is XXXX"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "Here are the details of my claim",
+            "The incident occurred on..."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 6,
+          "utterances": [
+            "I need more help",
+            "Cannot proceed"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Welcome to Weekend Travel Planner! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Find Flights",
+          "utterances": [
+            "Sure, I can help you find flights. Where are you flying from and to?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Find Hotels",
+          "utterances": [
+            "Great, let's find you a hotel. What city are you staying in?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Plan Activities",
+          "utterances": [
+            "Awesome, I can suggest activities. What kind of activities are you interested in?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Could you please rephrase?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to find flights",
+            "Book a flight"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need a hotel",
+            "Find me a hotel"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "Plan activities",
+            "Find things to do"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "Other",
+            "None of the above"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hi! I'd love to hear about your favorite movies. What's your all-time favorite movie?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Favorite Movie Response",
+          "utterances": [
+            "That's a fantastic choice!",
+            "I really enjoy that movie too!",
+            "Great movie! What do you like most about it?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Movie Recommendation",
+          "utterances": [
+            "Can I recommend some movies you might like?",
+            "Would you like some movie recommendations?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "End Conversation",
+          "utterances": [
+            "Thanks for sharing your favorite movies!",
+            "It was great talking about movies with you. Have a nice day!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "My favorite movie is Inception.",
+            "I really love The Godfather.",
+            "I enjoy watching The Matrix."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Sure, I'd love some recommendations.",
+            "Yes, please recommend some movies."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Thank you!",
+            "Thanks for the suggestions."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello!",
+            "Hi there! How can I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Weather Inquiry",
+          "utterances": [
+            "Sure, I can help you with the weather. Which location are you interested in?",
+            "I'd be happy to provide weather information. Please specify the city or area."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Weather",
+          "utterances": [
+            "The current weather in {location} is sunny with a temperature of 25°C.",
+            "It's raining in {location} with a temperature of 18°C.",
+            "It's cloudy in {location} with a temperature of 20°C."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Fallback",
+          "utterances": [
+            "I'm sorry, I didn't quite get that. Could you please specify the location?",
+            "Apologies, I couldn't understand. Can you provide the name of the city or area you're interested in?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "What's the weather like?",
+            "Can you tell me the weather?",
+            "I'd like to know the current weather."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "New York",
+            "Los Angeles",
+            "London",
+            "Paris"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "I'm not sure",
+            "I don't know the location",
+            "Random text"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 2,
+          "utterances": [
+            "It's in Tokyo",
+            "The location is Berlin"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'd be happy to help you with book discussions and recommendations. What are you in the mood for today?",
+            "Hi there! Looking for book recommendations or want to discuss a book?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask Genre",
+          "utterances": [
+            "What genre are you interested in?",
+            "Which type of books do you like?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Recommendation",
+          "utterances": [
+            "I recommend 'The Hobbit' by J.R.R. Tolkien.",
+            "You might enjoy '1984' by George Orwell."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "More Recommendations?",
+          "utterances": [
+            "Would you like more recommendations?",
+            "Do you want to hear more book suggestions?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "End Conversation",
+          "utterances": [
+            "Happy reading!",
+            "Let me know if you need anything else. Goodbye!"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like a recommendation.",
+            "I want to find a book."
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in fantasy.",
+            "I like science fiction."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Thanks!",
+            "That's great!"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 3,
+          "utterances": [
+            "Yes, please.",
+            "More recommendations."
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "No, thank you.",
+            "That's all for now."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! I'd love to hear about your music preferences. What genres do you enjoy?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Genre Selection",
+          "utterances": [
+            "Great choice! Do you have any favorite artists or bands in that genre?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Artist Selection",
+          "utterances": [
+            "Awesome! I can suggest some songs you might like. Would you like recommendations?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Recommendations",
+          "utterances": [
+            "Here are some songs you might enjoy:",
+            "Based on your preferences, I recommend these tracks:"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Escalation",
+          "utterances": [
+            "I'm sorry, I couldn't assist with that. Let me connect you to a support agent."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I enjoy pop",
+            "I like rock",
+            "Other genres"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Taylor Swift",
+            "Imagine Dragons",
+            "Another artist"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Yes, please",
+            "Sure, go ahead"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 5,
+          "utterances": [
+            "I don't like these suggestions",
+            "Can you help me with something else?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! I can help you with cooking preferences and techniques. How may I assist you today?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Preference Handling",
+          "utterances": [
+            "Great! What type of dishes are you interested in?",
+            "Sure! Do you prefer baking, frying, or something else?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Unknown Handling",
+          "utterances": [
+            "I'm sorry, I couldn't understand that. Let me transfer you to a human agent."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to learn new cooking techniques",
+            "Tell me about cooking preferences"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I need help with something else"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Not sure what you mean"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hi! I'd love to hear about your hobbies. What do you enjoy doing in your free time?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Hobby: Reading",
+          "utterances": [
+            "That's great! What genre do you prefer?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Hobby: Painting",
+          "utterances": [
+            "Painting is wonderful. What do you like to paint?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Unknown Response",
+          "utterances": [
+            "I'm not sure I understand. Could you tell me more?"
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I like reading books.",
+            "I enjoy reading novels."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 3,
+          "utterances": [
+            "I enjoy painting.",
+            "I like to paint."
+          ]
+        },
+        {
+          "source": 1,
+          "target": 4,
+          "utterances": [
+            "I like hiking.",
+            "I enjoy playing chess.",
+            "Other hobbies"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Let's talk about your favorite sports."
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask Favorite Sport",
+          "utterances": [
+            "What's your favorite sport?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Respond with Sport",
+          "utterances": [
+            "That's great! I love %sport% too.",
+            "Nice choice! %sport% is awesome."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Unknown Response",
+          "utterances": [
+            "I'm sorry, I didn't understand that. Let me connect you with someone who can help."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Start conversation",
+            "Initiate discussion"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "User shares favorite sport"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "User input not recognized"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 1,
+          "utterances": [
+            "Continue discussion",
+            "Ask another question"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 1,
+          "utterances": [
+            "Escalate to agent",
+            "Retry conversation"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with your vacation planning today?",
+            "Hi there! Ready to plan your vacation?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Destination Selection",
+          "utterances": [
+            "Great choice! Where would you like to go for your vacation?",
+            "Let's choose your vacation destination. Where do you want to go?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Accommodation Options",
+          "utterances": [
+            "I can help you find accommodation. Do you prefer hotels or rentals?",
+            "Let's find accommodation. Would you like to stay in a hotel or an apartment?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Transportation",
+          "utterances": [
+            "How would you like to travel to your destination?",
+            "Do you need help booking flights or other transportation?"
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Finalize Plan",
+          "utterances": [
+            "Your vacation plan is set! Is there anything else I can help you with?",
+            "All set for your vacation! Let me know if you need anything else."
+          ]
+        },
+        {
+          "id": 6,
+          "label": "Escalation",
+          "utterances": [
+            "I'm sorry, I can't assist with that. Let me connect you to a support agent.",
+            "I didn't understand that. Transferring you to a support representative."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to plan a vacation",
+            "Looking to organize my trip"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I have a destination in mind",
+            "Not sure where to go"
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I need accommodation help",
+            "Looking for places to stay"
+          ]
+        },
+        {
+          "source": 4,
+          "target": 5,
+          "utterances": [
+            "I need transportation assistance",
+            "Help me with travel arrangements"
+          ]
+        },
+        {
+          "source": 5,
+          "target": 6,
+          "utterances": [
+            "I have another question",
+            "Need further assistance"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 6,
+          "utterances": [
+            "I need to talk to a human",
+            "Escalate my request"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you with tech gadgets today?",
+            "Hi there! Looking to discuss any tech gadgets?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Gadget Inquiry",
+          "utterances": [
+            "Sure, what tech gadget are you interested in?",
+            "I'd be happy to provide information. Which gadget do you have in mind?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Information",
+          "utterances": [
+            "The latest smartphone features...",
+            "Our newest laptop has...",
+            "The smartwatch you're interested in offers..."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "End Conversation",
+          "utterances": [
+            "If you have any more questions, feel free to ask. Goodbye!",
+            "Happy to help! Let me know if you need anything else."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I want to know about smartphones.",
+            "Tell me about laptops.",
+            "Can you provide info on smartwatches?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in the latest smartphone.",
+            "I'd like to know about your laptops.",
+            "Tell me more about smartwatches."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Thank you.",
+            "That's all I needed.",
+            "Great, thanks!"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Greeting",
+          "is_start": true,
+          "utterances": [
+            "Hello! How can I assist you today?",
+            "Hi there! Looking for book recommendations?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Ask Genre",
+          "utterances": [
+            "What genre of books are you interested in?",
+            "Do you have a preferred book genre?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Provide Recommendations",
+          "utterances": [
+            "Here are some books you might like: [List of Books].",
+            "I recommend the following titles based on your preference: [List of Books]."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "End",
+          "utterances": [
+            "Happy reading! Let me know if you need anything else.",
+            "Enjoy your books! Feel free to ask if you need more recommendations."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I need book recommendations.",
+            "Can you suggest some books?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "I'm interested in mystery novels.",
+            "I like science fiction."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "Thank you!",
+            "That's great, thanks."
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hello! Would you like to try a trivia question?"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "AskQuestion",
+          "utterances": [
+            "Great! Here's your question: What is the capital of France?"
+          ]
+        },
+        {
+          "id": 3,
+          "label": "CorrectAnswer",
+          "utterances": [
+            "That's correct! Well done."
+          ]
+        },
+        {
+          "id": 4,
+          "label": "IncorrectAnswer",
+          "utterances": [
+            "Sorry, that's not correct. The capital of France is Paris."
+          ]
+        },
+        {
+          "id": 5,
+          "label": "Decline",
+          "utterances": [
+            "No problem! Let me know if you'd like to try later."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "Yes"
+          ]
+        },
+        {
+          "source": 1,
+          "target": 5,
+          "utterances": [
+            "No"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Paris"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 4,
+          "utterances": [
+            "London",
+            "Berlin",
+            "Rome"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  },
+  {
+    "graph": {
+      "nodes": [
+        {
+          "id": 1,
+          "label": "Start",
+          "is_start": true,
+          "utterances": [
+            "Hi! I'd love to hear about your holiday plans!"
+          ]
+        },
+        {
+          "id": 2,
+          "label": "User Shares Holiday Plans",
+          "utterances": [
+            "I'm planning to go to Italy.",
+            "I'm visiting family in Canada.",
+            "I'm taking a trip to Japan."
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Bot Asks Follow-up Questions",
+          "utterances": [
+            "When are you leaving?",
+            "What activities are you looking forward to?",
+            "How long will you be staying?"
+          ]
+        },
+        {
+          "id": 4,
+          "label": "Escalate to Support",
+          "utterances": [
+            "I'm sorry, I can't assist with that.",
+            "Let me connect you with someone who can help."
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "source": 1,
+          "target": 2,
+          "utterances": [
+            "I'd like to discuss my holiday plans.",
+            "Can we talk about my vacation?"
+          ]
+        },
+        {
+          "source": 2,
+          "target": 3,
+          "utterances": [
+            "Sure, I'm going to Italy.",
+            "I'm visiting family in Canada.",
+            "I'm taking a trip to Japan."
+          ]
+        },
+        {
+          "source": 3,
+          "target": 4,
+          "utterances": [
+            "I need help with planning.",
+            "Can you give me more details?"
+          ]
+        }
+      ]
+    },
+    "model": "o1-mini",
+    "temperature": 0.0,
+    "keys_used": [
+      "topic",
+      "escalation_policy"
+    ]
+  }
+]
