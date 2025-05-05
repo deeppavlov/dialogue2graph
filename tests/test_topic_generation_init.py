@@ -1,8 +1,8 @@
 import pytest
 import dotenv
 
-from dialogue2graph.pipelines.model_storage import ModelStorage
-from dialogue2graph.datasets.complex_dialogues.generation import (
+from dialog2graph.pipelines.model_storage import ModelStorage
+from dialog2graph.datasets.complex_dialogs.generation import (
     GenerationPipeline,
     LoopedGraphGenerator,
 )
@@ -10,6 +10,7 @@ from dialogue2graph.datasets.complex_dialogues.generation import (
 dotenv.load_dotenv()
 if not dotenv.find_dotenv():
     pytest.skip("Skipping test as .env file is not found", allow_module_level=True)
+
 
 def test_generation_pipeline_init():
     """Test GenerationPipeline initialization"""

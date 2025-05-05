@@ -1,8 +1,8 @@
-# Debugging dialogue sampler
+# Debugging dialog sampler
 
 ## Issues and goals
 
-I believe current dialogue sampler can malfunction on a more complex graphs. We will check this.
+I believe current dialog sampler can malfunction on a more complex graphs. We will check this.
 Also here I will score the data we already have.
 
 ## Hypothesises and steps

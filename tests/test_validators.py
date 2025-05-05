@@ -3,16 +3,16 @@ import dotenv
 from langchain_openai import ChatOpenAI
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-from dialogue2graph import Dialogue
-from dialogue2graph.metrics.no_llm_validators import (
+from dialog2graph import Dialog
+from dialog2graph.metrics.no_llm_validators import (
     is_greeting_repeated_regex,
     is_dialog_closed_too_early_regex,
 )
-from dialogue2graph.metrics.llm_validators import (
+from dialog2graph.metrics.llm_validators import (
     is_greeting_repeated_emb_llm,
     is_dialog_closed_too_early_emb_llm,
 )
-from dialogue2graph.pipelines.model_storage import ModelStorage
+from dialog2graph.pipelines.model_storage import ModelStorage
 
 
 dotenv.load_dotenv()
@@ -64,7 +64,7 @@ def good_example():
         {"participant": "user", "text": "No, thank you"},
         {"participant": "assistant", "text": "Goodbye! Have a great day!"},
     ]
-    return [Dialogue().from_list(messages)]
+    return [Dialog().from_list(messages)]
 
 
 @pytest.fixture
@@ -105,7 +105,7 @@ def hello_x2_example():
             "text": "If you need any further assistance, feel free to let me know. Have a great day!",
         },
     ]
-    return [Dialogue().from_list(messages)]
+    return [Dialog().from_list(messages)]
 
 
 @pytest.fixture
@@ -146,7 +146,7 @@ def bye_x2_example():
             "text": "Glad I could help. If you need anything else, feel free to ask. Goodbye!",
         },
     ]
-    return [Dialogue().from_list(messages)]
+    return [Dialog().from_list(messages)]
 
 
 def test_re_start(good_example, hello_x2_example):

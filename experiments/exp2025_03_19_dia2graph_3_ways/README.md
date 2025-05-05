@@ -2,9 +2,9 @@
 Dia2graph generation with three different approaches
 
 ## Hypotheses and steps
-1. LLMGenerator: Generating graph from dialogues with dia2graph generator where nodes are grouped via LLM
-2. AlgoGenerator: Generating graph from dialogues with dia2graph generator where nodes are grouped via algorithm
-3. LLMExtender: Demonstration of incremental approach where first graph generated from 1st dialogue, then next step is generating graph via LLM from previous graph and next dialogue
+1. LLMGenerator: Generating graph from dialogs with dia2graph generator where nodes are grouped via LLM
+2. AlgoGenerator: Generating graph from dialogs with dia2graph generator where nodes are grouped via algorithm
+3. LLMExtender: Demonstration of incremental approach where first graph generated from 1st dialog, then next step is generating graph via LLM from previous graph and next dialog
 
 ## Results
 

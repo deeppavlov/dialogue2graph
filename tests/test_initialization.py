@@ -1,13 +1,14 @@
-from dialogue2graph.datasets.complex_dialogues.generation import (
+from dialog2graph.datasets.complex_dialogs.generation import (
     CycleGraphGenerator,
     ErrorType,
     GenerationError,
 )
-from dialogue2graph.pipelines.core.dialogue import Dialogue
-from dialogue2graph.pipelines.core.graph import Graph, BaseGraph
-from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
+from dialog2graph.pipelines.core.dialog import Dialog
+from dialog2graph.pipelines.core.graph import Graph, BaseGraph
+from dialog2graph.pipelines.core.dialog_sampling import RecursiveDialogSampler
 
-# from dialogue2graph.metrics.automatic_metrics import all_utterances_present
+# from dialog2graph.metrics.automatic_metrics import all_utterances_present
+
 
 def test_cycle_graph_generator_init():
     """Test CycleGraphGenerator initialization"""
@@ -15,15 +16,15 @@ def test_cycle_graph_generator_init():
     assert isinstance(generator, CycleGraphGenerator)
 
 
-def test_dialogue_init():
-    """Test Dialogue initialization"""
+def test_dialog_init():
+    """Test Dialog initialization"""
     messages = [
         {"participant": "assistant", "text": "Hello"},
         {"participant": "user", "text": "Hi"},
     ]
-    dialogue = Dialogue.from_list(messages)
-    assert isinstance(dialogue, Dialogue)
-    assert len(dialogue.messages) == 2
+    dialog = Dialog.from_list(messages)
+    assert isinstance(dialog, Dialog)
+    assert len(dialog.messages) == 2
 
 
 def test_graph_init():
@@ -38,10 +39,10 @@ def test_graph_init():
     assert isinstance(graph, BaseGraph)
 
 
-def test_recursive_dialogue_sampler_init():
-    """Test RecursiveDialogueSampler initialization"""
-    sampler = RecursiveDialogueSampler()
-    assert isinstance(sampler, RecursiveDialogueSampler)
+def test_recursive_dialog_sampler_init():
+    """Test RecursiveDialogSampler initialization"""
+    sampler = RecursiveDialogSampler()
+    assert isinstance(sampler, RecursiveDialogSampler)
 
 
 def test_error_type_enum():

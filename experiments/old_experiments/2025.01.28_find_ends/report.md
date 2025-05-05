@@ -1,10 +1,10 @@
-# Method to sample dialogues in a graph: get_full_dialogues
+# Method to sample dialogs in a graph: get_full_dialogs
 
 ## Issues and goals
 
-To genearate graphs from dialogues first we need dialogues.
-Dialogues are sampled from the graphs generated from scratch by LLM.
-Dialogue sampler used so far and based on networkx gives poor results: not all dialogues are sampled.
+To genearate graphs from dialogs first we need dialogs.
+Dialogs are sampled from the graphs generated from scratch by LLM.
+Dialog sampler used so far and based on networkx gives poor results: not all dialogs are sampled.
 So it was decided to try new way.
 
 ## Hypotheses and steps
@@ -21,11 +21,11 @@ Will use regular recursion.
 
 ## Results
 
-`dialogue_dataset_10_topics_3_dialogue.json` is original data of 10 simple graphs from Dmitry
+`dialog_dataset_10_topics_3_dialog.json` is original data of 10 simple graphs from Dmitry
 `complex_graphs.json` is data of 5 complex graphs from Andrey modified by Yuri
 `ready_graphs.json` is data of 5 complex graphs from Dmitry modified by Yuri
 
-100% utterances present with maximum of 6 dialogues
+100% utterances present with maximum of 6 dialogs
 
 ## Future plans
 

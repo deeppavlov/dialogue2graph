@@ -9,9 +9,9 @@ Now chatgpt-4o is used
 
 ## Results
 
-New prompt was developed to make dialogues more live and closer to reality
+New prompt was developed to make dialogs more live and closer to reality
 Also error with 0 cycles in a graph was fixed
-New dialogues look more interesting and complex
+New dialogs look more interesting and complex
 Generation is quite unstable, giving less than 2 cycles
 
 ## Future plans
