@@ -64,7 +64,11 @@ PipelineResult = Union[GraphGenerationResult, GenerationError]
 
 
 class CycleGraphGenerator(BaseModel):
-    """Class for generating graph with cycles"""
+    """Class for generating graph with cycles
+    Attributes:
+        cache: Caching mechanism
+        model_storage: Storage for models
+    """
 
     cache: Optional[Any] = Field(default=None, exclude=True)
     model_storage: ModelStorage = Field(default=None)
@@ -81,6 +85,13 @@ class CycleGraphGenerator(BaseModel):
     ) -> BaseGraph:
         """
         Generate a cyclic dialog graph based on the topic input.
+        Args:
+            generation_llm: Name of the model to use for graph generation.
+            prompt: Prompt to use for graph generation.
+            seed: Seed for the generation.
+            kwargs: Additional arguments for the prompt.
+        Returns:
+            Dialog graph.
         """
 
         # Add UUID to the prompt template
@@ -120,7 +131,16 @@ class CycleGraphGenerator(BaseModel):
 
 
 class GenerationPipeline(BaseModel):
-    """Class for generation pipeline"""
+    """Class for generation pipeline
+    Attributes:
+        cache: Caching mechanism
+        model_storage: Storage for models
+        generation_llm: Name of the model to use for graph generation
+        validation_llm: Name of the model to use for graph validation
+        cycle_ends_llm: Name of the model to use for cycle ends detection
+        theme_validation_llm: Name of the model to use for theme validation
+        generation_prompt: Prompt to use for graph generation
+    """
 
     cache: Optional[Any] = Field(default=None, exclude=True)
     model_storage: ModelStorage
@@ -128,11 +148,6 @@ class GenerationPipeline(BaseModel):
     validation_llm: str
     cycle_ends_llm: str
     theme_validation_llm: str
-
-    # generation_model: BaseChatModel
-    # theme_validation_model: BaseChatModel
-    # validation_model: BaseChatModel
-    # cycle_ends_model: BaseChatModel
     graph_generator: CycleGraphGenerator = Field(default_factory=CycleGraphGenerator)
     generation_prompt: Optional[PromptTemplate] = Field(
         default_factory=lambda: cycle_graph_generation_prompt_informal
@@ -158,16 +173,28 @@ class GenerationPipeline(BaseModel):
         validation_llm: str,
         cycle_ends_llm: str,
         theme_validation_llm: str,
-        # generation_model: BaseChatModel,
-        # theme_validation_model: BaseChatModel,
-        # validation_model: BaseChatModel,
-        # cycle_ends_model: BaseChatModel,
         generation_prompt: Optional[PromptTemplate],
         repair_prompt: Optional[PromptTemplate],
         min_cycles: int = 2,
         max_fix_attempts: int = 2,
         seed: Optional[int] = None,
     ):
+        
+        """
+        Initialize the GenerationPipeline with the given parameters.
+        
+        Parameters:
+        model_storage (ModelStorage): Storage for models to use in the pipeline.
+        generation_llm (str): Name of the model to use for graph generation.
+        validation_llm (str): Name of the model to use for graph validation.
+        cycle_ends_llm (str): Name of the model to use for cycle ends detection.
+        theme_validation_llm (str): Name of the model to use for theme validation.
+        generation_prompt (Optional[PromptTemplate]): Prompt to use for graph generation.
+        repair_prompt (Optional[PromptTemplate]): Prompt to use for graph repair.
+        min_cycles (int): Minimum number of cycles to generate in the graph.
+        max_fix_attempts (int): Maximum number of attempts to fix the graph.
+        seed (Optional[int]): Seed to use for caching.
+        """
         super().__init__(
             model_storage=model_storage,
             generation_llm=generation_llm,
@@ -188,7 +215,22 @@ class GenerationPipeline(BaseModel):
     def validate_graph_cycle_requirement(
         self, graph: BaseGraph, min_cycles: int = 2
     ) -> Dict[str, Any]:
-        """Check the graph for cycle requirements"""
+        """
+        Validate whether a graph meets the cycle requirements.
+
+        Checks if the graph contains at least `min_cycles` cycles and
+        that none of the cycles contain the start node (node 1).
+
+        Args:
+        - graph (BaseGraph): The graph to validate.
+        - min_cycles (int): The minimum number of cycles required (default: 2).
+
+        Returns:
+        - A dictionary containing the result of the validation, including:
+          - `meets_requirements` (bool): True if the graph meets the cycle requirements.
+          - `cycles` (List[List[int]]): A list of cycles found in the graph.
+          - `cycles_count` (int): The number of cycles found in the graph.
+        """
         logger.info("🔍 Checking graph requirements...")
         try:
             cycles = list(nx.simple_cycles(graph.graph))
@@ -220,10 +262,28 @@ class GenerationPipeline(BaseModel):
             logger.error(f"❌ Validation error: {str(e)}")
             raise
 
+
     def check_and_fix_transitions(
         self, graph: BaseGraph, max_attempts: int = 3
     ) -> Dict[str, Any]:
-        """Check transitions in the graph and attempts to fix invalid ones via LLM"""
+        """
+        Checks transitions in the graph and tries to fix invalid ones via LLM.
+
+        Args:
+        - graph (BaseGraph): The graph to check and fix.
+        - max_attempts (int): The maximum number of attempts to fix the graph. Defaults to 3.
+
+        Returns:
+        - A dictionary containing the result of the validation, including:
+          - `is_valid` (bool): True if the graph is valid.
+          - `graph` (BaseGraph): The fixed graph.
+          - `validation_details` (Dict[str, Any]): A dictionary containing details about the
+            validation, including:
+            - `invalid_transitions` (List[Tuple[int, int, str]]): The invalid transitions in
+              the graph.
+            - `attempts_made` (int): The number of attempts made to fix the graph.
+            - `fixed_count` (int): The number of invalid transitions fixed.
+        """
         logger.info("Validating initial graph")
         initial_validation = are_triplets_valid(
             graph,
@@ -307,7 +367,21 @@ class GenerationPipeline(BaseModel):
             }
 
     def generate_and_validate(self, topic: str) -> PipelineResult:
-        """Generate and validate a dialog graph for given topic"""
+        """
+        Generates a graph and validates it according to the following criteria:
+        1. The graph has at least min_cycles cycles.
+        2. The graph is valid according to the validation model.
+        3. The graph is themed according to the theme validation model.
+        4. The graph has no invalid transitions after attempting to fix them up to max_fix_attempts times.
+        5. Dialogs sampled from the graph cover all nodes and cover all edges.
+
+        Args:
+            topic: The topic to generate the graph for.
+
+        Returns:
+            GraphGenerationResult: A GraphGenerationResult object containing the generated graph, metadata, and sampled dialogs.
+            If the graph fails to meet any of the criteria, a GenerationError is returned instead.
+        """
         try:
             logger.info("Generating Graph ...")
             graph = self.graph_generator.invoke(
@@ -431,7 +505,15 @@ class GenerationPipeline(BaseModel):
 
 
 class LoopedGraphGenerator(TopicGraphGenerator):
-    """Graph generator for topic-based dialog generation with model storage support"""
+    """Graph generator for topic-based dialog generation with model storage support
+    Attributes:
+        model_storage (ModelStorage): Model storage to take models from.
+        generation_llm (str): Name of the model to use for graph generation.
+        validation_llm (str): Name of the model to use for validation.
+        cycle_ends_llm (str): Name of the model to use for finding cycle ends.
+        theme_validation_llm (str): Name of the model to use for theme validation.
+        pipeline (GenerationPipeline): Generation pipeline to use for graph generation.
+    """
 
     model_storage: ModelStorage = Field(description="Model storage")
     generation_llm: str = Field(
@@ -459,6 +541,18 @@ class LoopedGraphGenerator(TopicGraphGenerator):
         theme_validation_llm: str = "looped_graph_theme_validation_llm:v1",
     ):
         # if model is not in model storage put the default model there
+        """
+        Initialize a LoopedGraphGenerator instance.
+
+        Args:
+            model_storage (ModelStorage): The model storage t take models from.
+            generation_llm (str): The LLM to use for graph generation. Defaults to "looped_graph_generation_llm:v1".
+            validation_llm (str): The LLM to use for validation. Defaults to "looped_graph_validation_llm:v1".
+            cycle_ends_llm (str): The LLM to use for finding cycle ends. Defaults to "looped_graph_cycle_ends_llm:v1".
+            theme_validation_llm (str): The LLM to use for theme validation. Defaults to "looped_graph_theme_validation_llm:v1".
+
+        If the specified LLMs are not present in the provided model storage, default models are added.
+        """
         model_storage.add(
             key=generation_llm,
             config={
@@ -514,6 +608,24 @@ class LoopedGraphGenerator(TopicGraphGenerator):
 
     def invoke(self, topic, seed=42) -> list[dict]:
         # TODO: add docs
+        """
+        Generates a dialog graph for a given topic using the configured pipeline.
+    
+        This method utilizes the pipeline to generate a dialog graph based on the
+        specified topic. It logs the process and handles potential errors during
+        generation. The method returns a list containing dictionaries with details
+        of successfully generated graphs.
+    
+        Args:
+            topic (str): The topic for which the dialog graph is to be generated.
+            seed (int, optional): A seed value to ensure reproducibility of the graph
+                generation process. Defaults to 42.
+    
+        Returns:
+            list[dict]: A list of dictionaries containing the graph, metadata, topic,
+            and dialogs for successfully generated graphs.
+        """
+    
         logger.info(f"\n{'=' * 50}")
         logger.info("Generating graph for topic: %s", topic)
         logger.info(f"{'=' * 50}")

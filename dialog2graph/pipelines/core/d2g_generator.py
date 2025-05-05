@@ -1,3 +1,6 @@
+""" Dialog2Graph base generator to reuse evaluate method in different algorithms
+"""
+
 from pydantic import Field
 
 from dialog2graph import metrics

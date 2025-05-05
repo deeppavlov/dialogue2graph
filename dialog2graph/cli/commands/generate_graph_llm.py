@@ -1,3 +1,5 @@
+""" Module for generating graphs using the D2GLLMPipeline from CLI.
+"""
 import os
 import json
 from pathlib import Path
@@ -33,8 +35,22 @@ def generate_llm(
     graph_path: str,
     report_path: str,
 ):
-    """Generates graph from dialogs via d2g_llm pipeline using parameters from config
-    and saves graph dictionary to output_path"""
+
+    """
+    Generates a graph from dialog data using the d2g_llm pipeline and saves the results.
+
+    Args:
+        dialogs (str): Input dialogs file.
+        tgraph (str): Input true graph file.
+        enable_evals (bool): Whether to enable evaluation metrics during the pipeline execution.
+        config (dict): Configuration parameters for the pipeline.
+        graph_path (str): Path to save the output graph file. If None, the graph is printed.
+        report_path (str): Path to save the output report file. If None, a default path with a timestamp is used.
+
+    Side Effects:
+        Loads and applies configuration to the model storage if provided.
+        Writes the resulting graph and report to specified paths, or prints them if not specified.
+    """
 
     if config != {}:
         ms.load(config)

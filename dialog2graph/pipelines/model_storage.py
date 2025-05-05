@@ -1,3 +1,6 @@
+""" ModelStorage module for managing and storing models.
+    This module provides classes and functions for managing and storing models, including loading configurations.    
+"""
 import yaml
 import re
 import dotenv
@@ -18,12 +21,35 @@ dotenv.load_dotenv()
 
 
 class GetModelInstance:
+    """Model instantiation utility class.
+    This class provides methods to load and instantiate models based on their configuration.
+    Attributes:
+        config (dict): Configuration dictionary containing details about the model.
+    Methods:
+        instantiate(class_name):
+            Instantiates a model based on the provided class name and configuration.
+    """
     config: dict
 
     def __init__(self, config: dict):
+        """
+        Initializes a GetModelInstance object with the given configuration.
+
+        Args:
+            config (dict): Configuration dictionary containing details about the model to be instantiated.
+        """
         self.config = config
 
-    def instantiate(self, class_name):
+    def instantiate(self, class_name) -> BaseChatModel|HuggingFaceEmbeddings:
+        """
+        Instantiates a model based on the provided class name and configuration.
+
+        Args:
+            class_name: The class name of the model to be instantiated.
+
+        Returns:
+            The instantiated model object.
+        """
         return class_name(**self.config)
 
 
@@ -117,6 +143,12 @@ class ModelStorage(BaseModel):
     ):
         """
                 Add a new model configuration to the storage.
+                The configuration is validated based on the specified model_type.
+                If the configuration is valid, a new StoredData object is created and added to the storage.
+                If a model with the same key already exists, the overwright parameter determines whether to replace it.
+                If overwright is False and the model already exists, the existing model will not be replaced.
+                Otherwise, the model will not be added to the storage.
+                In case of failure to add the model logs the error.
 
                 Args:
                     key (str): The unique identifier for the model configuration.
@@ -126,7 +158,6 @@ class ModelStorage(BaseModel):
         .
                 Raises:
                     KeyError: If configuration keys are invalid for the specified model_type.
-                    Exception: When adding model to the storage failed
         """
         logger.debug("Current storage keys: %s", list(self.storage.keys()))
         if key in self.storage:
@@ -177,6 +208,7 @@ class ModelStorage(BaseModel):
     def save(self, path: str):
         """
         Save the current model storage to a YAML file.
+        In case of failure logs the error.
 
         Args:
             path (str): The file path where the storage data will be saved.

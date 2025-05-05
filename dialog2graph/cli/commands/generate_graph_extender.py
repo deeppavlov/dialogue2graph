@@ -1,3 +1,5 @@
+""" Module for running d2g_extender pipeline from CLI
+"""
 import os
 import json
 from pathlib import Path
@@ -35,9 +37,25 @@ def generate_extender(
     graph_path: str,
     report_path: str,
 ):
-    """Generates graph from dialogs via d2g_extender pipeline using parameters from config
-    and saves graph dictionary to output_path"""
 
+    """
+    Generates graph from dialogs via d2g_extender pipeline using parameters from config
+    and saves graph dictionary to output_path
+
+    Args:
+        dialogs (str): Input dialogs file
+        graph (str): Input graph file
+        tgraph (str): Input true graph file
+        enable_evals (bool): Whether to call pipeline evals
+        config (dict): Parameters for pipeline
+        graph_path (str): Output graph file
+        report_path (str): Output report file
+        
+    Side Effects:
+        Loads and applies configuration to the model storage if provided.
+        Writes the resulting graph and report to specified paths, or prints them if not specified.
+    """
+    
     if config != {}:
         ms.load(config)
 

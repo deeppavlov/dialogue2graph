@@ -1,3 +1,5 @@
+""" Module for CLI entrypoints
+"""
 import click
 from dotenv import load_dotenv
 from .commands.generate_data import generate_data
