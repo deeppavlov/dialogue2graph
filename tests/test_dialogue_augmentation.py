@@ -4,6 +4,7 @@ import dotenv
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.datasets.augment_dialogues.augmentation import DialogueAugmenter
 from dialogue2graph.pipelines.model_storage import ModelStorage
+from langchain_community.chat_models import ChatOpenAI
 from dialogue2graph.datasets.augment_dialogues.prompts import augmentation_prompt_3_vars
 from dialogue2graph.metrics.no_llm_metrics.metrics import is_correct_length, match_roles
 
@@ -51,7 +52,7 @@ def negative_augmentation_result(test_data):
 @pytest.fixture
 def positive_augmented_dialogues(test_data):
     """
-    Augmented dialogues as Dialogue objects in a list.
+    Augmented dialogues in a list.
     """
     return test_data[3]["positive_aug_dialogues"]
 
@@ -59,7 +60,7 @@ def positive_augmented_dialogues(test_data):
 @pytest.fixture
 def negative_augmented_dialogue(test_data):
     """
-    Augmented dialogues as Dialogue objects in a list.
+    Augmented dialogues in a list.
     """
     return test_data[4]["negative_aug_dialogue"]
 
@@ -71,12 +72,12 @@ def ms():
     storage.add(
         key="generation-llm",
         config={"model_name": "gpt-4o-mini-2024-07-18", "temperature": 0.7},
-        model_type="llm",
+        model_type=ChatOpenAI,
     )
     storage.add(
         key="formatting-llm",
         config={"model_name": "gpt-3.5-turbo", "temperature": 0.7},
-        model_type="llm",
+        model_type=ChatOpenAI,
     )
     return storage
 
@@ -137,7 +138,7 @@ def test_error_handling_with_invalid_llm(ms, dialogue):
     ms.add(
         key="invalid-llm",
         config={"model_name": "outdated-model", "temperature": 0.7},
-        model_type="llm",
+        model_type=ChatOpenAI,
     )
     augmenter = DialogueAugmenter(
         model_storage=ms, generation_llm="invalid-llm", formatting_llm="invalid-llm"
