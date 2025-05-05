@@ -1,20 +1,20 @@
-:tutorial_name: dialog_augmentation/dialogue_augmentation_example.ipynb
+:tutorial_name: dialog_augmentation/dialog_augmentation_example.ipynb
 
-Generate augmented dialogues on one given dialogue
+Generate augmented dialogs on one given dialog
 ==================================================
 
-Use :py:class:`~dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter` to augment an original dialogue by paraphrasing 
+Use :py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter` to augment an original dialog by paraphrasing 
 its lines while maintaining the structure and flow of the conversation.
 
 .. code-block:: python
 
     from langchain_openai import ChatOpenAI
 
-    from dialogue2graph.datasets.augment_dialogues.augmentation import DialogueAugmenter
-    from dialogue2graph.pipelines.model_storage import ModelStorage
+    from dialog2graph.datasets.augment_dialogs.augmentation import DialogAugmenter
+    from dialog2graph.pipelines.model_storage import ModelStorage
 
 
-1. Create :py:class:`~dialogue2graph.pipelines.model_storage.ModelStorage` instance and add choosen LLMs for dialogue generation (i.e. dialogue augmentation) 
+1. Create :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` instance and add choosen LLMs for dialog generation (i.e. dialog augmentation) 
 and formatting LLM's output.
  
 .. code-block:: python
@@ -31,18 +31,18 @@ and formatting LLM's output.
             model_type=ChatOpenAI
         )
 
-2. Create :py:class:`~dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter` instance and use 
-:py:class:`~dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.invoke` method to get augmented dialogues.
+2. Create :py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter` instance and use 
+:py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter.invoke` method to get augmented dialogs.
 
 .. code-block:: python
 
-    augmenter = DialogueAugmenter(
+    augmenter = DialogAugmenter(
             model_storage=model_storage,
             generation_llm="generation-llm",
             formatting_llm="formatting-llm"
         )
     result = augmenter.invoke(
-        dialogue=dialogue, # original dialogue as a Dialogue object
-        topic=topic, # topic of the original dialogue as a string
-        prompt=augmentation_prompt # prompt for dialogue augmentation as a string
+        dialog=dialog, # original dialog as a Dialog object
+        topic=topic, # topic of the original dialog as a string
+        prompt=augmentation_prompt # prompt for dialog augmentation as a string
         )
