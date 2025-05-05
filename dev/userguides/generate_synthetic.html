@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Generate synthetic graph on certain topic &#8212; Dialogue2Graph  documentation</title>
+    <title>Generate synthetic graph on certain topic &#8212; Dialog2Graph  documentation</title>
   
   
   
@@ -32,6 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=2286c558" />
   
   <!-- So that users can add custom icons -->
   <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
@@ -46,10 +47,10 @@
     <script src="../_static/scripts/pydata-sphinx-theme.js?v=a1eb5d9f"></script>
     <script src="../_static/scripts/bootstrap.js?v=7583a70d"></script>
     <script src="../_static/scripts/fontawesome.js?v=9b125980"></script>
-    <link rel="canonical" href="/dialogue2graph/dev/userguides/generate_synthetic.html" />
+    <link rel="canonical" href="/dialog2graph/dev/userguides/generate_synthetic.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="API Reference" href="../autoapi/index.html" />
+    <link rel="next" title="Learn dialog2graph CLI interface" href="cli_usage.html" />
     <link rel="prev" title="Using Dialog2Graph algorithms" href="generate_graphs.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -115,7 +116,7 @@
   
   
   
-    <p class="title logo__title">Dialogue2Graph  documentation</p>
+    <p class="title logo__title">Dialog2Graph  documentation</p>
   
 </a></div>
     
@@ -163,23 +164,13 @@
   </a>
 </li>
 
-            <li class="nav-item dropdown">
-                <button class="btn dropdown-toggle nav-item" type="button"
-                data-bs-toggle="dropdown" aria-expanded="false"
-                aria-controls="pst-nav-more-links">
-                    More
-                </button>
-                <ul id="pst-nav-more-links" class="dropdown-menu">
-                    
-<li class=" ">
-  <a class="nav-link dropdown-item nav-internal" href="../about_us.html">
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../about_us.html">
     About us
   </a>
 </li>
 
-                </ul>
-            </li>
-            
   </ul>
 </nav></div>
       
@@ -218,7 +209,7 @@
           
           
           
-          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/deeppavlov/dialog2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -339,7 +330,7 @@
           
           
           
-          <a href="https://github.com/deeppavlov/dialogue2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/deeppavlov/dialog2graph" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-github fa-lg" aria-hidden="true"></i>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -354,9 +345,11 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Learn base dialogue2graph classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic_usage.html">Learn base dialog2graph classes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generate_graphs.html">Using Dialog2Graph algorithms</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Generate synthetic graph on certain topic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli_usage.html">Learn dialog2graph CLI interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="augment_dialogs.html">Generate augmented dialogues on one given dialogue</a></li>
 </ul>
 </div>
 </nav></div>
@@ -419,16 +412,16 @@
                   
   <section id="generate-synthetic-graph-on-certain-topic">
 <h1>Generate synthetic graph on certain topic<a class="headerlink" href="#generate-synthetic-graph-on-certain-topic" title="Link to this heading">#</a></h1>
-<p>Use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> to create a validated graph from several LLM generated dialogues concerning a given topic.</p>
+<p>Use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> to create a validated graph from several
+LLM generated dialogues concerning a given topic.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.datasets.complex_dialogues.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoopedGraphGenerator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
 </pre></div>
 </div>
-<ol class="arabic simple">
-<li><p>Create <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance and add choosen LLMs for dialogue generation, dialogue validation, theme validation and cycle end search.</p></li>
-</ol>
+<p>1. Create <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance and add choosen LLMs for dialogue generation,
+dialogue validation, theme validation and cycle end search.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_storage</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
 <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="s2">&quot;gen_model&quot;</span><span class="p">,</span> <span class="c1"># model to use for generation</span>
@@ -442,9 +435,8 @@
 <span class="p">)</span>
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
-<li><p>Create <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> and use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method to get a dialogue graph</p></li>
-</ol>
+<p>2. Create <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> and
+use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method to get a dialogue graph</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">LoopedGraphGenerator</span><span class="p">(</span>
     <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
     <span class="n">generation_llm</span><span class="o">=</span><span class="s1">&#39;gen_model&#39;</span><span class="p">,</span>
@@ -478,11 +470,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="../autoapi/index.html"
+       href="cli_usage.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">API Reference</p>
+        <p class="prev-next-title">Learn dialog2graph CLI interface</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -498,13 +490,27 @@
 
 
   <div class="sidebar-secondary-item">
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="../_sources/userguides/generate_synthetic.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div></div>
+    
+    
+
+    <h4>Userguide code example</h4>
+
+    <a href="https://colab.research.google.com/github/deeppavlov/dialog2graph/blob/dev/examples/data_generation/LoopedGraphGenerator_example.ipynb" data-behavior="call-to-action-event" data-response="Run in Google Colab" target="_blank">
+        <div id="google-colab-link">
+            <span class="pytorch-colab call-to-action-any"></span>
+            <div class="call-to-action-desktop-view">Run in Google Colab</div>
+            <div class="call-to-action-mobile-view">Colab</div>
+        </div>
+    </a>
+
+    <a href="https://github.com/deeppavlov/dialog2graph/blob/dev/examples/data_generation/LoopedGraphGenerator_example.ipynb" data-behavior="call-to-action-event" data-response="View on Github" target="_blank">
+        <div id="github-view-link">
+            <span class="pytorch-github call-to-action-any"></span>
+            <div class="call-to-action-desktop-view">View on GitHub</div>
+            <div class="call-to-action-mobile-view">GitHub</div>
+        </div>
+    </a>
+</div>
 
 </div></div>
               
