@@ -69,10 +69,15 @@ def parse_md(md_path):
 def check_json_subreports(report_path):
     with open(str(report_path)) as f:
         report = json.load(f)
+    print(
+        "REPO: ",
+        "compare_two_graphs:step2" in report["subreports"][0],
+        report["subreports"][0],
+    )
     if "subreports" not in report:
         return False
     if (
-        "compare_graphs:step2" not in report["subreports"][0]
+        "compare_two_graphs:step2" not in report["subreports"][0]
         or "is_same_structure:step2" not in report["subreports"][0]
     ):
         return False
@@ -85,7 +90,7 @@ def check_md_subreports(report_path):
 
     if (
         len(data) < 9
-        or "compare_graphs:step2" not in data[8].page_content
+        or "compare_two_graphs:step2" not in data[8].page_content
         or "is_same_structure:step2" not in data[8].page_content
     ):
         return False
@@ -99,7 +104,7 @@ def check_csv_subreports(report_path):
         first_row = next(csv_reader)
 
     if (
-        "compare_graphs:step2" not in first_row
+        "compare_two_graphs:step2" not in first_row
         or "is_same_structure:step2" not in first_row
     ):
         return False
@@ -112,7 +117,7 @@ def check_txt_subreports(report_path):
 
     if (
         len(lines) < 9
-        or "compare_graphs:step2" not in lines[8]
+        or "compare_two_graphs:step2" not in lines[8]
         or "is_same_structure:step2" not in lines[8]
     ):
         return False

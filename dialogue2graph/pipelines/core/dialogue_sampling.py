@@ -20,7 +20,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
 
 class _DialogPathsCounter:
@@ -35,7 +35,7 @@ class RecursiveDialogueSampler(DialogueGenerator):
         graph: BaseGraph,
         cycle_ends_model: BaseChatModel,
         upper_limit: int,
-        sampling_max: int = 1000000,
+        sampling_max: int = 5000000,
     ) -> list[Dialogue]:
         """Extract all the dialogues from the graph
 
@@ -62,14 +62,25 @@ class RecursiveDialogueSampler(DialogueGenerator):
         while repeats <= upper_limit:
             try:
                 dialogues = get_dialogues(graph, repeats, finish_nodes, sampling_max)
-            except ValueError:
+            except ValueError as e:
+                logger.error("Error occurred in get_dialogues: %s" % e)
                 dialogues = []
             if dialogues:
-                if match_dg_triplets(graph, dialogues)["value"]:
+                match_result = match_dg_triplets(graph, dialogues)
+                if match_result["value"]:
                     break
+            else:
+                match_result = {"description": "", "absent_triplets": ""}
             repeats += 1
         if repeats > upper_limit:
-            raise ValueError("Not all utterances present")
+            raise ValueError(
+                "Not all utterances present in dialogs after %d repeats, %s: %s"
+                % (
+                    repeats - 1,
+                    match_result["description"],
+                    match_result["absent_triplets"],
+                )
+            )
         return dialogues
 
     async def ainvoke(self, *args, **kwargs):
@@ -164,8 +175,8 @@ def get_all_sequences(
         path_counter.counter += 1
         if path_counter.counter == sampling_max:
             raise ValueError("Sampling Max exceeded")
-        if path_counter.counter % 10000000 == 0:
-            logger.warning("Number of found combinations: ", path_counter.counter)
+        if path_counter.counter % 1000000 == 0:
+            logger.warning("Number of found combinations: %d" % path_counter.counter)
     dialogues.append(visited_messages)
     return dialogues
 

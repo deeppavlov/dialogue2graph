@@ -23,7 +23,7 @@ from langchain.schema import HumanMessage
 
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
 
 class InvalidTransition(TypedDict):

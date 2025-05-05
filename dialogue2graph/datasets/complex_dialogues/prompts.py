@@ -265,7 +265,7 @@ Create a dialogue graph for real conversations between two people about {topic}.
    - Nodes are assistant's utterances, edges are utterances from the user
    - Dialogue flow goes from source to target for all edges
    - Graph must contain at least 8 nodes
-   - Graph must contain at least 2 distinct cycles (return paths)
+   - Graph must contain at least 4 distinct cycles (return paths)
    - Include clear exit points from each major decision path
    
 3. Core Path Types:
@@ -295,10 +295,11 @@ Example of the graph:
 
 Please use informal language like in the example above. Conversation shall look like a real one,
 with all the real details inherent in a real conversation on this topic: {topic}.
-Some of nodes and edges shall have several different utterances meaning different details of same intent.
+One of nodes and one of edges shall have several different utterances meaning different details of same intent.
 For examples see provide_contact_info and provide_recommendations nodes of the above graph.
-So you need to add several different details per node/edge for some of nodes and edges.
-Make sure that number of edges with several utterances doesn't exceed 5 edges.
+So you need to add several different details per node/edge for a single node and a single edge.
+Make sure that number of edges with more than one utterance doesn't exceed 2 edges.
+Make sure that number of nodes with more than one utterance doesn't exceed 2 nodes.
 
 is_start field is mandatory for all the nodes.
 

@@ -28,7 +28,11 @@ class DialogueStore:
     _assistant_size: int
     _score_threshold: int
 
-    def _load_dialogue(self, dialogue: list, embedder: HuggingFaceEmbeddings):
+    def _load_dialogue(
+        self,
+        dialogue: list,
+        embedder: HuggingFaceEmbeddings,
+    ):
         """Auxiliary method to initialize instance
 
         Args:
@@ -113,7 +117,11 @@ class NodeStore:
     _nodes_store: Chroma
     _utterances: list[tuple[str, int]] = []
 
-    def _load_nodes(self, nodes: list, embedder: HuggingFaceEmbeddings):
+    def _load_nodes(
+        self,
+        nodes: list,
+        embedder: HuggingFaceEmbeddings,
+    ):
         """Auxiliary method to initialize instance
 
         Args:
@@ -130,10 +138,13 @@ class NodeStore:
             Document(page_content=utt[0], id=id, metadata={"id": id})
             for id, utt in enumerate(self._utterances)
         ]
-
         self._nodes_store.add_documents(documents=docs)
 
-    def __init__(self, nodes: list[dict], embedder: HuggingFaceEmbeddings):
+    def __init__(
+        self,
+        nodes: list[dict],
+        embedder: HuggingFaceEmbeddings,
+    ):
         """Initialize instance for nodes based on embedder
 
         Args:

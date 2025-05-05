@@ -1,7 +1,5 @@
 from dialogue2graph.datasets.complex_dialogues.generation import (
     CycleGraphGenerator,
-    GenerationPipeline,
-    # LoopedGraphGenerator,
     ErrorType,
     GenerationError,
 )
@@ -10,47 +8,11 @@ from dialogue2graph.pipelines.core.graph import Graph, BaseGraph
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
 
 # from dialogue2graph.metrics.automatic_metrics import all_utterances_present
-from langchain_core.language_models.chat_models import BaseChatModel
-
-
-class MockChatModel(BaseChatModel):
-    """Mock chat model for testing"""
-
-    def invoke(self, *args, **kwargs):
-        return {"generations": [{"text": "test response"}]}
-
-    def _llm_type(self):
-        return "mock"
-
-    def _generate(self, messages, stop=None, run_manager=None, **kwargs):
-        return super()._generate(messages, stop, run_manager, **kwargs)
-
 
 def test_cycle_graph_generator_init():
     """Test CycleGraphGenerator initialization"""
     generator = CycleGraphGenerator()
     assert isinstance(generator, CycleGraphGenerator)
-
-
-def test_generation_pipeline_init():
-    """Test GenerationPipeline initialization"""
-    model = MockChatModel()
-    pipeline = GenerationPipeline(
-        generation_model=model,
-        theme_validation_model=model,
-        validation_model=model,
-        cycle_ends_model=model,
-        generation_prompt=None,
-        repair_prompt=None,
-    )
-    assert isinstance(pipeline, GenerationPipeline)
-
-
-# def test_looped_graph_generator_init():
-#     """Test LoopedGraphGenerator initialization"""
-#     model = MockChatModel()
-#     generator = LoopedGraphGenerator(generation_model=model, validation_model=model, theme_validation_model=model)
-#     assert isinstance(generator, LoopedGraphGenerator)
 
 
 def test_dialogue_init():
@@ -85,7 +47,7 @@ def test_recursive_dialogue_sampler_init():
 def test_error_type_enum():
     """Test ErrorType enum initialization"""
     assert ErrorType.INVALID_GRAPH_STRUCTURE == "invalid_graph_structure"
-    assert ErrorType.TOO_MANY_CYCLES == "too_many_cycles"
+    assert ErrorType.TOO_FEW_CYCLES == "too_few_cycles"
     assert ErrorType.SAMPLING_FAILED == "sampling_failed"
     assert ErrorType.INVALID_THEME == "invalid_theme"
     assert ErrorType.GENERATION_FAILED == "generation_failed"

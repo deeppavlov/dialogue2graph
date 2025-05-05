@@ -17,7 +17,7 @@ from dialogue2graph.pipelines.core import schemas
 from dialogue2graph.pipelines.core import graph
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
 RawDialogsType = dict | list[list] | list[dict] | Dialogue | list[Dialogue] | PosixPath
 ValidatedDialogType = (

@@ -1,11 +1,27 @@
+import os
 import json
 from pathlib import Path
 import datetime
+from langchain_core.globals import set_llm_cache
+from langchain_community.cache import SQLAlchemyMd5Cache
+from langchain_community.cache import InMemoryCache
+from sqlalchemy import create_engine
 
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.d2g_light.pipeline import D2GLightPipeline
 from dialogue2graph.pipelines.helpers.parse_data import PipelineRawDataType
 from dialogue2graph.pipelines.model_storage import ModelStorage
+from dialogue2graph.utils.logger import Logger
+
+logger = Logger(__name__)
+
+try:
+    engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+    set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
+except Exception:
+    logger.warning("SQLAlchemyMd5Cache is not available")
+    set_llm_cache(InMemoryCache())
+
 
 ms = ModelStorage()
 
@@ -24,7 +40,10 @@ def generate_light(
     if config != {}:
         ms.load(config)
     pipeline = D2GLightPipeline(
-        "d2g_light", ms, step2_evals=metrics.DGEvalBase, end_evals=metrics.DGEvalBase
+        "three_stages_light",
+        ms,
+        step2_evals=metrics.DGEvalBase,
+        end_evals=metrics.DGEvalBase,
     )
 
     raw_data = PipelineRawDataType(dialogs=dialogs, true_graph=tgraph)

@@ -6,19 +6,23 @@ The module provides three step algorithm aimed to extend dialog graph by generat
 """
 
 import logging
+from datetime import datetime
 from typing import List, Callable
 from pydantic import ConfigDict
 from pydantic import BaseModel, Field
 from langchain.output_parsers import PydanticOutputParser, OutputFixingParser
 from langchain.schema import HumanMessage
 from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
 
 from dialogue2graph.utils.logger import Logger
 from dialogue2graph import metrics
 from dialogue2graph.pipelines.core.dialogue_sampling import RecursiveDialogueSampler
-from dialogue2graph.pipelines.d2g_light.three_stages_light import LightGraphGenerator
-from dialogue2graph.pipelines.core.algorithms import GraphExtender
-from dialogue2graph.pipelines.core.graph import BaseGraph, Graph
+from dialogue2graph.pipelines.d2g_llm.three_stages_llm import LLMGraphGenerator
+from dialogue2graph.pipelines.core.d2g_generator import DGBaseGenerator
+from dialogue2graph.pipelines.core.graph import BaseGraph, Graph, Metadata
 from dialogue2graph.pipelines.core.schemas import ReasonGraph, Node
 from dialogue2graph.pipelines.core.dialogue import Dialogue
 from dialogue2graph.pipelines.model_storage import ModelStorage
@@ -50,14 +54,14 @@ logger = Logger(__file__)
 dialogue_sampler = RecursiveDialogueSampler()
 
 
-class LLMGraphExtender(GraphExtender):
+class LLMGraphExtender(DGBaseGenerator):
     """Graph generator which iteratively takes step dialogues and adds them to graph
     generated on the previous step. First step is done with LightGraphGenerator or taken from
     supported graph
     Generation stages:
 
     1.
-        a. If supported graph is given, it is used as a start. Otherwise, graph is generated with LightGraphGenerator from first step dialogs
+        a. If supported graph is given, it is used as a start. Otherwise, graph is generated with LLMGraphGenerator from first step dialogs
         b. Algorithmic connecting nodes by edges.
     2. Iterative steps:
         a. LLM extension of graph nodes with next step dialogs.
@@ -97,7 +101,7 @@ class LLMGraphExtender(GraphExtender):
         description="Similarity model", default="extender_sim_model:v1"
     )
     step: int
-    graph_generator: LightGraphGenerator
+    graph_generator: LLMGraphGenerator
     step1_evals: list[Callable]
     extender_evals: list[Callable]
     step2_evals: list[Callable]
@@ -107,6 +111,7 @@ class LLMGraphExtender(GraphExtender):
     def __init__(
         self,
         model_storage: ModelStorage,
+        grouping_llm: str = "extender_grouping_llm:v1",
         extending_llm: str = "extender_extending_llm:v1",
         filling_llm: str = "extender_filling_llm:v1",
         formatting_llm: str = "extender_formatting_llm:v1",
@@ -118,42 +123,42 @@ class LLMGraphExtender(GraphExtender):
         end_evals: list[Callable] | None = [],
         step: int = 2,
     ):
-        # check if models are in model storage
         # if model is not in model storage put the default model there
-        if extending_llm not in model_storage.storage:
-            model_storage.add(
-                key=extending_llm,
-                config={"model": "gpt-4o-latest", "temperature": 0},
-                model_type="llm",
-            )
+        model_storage.add(
+            key=grouping_llm,
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
 
-        if filling_llm not in model_storage.storage:
-            model_storage.add(
-                key=filling_llm,
-                config={"model": "o3-mini", "temperature": 1},
-                model_type="llm",
-            )
+        model_storage.add(
+            key=extending_llm,
+            config={"model_name": "chatgpt-4o-latest", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
 
-        if formatting_llm not in model_storage.storage:
-            model_storage.add(
-                key=formatting_llm,
-                config={"model": "gpt-4o-mini", "temperature": 0},
-                model_type="llm",
-            )
+        model_storage.add(
+            key=filling_llm,
+            config={"model_name": "o3-mini", "temperature": 1},
+            model_type=ChatOpenAI,
+        )
 
-        if dialog_llm not in model_storage.storage:
-            model_storage.add(
-                key=dialog_llm,
-                config={"model": "o3-mini", "temperature": 1},
-                model_type="llm",
-            )
+        model_storage.add(
+            key=formatting_llm,
+            config={"model_name": "gpt-4o-mini", "temperature": 0},
+            model_type=ChatOpenAI,
+        )
 
-        if sim_model not in model_storage.storage:
-            model_storage.add(
-                key=sim_model,
-                config={"model_name": "BAAI/bge-m3", "device": "cpu"},
-                model_type="emb",
-            )
+        model_storage.add(
+            key=dialog_llm,
+            config={"model_name": "o3-mini", "temperature": 1},
+            model_type=ChatOpenAI,
+        )
+
+        model_storage.add(
+            key=sim_model,
+            config={"model_name": "BAAI/bge-m3", "model_kwargs": {"device": "cpu"}},
+            model_type=HuggingFaceEmbeddings,
+        )
         super().__init__(
             model_storage=model_storage,
             extending_llm=extending_llm,
@@ -161,8 +166,9 @@ class LLMGraphExtender(GraphExtender):
             formatting_llm=formatting_llm,
             dialog_llm=dialog_llm,
             sim_model=sim_model,
-            graph_generator=LightGraphGenerator(
+            graph_generator=LLMGraphGenerator(
                 model_storage,
+                grouping_llm,
                 filling_llm,
                 formatting_llm,
                 sim_model,
@@ -220,9 +226,12 @@ class LLMGraphExtender(GraphExtender):
             )
         except Exception as e:
             logger.error("Error in dialog sampler: %s", e)
-            return Graph({})
+            return Graph(graph_dict={}, metadata=graph.metadata)
 
-        return Graph({"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]})
+        return Graph(
+            graph_dict={"edges": graph_dict["edges"], "nodes": graph_dict["nodes"]},
+            metadata=graph.metadata,
+        )
 
     def invoke(
         self, pipeline_data: PipelineDataType, enable_evals: bool = False
@@ -240,7 +249,12 @@ class LLMGraphExtender(GraphExtender):
         cur_graph = pipeline_data.supported_graph or self._initial_graph(
             pipeline_data, enable_evals, report
         )
-
+        cur_graph.metadata = Metadata(
+            generator_name="d2g_extender",
+            models_config=self.model_storage.model_dump(),
+            schema_version="v1",
+            timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        )
         if enable_evals and pipeline_data.true_graph:
             report.update(self.evaluate(cur_graph, pipeline_data.true_graph, "step1"))
 
@@ -272,7 +286,7 @@ class LLMGraphExtender(GraphExtender):
             return result_graph, report
         except Exception as e:
             logger.error("Error in step3: %s", e)
-            return Graph({}), report
+            return Graph(graph_dict={}, metadata=cur_graph.metadata), report
 
     def _initial_graph(self, pipeline_data, enable_evals, report):
         raw_data = PipelineDataType(
@@ -304,20 +318,16 @@ class LLMGraphExtender(GraphExtender):
         result = chain.invoke(messages)
 
         if result and all(e["target"] for e in result.model_dump()["edges"]):
-            result_graph = Graph(graph_dict=result.model_dump())
+            result_graph = Graph(
+                graph_dict=result.model_dump(), metadata=cur_graph.metadata
+            )
             if enable_evals and pipeline_data.true_graph:
                 report.update(
                     self.evaluate(result_graph, pipeline_data.true_graph, "end")
                 )
             return result_graph
 
-        return Graph({})
+        return Graph(graph_dict={}, metadata=cur_graph.metadata)
 
-    async def ainvoke(self, *args, **kwargs):
+    async def ainvoke(self, *args, **kwargs):  # pragma: no cover
         return self.invoke(*args, **kwargs)
-
-    def evaluate(self, graph, gt_graph, eval_stage: str) -> metrics.DGReportType:
-        report = {}
-        for metric in getattr(self, eval_stage + "_evals"):
-            report[metric.__name__ + ":" + eval_stage] = metric(graph, gt_graph)
-        return report

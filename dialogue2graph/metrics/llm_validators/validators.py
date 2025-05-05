@@ -15,7 +15,8 @@ from dialogue2graph.metrics.similarity import compare_strings
 
 from langchain_openai import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+
 from langchain.prompts import PromptTemplate
 from langchain.output_parsers import PydanticOutputParser
 

@@ -8,11 +8,11 @@ from pydantic import BaseModel, Field, model_validator
 
 from langchain_community.chat_models import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from dialogue2graph.utils.logger import Logger
 
-logger = Logger(__file__)
+logger = Logger(__name__)
 
 dotenv.load_dotenv()
 
@@ -49,9 +49,10 @@ class StoredData(BaseModel):
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
     model_type: ModelMetaclass = Field(description="Type of the stored model")
-    model: Union[HuggingFaceEmbeddings, BaseChatModel] = Field(
-        description="Model object"
-    )
+    model: Union[
+        HuggingFaceEmbeddings,
+        BaseChatModel,
+    ] = Field(description="Model object")
 
     @model_validator(mode="before")
     def validate_model(cls, values):
@@ -61,7 +62,7 @@ class StoredData(BaseModel):
         elif values.get("model_type") == HuggingFaceEmbeddings:
             if not isinstance(values.get("model"), HuggingFaceEmbeddings):
                 raise ValueError(
-                    "Embedding model must be an instance of HuggingFaceEmbeddings"
+                    "HuggingFaceEmbeddings model must be an instance of HuggingFaceEmbeddings"
                 )
         return values
 
@@ -149,7 +150,13 @@ class ModelStorage(BaseModel):
                 "Initializing model %s for key '%s' with config: %s"
                 % (model_type, key, config)
             )
-            if not all(p in model_type.model_fields.keys() for p in config):
+            if "name" in config:
+                raise KeyError(
+                    f"Instead of 'name' parameter for model {key} of type {model_type} please use 'model_name'"
+                )                
+            if not all(
+                p in model_type.model_fields.keys() for p in config
+            ):
                 raise KeyError(
                     f"Invalid parameter names for model '{key}': {[p for p in config if p not in model_type.model_fields.keys()]}"
                 )
@@ -157,6 +164,7 @@ class ModelStorage(BaseModel):
             model_instance = model_getter.instantiate(model_type)
 
             logger.debug("Created model instance of type: %s", type(model_instance))
+
             item = StoredData(
                 key=key, config=config, model_type=model_type, model=model_instance
             )
@@ -185,7 +193,12 @@ class ModelStorage(BaseModel):
                         .replace("'>", "")
                         .split(".")[-1]
                     )
-                    storage_dump[model_key]["config"].pop("api_key", None)
+                    keys_to_pop = []
+                    for key in storage_dump[model_key]["config"]:
+                        if "api_key" in key or "api_base" in key or "base_url" in key:
+                            keys_to_pop.append(key)
+                    for key in keys_to_pop:
+                        storage_dump[model_key]["config"].pop(key, None)
                 yaml.dump(storage_dump, f)
             logger.info(f"Saved {len(self.storage)} models to {path}")
         except Exception as e:
