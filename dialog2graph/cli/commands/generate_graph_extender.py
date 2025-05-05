@@ -25,6 +25,15 @@ except Exception:
     logger.warning("SQLAlchemyMd5Cache is not available")
     set_llm_cache(InMemoryCache())
 
+logger = Logger(__name__)
+
+try:
+    engine = create_engine(os.getenv("SQLALCHEMY_DATABASE_URI"))
+    set_llm_cache(SQLAlchemyMd5Cache(engine=engine))
+except Exception:
+    logger.warning("SQLAlchemyMd5Cache is not available")
+    set_llm_cache(InMemoryCache())
+
 ms = ModelStorage()
 
 

@@ -16,9 +16,21 @@ This guide demonstrates usage of ``ModelStorage`` class and generating the dialo
 
 This generation guide demonstrates how we can generate a dialog graph to a certain topic.
 
+:doc:`Learn how to use dialog2graph CLI <./userguides/cli_usage>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This guide demonstrates how to use CLI interface of dialog2graph.
+
+:doc:`Augment dialogs <./userguides/augment_dialogs>`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This guide demonstrates how to augment existing dialogs using LLMs.
+
 .. toctree::
    :hidden:
 
    userguides/basic_usage
    userguides/generate_graphs
    userguides/generate_synthetic
+   userguides/cli_usage
+   userguides/augment_dialogs

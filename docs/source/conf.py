@@ -44,9 +44,8 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.extlinks",
     "sphinx_autodoc_typehints",
+    "sphinx.ext.graphviz"
 ]
-
-templates_path = ["_templates"]
 
 autodoc_default_options = {
     "members": True,
@@ -91,10 +90,15 @@ napoleon_attr_annotations = True
 # html_theme = 'alabaster'
 html_theme = "pydata_sphinx_theme"
 
+# Add any paths that contain templates here, relative to this directory.
+templates_path = ["_templates"]
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+html_show_sourcelink = False
 
 extlinks = {
     "github_source_link": (
@@ -109,12 +113,16 @@ html_js_files = [
     "scripts/bootstrap.js",
     "scripts/fontawesome.js",
 ]
+html_css_files = [
+    "css/custom.css",
+]
 
 # Fix base URL for GitHub Pages
 html_baseurl = "/dialog2graph/dev/"
 
 # Important: Add this to handle static files correctly
 html_theme_options = {
+    "header_links_before_dropdown": 6,
     "use_edit_page_button": False,
     "navigation_depth": 3,
     "show_toc_level": 2,
@@ -128,6 +136,7 @@ html_theme_options = {
             "type": "fontawesome",
         },
     ],
+    "secondary_sidebar_items": ["example-links", "page-toc"],
 }
 
 # Fix relative URLs for GitHub Pages deployment

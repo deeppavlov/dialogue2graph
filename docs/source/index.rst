@@ -13,12 +13,13 @@ graph-based representations.
 :doc:`Getting Started <getting_started>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``Getting started`` section contains instructions of how to install the project. It also includes basic terms used in the documentation.
+The ``Getting started`` section contains instructions of how to install the project.
 
 :doc:`Research <research>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``Research`` section contains an overview of conducted research on dialog2graph problem, including creating data collections, choosing metrics for graph assessment.
+The ``Research`` section contains an overview of conducted research on dialog2graph problem, including creating data collections, choosing metrics for graph assessment. 
+It also includes basic terms used in the documentation.
 
 :doc:`User Guides <userguides>`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

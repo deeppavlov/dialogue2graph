@@ -6,6 +6,7 @@ from dialog2graph.utils.logger import Logger
 
 ms = ModelStorage()
 logger = Logger(__name__)
+logger = Logger(__name__)
 
 
 def generate_data(topic: str, config: dict, output_path: str):
@@ -21,6 +22,7 @@ def generate_data(topic: str, config: dict, output_path: str):
 
     result = pipeline.invoke(topic=topic)
 
+    logger.info("Result: %s" % result)
     logger.info("Result: %s" % result)
 
     # Save results

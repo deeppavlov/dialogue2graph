@@ -251,7 +251,6 @@ class LLMGraphExtender(DGBaseGenerator):
         cur_graph = pipeline_data.supported_graph or self._initial_graph(
             pipeline_data, enable_evals, report
         )
-
         cur_graph.metadata = Metadata(
             generator_name="d2g_extender",
             models_config=self.model_storage.model_dump(),
