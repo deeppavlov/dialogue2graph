@@ -40,11 +40,11 @@ A symmetrical “with-exclusion” analysis confirmed that **removing any of the
 
 ## 5  Detailed Breakdown  
 
-| Level | Similarity (6 keys) | | All 26 keys |
-|-------|--------------------|
-| L1 (simple)  | 0.593 | 0.558|
-| L2 (medium)  | 0.619 | 0.574|
-| L3 (complex) | 0.618 | 0.549|
+| Level        | Similarity (6 keys) | All 26 keys |
+|--------------|---------------------|-------------|
+| L1 (simple)  | 0.593               | 0.558       |
+| L2 (medium)  | 0.619               | 0.574       |
+| L3 (complex) | 0.618               | 0.549       |
 
 Predictably, very large cyclic graphs suffer more when information is pruned, but the six-key set still outperforms any smaller combination we tested.
 
