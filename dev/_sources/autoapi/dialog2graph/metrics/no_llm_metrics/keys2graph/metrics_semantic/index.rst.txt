@@ -1,0 +1,57 @@
+dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic
+===============================================================
+
+.. py:module:: dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic
+
+.. autoapi-nested-parse::
+
+   Advanced semantic-based metrics for comparing graphs
+   by embedding their utterances and matching them if similarity >= threshold.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic.get_text_embedding_openai
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic.cosine_similarity
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic.match_graph_triplets_semantic
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic.is_same_structure_semantic
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic.match_triplets_dg_semantic
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic.triplet_match_accuracy_semantic
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics_semantic.compare_two_graphs_semantically
+
+
+Module Contents
+---------------
+
+.. py:function:: get_text_embedding_openai(texts: List[str], model: str) -> List[List[float]]
+
+   Get embeddings from OpenAI for a list of text strings, using a single request if possible.
+
+
+.. py:function:: cosine_similarity(vec1: List[float], vec2: List[float]) -> float
+
+.. py:function:: match_graph_triplets_semantic(G1: Any, G2: Any, threshold: float, embed_model: str)
+
+   Similar to match_graph_triplets, but uses semantic matching
+   for edges and nodes. Return node_mapping, edge_mapping.
+
+
+.. py:function:: is_same_structure_semantic(G1: Any, G2: Any, threshold: float, embed_model: str) -> bool
+
+.. py:function:: match_triplets_dg_semantic(G1: Any, dialogs: List[Any], threshold: float, embed_model: str) -> Dict[str, Any]
+
+   Stub function to do semantic check of G1 vs dialogs.
+
+
+.. py:function:: triplet_match_accuracy_semantic(G1: Any, G2: Any, threshold: float, embed_model: str) -> Dict[str, float]
+
+.. py:function:: compare_two_graphs_semantically(graph1: Dict[str, Any], graph2: Dict[str, Any], threshold: float) -> Dict[str, float]
+
+   Compare two dialog graphs by semantic jaccard for nodes & edges.
+   Embedding model is taken from config.get_embedding_model().
+
+

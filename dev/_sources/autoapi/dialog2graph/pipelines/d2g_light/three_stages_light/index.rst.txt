@@ -1,0 +1,113 @@
+dialog2graph.pipelines.d2g_light.three_stages_light
+===================================================
+
+.. py:module:: dialog2graph.pipelines.d2g_light.three_stages_light
+
+.. autoapi-nested-parse::
+
+   Three Stage LightGraphGenerator
+   -------------------------------
+
+   The module provides three step algorithm aimed to generate dialog graph.
+
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.pipelines.d2g_light.three_stages_light.LightGraphGenerator
+
+
+Module Contents
+---------------
+
+.. py:class:: LightGraphGenerator(model_storage: dialog2graph.pipelines.model_storage.ModelStorage, filling_llm: str = 'three_stages_light_filling_llm:v1', formatting_llm: str = 'three_stages_light_formatting_llm:v1', sim_model: str = 'three_stages_light_sim_model:v1', step2_evals: list[Callable] | None = [], end_evals: list[Callable] | None = [])
+
+   Bases: :py:obj:`dialog2graph.pipelines.core.d2g_generator.DGBaseGenerator`
+
+
+   Graph generator from list of dialogs. Based on algorithm with embedding similarity usage.
+
+   .. attribute:: model_storage
+
+      Model storage
+
+   .. attribute:: filling_llm
+
+      Name of LLM for adding missing edges
+
+   .. attribute:: formatting_llm
+
+      Name of LLM for formatting other LLMs output
+
+   .. attribute:: sim_model
+
+      HuggingFace name for similarity model
+
+   .. attribute:: step2_evals
+
+      Evaluation metrics called after stage 2 with connecting nodes by edges
+
+   .. attribute:: end_evals
+
+      Evaluation metrics called at the end of generation process
+
+   .. attribute:: model_config
+
+      It's a parameter for internal use of Pydantic
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: filling_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: formatting_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: sim_model
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: step2_evals
+      :type:  list[Callable]
+      :value: None
+
+
+
+   .. py:attribute:: end_evals
+      :type:  list[Callable]
+      :value: None
+
+
+
+   .. py:attribute:: model_config
+
+      Configuration for the model, should be a dictionary conforming to [`ConfigDict`][pydantic.config.ConfigDict].
+
+
+   .. py:method:: invoke(pipeline_data: dialog2graph.pipelines.helpers.parse_data.PipelineDataType, enable_evals: bool = False) -> tuple[dialog2graph.pipelines.core.graph.BaseGraph, dialog2graph.metrics.DGReportType]
+
+      Invoke efficient implementation of the three stages generation algorithm.
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+

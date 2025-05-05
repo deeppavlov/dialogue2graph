@@ -349,7 +349,7 @@
 <li class="toctree-l1"><a class="reference internal" href="generate_graphs.html">Using Dialog2Graph algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generate_synthetic.html">Generate synthetic graph on certain topic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli_usage.html">Learn dialog2graph CLI interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="augment_dialogs.html">Generate augmented dialogues on one given dialogue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="augment_dialogs.html">Generate augmented dialogs on one given dialog</a></li>
 </ul>
 </div>
 </nav></div>
@@ -412,11 +412,11 @@
                   
   <section id="learn-base-dialog2graph-classes">
 <h1>Learn base dialog2graph classes<a class="headerlink" href="#learn-base-dialog2graph-classes" title="Link to this heading">#</a></h1>
-<p><a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.pipelines.core.graph.Graph" title="dialogue2graph.pipelines.core.graph.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> and <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a> are the base structures used in the
-<code class="docutils literal notranslate"><span class="pre">dialog2graph</span></code> project. They are perfect to store information about your graphs and dialogues in a clear format.</p>
-<section id="create-dialogue2graph-graph">
-<h2>Create dialogue2graph.Graph<a class="headerlink" href="#create-dialogue2graph-graph" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.pipelines.core.graph.Graph" title="dialogue2graph.pipelines.core.graph.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> enables to create a directed dialog graph and work with it.
+<p><a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/graph/index.html#dialog2graph.pipelines.core.graph.Graph" title="dialog2graph.pipelines.core.graph.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> and <a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/dialog/index.html#dialog2graph.pipelines.core.dialog.Dialog" title="dialog2graph.pipelines.core.dialog.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a> are the base structures used in the
+<code class="docutils literal notranslate"><span class="pre">dialog2graph</span></code> project. They are perfect to store information about your graphs and dialogs in a clear format.</p>
+<section id="create-dialog2graph-graph">
+<h2>Create dialog2graph.Graph<a class="headerlink" href="#create-dialog2graph-graph" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/graph/index.html#dialog2graph.pipelines.core.graph.Graph" title="dialog2graph.pipelines.core.graph.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> enables to create a directed dialog graph and work with it.
 You can visualise it and sample dialogs from it.</p>
 <p>For experimenting with dialog graphs a set with generated data was created.
 It can be loaded from <a class="reference external" href="https://huggingface.co/datasets/DeepPavlov/d2g_generated">HuggingFace</a> and contains 402 dialog graphs on various
@@ -426,8 +426,8 @@ topics concerning custom support and other topics. See more information about av
 <span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;DeepPavlov/d2g_generated&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>First, initialize <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/graph/index.html#dialogue2graph.pipelines.core.graph.Graph" title="dialogue2graph.pipelines.core.graph.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> by passing a dictionary with graph edges and nodes (<code class="docutils literal notranslate"><span class="pre">{&quot;edges&quot;:</span> <span class="pre">[...],</span> <span class="pre">&quot;nodes&quot;:</span> <span class="pre">[...]}</span></code>).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Graph</span>
+<p>First, initialize <a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/graph/index.html#dialog2graph.pipelines.core.graph.Graph" title="dialog2graph.pipelines.core.graph.Graph"><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></a> by passing a dictionary with graph edges and nodes (<code class="docutils literal notranslate"><span class="pre">{&quot;edges&quot;:</span> <span class="pre">[...],</span> <span class="pre">&quot;nodes&quot;:</span> <span class="pre">[...]}</span></code>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Graph</span>
 
 <span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span><span class="n">graph_dict</span><span class="o">=</span><span class="n">dataset</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">][</span><span class="mi">5</span><span class="p">][</span><span class="s2">&quot;graph&quot;</span><span class="p">])</span>
 </pre></div>
@@ -442,31 +442,31 @@ topics concerning custom support and other topics. See more information about av
 </pre></div>
 </div>
 </section>
-<section id="create-recursivedialoguesampler">
-<h2>Create RecursiveDialogueSampler<a class="headerlink" href="#create-recursivedialoguesampler" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/dialogue_sampling/index.html#dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler" title="dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">RecursiveDialogueSampler</span></code></a> is a class that helps to sample dialogs from existing dialog graphs.
+<section id="create-recursivedialogsampler">
+<h2>Create RecursiveDialogSampler<a class="headerlink" href="#create-recursivedialogsampler" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/dialog_sampling/index.html#dialog2graph.pipelines.core.dialog_sampling.RecursiveDialogSampler" title="dialog2graph.pipelines.core.dialog_sampling.RecursiveDialogSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">RecursiveDialogSampler</span></code></a> is a class that helps to sample dialogs from existing dialog graphs.
 It uses recursion to get all possible dialogs from the graph.
-To sample dialogs from the graph, create <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/dialogue_sampling/index.html#dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler" title="dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">RecursiveDialogueSampler</span></code></a> instance and use
+To sample dialogs from the graph, create <a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/dialog_sampling/index.html#dialog2graph.pipelines.core.dialog_sampling.RecursiveDialogSampler" title="dialog2graph.pipelines.core.dialog_sampling.RecursiveDialogSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">RecursiveDialogSampler</span></code></a> instance and use
 <code class="docutils literal notranslate"><span class="pre">invoke</span></code> method to start sampling process.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.core.dialogue_sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveDialogueSampler</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.pipelines.core.dialog_sampling</span><span class="w"> </span><span class="kn">import</span> <span class="n">RecursiveDialogSampler</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
 
-<span class="n">sampler</span> <span class="o">=</span> <span class="n">RecursiveDialogueSampler</span><span class="p">()</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">RecursiveDialogSampler</span><span class="p">()</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-3.5-turbo&quot;</span><span class="p">)</span>
-<span class="n">dialogues</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">upper_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cycle_ends_model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
+<span class="n">dialogs</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">,</span> <span class="n">upper_limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">cycle_ends_model</span><span class="o">=</span><span class="n">model</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The output of <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/dialogue_sampling/index.html#dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler.invoke" title="dialogue2graph.pipelines.core.dialogue_sampling.RecursiveDialogueSampler.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method is a list
-of <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a> instances. This class is also helpful when working with dialog graphs.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">dialogues</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<p>The output of <a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/dialog_sampling/index.html#dialog2graph.pipelines.core.dialog_sampling.RecursiveDialogSampler.invoke" title="dialog2graph.pipelines.core.dialog_sampling.RecursiveDialogSampler.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method is a list
+of <a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/dialog/index.html#dialog2graph.pipelines.core.dialog.Dialog" title="dialog2graph.pipelines.core.dialog.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a> instances. This class is also helpful when working with dialog graphs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">dialogs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>
-<section id="use-dialogue2graph-dialogue">
-<h2>Use dialogue2graph.Dialogue<a class="headerlink" href="#use-dialogue2graph-dialogue" title="Link to this heading">#</a></h2>
-<p><a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/dialogue/index.html#dialogue2graph.pipelines.core.dialogue.Dialogue" title="dialogue2graph.pipelines.core.dialogue.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a> is a class that represents a complete dialogue and provide method for visualisation and converting.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dialogues</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">dialogues</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<section id="use-dialog2graph-dialog">
+<h2>Use dialog2graph.Dialog<a class="headerlink" href="#use-dialog2graph-dialog" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="../autoapi/dialog2graph/pipelines/core/dialog/index.html#dialog2graph.pipelines.core.dialog.Dialog" title="dialog2graph.pipelines.core.dialog.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a> is a class that represents a complete dialog and provide method for visualisation and converting.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">dialogs</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">dialogs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
@@ -542,9 +542,9 @@ of <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/core/
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dialogue2graph-graph">Create dialogue2graph.Graph</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-recursivedialoguesampler">Create RecursiveDialogueSampler</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-dialogue2graph-dialogue">Use dialogue2graph.Dialogue</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-dialog2graph-graph">Create dialog2graph.Graph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-recursivedialogsampler">Create RecursiveDialogSampler</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-dialog2graph-dialog">Use dialog2graph.Dialog</a></li>
 </ul>
   </nav></div>
 

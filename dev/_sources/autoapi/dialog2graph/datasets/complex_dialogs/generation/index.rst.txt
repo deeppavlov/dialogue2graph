@@ -1,0 +1,434 @@
+dialog2graph.datasets.complex_dialogs.generation
+================================================
+
+.. py:module:: dialog2graph.datasets.complex_dialogs.generation
+
+.. autoapi-nested-parse::
+
+   Generation
+   ----------
+
+   The module provides graph generator capable of creating complex validated graphs.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialog2graph.datasets.complex_dialogs.generation.logger
+   dialog2graph.datasets.complex_dialogs.generation.PipelineResult
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.datasets.complex_dialogs.generation.ErrorType
+   dialog2graph.datasets.complex_dialogs.generation.GenerationError
+   dialog2graph.datasets.complex_dialogs.generation.CycleGraphGenerator
+   dialog2graph.datasets.complex_dialogs.generation.GenerationPipeline
+   dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: ErrorType
+
+   Bases: :py:obj:`str`, :py:obj:`enum.Enum`
+
+
+   Error types that can occur during generation
+
+
+   .. py:attribute:: INVALID_GRAPH_STRUCTURE
+      :value: 'invalid_graph_structure'
+
+
+
+   .. py:attribute:: TOO_FEW_CYCLES
+      :value: 'too_few_cycles'
+
+
+
+   .. py:attribute:: SAMPLING_FAILED
+      :value: 'sampling_failed'
+
+
+
+   .. py:attribute:: INVALID_THEME
+      :value: 'invalid_theme'
+
+
+
+   .. py:attribute:: GENERATION_FAILED
+      :value: 'generation_failed'
+
+
+
+.. py:class:: GenerationError(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Base error with essential fields
+
+
+   .. py:attribute:: error_type
+      :type:  ErrorType
+
+
+   .. py:attribute:: message
+      :type:  str
+
+
+.. py:data:: PipelineResult
+
+.. py:class:: CycleGraphGenerator(**data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Class for generating graph with cycles
+   .. attribute:: cache
+
+      Caching mechanism
+
+   .. attribute:: model_storage
+
+      Storage for models
+
+
+   .. py:attribute:: cache
+      :type:  Optional[Any]
+      :value: None
+
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: extra
+         :value: 'allow'
+
+
+
+
+   .. py:method:: invoke(generation_llm: str, prompt: langchain.prompts.PromptTemplate, seed=None, **kwargs) -> dialog2graph.pipelines.core.graph.BaseGraph
+
+      Generate a cyclic dialog graph based on the topic input.
+      :param generation_llm: Name of the model to use for graph generation.
+      :param prompt: Prompt to use for graph generation.
+      :param seed: Seed for the generation.
+      :param kwargs: Additional arguments for the prompt.
+
+      :returns: Dialog graph.
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+      Async version of invoke - to be implemented
+
+
+
+   .. py:method:: evaluate(*args, report_type='dict', **kwargs)
+
+
+.. py:class:: GenerationPipeline(model_storage: dialog2graph.pipelines.model_storage.ModelStorage, generation_llm: str, validation_llm: str, cycle_ends_llm: str, theme_validation_llm: str, generation_prompt: Optional[langchain.prompts.PromptTemplate], repair_prompt: Optional[langchain.prompts.PromptTemplate], min_cycles: int = 2, max_fix_attempts: int = 2, seed: Optional[int] = None)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Class for generation pipeline
+   .. attribute:: cache
+
+      Caching mechanism
+
+   .. attribute:: model_storage
+
+      Storage for models
+
+   .. attribute:: generation_llm
+
+      Name of the model to use for graph generation
+
+   .. attribute:: validation_llm
+
+      Name of the model to use for graph validation
+
+   .. attribute:: cycle_ends_llm
+
+      Name of the model to use for cycle ends detection
+
+   .. attribute:: theme_validation_llm
+
+      Name of the model to use for theme validation
+
+   .. attribute:: generation_prompt
+
+      Prompt to use for graph generation
+
+
+   .. py:attribute:: cache
+      :type:  Optional[Any]
+      :value: None
+
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+
+
+   .. py:attribute:: generation_llm
+      :type:  str
+
+
+   .. py:attribute:: validation_llm
+      :type:  str
+
+
+   .. py:attribute:: cycle_ends_llm
+      :type:  str
+
+
+   .. py:attribute:: theme_validation_llm
+      :type:  str
+
+
+   .. py:attribute:: graph_generator
+      :type:  CycleGraphGenerator
+      :value: None
+
+
+
+   .. py:attribute:: generation_prompt
+      :type:  Optional[langchain.prompts.PromptTemplate]
+      :value: None
+
+
+
+   .. py:attribute:: repair_prompt
+      :type:  Optional[langchain.prompts.PromptTemplate]
+      :value: None
+
+
+
+   .. py:attribute:: min_cycles
+      :type:  int
+      :value: 2
+
+
+
+   .. py:attribute:: max_fix_attempts
+      :type:  int
+      :value: 3
+
+
+
+   .. py:attribute:: dialog_sampler
+      :type:  dialog2graph.pipelines.core.dialog_sampling.RecursiveDialogSampler
+      :value: None
+
+
+
+   .. py:attribute:: seed
+      :type:  Optional[int]
+      :value: None
+
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: extra
+         :value: 'allow'
+
+
+
+
+   .. py:method:: validate_graph_cycle_requirement(graph: dialog2graph.pipelines.core.graph.BaseGraph, min_cycles: int = 2) -> Dict[str, Any]
+
+      Validate whether a graph meets the cycle requirements.
+
+      Checks if the graph contains at least `min_cycles` cycles and
+      that none of the cycles contain the start node (node 1).
+
+      Args:
+      - graph (BaseGraph): The graph to validate.
+      - min_cycles (int): The minimum number of cycles required (default: 2).
+
+      Returns:
+      - A dictionary containing the result of the validation, including:
+        - `meets_requirements` (bool): True if the graph meets the cycle requirements.
+        - `cycles` (List[List[int]]): A list of cycles found in the graph.
+        - `cycles_count` (int): The number of cycles found in the graph.
+
+
+
+   .. py:method:: check_and_fix_transitions(graph: dialog2graph.pipelines.core.graph.BaseGraph, max_attempts: int = 3) -> Dict[str, Any]
+
+      Checks transitions in the graph and tries to fix invalid ones via LLM.
+
+      Args:
+      - graph (BaseGraph): The graph to check and fix.
+      - max_attempts (int): The maximum number of attempts to fix the graph. Defaults to 3.
+
+      Returns:
+      - A dictionary containing the result of the validation, including:
+        - `is_valid` (bool): True if the graph is valid.
+        - `graph` (BaseGraph): The fixed graph.
+        - `validation_details` (Dict[str, Any]): A dictionary containing details about the
+          validation, including:
+          - `invalid_transitions` (List[Tuple[int, int, str]]): The invalid transitions in
+            the graph.
+          - `attempts_made` (int): The number of attempts made to fix the graph.
+          - `fixed_count` (int): The number of invalid transitions fixed.
+
+
+
+   .. py:method:: generate_and_validate(topic: str) -> PipelineResult
+
+      Generates a graph and validates it according to the following criteria:
+      1. The graph has at least min_cycles cycles.
+      2. The graph is valid according to the validation model.
+      3. The graph is themed according to the theme validation model.
+      4. The graph has no invalid transitions after attempting to fix them up to max_fix_attempts times.
+      5. Dialogs sampled from the graph cover all nodes and cover all edges.
+
+      :param topic: The topic to generate the graph for.
+
+      :returns: A GraphGenerationResult object containing the generated graph, metadata, and sampled dialogs.
+                If the graph fails to meet any of the criteria, a GenerationError is returned instead.
+      :rtype: GraphGenerationResult
+
+
+
+   .. py:method:: __call__(topic: str) -> PipelineResult
+
+      Shorthand for generate_and_validate
+
+
+
+.. py:class:: LoopedGraphGenerator(model_storage: dialog2graph.pipelines.model_storage.ModelStorage, generation_llm: str = 'looped_graph_generation_llm:v1', validation_llm: str = 'looped_graph_validation_llm:v1', cycle_ends_llm: str = 'looped_graph_cycle_ends_llm:v1', theme_validation_llm: str = 'looped_graph_theme_validation_llm:v1')
+
+   Bases: :py:obj:`dialog2graph.pipelines.core.algorithms.TopicGraphGenerator`
+
+
+   Graph generator for topic-based dialog generation with model storage support
+   .. attribute:: model_storage
+
+      Model storage to take models from.
+
+      :type: ModelStorage
+
+   .. attribute:: generation_llm
+
+      Name of the model to use for graph generation.
+
+      :type: str
+
+   .. attribute:: validation_llm
+
+      Name of the model to use for validation.
+
+      :type: str
+
+   .. attribute:: cycle_ends_llm
+
+      Name of the model to use for finding cycle ends.
+
+      :type: str
+
+   .. attribute:: theme_validation_llm
+
+      Name of the model to use for theme validation.
+
+      :type: str
+
+   .. attribute:: pipeline
+
+      Generation pipeline to use for graph generation.
+
+      :type: GenerationPipeline
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: generation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: validation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: cycle_ends_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: theme_validation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: pipeline
+      :type:  GenerationPipeline
+
+
+   .. py:method:: invoke(topic, seed=42) -> list[dict]
+
+      Generates a dialog graph for a given topic using the configured pipeline.
+
+      This method utilizes the pipeline to generate a dialog graph based on the
+      specified topic. It logs the process and handles potential errors during
+      generation. The method returns a list containing dictionaries with details
+      of successfully generated graphs.
+
+      :param topic: The topic for which the dialog graph is to be generated.
+      :type topic: str
+      :param seed: A seed value to ensure reproducibility of the graph
+                   generation process. Defaults to 42.
+      :type seed: int, optional
+
+      :returns: A list of dictionaries containing the graph, metadata, topic,
+                and dialogs for successfully generated graphs.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: evaluate(*args, report_type='dict', **kwargs)
+
+

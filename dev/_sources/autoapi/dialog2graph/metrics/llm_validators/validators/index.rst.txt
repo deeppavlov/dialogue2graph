@@ -1,0 +1,91 @@
+dialog2graph.metrics.llm_validators.validators
+==============================================
+
+.. py:module:: dialog2graph.metrics.llm_validators.validators
+
+.. autoapi-nested-parse::
+
+   Validators
+   --------------------------
+
+   The module contains validators to evaluate dialogs that use power of LLMs and embeddings.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.llm_validators.validators.START_TURNS
+   dialog2graph.metrics.llm_validators.validators.END_TURNS
+   dialog2graph.metrics.llm_validators.validators.START_THRESHOLD
+   dialog2graph.metrics.llm_validators.validators.END_THRESHOLD
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.llm_validators.validators.is_greeting_repeated_emb_llm
+   dialog2graph.metrics.llm_validators.validators.is_dialog_closed_too_early_emb_llm
+
+
+Module Contents
+---------------
+
+.. py:data:: START_TURNS
+   :value: ['Greetings! How can I assist you?', 'Greetings! How can I help you?', 'Greetings! Would you...
+
+
+.. py:data:: END_TURNS
+   :value: ['Thank you for contacting us. Have a great day!', "You're welcome! Have a great day.", "Request...
+
+
+.. py:data:: START_THRESHOLD
+   :value: 0.2
+
+
+.. py:data:: END_THRESHOLD
+   :value: 0.2
+
+
+.. py:function:: is_greeting_repeated_emb_llm(dialogs: List[dialog2graph.pipelines.core.dialog.Dialog], model_storage: dialog2graph.pipelines.model_storage.ModelStorage, embedder_name: str, llm_name: str, starts: list = None) -> bool
+
+   Check if greeting is repeated within dialogs using pairwise distance and LLM assessment.
+
+   :param dialogs: Dialog list from graph.
+   :type dialogs: List[Dialog]
+   :param model_storage: Model storage containing embedder and LLM model for evaluation.
+   :type model_storage: ModelStorage
+   :param embedder_name: Name of embedder model in model storage (ModelStorage).
+   :type embedder_name: str
+   :param llm_name: Name of LLM in model storage (ModelStorage).
+   :type llm_name: str
+   :param starts: List of opening phrases. Defaults to None, so standard opening phrases are used.
+   :type starts: list
+
+   Returns
+       bool: True if greeting has been repeated, False otherwise.
+
+
+.. py:function:: is_dialog_closed_too_early_emb_llm(dialogs: List[dialog2graph.pipelines.core.dialog.Dialog], model_storage: dialog2graph.pipelines.model_storage.ModelStorage, embedder_name: str, llm_name: str, ends: list = None) -> bool
+
+   Check if assistant tried to close dialog in the middle using pairwise distance and LLM assessment.
+
+   :param dialogs: Dialog list from graph.
+   :type dialogs: List[Dialog]
+   :param model_storage: Model storage containing embedder and LLM model for evaluation.
+   :type model_storage: ModelStorage
+   :param embedder_name: Name of embedder model in model storage (ModelStorage).
+   :type embedder_name: str
+   :param llm_name: Name of LLM in model storage (ModelStorage).
+   :type llm_name: str
+   :param ends: List of closing phrases. Defaults to None, so standard closing phrases are used.
+   :type ends: list
+
+   Returns
+       bool: True if greeting has been repeated, False otherwise.
+
+

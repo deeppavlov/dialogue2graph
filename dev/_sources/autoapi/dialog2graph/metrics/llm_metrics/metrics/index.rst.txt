@@ -1,0 +1,148 @@
+dialog2graph.metrics.llm_metrics.metrics
+========================================
+
+.. py:module:: dialog2graph.metrics.llm_metrics.metrics
+
+.. autoapi-nested-parse::
+
+   LLM Metrics.
+   ------------
+
+   The module contains functions that checks Graphs and Dialogs for various metrics using LLM calls.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.llm_metrics.metrics.logger
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.llm_metrics.metrics.InvalidTransition
+   dialog2graph.metrics.llm_metrics.metrics.GraphValidationResult
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.llm_metrics.metrics.are_triplets_valid
+   dialog2graph.metrics.llm_metrics.metrics.is_theme_valid
+   dialog2graph.metrics.llm_metrics.metrics.compare_graphs
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: InvalidTransition
+
+   Bases: :py:obj:`TypedDict`
+
+
+   dict() -> new empty dictionary
+   dict(mapping) -> new dictionary initialized from a mapping object's
+       (key, value) pairs
+   dict(iterable) -> new dictionary initialized as if via:
+       d = {}
+       for k, v in iterable:
+           d[k] = v
+   dict(**kwargs) -> new dictionary initialized with the name=value pairs
+       in the keyword argument list.  For example:  dict(one=1, two=2)
+
+
+   .. py:attribute:: from_
+      :type:  List[str]
+
+
+   .. py:attribute:: user
+      :type:  List[str]
+
+
+   .. py:attribute:: to
+      :type:  List[str]
+
+
+   .. py:attribute:: reason
+      :type:  str
+
+
+.. py:class:: GraphValidationResult
+
+   Bases: :py:obj:`TypedDict`
+
+
+   dict() -> new empty dictionary
+   dict(mapping) -> new dictionary initialized from a mapping object's
+       (key, value) pairs
+   dict(iterable) -> new dictionary initialized as if via:
+       d = {}
+       for k, v in iterable:
+           d[k] = v
+   dict(**kwargs) -> new dictionary initialized with the name=value pairs
+       in the keyword argument list.  For example:  dict(one=1, two=2)
+
+
+   .. py:attribute:: is_valid
+      :type:  bool
+
+
+   .. py:attribute:: invalid_transitions
+      :type:  List[InvalidTransition]
+
+
+.. py:function:: are_triplets_valid(G: dialog2graph.pipelines.core.graph.Graph, model: langchain_core.language_models.chat_models.BaseChatModel, return_type: str = 'dict') -> Union[dict, GraphValidationResult]
+
+   Validate dialog graph structure and logical transitions between nodes.
+
+   :param G: The dialog graph to validate
+   :type G: BaseGraph
+   :param model: The LLM model to use for validation
+   :type model: BaseChatModel
+   :param return_type: Type of return value - either "dict" or "detailed"
+   :type return_type: str
+
+   :returns:     If return_type == "dict": {'value': bool, 'description': str}
+                 If return_type == "detailed": GraphValidationResult
+   :rtype: Union[dict, GraphValidationResult]
+
+
+.. py:function:: is_theme_valid(G: dialog2graph.pipelines.core.graph.BaseGraph, model: langchain_core.language_models.chat_models.BaseChatModel, topic: str) -> dict[str]
+
+   Validate if the dialog stays on theme/topic throughout the conversation.
+
+   :param G: The dialog graph to validate
+   :type G: BaseGraph
+   :param model: The LLM model to use for validation
+   :type model: BaseChatModel
+   :param topic: The expected topic of the dialog
+   :type topic: str
+
+   :returns: {'value': bool, 'description': str}
+   :rtype: dict
+
+
+.. py:function:: compare_graphs(G1: dialog2graph.pipelines.core.graph.BaseGraph, G2: dialog2graph.pipelines.core.graph.BaseGraph, embedder: str = 'BAAI/bge-m3', sim_th: float = 0.93, llm_comparer: str = 'o3-mini', formatter: str = 'gpt-3.5-turbo', device='cuda:0') -> dialog2graph.pipelines.core.schemas.CompareResponse
+
+   Compare two graphs via utterance embeddings similarity. If similarity is lower than `sim_th` value LLM llm_comparer is used for additional comparison.
+   LLM formatter is used to keep LLM answer in a required format.
+
+   :param G1: graphs to compare
+   :param G2: graphs to compare
+   :param embedder: name of embedding model on HuggingFace
+   :param sim_th: similarity threshold to use LLM
+   :param llm_comparer: name of LLM to compare graphs
+   :param formatter: name of LLm modle to format llm_comparer output
+
+   :returns: dict with True or False value and a description.
+
+

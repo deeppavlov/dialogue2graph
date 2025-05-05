@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Generate augmented dialogues on one given dialogue &#8212; Dialog2Graph  documentation</title>
+    <title>Generate augmented dialogs on one given dialog &#8212; Dialog2Graph  documentation</title>
   
   
   
@@ -349,7 +349,7 @@
 <li class="toctree-l1"><a class="reference internal" href="generate_graphs.html">Using Dialog2Graph algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generate_synthetic.html">Generate synthetic graph on certain topic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli_usage.html">Learn dialog2graph CLI interface</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Generate augmented dialogues on one given dialogue</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Generate augmented dialogs on one given dialog</a></li>
 </ul>
 </div>
 </nav></div>
@@ -393,7 +393,7 @@
     
     <li class="breadcrumb-item"><a href="../userguides.html" class="nav-link">User guides</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Generate augmented dialogues on one given dialogue</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Generate augmented dialogs on one given dialog</span></li>
   </ul>
 </nav>
 </div>
@@ -410,17 +410,17 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="generate-augmented-dialogues-on-one-given-dialogue">
-<h1>Generate augmented dialogues on one given dialogue<a class="headerlink" href="#generate-augmented-dialogues-on-one-given-dialogue" title="Link to this heading">#</a></h1>
-<p>Use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter" title="dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">DialogueAugmenter</span></code></a> to augment an original dialogue by paraphrasing
+  <section id="generate-augmented-dialogs-on-one-given-dialog">
+<h1>Generate augmented dialogs on one given dialog<a class="headerlink" href="#generate-augmented-dialogs-on-one-given-dialog" title="Link to this heading">#</a></h1>
+<p>Use <a class="reference internal" href="../autoapi/dialog2graph/datasets/augment_dialogs/augmentation/index.html#dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter" title="dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">DialogAugmenter</span></code></a> to augment an original dialog by paraphrasing
 its lines while maintaining the structure and flow of the conversation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.datasets.augment_dialogues.augmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DialogueAugmenter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.datasets.augment_dialogs.augmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">DialogAugmenter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
 </pre></div>
 </div>
-<p>1. Create <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance and add choosen LLMs for dialogue generation (i.e. dialogue augmentation)
+<p>1. Create <a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance and add choosen LLMs for dialog generation (i.e. dialog augmentation)
 and formatting LLM’s output.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_storage</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
 <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
@@ -435,17 +435,17 @@ and formatting LLM’s output.</p>
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>2. Create <a class="reference internal" href="../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter" title="dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">DialogueAugmenter</span></code></a> instance and use
-<a class="reference internal" href="../autoapi/dialogue2graph/datasets/augment_dialogues/augmentation/index.html#dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.invoke" title="dialogue2graph.datasets.augment_dialogues.augmentation.DialogueAugmenter.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method to get augmented dialogues.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">augmenter</span> <span class="o">=</span> <span class="n">DialogueAugmenter</span><span class="p">(</span>
+<p>2. Create <a class="reference internal" href="../autoapi/dialog2graph/datasets/augment_dialogs/augmentation/index.html#dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter" title="dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter"><code class="xref py py-class docutils literal notranslate"><span class="pre">DialogAugmenter</span></code></a> instance and use
+<a class="reference internal" href="../autoapi/dialog2graph/datasets/augment_dialogs/augmentation/index.html#dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter.invoke" title="dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method to get augmented dialogs.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">augmenter</span> <span class="o">=</span> <span class="n">DialogAugmenter</span><span class="p">(</span>
         <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
         <span class="n">generation_llm</span><span class="o">=</span><span class="s2">&quot;generation-llm&quot;</span><span class="p">,</span>
         <span class="n">formatting_llm</span><span class="o">=</span><span class="s2">&quot;formatting-llm&quot;</span>
     <span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">augmenter</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-    <span class="n">dialogue</span><span class="o">=</span><span class="n">dialogue</span><span class="p">,</span> <span class="c1"># original dialogue as a Dialogue object</span>
-    <span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span> <span class="c1"># topic of the original dialogue as a string</span>
-    <span class="n">prompt</span><span class="o">=</span><span class="n">augmentation_prompt</span> <span class="c1"># prompt for dialogue augmentation as a string</span>
+    <span class="n">dialog</span><span class="o">=</span><span class="n">dialog</span><span class="p">,</span> <span class="c1"># original dialog as a Dialog object</span>
+    <span class="n">topic</span><span class="o">=</span><span class="n">topic</span><span class="p">,</span> <span class="c1"># topic of the original dialog as a string</span>
+    <span class="n">prompt</span><span class="o">=</span><span class="n">augmentation_prompt</span> <span class="c1"># prompt for dialog augmentation as a string</span>
     <span class="p">)</span>
 </pre></div>
 </div>
@@ -496,7 +496,7 @@ and formatting LLM’s output.</p>
 
     <h4>Userguide code example</h4>
 
-    <a href="https://colab.research.google.com/github/deeppavlov/dialog2graph/blob/dev/examples/dialog_augmentation/dialogue_augmentation_example.ipynb" data-behavior="call-to-action-event" data-response="Run in Google Colab" target="_blank">
+    <a href="https://colab.research.google.com/github/deeppavlov/dialog2graph/blob/dev/examples/dialog_augmentation/dialog_augmentation_example.ipynb" data-behavior="call-to-action-event" data-response="Run in Google Colab" target="_blank">
         <div id="google-colab-link">
             <span class="pytorch-colab call-to-action-any"></span>
             <div class="call-to-action-desktop-view">Run in Google Colab</div>
@@ -504,7 +504,7 @@ and formatting LLM’s output.</p>
         </div>
     </a>
 
-    <a href="https://github.com/deeppavlov/dialog2graph/blob/dev/examples/dialog_augmentation/dialogue_augmentation_example.ipynb" data-behavior="call-to-action-event" data-response="View on Github" target="_blank">
+    <a href="https://github.com/deeppavlov/dialog2graph/blob/dev/examples/dialog_augmentation/dialog_augmentation_example.ipynb" data-behavior="call-to-action-event" data-response="View on Github" target="_blank">
         <div id="github-view-link">
             <span class="pytorch-github call-to-action-any"></span>
             <div class="call-to-action-desktop-view">View on GitHub</div>

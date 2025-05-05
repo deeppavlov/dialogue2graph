@@ -349,7 +349,7 @@
 <li class="toctree-l1"><a class="reference internal" href="generate_graphs.html">Using Dialog2Graph algorithms</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Generate synthetic graph on certain topic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli_usage.html">Learn dialog2graph CLI interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="augment_dialogs.html">Generate augmented dialogues on one given dialogue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="augment_dialogs.html">Generate augmented dialogs on one given dialog</a></li>
 </ul>
 </div>
 </nav></div>
@@ -412,16 +412,16 @@
                   
   <section id="generate-synthetic-graph-on-certain-topic">
 <h1>Generate synthetic graph on certain topic<a class="headerlink" href="#generate-synthetic-graph-on-certain-topic" title="Link to this heading">#</a></h1>
-<p>Use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> to create a validated graph from several
-LLM generated dialogues concerning a given topic.</p>
+<p>Use <a class="reference internal" href="../autoapi/dialog2graph/datasets/complex_dialogs/generation/index.html#dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator" title="dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> to create a validated graph from several
+LLM generated dialogs concerning a given topic.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.datasets.complex_dialogues.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoopedGraphGenerator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.datasets.complex_dialogs.generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">LoopedGraphGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
 </pre></div>
 </div>
-<p>1. Create <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance and add choosen LLMs for dialogue generation,
-dialogue validation, theme validation and cycle end search.</p>
+<p>1. Create <a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> instance and add choosen LLMs for dialog generation,
+dialog validation, theme validation and cycle end search.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_storage</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
 <span class="n">model_storage</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
     <span class="s2">&quot;gen_model&quot;</span><span class="p">,</span> <span class="c1"># model to use for generation</span>
@@ -435,8 +435,8 @@ dialogue validation, theme validation and cycle end search.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>2. Create <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> and
-use <a class="reference internal" href="../autoapi/dialogue2graph/datasets/complex_dialogues/generation/index.html#dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke" title="dialogue2graph.datasets.complex_dialogues.generation.LoopedGraphGenerator.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method to get a dialogue graph</p>
+<p>2. Create <a class="reference internal" href="../autoapi/dialog2graph/datasets/complex_dialogs/generation/index.html#dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator" title="dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LoopedGraphGenerator</span></code></a> and
+use <a class="reference internal" href="../autoapi/dialog2graph/datasets/complex_dialogs/generation/index.html#dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator.invoke" title="dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator.invoke"><code class="xref py py-class docutils literal notranslate"><span class="pre">invoke</span></code></a> method to get a dialog graph</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">LoopedGraphGenerator</span><span class="p">(</span>
     <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
     <span class="n">generation_llm</span><span class="o">=</span><span class="s1">&#39;gen_model&#39;</span><span class="p">,</span>

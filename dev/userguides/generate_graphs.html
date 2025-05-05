@@ -345,7 +345,7 @@
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Using Dialog2Graph algorithms</a></li>
 <li class="toctree-l1"><a class="reference internal" href="generate_synthetic.html">Generate synthetic graph on certain topic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli_usage.html">Learn dialog2graph CLI interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="augment_dialogs.html">Generate augmented dialogues on one given dialogue</a></li>
+<li class="toctree-l1"><a class="reference internal" href="augment_dialogs.html">Generate augmented dialogs on one given dialog</a></li>
 </ul>
 </div>
 </nav></div>
@@ -410,13 +410,13 @@
 <h1>Using Dialog2Graph algorithms<a class="headerlink" href="#using-dialog2graph-algorithms" title="Link to this heading">#</a></h1>
 <p>This guide demonstrates usage of <code class="docutils literal notranslate"><span class="pre">dialog2graph</span></code> dialog graph generation algorithms.
 The following example shows how to use the particular algorithm that generates graph from the set of dialogs. It leverages both Embedding and LLM models.
-Also we dive into details of <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> usage.</p>
-<p>First of all, we need to import the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> and
-<a class="reference internal" href="../autoapi/dialogue2graph/pipelines/d2g_llm/index.html#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dialogue</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.d2g_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGraphGenerator</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dialogue2graph.pipelines.helpers.parse_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineRawDataType</span>
+Also we dive into details of <a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> usage.</p>
+<p>First of all, we need to import the <a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> and
+<a class="reference internal" href="../autoapi/dialog2graph/pipelines/d2g_llm/index.html#dialog2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialog2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dialog</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.pipelines.model_storage</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModelStorage</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.pipelines.d2g_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLMGraphGenerator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dialog2graph.pipelines.helpers.parse_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineRawDataType</span>
 </pre></div>
 </div>
 <p>Now, we need to get the dialogs that are the source for the further graph. In this example we will read the dialogs from a JSON file.
@@ -442,22 +442,22 @@ The dialogs should be presented in the following format:</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>As we got the dialogs from the file, we reformat the initial dictionaries to <a class="reference internal" href="../autoapi/dialogue2graph/index.html#dialogue2graph.Dialogue" title="dialogue2graph.Dialogue"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialogue</span></code></a> objects. Then, the dialogs are
+<p>As we got the dialogs from the file, we reformat the initial dictionaries to <a class="reference internal" href="../autoapi/dialog2graph/index.html#dialog2graph.Dialog" title="dialog2graph.Dialog"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dialog</span></code></a> objects. Then, the dialogs are
 passed to the data parser <code class="xref py py-class docutils literal notranslate"><span class="pre">PipelineRawDataType</span></code>. So, we’ve prepared data for the generator:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;example_dialogue.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;example_dialog.json&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
 
-<span class="n">dialogues</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dialogue</span><span class="p">(</span><span class="o">**</span><span class="n">dialogue</span><span class="p">)</span> <span class="k">for</span> <span class="n">dialogue</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dialogs&quot;</span><span class="p">]]</span>
+<span class="n">dialogs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Dialog</span><span class="p">(</span><span class="o">**</span><span class="n">dialog</span><span class="p">)</span> <span class="k">for</span> <span class="n">dialog</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;dialogs&quot;</span><span class="p">]]</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">PipelineRawDataType</span><span class="p">(</span>
-    <span class="n">dialogs</span><span class="o">=</span><span class="n">dialogues</span><span class="p">,</span>
+    <span class="n">dialogs</span><span class="o">=</span><span class="n">dialogs</span><span class="p">,</span>
     <span class="n">supported_graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">true_graph</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we should create a <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object. This object will be used to store the models for generation.
+<p>Now we should create a <a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object. This object will be used to store the models for generation.
 In this example we will use the LLM model and the Embedding model. The LLM model will be used to generate the graph, and the Embedding model will be used
 to generate the embeddings for the nodes in the graph.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model_storage</span> <span class="o">=</span> <span class="n">ModelStorage</span><span class="p">()</span>
@@ -479,12 +479,12 @@ to generate the embeddings for the nodes in the graph.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we can create the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/d2g_llm/index.html#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a> object. This object will be used to generate the graph.
-We will pass the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object to the constructor of the
-<a class="reference internal" href="../autoapi/dialogue2graph/pipelines/d2g_llm/index.html#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a> object. Note, that we are overriding the default model on the formatting and
-similarity tasks with the models we added to the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object.
+<p>Now we can create the <a class="reference internal" href="../autoapi/dialog2graph/pipelines/d2g_llm/index.html#dialog2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialog2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a> object. This object will be used to generate the graph.
+We will pass the <a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object to the constructor of the
+<a class="reference internal" href="../autoapi/dialog2graph/pipelines/d2g_llm/index.html#dialog2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialog2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a> object. Note, that we are overriding the default model on the formatting and
+similarity tasks with the models we added to the <a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a> object.
 The rest of the models will be used as default. Don’t forget to use correct <code class="docutils literal notranslate"><span class="pre">model_type</span></code> when adding the model to the
-<a class="reference internal" href="../autoapi/dialogue2graph/pipelines/model_storage/index.html#dialogue2graph.pipelines.model_storage.ModelStorage" title="dialogue2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a>. The available types are <code class="docutils literal notranslate"><span class="pre">llm</span></code> for LLMs and <code class="docutils literal notranslate"><span class="pre">emb</span></code> for embedders.</p>
+<a class="reference internal" href="../autoapi/dialog2graph/pipelines/model_storage/index.html#dialog2graph.pipelines.model_storage.ModelStorage" title="dialog2graph.pipelines.model_storage.ModelStorage"><code class="xref py py-class docutils literal notranslate"><span class="pre">ModelStorage</span></code></a>. The available types are <code class="docutils literal notranslate"><span class="pre">llm</span></code> for LLMs and <code class="docutils literal notranslate"><span class="pre">emb</span></code> for embedders.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">graph_generator</span> <span class="o">=</span> <span class="n">LLMGraphGenerator</span><span class="p">(</span>
     <span class="n">model_storage</span><span class="o">=</span><span class="n">model_storage</span><span class="p">,</span>
     <span class="n">formatting_llm</span><span class="o">=</span><span class="s2">&quot;my_formatting_model&quot;</span><span class="p">,</span>
@@ -492,7 +492,7 @@ The rest of the models will be used as default. Don’t forget to use correct <c
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Now we can generate the graph. We will pass the dialogs <code class="docutils literal notranslate"><span class="pre">.invoke()</span></code> method of the <a class="reference internal" href="../autoapi/dialogue2graph/pipelines/d2g_llm/index.html#dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialogue2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a>
+<p>Now we can generate the graph. We will pass the dialogs <code class="docutils literal notranslate"><span class="pre">.invoke()</span></code> method of the <a class="reference internal" href="../autoapi/dialog2graph/pipelines/d2g_llm/index.html#dialog2graph.pipelines.d2g_llm.LLMGraphGenerator" title="dialog2graph.pipelines.d2g_llm.LLMGraphGenerator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LLMGraphGenerator</span></code></a>
 object. The method will return a graph object and a report object. To include the metrics in the report, we need to set the <code class="docutils literal notranslate"><span class="pre">enable_evals</span></code>
 parameter to <code class="docutils literal notranslate"><span class="pre">True</span></code>. It will run some metrics on the graph during and after the generation process. Keep in mind that this will usually slow down
 the generation process and rise the token count.</p>

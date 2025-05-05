@@ -1,0 +1,107 @@
+dialog2graph.datasets.augment_dialogs.augmentation
+==================================================
+
+.. py:module:: dialog2graph.datasets.augment_dialogs.augmentation
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.datasets.augment_dialogs.augmentation.AugmentedTurn
+   dialog2graph.datasets.augment_dialogs.augmentation.DialogSequence
+   dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter
+
+
+Module Contents
+---------------
+
+.. py:class:: AugmentedTurn(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Dialog turn to augment
+
+
+   .. py:attribute:: participant
+      :type:  str
+
+
+   .. py:attribute:: text
+      :type:  list[str]
+      :value: None
+
+
+
+.. py:class:: DialogSequence(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Result as dialog sequence
+
+
+   .. py:attribute:: result
+      :type:  list[AugmentedTurn]
+      :value: None
+
+
+
+.. py:class:: DialogAugmenter(/, **data: Any)
+
+   Bases: :py:obj:`dialog2graph.pipelines.core.algorithms.DialogAugmentation`
+
+
+   Class for dialog augmentation.
+
+   Augments dialogs while preserving structure and conversation flow by rephrasing original dialog lines.
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: generation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: formatting_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:method:: invoke(dialog: dialog2graph.pipelines.core.dialog.Dialog, prompt: str, topic: str = '') -> Union[list[dialog2graph.pipelines.core.dialog.Dialog], str]
+
+      Augment dialog while preserving conversation structure.
+
+      :param dialog: Input Dialog object to augment
+      :param prompt: Required augmentation prompt template
+      :param topic: Contextual topic for augmentation (default: empty)
+
+      :returns: List of augmented Dialog objects or error message
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+      Async version of invoke
+
+
+
+   .. py:method:: evaluate(dialog: dialog2graph.pipelines.core.dialog.Dialog, prompt: str, topic: str = '') -> dict
+      :async:
+
+
+      Evaluate augmentation quality with dictionary report format.
+
+
+

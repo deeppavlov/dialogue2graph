@@ -1,0 +1,210 @@
+dialog2graph.pipelines.model_storage
+====================================
+
+.. py:module:: dialog2graph.pipelines.model_storage
+
+.. autoapi-nested-parse::
+
+   ModelStorage module for managing and storing models.
+   This module provides classes and functions for managing and storing models, including loading configurations.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialog2graph.pipelines.model_storage.logger
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.pipelines.model_storage.GetModelInstance
+   dialog2graph.pipelines.model_storage.StoredData
+   dialog2graph.pipelines.model_storage.ModelStorage
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:class:: GetModelInstance(config: dict)
+
+   Model instantiation utility class.
+   This class provides methods to load and instantiate models based on their configuration.
+   .. attribute:: config
+
+      Configuration dictionary containing details about the model.
+
+      :type: dict
+
+   .. method:: instantiate(class_name)
+
+      
+      Instantiates a model based on the provided class name and configuration.
+      
+
+
+   .. py:attribute:: config
+      :type:  dict
+
+
+   .. py:method:: instantiate(class_name) -> langchain_core.language_models.BaseChatModel | langchain_community.embeddings.HuggingFaceEmbeddings
+
+      Instantiates a model based on the provided class name and configuration.
+
+      :param class_name: The class name of the model to be instantiated.
+
+      :returns: The instantiated model object.
+
+
+
+.. py:class:: StoredData(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   StoredData is a Pydantic model that represents the storage structure for a model, its configuration, and metadata.
+
+   .. attribute:: key
+
+      Key for the stored model.
+
+      :type: str
+
+   .. attribute:: config
+
+      Configuration for the stored model.
+
+      :type: dict
+
+   .. attribute:: model_type
+
+      Type of the stored model, either "llm" (language model) or "emb" (embedding model).
+
+      :type: Union[Literal["llm"], Literal["emb"]]
+
+   .. attribute:: model
+
+      The actual model object, which can either be a HuggingFaceEmbeddings instance or a BaseChatModel instance.
+
+      :type: Union[HuggingFaceEmbeddings, BaseChatModel]
+
+   .. method:: validate_model(cls, values)
+
+      
+      Validates the `model` attribute based on the `model_type`. Ensures that:
+      - If `model_type` is "llm", the `model` must be an instance of BaseChatModel.
+      - If `model_type` is "emb", the `model` must be an instance of HuggingFaceEmbeddings.
+      :raises ValueError: If the `model` does not match the expected type for the given `model_type`.
+      
+
+
+   .. py:attribute:: key
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: config
+      :type:  dict
+      :value: None
+
+
+
+   .. py:attribute:: model_type
+      :type:  pydantic._internal._model_construction.ModelMetaclass
+      :value: None
+
+
+
+   .. py:attribute:: model
+      :type:  Union[langchain_community.embeddings.HuggingFaceEmbeddings, langchain_core.language_models.BaseChatModel]
+      :value: None
+
+
+
+   .. py:method:: validate_model(values)
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: validate_assignment
+         :value: False
+
+
+
+
+.. py:class:: ModelStorage(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   ModelStorage is a class for managing the storage of model configurations and instances.
+   It provides functionality to load configurations from a YAML file, add new models to the storage,
+   and save the current storage state back to a YAML file.
+
+   .. attribute:: storage
+
+      A dictionary that holds the stored model configurations
+      and their corresponding instances.
+
+      :type: Dict[str, StoredData]
+
+
+   .. py:attribute:: storage
+      :type:  Dict[str, StoredData]
+      :value: None
+
+
+
+   .. py:method:: load(path: pathlib.Path)
+
+      Load model configurations from a YAML file into the storage.
+
+      :param path: The file path to the YAML file containing model configurations.
+      :type path: str
+
+
+
+   .. py:method:: add(key: str, config: dict, model_type: pydantic._internal._model_construction.ModelMetaclass, overwright: bool = False)
+
+              Add a new model configuration to the storage.
+              The configuration is validated based on the specified model_type.
+              If the configuration is valid, a new StoredData object is created and added to the storage.
+              If a model with the same key already exists, the overwright parameter determines whether to replace it.
+              If overwright is False and the model already exists, the existing model will not be replaced.
+              Otherwise, the model will not be added to the storage.
+              In case of failure to add the model logs the error.
+
+              Args:
+                  key (str): The unique identifier for the model configuration.
+                  config (dict): The configuration dictionary for initializing the model.
+                  model_type (ModelMetaclass): The type name of the model to be added.
+                  overwright (bool): Whether to overwright model existing under same key
+      .
+              Raises:
+                  KeyError: If configuration keys are invalid for the specified model_type.
+
+
+
+   .. py:method:: save(path: str)
+
+      Save the current model storage to a YAML file.
+      In case of failure logs the error.
+
+      :param path: The file path where the storage data will be saved.
+      :type path: str
+
+
+

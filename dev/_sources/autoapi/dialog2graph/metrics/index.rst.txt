@@ -1,0 +1,325 @@
+dialog2graph.metrics
+====================
+
+.. py:module:: dialog2graph.metrics
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialog2graph/metrics/algorithm_registry/index
+   /autoapi/dialog2graph/metrics/llm_metrics/index
+   /autoapi/dialog2graph/metrics/llm_validators/index
+   /autoapi/dialog2graph/metrics/no_llm_metrics/index
+   /autoapi/dialog2graph/metrics/no_llm_validators/index
+   /autoapi/dialog2graph/metrics/similarity/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.PreDGEvalBase
+   dialog2graph.metrics.DGEvalBase
+   dialog2graph.metrics.DGReportType
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.Graph
+   dialog2graph.metrics.CompareResponse
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.compare_graphs_light
+   dialog2graph.metrics.compare_graphs_full
+
+
+Package Contents
+----------------
+
+.. py:class:: Graph(graph_dict: dict, metadata: Metadata = Metadata(), **kwargs: Any)
+
+   Bases: :py:obj:`BaseGraph`
+
+
+   Implementation of BaseGraph for dialog graph operations.
+
+   This class provides concrete implementations for graph operations including
+   loading, visualization, path finding, and graph manipulation methods.
+
+   .. attribute:: Inherits all attributes from BaseGraph.
+
+      
+
+
+   .. py:method:: check_edges(seq: list[list[int]]) -> bool
+
+      Checks whether seq (sequence of pairs (source, target))
+      has all the edges of the graph
+
+
+
+   .. py:method:: load_graph()
+
+      Load graph from dictionary representation into NetworkX DiGraph.
+
+      Creates a directed graph from the graph_dict, handling node and edge attributes.
+      Also creates node mapping if node IDs need renumbering.
+
+
+
+   .. py:method:: visualise(*args, **kwargs)
+
+      Visualize the graph using matplotlib and networkx.
+
+      Creates a visualization of the graph with nodes and edges labeled with utterances.
+      Uses pygraphviz layout if available, falls back to kamada_kawai_layout.
+
+
+
+   .. py:method:: visualise_short(name, *args, **kwargs)
+
+      Create a compact visualization of the graph.
+
+      :param name: Title for the visualization.
+      :type name: str
+      :param \*args: Variable length argument list.
+      :param \*\*kwargs: Arbitrary keyword arguments.
+
+      Creates a simplified visualization showing only node IDs and utterance counts.
+
+
+
+   .. py:method:: find_nodes_by_utterance(utterance: str) -> list[dict]
+
+      Find nodes containing a specific utterance.
+
+      :param utterance: The utterance to search for.
+      :type utterance: str
+
+      :returns: List of nodes containing the utterance.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: find_edges_by_utterance(utterance: str) -> list[dict]
+
+      Find edges containing a specific utterance.
+
+      :param utterance: The utterance to search for.
+      :type utterance: str
+
+      :returns: List of edges containing the utterance.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: get_nodes_by_id(id: int)
+
+      Retrieve a node by its ID.
+
+      :param id: The ID of the node to retrieve.
+      :type id: int
+
+      :returns: The node with the specified ID if found, None otherwise.
+      :rtype: dict
+
+
+
+   .. py:method:: get_edges_by_source(id: int)
+
+      Get all edges originating from a specific node.
+
+      :param id: The ID of the source node.
+      :type id: int
+
+      :returns: List of edges with the specified source node.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: get_edges_by_target(id: int)
+
+      Get all edges targeting a specific node.
+
+      :param id: The ID of the target node.
+      :type id: int
+
+      :returns: List of edges with the specified target node.
+      :rtype: list[dict]
+
+
+
+   .. py:method:: match_edges_nodes() -> bool
+
+      Verify that all edge endpoints correspond to existing nodes.
+
+      :returns: True if all edge endpoints match existing nodes, False otherwise.
+      :rtype: bool
+
+
+
+   .. py:method:: remove_duplicated_edges() -> BaseGraph
+
+      Remove duplicate edges between the same node pairs.
+
+      Combines utterances from duplicate edges into a single edge.
+
+      :returns: New graph instance with duplicate edges removed.
+      :rtype: BaseGraph
+
+
+
+   .. py:method:: remove_duplicated_nodes() -> BaseGraph | None
+
+      Remove duplicate nodes based on their utterances.
+
+      :returns:
+
+                New graph instance with duplicate nodes removed,
+                                or None if invalid state is detected.
+      :rtype: BaseGraph | None
+
+
+
+   .. py:method:: get_all_paths(start_node_id: int, visited_nodes: list[int], repeats_limit: int) -> list[list[int]]
+
+      Find all possible paths in the graph from a starting node.
+
+      :param start_node_id: ID of the starting node.
+      :type start_node_id: int
+      :param visited_nodes: List of nodes already visited in the current path.
+      :type visited_nodes: list[int]
+      :param repeats_limit: Maximum number of times a sequence can repeat.
+      :type repeats_limit: int
+
+      :returns: List of all valid paths found.
+      :rtype: list[list[int]]
+
+
+
+   .. py:method:: find_paths(start_node_id: int, end_node_id: int, visited_nodes: list[int]) -> list[list[int]]
+
+      Find all paths between two nodes in the graph.
+
+      :param start_node_id: ID of the starting node.
+      :type start_node_id: int
+      :param end_node_id: ID of the target node.
+      :type end_node_id: int
+      :param visited_nodes: List of nodes already visited.
+      :type visited_nodes: list[int]
+
+      :returns: List of all paths found between start and end nodes.
+      :rtype: list[list[int]]
+
+
+
+   .. py:method:: get_ends() -> list[int]
+
+      Find all terminal nodes in the graph.
+
+      Terminal nodes are those with no outgoing edges.
+
+      :returns: List of IDs of terminal nodes.
+      :rtype: list[int]
+
+
+
+   .. py:method:: get_list_from_nodes() -> list[str]
+
+      Create a list of concatenated utterances from all nodes.
+
+      :returns: List where each element is the concatenated utterances of a node.
+      :rtype: list[str]
+
+
+
+   .. py:method:: get_list_from_graph() -> tuple[list[str], int]
+
+      Create a list of concatenated utterances from nodes and their edges.
+
+      :returns:
+
+                Tuple containing:
+                    - list of concatenated utterances
+                    - total number of utterances in edges
+      :rtype: tuple[list[str], int]
+
+
+
+.. py:class:: CompareResponse(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   LLM Response of comparison between two graphs
+   .. attribute:: value
+
+      Whether two graphs are equal
+
+   .. attribute:: description
+
+      Explanation of the comparison
+
+
+   .. py:attribute:: value
+      :type:  bool
+      :value: None
+
+
+
+   .. py:attribute:: description
+      :type:  str
+      :value: None
+
+
+
+.. py:data:: PreDGEvalBase
+
+.. py:data:: DGEvalBase
+
+.. py:data:: DGReportType
+
+.. py:function:: compare_graphs_light(graph: dialog2graph.pipelines.core.graph.Graph, data: dialog2graph.pipelines.helpers.parse_data.PipelineDataType) -> bool
+
+   Compares a generated Graph with the true Graph using two metrics:
+
+   1. `match_dg_triplets`: checks if the generated graph matches the triplets from the dialogs.
+   2. `is_same_structure`: checks if the generated graph has the same structure as the true graph.
+
+   :param graph: The generated graph to compare with the true graph.
+   :type graph: Graph
+   :param data: Contains the true graph and the dialogs.
+   :type data: PipelineDataType
+
+   :returns: True if both metrics return True, False otherwise.
+   :rtype: bool
+
+
+.. py:function:: compare_graphs_full(model: langchain_community.embeddings.HuggingFaceInferenceAPIEmbeddings | langchain_huggingface.HuggingFaceEmbeddings, graph: dialog2graph.pipelines.core.graph.Graph, data: dialog2graph.pipelines.helpers.parse_data.PipelineDataType) -> dialog2graph.pipelines.core.schemas.CompareResponse
+
+   Compares a generated Graph with the true Graph using the triplet comparison metric.
+
+   :param model: The model to use for computing the embeddings.
+   :type model: HuggingFaceEmbeddings
+   :param graph: The generated graph to compare with the true graph.
+   :type graph: Graph
+   :param data: Contains the true graph and the dialogs.
+   :type data: PipelineDataType
+
+   :returns: A dictionary with a "value" key that is True if the graphs match, and a "description" key with a description of the comparison result.
+   :rtype: CompareResponse
+
+

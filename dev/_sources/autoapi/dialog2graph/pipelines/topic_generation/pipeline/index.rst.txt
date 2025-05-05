@@ -1,0 +1,89 @@
+dialog2graph.pipelines.topic_generation.pipeline
+================================================
+
+.. py:module:: dialog2graph.pipelines.topic_generation.pipeline
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.pipelines.topic_generation.pipeline.TopicGenerationPipeline
+
+
+Module Contents
+---------------
+
+.. py:class:: TopicGenerationPipeline(model_storage: dialog2graph.pipelines.model_storage.ModelStorage, generation_llm: str = 'looped_graph_generation_llm:v1', validation_llm: str = 'looped_graph_validation_llm:v1', cycle_ends_llm: str = 'looped_graph_cycle_ends_llm:v1', theme_validation_llm: str = 'looped_graph_theme_validation_llm:v1')
+
+   Bases: :py:obj:`dialog2graph.pipelines.core.pipeline.BasePipeline`
+
+
+   Pipeline for generating dialog graph based on a given topic.
+
+   This pipeline utilizes multiple language models (LLMs) for topic generation,
+   validation, and theme validation. If the specified models are not present
+   in the provided model storage, default configurations are added.
+
+   .. attribute:: model_storage
+
+      The storage object containing available models.
+
+      :type: ModelStorage
+
+   .. attribute:: generation_llm
+
+      Key for the LLM used for topic generation. Defaults to "looped_graph_generation_llm:v1".
+
+      :type: str
+
+   .. attribute:: validation_llm
+
+      Key for the LLM used for validation. Defaults to "looped_graph_validation_llm:v1".
+
+      :type: str
+
+   .. attribute:: cycle_ends_llm
+
+      Key for the LLM for dialog sampler to find cycle ends. Defaults to "looped_graph_cycle_ends_llm:v1.
+
+      :type: str
+
+   .. attribute:: theme_validation_llm
+
+      Key for the LLM used for theme validation. Defaults to "looped_graph_theme_validation_llm:v1".
+
+      :type: str
+
+   .. method:: invoke(topic
+
+      str, output_path: str):
+      Executes the pipeline for a given topic and saves the output to the specified path.
+      
+      :param topic: The topic for which the dialog graph is generated.
+      :type topic: str
+      :param output_path: The file path where the output will be saved.
+      :type output_path: str
+      
+      :returns: The generated output from the pipeline.
+      :rtype: dict
+      
+
+
+   .. py:method:: invoke(topic: str, output_path: str) -> Tuple[dialog2graph.pipelines.core.graph.Graph, dialog2graph.pipelines.report.PipelineReport]
+
+      Executes a series of steps to process a given topic and saves the output graph to a specified file.
+
+      :param topic: The topic to be processed by the pipeline steps.
+      :type topic: str
+      :param output_path: The JSON file path where the graph will be saved.
+      :type output_path: str
+
+      :returns: A tuple containing the generated graph and a pipeline report.
+      :rtype: Tuple[Graph, PipelineReport]
+
+      :raises OSError: If there is an issue creating directories or writing to the output file.
+
+
+

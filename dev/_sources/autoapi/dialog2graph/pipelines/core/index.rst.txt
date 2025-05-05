@@ -1,0 +1,133 @@
+dialog2graph.pipelines.core
+===========================
+
+.. py:module:: dialog2graph.pipelines.core
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialog2graph/pipelines/core/algorithms/index
+   /autoapi/dialog2graph/pipelines/core/d2g_generator/index
+   /autoapi/dialog2graph/pipelines/core/dialog/index
+   /autoapi/dialog2graph/pipelines/core/dialog_sampling/index
+   /autoapi/dialog2graph/pipelines/core/graph/index
+   /autoapi/dialog2graph/pipelines/core/pipeline/index
+   /autoapi/dialog2graph/pipelines/core/prompt_loader/index
+   /autoapi/dialog2graph/pipelines/core/schemas/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.pipelines.core.RecursiveDialogSampler
+   dialog2graph.pipelines.core.BasePipeline
+
+
+Package Contents
+----------------
+
+.. py:class:: RecursiveDialogSampler
+
+   Bases: :py:obj:`dialog2graph.pipelines.core.algorithms.DialogGenerator`
+
+
+   Recursive dialog sampler for the graph
+
+
+   .. py:method:: invoke(graph: dialog2graph.pipelines.core.graph.BaseGraph, cycle_ends_model: langchain_core.language_models.chat_models.BaseChatModel, upper_limit: int, sampling_max: int = 5000000) -> list[dialog2graph.pipelines.core.dialog.Dialog]
+
+      Extract all the dialogs from the graph
+
+      :param graph: used to extract dialogs from it
+      :param cycle_ends_model: LLM(BaseChatModel) to find cycling ends of the graph
+      :param upper_limit: limits from above repeats_limit used in recursive get_dialogs method
+      :param sampling_max: maximum number of found dialogs
+
+      :returns: list of dialogs
+
+      :raises ValueError: "Not all utterances present" if match_dg_triplets returns False
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+
+   .. py:method:: evaluate(graph, upper_limit, target_dialogs, report_type=Literal['dict', 'dataframe'])
+      :async:
+
+
+
+.. py:class:: BasePipeline(/, **data: Any)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Base class for pipelines
+   .. attribute:: model_storage
+
+      An object to manage and store models used in the pipeline.
+
+      :type: ModelStorage
+
+   .. attribute:: sim_model
+
+      The key for the similarity embedder model in the model storage.
+
+      :type: str
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: sim_model
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: name
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: steps
+      :type:  list[Union[dialog2graph.pipelines.core.algorithms.DialogGenerator, dialog2graph.pipelines.core.algorithms.DialogAugmentation, dialog2graph.pipelines.core.algorithms.GraphGenerator, dialog2graph.pipelines.core.algorithms.GraphExtender]]
+      :value: None
+
+
+
+   .. py:method:: invoke(raw_data: dialog2graph.pipelines.helpers.parse_data.PipelineRawDataType, enable_evals=False) -> Tuple[Any, dialog2graph.pipelines.report.PipelineReport]
+
+      Invoke the pipeline to process the raw data and generate a report.
+
+      This method processes the given raw data through each step in the pipeline,
+      generating both output data (result of the pipeline) and a report detailing the pipeline's execution.
+      It measures execution time, performs simple graph comparisons, and optionally
+      evaluates the results with more detailed comparisons.
+
+      :param raw_data: The raw input data to be processed by the pipeline.
+      :type raw_data: PipelineRawDataType
+      :param enable_evals: If True, performs additional evaluations
+                           and adds more detailed comparisons to the report.
+      :type enable_evals: bool, optional
+
+      :returns:
+
+                A tuple containing the final output of the pipeline
+                                            and a detailed report of the pipeline's execution.
+      :rtype: Tuple[Any, PipelineReport]
+
+
+

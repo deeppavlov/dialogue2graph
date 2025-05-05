@@ -1,0 +1,147 @@
+dialog2graph.datasets
+=====================
+
+.. py:module:: dialog2graph.datasets
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/dialog2graph/datasets/augment_dialogs/index
+   /autoapi/dialog2graph/datasets/complex_dialogs/index
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.datasets.CycleGraphGenerator
+   dialog2graph.datasets.DialogAugmenter
+
+
+Package Contents
+----------------
+
+.. py:class:: CycleGraphGenerator(**data)
+
+   Bases: :py:obj:`pydantic.BaseModel`
+
+
+   Class for generating graph with cycles
+   .. attribute:: cache
+
+      Caching mechanism
+
+   .. attribute:: model_storage
+
+      Storage for models
+
+
+   .. py:attribute:: cache
+      :type:  Optional[Any]
+      :value: None
+
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:class:: Config
+
+      .. py:attribute:: arbitrary_types_allowed
+         :value: True
+
+
+
+      .. py:attribute:: extra
+         :value: 'allow'
+
+
+
+
+   .. py:method:: invoke(generation_llm: str, prompt: langchain.prompts.PromptTemplate, seed=None, **kwargs) -> dialog2graph.pipelines.core.graph.BaseGraph
+
+      Generate a cyclic dialog graph based on the topic input.
+      :param generation_llm: Name of the model to use for graph generation.
+      :param prompt: Prompt to use for graph generation.
+      :param seed: Seed for the generation.
+      :param kwargs: Additional arguments for the prompt.
+
+      :returns: Dialog graph.
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+      Async version of invoke - to be implemented
+
+
+
+   .. py:method:: evaluate(*args, report_type='dict', **kwargs)
+
+
+.. py:class:: DialogAugmenter(/, **data: Any)
+
+   Bases: :py:obj:`dialog2graph.pipelines.core.algorithms.DialogAugmentation`
+
+
+   Class for dialog augmentation.
+
+   Augments dialogs while preserving structure and conversation flow by rephrasing original dialog lines.
+
+
+   .. py:attribute:: model_storage
+      :type:  dialog2graph.pipelines.model_storage.ModelStorage
+      :value: None
+
+
+
+   .. py:attribute:: generation_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:attribute:: formatting_llm
+      :type:  str
+      :value: None
+
+
+
+   .. py:method:: invoke(dialog: dialog2graph.pipelines.core.dialog.Dialog, prompt: str, topic: str = '') -> Union[list[dialog2graph.pipelines.core.dialog.Dialog], str]
+
+      Augment dialog while preserving conversation structure.
+
+      :param dialog: Input Dialog object to augment
+      :param prompt: Required augmentation prompt template
+      :param topic: Contextual topic for augmentation (default: empty)
+
+      :returns: List of augmented Dialog objects or error message
+
+
+
+   .. py:method:: ainvoke(*args, **kwargs)
+      :async:
+
+
+      Async version of invoke
+
+
+
+   .. py:method:: evaluate(dialog: dialog2graph.pipelines.core.dialog.Dialog, prompt: str, topic: str = '') -> dict
+      :async:
+
+
+      Evaluate augmentation quality with dictionary report format.
+
+
+

@@ -1,0 +1,254 @@
+dialog2graph.metrics.no_llm_metrics.metrics
+===========================================
+
+.. py:module:: dialog2graph.metrics.no_llm_metrics.metrics
+
+.. autoapi-nested-parse::
+
+   Automatic Metrics.
+   ------------------
+
+   The module contains functions that automatically (without using LLMs) check Graphs and Dialogs
+   for various metrics.
+
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.no_llm_metrics.metrics.logger
+   dialog2graph.metrics.no_llm_metrics.metrics.logger
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.no_llm_metrics.metrics.AbsentTriplet
+   dialog2graph.metrics.no_llm_metrics.metrics.DGTripletsMatchResult
+   dialog2graph.metrics.no_llm_metrics.metrics.InvalidDialogTransition
+   dialog2graph.metrics.no_llm_metrics.metrics.DialogValidationResult
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.no_llm_metrics.metrics.match_graph_triplets
+   dialog2graph.metrics.no_llm_metrics.metrics.is_same_structure
+   dialog2graph.metrics.no_llm_metrics.metrics.match_dialog_triplets
+   dialog2graph.metrics.no_llm_metrics.metrics.match_dg_triplets
+   dialog2graph.metrics.no_llm_metrics.metrics.are_paths_valid
+   dialog2graph.metrics.no_llm_metrics.metrics.match_roles
+   dialog2graph.metrics.no_llm_metrics.metrics.is_correct_length
+   dialog2graph.metrics.no_llm_metrics.metrics.are_answers_similar
+   dialog2graph.metrics.no_llm_metrics.metrics.all_utterances_present
+   dialog2graph.metrics.no_llm_metrics.metrics.triplet_match_accuracy
+   dialog2graph.metrics.no_llm_metrics.metrics.compute_graph_metrics
+
+
+Module Contents
+---------------
+
+.. py:data:: logger
+
+.. py:data:: logger
+
+.. py:function:: match_graph_triplets(G1: dialog2graph.pipelines.core.graph.BaseGraph, G2: dialog2graph.pipelines.core.graph.BaseGraph, change_to_original_ids=False)
+
+   Match two graphs (G1 and G2) by:
+     1) Checking isomorphism using NetworkX matchers (depending on whether it's DiGraph or MultiDiGraph).
+     2) Building Jaccard similarity matrices for nodes and edges to refine the mapping.
+     3) Potentially reverting mapped IDs to G1's original numbering if change_to_original_ids=True.
+
+   :returns:     - node_mapping: which node in G1 corresponds to which node in G2
+                 - edge_mapping: which edge in G1 corresponds to which edge in G2
+   :rtype: node_mapping, edge_mapping (dict, dict)
+
+
+.. py:function:: is_same_structure(G1: dialog2graph.pipelines.core.graph.BaseGraph, G2: dialog2graph.pipelines.core.graph.BaseGraph, sim_model=None) -> bool
+
+   Check if graphs are isomorphic.
+
+   :param G1: BaseGraph object containing the dialog graph
+   :param G2: BaseGraph object containing the dialog graph
+
+
+.. py:function:: match_dialog_triplets(s1: list[dialog2graph.pipelines.core.dialog.Dialog], s2: list[dialog2graph.pipelines.core.dialog.Dialog])
+
+   Match triplets of two dialog sequences
+
+
+.. py:class:: AbsentTriplet
+
+   Bases: :py:obj:`TypedDict`
+
+
+   To return absent triplets in DGTripletsMatchResult
+
+
+   .. py:attribute:: source
+      :type:  str
+
+
+   .. py:attribute:: edge
+      :type:  str
+
+
+   .. py:attribute:: target
+      :type:  str
+
+
+   .. py:method:: from_tuple(triplet: tuple[str]) -> AbsentTriplet
+      :classmethod:
+
+
+      Create AbsentTriplet from a tuple
+
+
+
+.. py:class:: DGTripletsMatchResult
+
+   Bases: :py:obj:`TypedDict`
+
+
+   To return result of matching triplets between graph and dialogs
+
+
+   .. py:attribute:: value
+      :type:  bool
+
+
+   .. py:attribute:: description
+      :type:  Optional[str]
+
+
+   .. py:attribute:: absent_triplets
+      :type:  Optional[List[AbsentTriplet]]
+
+
+.. py:function:: match_dg_triplets(G: dialog2graph.pipelines.core.graph.BaseGraph, dialogs: list[dialog2graph.pipelines.core.dialog.Dialog]) -> DGTripletsMatchResult
+
+   Check if all graph triplets match triplets in set of dialogs.
+
+   :param G: BaseGraph object containing the dialog graph
+   :param dialogs: List of Dialog objects to check against
+
+
+.. py:class:: InvalidDialogTransition
+
+   Bases: :py:obj:`TypedDict`
+
+
+   To return invalid dialog transition in DialogValidationResult
+
+
+   .. py:attribute:: from_message
+      :type:  str
+
+
+   .. py:attribute:: to_message
+      :type:  str
+
+
+   .. py:attribute:: dialog_id
+      :type:  str
+
+
+.. py:class:: DialogValidationResult
+
+   Bases: :py:obj:`TypedDict`
+
+
+   To return result of dialogs_are_valid_paths
+
+
+   .. py:attribute:: value
+      :type:  bool
+
+
+   .. py:attribute:: invalid_transitions
+      :type:  Optional[List[InvalidDialogTransition]]
+
+
+.. py:function:: are_paths_valid(G: dialog2graph.pipelines.core.graph.BaseGraph, dialogs: list[dialog2graph.pipelines.core.dialog.Dialog]) -> DialogValidationResult
+
+   Check if all dialogs are valid paths in the graph.
+
+   :param G: BaseGraph object containing the dialog graph
+   :param dialogs: List of Dialog objects to check against
+
+   :returns: for every dialog {"value": bool, "description": "description with dialog_id and list of pairs when there is no connection from one message to another"}
+   :rtype: list
+
+
+.. py:function:: match_roles(D1: dialog2graph.pipelines.core.dialog.Dialog, D2: dialog2graph.pipelines.core.dialog.Dialog) -> bool
+
+   Check if two dialogs have identical participant roles in each turn.
+
+   :returns: True if they match in every turn, otherwise False.
+
+
+.. py:function:: is_correct_length(D1: dialog2graph.pipelines.core.dialog.Dialog, D2: dialog2graph.pipelines.core.dialog.Dialog) -> bool
+
+   Check if two dialogs have the same number of messages.
+
+   :returns: True if lengths are equal, False otherwise.
+
+
+.. py:function:: are_answers_similar(D1: dialog2graph.pipelines.core.dialog.Dialog, D2: dialog2graph.pipelines.core.dialog.Dialog, model, threshold: float) -> bool
+
+   Placeholder for any advanced similarity check between the dialogs' answers.
+   Not implemented.
+
+
+.. py:function:: all_utterances_present(G: dialog2graph.pipelines.core.graph.BaseGraph, dialogs: List[dialog2graph.pipelines.core.dialog.Dialog])
+
+   Check whether every utterance in the graph (both from nodes and edges)
+   appears at least once in the provided dialogs.
+
+   :returns: True if all graph utterances are found within the dialogs, otherwise returns the set of missing utterances.
+
+
+.. py:function:: triplet_match_accuracy(G1: dialog2graph.pipelines.core.graph.BaseGraph, G2: dialog2graph.pipelines.core.graph.BaseGraph, change_to_original_ids: bool = False) -> dict
+
+   Calculate a simple accuracy metric for node and edge matching based on 'match_graph_triplets'.
+
+   :returns:
+
+             {
+                 "node_accuracy": fraction_of_matched_nodes_in_G1,
+                 "edge_accuracy": fraction_of_matched_edges_in_G1
+             }
+
+
+.. py:function:: compute_graph_metrics(graph_list: List[dialog2graph.pipelines.core.graph.BaseGraph]) -> dict
+
+   Compute various statistics across a list of Graph objects,
+   where each Graph has a 'graph_dict' containing 'edges' and 'nodes'.
+
+   Expects each element in 'graph_list' to be something like:
+       Graph(
+           graph_dict={
+               "edges": [...],
+               "nodes": [...]
+           },
+           graph=<networkx graph object>,
+           node_mapping={}
+       )
+
+   :returns: a dictionary with the following keys:
+             - "with_cycles" (int): How many of the graphs contain at least one cycle.
+             - "percentage_with_cycles" (float): Percentage of graphs that have a cycle, out of all.
+             - "average_edges_amount" (float): Average number of edges per graph.
+             - "average_nodes_amount" (float): Average number of nodes per graph.
+             - "total_graphs" (int): Total number of graphs processed.
+             - "total_edges" (int): Sum of edges across all graphs.
+             - "total_nodes" (int): Sum of nodes across all graphs.
+   :rtype: dict
+
+

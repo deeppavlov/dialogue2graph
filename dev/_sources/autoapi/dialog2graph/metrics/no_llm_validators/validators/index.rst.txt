@@ -1,0 +1,52 @@
+dialog2graph.metrics.no_llm_validators.validators
+=================================================
+
+.. py:module:: dialog2graph.metrics.no_llm_validators.validators
+
+.. autoapi-nested-parse::
+
+   Validators
+   --------------------------
+
+   The module contains validators to evaluate dialogs with regular expressions.
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.no_llm_validators.validators.is_greeting_repeated_regex
+   dialog2graph.metrics.no_llm_validators.validators.is_dialog_closed_too_early_regex
+
+
+Module Contents
+---------------
+
+.. py:function:: is_greeting_repeated_regex(dialogs: List[dialog2graph.pipelines.core.dialog.Dialog], regex: str = None) -> bool
+
+   Check if greeting is repeated within dialogs using regular expression.
+
+   :param dialogs: Dialog list from graph.
+   :type dialogs: List[Dialog]
+   :param regex: Regular expression to find start turns. Defaults to None, so standard regex is used.
+   :type regex: str
+
+   Returns
+       bool: True if greeting has been repeated, False otherwise.
+
+
+.. py:function:: is_dialog_closed_too_early_regex(dialogs: List[dialog2graph.pipelines.core.dialog.Dialog], regex: str = None) -> bool
+
+   Check if assistant tried to close dialog in the middle using regular expression.
+
+   :param dialogs: Dialog list from graph.
+   :type dialogs: List[Dialog]
+   :param regex: Regular expression to find end turns. Defaults to None, so standard regex is used.
+   :type regex: str
+
+   Returns
+       bool: True if closing appeared too early, False otherwise.
+
+

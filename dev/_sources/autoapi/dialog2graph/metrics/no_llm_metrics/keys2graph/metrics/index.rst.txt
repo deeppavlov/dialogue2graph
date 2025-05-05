@@ -1,0 +1,63 @@
+dialog2graph.metrics.no_llm_metrics.keys2graph.metrics
+======================================================
+
+.. py:module:: dialog2graph.metrics.no_llm_metrics.keys2graph.metrics
+
+.. autoapi-nested-parse::
+
+   Automatic Metrics (no LLM).
+   ---------------------------
+   Functions that check Graphs and Dialogs with direct string matching
+   (Jaccard-based or isomorphism-based).
+
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics.match_graph_triplets
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics.is_same_structure
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics.match_triplets_dg
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics.are_paths_valid
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics.triplet_match_accuracy
+   dialog2graph.metrics.no_llm_metrics.keys2graph.metrics.compute_graph_metrics
+
+
+Module Contents
+---------------
+
+.. py:function:: match_graph_triplets(G1: Any, G2: Any, change_to_original_ids=False)
+
+   Attempts to match two graphs (G1, G2) using a combination of isomorphism checks and
+   Jaccard-based utterance similarity for edges/nodes.
+   Return node_mapping, edge_mapping
+
+
+.. py:function:: is_same_structure(G1: Any, G2: Any) -> bool
+
+.. py:function:: match_triplets_dg(G1: Any, dialogs: List[Any]) -> Dict[str, Any]
+
+   Check if all triplets from dialogs are present in G1 or vice versa.
+   Very simplified approach (from user snippet).
+   Here we just return a dummy result for demonstration.
+
+
+.. py:function:: are_paths_valid(G1: Any, dialogs: List[Any]) -> Dict[str, Any]
+
+   Check if dialogs form valid paths in G1.
+   Very simplified approach from snippet.
+
+
+.. py:function:: triplet_match_accuracy(G1: Any, G2: Any, change_to_original_ids: bool = False) -> Dict[str, float]
+
+   Basic example: use match_graph_triplets to count matched nodes/edges
+   and produce an accuracy dict.
+
+
+.. py:function:: compute_graph_metrics(graph_list: List[Any]) -> Dict[str, float]
+
+   Example function that checks for cycles, counts edges/nodes, etc.
+
+
