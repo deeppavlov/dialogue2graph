@@ -5,12 +5,14 @@ Graph
 The module contains base class for graphs.
 """
 
+import abc
+import yaml
+from typing import Optional, Any
 from datetime import datetime
+
 import networkx as nx
 from pydantic import BaseModel
-from typing import Optional, Any
 import matplotlib.pyplot as plt
-import abc
 
 from dialog2graph.utils.logger import Logger
 
@@ -142,12 +144,27 @@ class Graph(BaseGraph):
     def _is_seq_in(self, a: list, b: list) -> bool:
         """Check if sequence a exists within sequence b."""
         return any(map(lambda x: b[x : x + len(a)] == a, range(len(b) - len(a) + 1)))
-    
+
     def export(self, file_path: str, export_config: Optional[dict] = None):
         """
         Export the graph to a YAML file compatible with Chatsky.
         """
-        pass
+        script = {"main_flow": {}}
+        for node in self.graph_dict["nodes"]:
+            edges = self.get_edges_by_source(node["id"])
+            script["main_flow"][node["label"]] = {
+                "RESPONSE": node["utterances"],
+                "TRANSITIONS": [
+                    {
+                        "dst": self.get_nodes_by_id(edge["target"])["label"],
+                        "cnd": edge["utterances"],
+                    }
+                    for edge in edges
+                ],
+            }
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            yaml.dump(script, f, allow_unicode=True)
 
     def check_edges(self, seq: list[list[int]]) -> bool:
         """Checks whether seq (sequence of pairs (source, target))
