@@ -3,16 +3,16 @@
 Learn dialog2graph CLI interface
 ================================
 
-Dialog2graph has CLI interface that allows you several actions.
+Dialog2graph has CLI interface that allows you several generation actions. Below are listed all possible commands and its arguments.
 
 +----------------------------------------------------------+------------------+------------------+-----------------------------+
 |Action                                                    |Command name      |Options           |Option description           |
 +==========================================================+==================+==================+=============================+
-|**Generate dialog data for a given topic**              |gen_data          | \-\-env, \-e     |Path to .env file            |
+|**Generate dialog data for a given topic**                |gen_data          | \-\-env, \-e     |Path to .env file            |
 +----------------------------------------------------------+------------------+------------------+-----------------------------+
 |                                                          |                  | \-\-cfg, \-c     |Path to cfg.yml file         |
 +----------------------------------------------------------+------------------+------------------+-----------------------------+
-|                                                          |                  | \-\-topic, \-t   |Topic for dialog generation|
+|                                                          |                  | \-\-topic, \-t   |Topic for dialog generation  |
 +----------------------------------------------------------+------------------+------------------+-----------------------------+
 |                                                          |                  | \-\-output, \-o  |Output file path             |
 +----------------------------------------------------------+------------------+------------------+-----------------------------+
