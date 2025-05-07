@@ -76,7 +76,9 @@ poetry init
 
 ### Docstrings
 Use this Google style docstrings format:
+
 https://www.sphinx-doc.org/en/master/usage/extensions/example_google.html
+
 Example from Dialog2graph:
 ```python
 class ModelStorage(BaseModel):
