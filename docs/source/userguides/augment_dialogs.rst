@@ -1,10 +1,10 @@
-:tutorial_name: dialog_augmentation/dialog_augmentation_example.ipynb
+:tutorial_name: dialog_augmentation/dialogue_augmentation_example.ipynb
 
 Generate augmented dialogs on one given dialog
 ==================================================
 
-Use :py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter` to augment an original dialog by paraphrasing 
-its lines while maintaining the structure and flow of the conversation.
+:py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter` is a class used to augment an original dialog by paraphrasing 
+dialog turns while maintaining dialog structure and flow of the conversation.
 
 .. code-block:: python
 
@@ -14,8 +14,9 @@ its lines while maintaining the structure and flow of the conversation.
     from dialog2graph.pipelines.model_storage import ModelStorage
 
 
-1. Create :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` instance and add choosen LLMs for dialog generation (i.e. dialog augmentation) 
-and formatting LLM's output.
+First, LLM models should be configured for further use. So, :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` instance 
+is created to which choosen LLMs are added for dialog generation (i.e. dialog augmentation) 
+and formatting LLM's output. More information on ModelStorage usage may be found :doc:`in this userguide <./generate_graphs>`. 
  
 .. code-block:: python
 
@@ -31,8 +32,11 @@ and formatting LLM's output.
             model_type=ChatOpenAI
         )
 
-2. Create :py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter` instance and use 
-:py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter.invoke` method to get augmented dialogs.
+Then, :py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter` instance is created to use 
+:py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter.invoke` method for getting augmented dialogs. 
+:py:class:`~dialog2graph.datasets.augment_dialogs.augmentation.DialogAugmenter` takes previously created 
+:py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` instance and the names given to models should be leveraged
+for new dialog generation and dialog formatting.
 
 .. code-block:: python
 
