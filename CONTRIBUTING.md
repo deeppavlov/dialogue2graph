@@ -74,6 +74,36 @@ poetry init
 - Include docstrings for functions and classes
 - Write unit tests for new features or bug fixes
 
+### Docstrings
+Use this Google style docstrings format:
+
+https://www.sphinx-doc.org/en/master/usage/extensions/example_google.html
+
+Example from Dialog2graph:
+```python
+class ModelStorage(BaseModel):
+    """
+    ModelStorage is a class for managing the storage of model configurations and instances.
+    It provides functionality to load configurations from a YAML file, add new models to the storage,
+    and save the current storage state back to a YAML file.
+
+    Attributes:
+        storage (Dict[str, StoredData]): A dictionary that holds the stored model configurations
+            and their corresponding instances.
+    """
+
+    storage: Dict[str, StoredData] = Field(default_factory=dict)
+
+    def load(self, path: Path):
+        """
+        Load model configurations from a YAML file into the storage.
+
+        Args:
+            path (str): The file path to the YAML file containing model configurations.
+        """
+        ...
+```
+
 ## Pull Request Format
 
 - Name of your PR (keep it simple yet meaningful)
