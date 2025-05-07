@@ -7,6 +7,7 @@ The module contains base class for graphs.
 
 from datetime import datetime
 import networkx as nx
+import gravis as gv
 from pydantic import BaseModel
 from typing import Optional, Any
 import matplotlib.pyplot as plt
@@ -238,7 +239,7 @@ class Graph(BaseGraph):
         plt.axis("off")
         plt.show()
 
-    def visualise_short(self, name, *args, **kwargs):
+    def visualise_short(self, name="", *args, **kwargs):
         """Create a compact visualization of the graph.
 
         Args:
@@ -284,6 +285,37 @@ class Graph(BaseGraph):
         plt.title(name)
         plt.axis("off")
         plt.show()
+
+    def visualise_interactive(self, *args, **kwargs) -> gv._internal.plotting.data_structures.Figure:
+        
+        """
+        Visualises the graph using interactive visualisation library "gravis".
+        Returns:
+          A figure object representing the interactive graph visualization.
+        """
+        graph = self.graph.copy()
+
+        node_labels = nx.get_node_attributes(graph, "utterances")
+        edge_labels = nx.get_edge_attributes(graph, "utterances")
+
+        for edge_id in graph.edges:
+            edge = graph.edges[edge_id]
+            edge['label'] = len(edge_labels[edge_id])
+            edge['hover'] = edge_labels[edge_id]
+        
+        for node_id in graph.nodes:
+            node = graph.nodes[node_id]
+            node['label'] = f"{node_id}:{len(node_labels[node_id])}"
+            node['hover'] = node_labels[node_id]
+        
+        return gv.vis(
+            graph, show_node_label=True, show_edge_label=True,
+            node_label_data_source='label',
+            edge_label_data_source='label', edge_label_size_factor=1.7,
+            layout_algorithm="hierarchicalRepulsion"
+            )
+
+
 
     def find_nodes_by_utterance(self, utterance: str) -> list[dict]:
         """Find nodes containing a specific utterance.
