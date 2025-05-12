@@ -1,6 +1,6 @@
 :tutorial_name: pipeline_usage/pipeline_example.ipynb
 
-Using Dialog2Graph algorithms
+Learn how to use Dialog2Graph algorithms
 =============================
 
 This guide demonstrates usage of dialog graph generation algorithms in ``dialog2graph``. 
