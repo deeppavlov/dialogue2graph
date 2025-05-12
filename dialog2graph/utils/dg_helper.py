@@ -28,12 +28,19 @@ def connect_nodes(
     """
     edges = []
     node_store = NodeStore(nodes, utt_sim)
+    for idx in range(len(nodes)):
+        nodes[idx]["frequency"] = 0
     for dialog in dialogs:
         turns = dialog.to_list()
         dialog_store = DialogStore(turns, utt_sim)
         for node in nodes:
             for utt in node["utterances"]:
-                ids = dialog_store.search_assistant(utt)
+                ids = dialog_store.search_store(
+                    dialog_store.assistant_store,
+                    dialog_store.assistant_size,
+                    utt
+                    )
+                node["frequency"] += len(ids)
                 if ids:
                     for id, user_utt in zip(ids, dialog_store.get_user_by_id(ids=ids)):
                         if len(turns) > 2 * (int(id) + 1):
@@ -66,6 +73,7 @@ def connect_nodes(
                                                 "utterances"
                                             ]
                                             + [user_utt],
+                                            "frequency": 0
                                         }
                                     )
                             else:
@@ -74,8 +82,17 @@ def connect_nodes(
                                         "source": node["id"],
                                         "target": target,
                                         "utterances": [user_utt],
+                                        "frequency": 0,
                                     }
                                 )
+        for edge in edges:
+            for utt in edge["utterances"]:
+                ids = dialog_store.search_store(
+                    dialog_store.user_store,
+                    dialog_store.user_size,
+                    utt
+                    )
+                edge["frequency"] += len(ids)
     return {"edges": edges, "nodes": nodes}
 
 
