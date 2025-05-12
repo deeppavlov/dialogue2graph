@@ -216,7 +216,8 @@ def remove_duplicated_paths(node_paths: list[list[int]]) -> list[list[int]]:
 
 
 def get_dialog_triplets(seq: list[list[dict]]) -> set[tuple[str]]:
-    """Find all dialog triplets with (source, edge, target) utterances
+    """Get all dialog triplets with (source, edge, target) utterances
+       from sequence of dialogs
 
     Args:
         seq: sequence of dialogs

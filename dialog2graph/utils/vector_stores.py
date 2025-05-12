@@ -17,15 +17,17 @@ class DialogStore:
     User and assistant utterances vectorized separately
 
     Attributes:
-      _assistant_store: store for assistant utterances
-      _user_store: store for user utterances
-      _assistant_size: number of assistant utterances
+      assistant_store: store for assistant utterances
+      user_store: store for user utterances
+      assistant_size: number of assistant utterances
+      user_size: number of user utterances
       _score_threshold: simlarity threshold
     """
 
-    _assistant_store: Chroma
-    _user_store: Chroma
-    _assistant_size: int
+    assistant_store: Chroma
+    user_store: Chroma
+    assistant_size: int
+    user_size: int
     _score_threshold: int
 
     def _load_dialog(
@@ -39,10 +41,10 @@ class DialogStore:
           dialog: list of dicts in a form {"participant": "user" or "assistant", "text": text}
           embedder: embedding function for vector store
         """
-        self._assistant_store = Chroma(
+        self.assistant_store = Chroma(
             collection_name=str(uuid.uuid4()), embedding_function=embedder
         )
-        self._user_store = Chroma(
+        self.user_store = Chroma(
             collection_name=str(uuid.uuid4()), embedding_function=embedder
         )
         assistant_docs = [
@@ -53,11 +55,12 @@ class DialogStore:
         ]
         user_docs = [
             Document(page_content=turn["text"].lower(), id=id, metadata={"id": id})
-            for id, turn in enumerate(d for d in dialog if d["participant"] == "user")
+            for id, turn in enumerate([d for d in dialog if d["participant"] == "user"])
         ]
-        self._assistant_size = len(assistant_docs)
-        self._assistant_store.add_documents(documents=assistant_docs)
-        self._user_store.add_documents(documents=user_docs)
+        self.assistant_size = len(assistant_docs)
+        self.user_size = len(user_docs)
+        self.assistant_store.add_documents(documents=assistant_docs)
+        self.user_store.add_documents(documents=user_docs)
 
     def __init__(
         self,
@@ -75,17 +78,20 @@ class DialogStore:
         self._score_threshold = score_threshold
         self._load_dialog(dialog, embedder)
 
-    def search_assistant(self, utterance) -> list[str]:
-        """Search for utterance over assistant store
+    def search_store(self, store: Chroma, size: int, utterance: str) -> list[str]:
+        """Search for utterance over store
 
         Args:
+          store: Chroma store
+          size: size of the store
           utterance: utterance to search for
         Returns:
-          list of found documents ids of assistant store
+          list of found documents ids
         """
-        docs = self._assistant_store.similarity_search_with_relevance_scores(
+
+        docs = store.similarity_search_with_relevance_scores(
             utterance.lower(),
-            k=self._assistant_size,
+            k=size,
             score_threshold=self._score_threshold,
         )
         res = [d[0].metadata["id"] for d in docs]
@@ -93,6 +99,7 @@ class DialogStore:
         res = [str(r) for r in res]
 
         return res
+
 
     def get_user_by_id(self, ids: list[str]) -> list[str]:
         """Get utterances of user with ids
@@ -102,7 +109,7 @@ class DialogStore:
         Returns:
           list of utterances
         """
-        res = self._user_store.get(ids=ids)["documents"]
+        res = self.user_store.get(ids=ids)["documents"]
         return res
 
 

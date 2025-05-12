@@ -7,10 +7,12 @@ The module contains base class for graphs.
 
 from datetime import datetime
 import networkx as nx
+import gravis as gv
 from pydantic import BaseModel
 from typing import Optional, Any
 import matplotlib.pyplot as plt
 import abc
+import colorsys
 
 from dialog2graph.utils.logger import Logger
 
@@ -238,7 +240,7 @@ class Graph(BaseGraph):
         plt.axis("off")
         plt.show()
 
-    def visualise_short(self, name, *args, **kwargs):
+    def visualise_short(self, name="", *args, **kwargs):
         """Create a compact visualization of the graph.
 
         Args:
@@ -251,7 +253,7 @@ class Graph(BaseGraph):
         try:
             pos = nx.nx_agraph.pygraphviz_layout(self.graph)
         except ImportError as e:
-            pos = nx.kamada_kawai_layout(self.graph)
+            pos = nx.spring_layout(self.graph)
             logger.warning(
                 f"{e}.\nInstall pygraphviz from http://pygraphviz.github.io/ .\nFalling back to default layout."
             )
@@ -284,6 +286,56 @@ class Graph(BaseGraph):
         plt.title(name)
         plt.axis("off")
         plt.show()
+
+    def visualise_interactive(self, *args, **kwargs) -> gv._internal.plotting.data_structures.Figure:
+        
+        """
+        Visualises the graph using interactive visualisation library "gravis".
+            
+        Returns:
+          A figure object representing the interactive graph visualization.
+        """
+        graph = {"graph": {}}
+        if "frequency" in self.graph_dict["nodes"][0]:
+            node_rgb = [colorsys.hsv_to_rgb(1/node["frequency"]/2, 1.0, 1.0) for node in self.graph_dict["nodes"]]
+            node_colors = ["#%02x%02x%02x" % tuple([round(255*x) for x in rgb]) for rgb in node_rgb]
+            node_frequency = [node["frequency"] for node in self.graph_dict["nodes"]]
+        else:
+            node_colors = ["#000000"]*len(self.graph_dict["nodes"])
+            node_frequency = [0]*len(self.graph_dict["nodes"])
+        if "frequency" in self.graph_dict["edges"][0]:
+            edge_rgb = [colorsys.hsv_to_rgb(1/node["frequency"]/2, 1.0, 1.0) for node in self.graph_dict["edges"]]
+            edge_colors = ["#%02x%02x%02x" % tuple([round(255*x) for x in rgb]) for rgb in edge_rgb]
+            edge_frequency = [edge["frequency"] for edge in self.graph_dict["edges"]]
+        else:
+            edge_colors = ["#000000"]*len(self.graph_dict["edges"])
+            edge_frequency = [0]*len(self.graph_dict["edges"])
+
+        graph["graph"]["nodes"] = {
+            str(node["id"]): {
+                "label": f"{node['id']}:{len(node['utterances'])}",
+                "metadata": {
+                    "hover": f"frequency: {node_frequency[idx]}\n" + '\n'.join([str(i+1)+": "+ node["utterances"][i] for i in range(len(node["utterances"]))]),
+                    "color": node_colors[idx]
+                    }
+                } for idx, node in enumerate(self.graph_dict["nodes"])
+            }
+        graph["graph"]["edges"] = [{"source": str(e["source"]),
+                                "target": str(e["target"]),
+                                "label": len(e["utterances"]),
+                                "metadata": {
+                                "hover": f"frequency: {edge_frequency[idx]}\n" + '\n'.join([str(i+1)+": "+ e["utterances"][i] for i in range(len(e["utterances"]))]),
+                                "color": edge_colors[idx]
+                                }
+                                } for idx, e in enumerate(self.graph_dict["edges"])]
+        return gv.vis(
+            graph, show_node_label=True, show_edge_label=True,
+            node_label_data_source='label',
+            edge_label_data_source='label', edge_label_size_factor=1.7,
+            layout_algorithm="hierarchicalRepulsion",
+            )
+
+
 
     def find_nodes_by_utterance(self, utterance: str) -> list[dict]:
         """Find nodes containing a specific utterance.

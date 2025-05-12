@@ -113,6 +113,7 @@ def test_d2g_pipeline(pipeline: BasePipeline) -> bool:
         # Parse the raw data
         raw_data = PipelineRawDataType(dialogs=dialogs, true_graph=graph)
         report = pipeline.invoke(raw_data, enable_evals=True)[1].model_dump()
+
         # Extract the duration and similarity from the report
         new_summary.append(
             {
