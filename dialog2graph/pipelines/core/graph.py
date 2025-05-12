@@ -297,14 +297,14 @@ class Graph(BaseGraph):
         """
         graph = {"graph": {}}
         if "frequency" in self.graph_dict["nodes"][0]:
-            node_rgb = [colorsys.hsv_to_rgb(node["frequency"]/30, 1.0, 1.0) for node in self.graph_dict["nodes"]]
+            node_rgb = [colorsys.hsv_to_rgb(1/node["frequency"]/2, 1.0, 1.0) for node in self.graph_dict["nodes"]]
             node_colors = ["#%02x%02x%02x" % tuple([round(255*x) for x in rgb]) for rgb in node_rgb]
             node_frequency = [node["frequency"] for node in self.graph_dict["nodes"]]
         else:
             node_colors = ["#000000"]*len(self.graph_dict["nodes"])
             node_frequency = [0]*len(self.graph_dict["nodes"])
         if "frequency" in self.graph_dict["edges"][0]:
-            edge_rgb = [colorsys.hsv_to_rgb(node["frequency"]/30, 1.0, 1.0) for node in self.graph_dict["edges"]]
+            edge_rgb = [colorsys.hsv_to_rgb(1/node["frequency"]/2, 1.0, 1.0) for node in self.graph_dict["edges"]]
             edge_colors = ["#%02x%02x%02x" % tuple([round(255*x) for x in rgb]) for rgb in edge_rgb]
             edge_frequency = [edge["frequency"] for edge in self.graph_dict["edges"]]
         else:
