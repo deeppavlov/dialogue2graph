@@ -4,7 +4,8 @@ Learn base dialog2graph classes
 =========================================
 
 :py:class:`~dialog2graph.pipelines.core.graph.Graph` and :py:class:`~dialog2graph.pipelines.core.dialog.Dialog` are the base structures used in the 
-``dialog2graph`` project. They are perfect to store information about your graphs and dialogs in a clear format.
+``dialog2graph`` project. They are perfect to store information about your graphs and dialogs in a clear format. This tutorial demonstrates these classes
+functional.
 
 Create dialog2graph.Graph
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

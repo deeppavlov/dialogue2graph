@@ -41,7 +41,7 @@ cd dialog2graph
 poetry install
 ```
 
-If you are planning to visualize your graphs consider installing **PyGraphviz** from [here](https://pygraphviz.github.io/) and also add it to the poetry environment.
+Consider installing **PyGraphviz** from [here](https://pygraphviz.github.io/), if you are planning to visualize your graphs. Then add it to the poetry environment.
 
 ```bash
 poetry add pygraphviz
@@ -59,48 +59,21 @@ Create `.env` file to store credentials
 
 ## How to Use
 
-### Generate synthetic graph on certain topic
+See `dialog2graph` usage examples:
 
-Choose LLMs for generating and validating dialog graph and invoke graph generation
+1. [Learn base classes usage](https://github.com/deeppavlov/dialog2graph/blob/dev/examples/basics/base_classes_usage.ipynb)
 
-```python
-from dialog2graph.datasets.complex_dialogs.generation import LoopedGraphGenerator
-from langchain_community.chat_models import ChatOpenAI
+2. [Learn dialog2graph pipelines and model configuration](https://github.com/deeppavlov/dialog2graph/blob/dev/examples/pipeline_usage/pipeline_example.ipynb)
 
+3. [Generate dialog graph using LLMs](https://github.com/deeppavlov/dialog2graph/blob/dev/examples/data_generation/LoopedGraphGenerator_example.ipynb)
 
-gen_model = ChatOpenAI(
-    model='gpt-4o',
-    api_key=os.getenv("OPENAI_API_KEY"),
-    base_url=os.getenv("OPENAI_BASE_URL"),
-)
-val_model = ChatOpenAI(
-    model='gpt-3.5-turbo',
-    api_key=os.getenv("OPENAI_API_KEY"),
-    base_url=os.getenv("OPENAI_BASE_URL"),
-    temperature=0,
-)
+4. [Evaluate graph and dialogs](https://github.com/deeppavlov/dialog2graph/blob/dev/examples/evaluation/examples_of_metrics_usage.ipynb)
 
-pipeline = LoopedGraphGenerator(
-    generation_model=gen_model,
-    validation_model=val_model,
-)
+5. [Learn CLI interface](https://github.com/deeppavlov/dialog2graph/blob/dev/examples/cli_usage/main.ipynb)
 
-generated_graph = pipeline.invoke(topic="restaurant reservation")
-```
+6. [Augment dialogs on dialog graph](https://github.com/deeppavlov/dialog2graph/blob/dev/examples/dialog_augmentation/dialogue_augmentation_example.ipynb)
 
-### Sample dialogs from existing dialog graph
-
-Create graph instance and invoke sampler to get dialog list
-
-```python
-from dialog2graph.pipelines.core.dialog_sampling import RecursiveDialogSampler
-from dialog2graph.pipelines.core.graph import Graph
-
-G = Graph(graph_dict={...})
-
-sampler = RecursiveDialogSampler()
-sampler.invoke(graph=G) #-> list of Dialog objects
-```
+7. [Extend a dialog graph](https://github.com/deeppavlov/dialog2graph/blob/dev/examples/dialog_extension/dialog_extender_example.ipynb)
 
 ## How to Contribute
 

@@ -3,8 +3,9 @@
 Generate synthetic graph on certain topic
 =========================================
 
-Use :py:class:`~dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator` to create a validated graph from several 
-LLM generated dialogs concerning a given topic. 
+:py:class:`~dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator` is a class to create a validated graph from several 
+LLM generated dialogs concerning a given topic. This class represents algorithm to generate dialog graph following several steps: 
+graph creation from dialogs, graph validation evaluating theme consistency and cycle validity, dialog generation from graph.
 
 .. code-block:: python
 
@@ -13,8 +14,10 @@ LLM generated dialogs concerning a given topic.
     from dialog2graph.datasets.complex_dialogs.generation import LoopedGraphGenerator
     from dialog2graph.pipelines.model_storage import ModelStorage
 
-1. Create :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` instance and add choosen LLMs for dialog generation, 
-dialog validation, theme validation and cycle end search.
+First, :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` instance is created. Then, using 
+:py:class:`~dialog2graph.pipelines.model_storage.ModelStorage.add` method, choosen LLMs may be added for dialog generation, 
+dialog validation, theme validation and cycle end search, important generation steps. You can choose between available models. 
+Preferably, the stronger model is used for generation problem and the simpler models are used for other tasks.
 
 .. code-block:: python
 
@@ -30,8 +33,11 @@ dialog validation, theme validation and cycle end search.
         model_type=ChatOpenAI,
     )
 
-2. Create :py:class:`~dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator` and 
-use :py:class:`~dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator.invoke` method to get a dialog graph
+Then, :py:class:`~dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator` is created, passing 
+previously defined :py:class:`~dialog2graph.pipelines.model_storage.ModelStorage` and specifying model names for 
+each task. :py:class:`~dialog2graph.datasets.complex_dialogs.generation.LoopedGraphGenerator.invoke` method is used to get a dialog graph 
+on ``restaurant reservation`` topic. The method returns a dictionary (``"graph": {{"edges": [...], "nodes": [...]}, "dialogues": [...]}``) 
+that can be passed to :py:class:`~dialog2graph.Graph` (more info you can find :doc:`in this userguide <./basic_usage>`). 
 
 .. code-block:: python
 
