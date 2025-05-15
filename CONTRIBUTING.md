@@ -1,6 +1,6 @@
-# Contributing to Dialogue2Graph
+# Contributing to Dialog2Graph
 
-Thank you for your interest in contributing to the Dialogue2Graph project! We welcome contributions from the community to help improve and expand Dialogue2Graph tool.
+Thank you for your interest in contributing to the Dialog2Graph project! We welcome contributions from the community to help improve and expand Dialog2Graph tool.
 
 ## Getting Started
 
@@ -33,7 +33,7 @@ poetry update
 
 ## How to Contribute
 
-1. Experiment with the graphs (see the following section for a detail) or add new features to Dialogue2Graph tool
+1. Experiment with the graphs (see the following section for a detail) or add new features to Dialog2Graph tool
 
 2. Check linting and try to reformat your code running
 

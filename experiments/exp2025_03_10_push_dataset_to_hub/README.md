@@ -1,4 +1,4 @@
-# Pushing generated dia2graph dataset of 402 graphs with dialogues for testing d2g task to huggingface 
+# Pushing generated dia2graph dataset of 402 graphs with dialogs for testing d2g task to huggingface 
 
 ## Issues and goals
 

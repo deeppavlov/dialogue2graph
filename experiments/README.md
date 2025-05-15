@@ -37,11 +37,11 @@ Once you've decided to create an experiment to test a hypothesis you should stic
     └── pyproject.toml
     ```
 
-6. You can work in the Jupyter notebooks, but if needed you can create a pipeline folder from the `dialogue2graph/pipelines`. It should resemble this kind of structure if you want to bring results of your experiments as a new pipeline for the library:
+6. You can work in the Jupyter notebooks, but if needed you can create a pipeline folder from the `dialog2graph/pipelines`. It should resemble this kind of structure if you want to bring results of your experiments as a new pipeline for the library:
 
     ```bash
     pipeline_name/
-    ├── dialogue.py
+    ├── dialog.py
     ├── graph.py
     ├── pipeline.py
     └── prompts
