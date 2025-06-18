@@ -5,14 +5,13 @@ This module provides classes and functions for managing and storing models, incl
 import yaml
 import re
 import dotenv
-from pydantic._internal._model_construction import ModelMetaclass
-from typing import Union, Dict
+from typing import Union, Dict, Type
 from pathlib import Path
 from pydantic import BaseModel, Field, model_validator
 
-from langchain_community.chat_models import ChatOpenAI
+from langchain_openai.chat_models import ChatOpenAI
 from langchain_core.language_models import BaseChatModel
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface.embeddings import HuggingFaceEmbeddings
 
 from dialog2graph.utils.logger import Logger
 
@@ -62,7 +61,7 @@ class StoredData(BaseModel):
     Attributes:
         key (str): Key for the stored model.
         config (dict): Configuration for the stored model.
-        model_type (Union[Literal["llm"], Literal["emb"]]): Type of the stored model, either "llm" (language model) or "emb" (embedding model).
+        model_type (Type[BaseChatModel | HuggingFaceEmbeddings]): Type of the stored model, for example ChatOpenAI, HuggingFaceEmbeddings.
         model (Union[HuggingFaceEmbeddings, BaseChatModel]): The actual model object, which can either be a HuggingFaceEmbeddings instance or a BaseChatModel instance.
 
     Methods:
@@ -76,7 +75,7 @@ class StoredData(BaseModel):
 
     key: str = Field(description="Key for the stored model")
     config: dict = Field(description="Configuration for the stored model")
-    model_type: ModelMetaclass = Field(description="Type of the stored model")
+    model_type: Type[BaseChatModel | HuggingFaceEmbeddings] = Field(description="Type of the stored model")
     model: Union[
         HuggingFaceEmbeddings,
         BaseChatModel,
@@ -140,7 +139,7 @@ class ModelStorage(BaseModel):
         self,
         key: str,
         config: dict,
-        model_type: ModelMetaclass,
+        model_type: Type[BaseChatModel | HuggingFaceEmbeddings],
         overwright: bool = False,
     ):
         """
@@ -155,7 +154,7 @@ class ModelStorage(BaseModel):
                 Args:
                     key (str): The unique identifier for the model configuration.
                     config (dict): The configuration dictionary for initializing the model.
-                    model_type (ModelMetaclass): The type name of the model to be added.
+                    model_type (Type[BaseChatModel | HuggingFaceEmbeddings]): The type of the model to be added.
                     overwright (bool): Whether to overwright model existing under same key
         .
                 Raises:

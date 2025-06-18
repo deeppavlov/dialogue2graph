@@ -1,20 +1,20 @@
-d2g_llm_filling_llm:v1:
+my_filling_model:
   config:
-    name: o3-mini
-    temperature: 1
-  model_type: llm
-d2g_llm_grouping_llm:v1:
+    model_name: gpt-3.5-turbo
+  model_type: ChatOpenAI
+three_stages_llm_formatting_llm:v1:
   config:
-    name: gpt-4o-latest
+    model_name: gpt-4o-mini
     temperature: 0
-  model_type: llm
-d2g_llm_sim_model:v1:
+  model_type: ChatOpenAI
+three_stages_llm_grouping_llm:v1:
+  config:
+    model_name: chatgpt-4o-latest
+    temperature: 0
+  model_type: ChatOpenAI
+three_stages_llm_sim_model:v1:
   config:
     model_kwargs:
       device: cpu
-    model_name: cointegrated/LaBSE-en-ru
-  model_type: emb
-my_model:
-  config:
-    name: gpt-3.5-turbo
-  model_type: llm
+    model_name: BAAI/bge-m3
+  model_type: HuggingFaceEmbeddings
